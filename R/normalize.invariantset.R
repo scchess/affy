@@ -46,7 +46,7 @@ library(modreg)
 ## needed ?
 
 
-normalize.Plob.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
+normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progress=FALSE) {
 
   nc <- ncols(container@pm)
   np <- nrows(container@pm)
