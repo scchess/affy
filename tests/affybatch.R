@@ -53,9 +53,9 @@ cel <- afbatch[[1]]
 cat("done.\n")
 
 ## normalize the AffyBatch
-cat("---> normalizing an AffyBatch...\n")
-n.afbatch <- normalize(afbatch, method="constant")
-cat("done.\n")
+##cat("---> normalizing an AffyBatch...\n")
+##n.afbatch <- normalize(afbatch, method="constant")
+##cat("done.\n")
 
 ## compute expression values
 cat("---> normalizing an AffyBatch...\n")
