@@ -6,9 +6,10 @@
    Normalizes arrays using loess.}
 }
 \usage{
-normalize.loess(mat, subset=sample(1:(dim(mat)[2]),5000),
-                epsilon=10^-2,maxit=1,log.it=TRUE,verbose=TRUE,span=2/3,
-                family.loess="symmetric")
+normalize.loess(mat, subset = sample(1:(dim(mat)[1]), min(c(5000,
+                 nrow(mat)))), epsilon = 10^-2, maxit = 1, log.it =
+                 TRUE, verbose = TRUE, span = 2/3, family.loess =
+                 "symmetric")
 normalize.AffyBatch.loess(abatch,type=c("together","pmonly","mmonly","separate"), ...)
 }
 \arguments{

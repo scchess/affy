@@ -1,23 +1,22 @@
-library(modreg)
 ##*******************************************************************************************
 #**********  maffy.normalize     *****
 maffy.normalize <- function(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE){
 
 k <- dim(data)[2]   ### Number of chips
 
-####   Create the transformation matrix 
+####   Create the transformation matrix
 t1 <- 1/sqrt(k)
 t2 <- (k-2-t1)/(k-1)
 t3 <- -(1+t1)/(k-1)
 
 transmat <- matrix(t3,k,k)
-for(i in 1:k){ 
+for(i in 1:k){
      transmat[1,i]<-t1
      transmat[i,1]<-t1
-} 
-for(i in 2:k) transmat[i,i]<-t2 
+}
+for(i in 2:k) transmat[i,i]<-t2
 
-#### Find normalizing curve   
+#### Find normalizing curve
 
 if(verbose) cat("Fitting normalizing curve\n")
 n<- length(subset)
@@ -52,12 +51,12 @@ for(i in 1:k){
 
     curve <- loess(c(mini,scaled[,i],maxi)~c(mini,unscaled[,i],maxi),weights=w,span=span)
 
-    if(log.it) 
+    if(log.it)
          temp <-  exp(predict(curve,log(data[,i])))
     else
          temp <-      predict(curve,data[,i])
 
-    data.scaled <- cbind(data.scaled,temp) 
+    data.scaled <- cbind(data.scaled,temp)
 }
 
 data.scaled
@@ -75,7 +74,7 @@ k     <- dim(data)[2]   ### Number of chips
 n     <- dim(data)[1]   ## Size of starting subset, i.e. all rows
 
 if(verbose)
-      cat("Data size",n,"x",k,"Desired subset size",subset.size,"+-",subset.delta,"\n")       
+      cat("Data size",n,"x",k,"Desired subset size",subset.size,"+-",subset.delta,"\n")
 
 means <- data%*%(rep(1,k,k)/k)
 
@@ -85,22 +84,22 @@ data.sorted <- data[index0,]
 
 ## Init
 set <- rep(TRUE,n,n)      ## Set-indicator
-index.set <- 1:n       ## Indexes for subset 
-nprev <- n+1           
+index.set <- 1:n       ## Indexes for subset
+nprev <- n+1
 iter  <- 1
 part.of.n <- 1
 
 ## loop
 while(nprev>n & n>(subset.size+subset.delta) & iter <maxit){
     if(verbose)
-      cat("Comuting ranks of old subset....")       
+      cat("Comuting ranks of old subset....")
     ranks <-apply(data.sorted[index.set,],2,rank)              ## Compute ranks, chip by chip.
     ranks.range <- apply(ranks,1,function(r) max(r)-min(r) )   ## Range of ranks over chips
 
     q <-min((n*part.of.n+subset.size)/((1+part.of.n)*n),1)     ## Select quantiles
-    low <- quantile(ranks.range[1:(n*0.2)+n*0.0],probs=q,names=FALSE)/n  
+    low <- quantile(ranks.range[1:(n*0.2)+n*0.0],probs=q,names=FALSE)/n
     high <-quantile(ranks.range[n+1-(1:(n*0.2))],probs=q,names=FALSE)/n
-    
+
     newset <-  ranks.range < (low*n+(0:n-1)*(high-low))        ## Set-indicator of new set
 
     if(sum(newset)<subset.size-subset.delta){                  ## To small?
@@ -111,11 +110,11 @@ while(nprev>n & n>(subset.size+subset.delta) & iter <maxit){
     else{                                                      ## New set OK
        set <- newset
        index.set <- subset(index.set,set)
-       index.set <- index.set[!is.na(index.set)] 
+       index.set <- index.set[!is.na(index.set)]
        nprev <- n
        n <- length(index.set)
        if(verbose)
-          cat("Size of new subset: ",n,"\n")       
+          cat("Size of new subset: ",n,"\n")
    }
 
    iter <- iter+1
@@ -196,11 +195,11 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 	   statistics = "approximate", surface = "interpolate",
 	   cell = 0.2, iterations = 1, trace.hat = "exact")
 {
- 
-    ## Extra init 
+
+    ## Extra init
     parametric <- FALSE
     drop.square <- FALSE
-    
+
     M <- NCOL(y)
     A <- rep(1,M,M)
 
@@ -244,7 +243,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 	    statistics <- if(trace.hat == "approximate") "2.approx"
 	    else if(trace.hat == "exact") "1.approx"
 	surf.stat <- paste(surface, statistics, sep="/")
-        for(k in 1:M) {        
+        for(k in 1:M) {
         	z <- .C("loess_raw",
 			as.double(y[,k]),
 			as.double(x),
@@ -270,7 +269,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 			delta1 = double(1),
 			delta2 = double(1),
 			as.integer(surf.stat == "interpolate/exact"),
-			PACKAGE="modreg")
+			PACKAGE="stats")
 			fitted.all[,k] <- z$fitted.values
 	}
 
@@ -289,7 +288,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 			       as.integer(N),
 			       robust = double(N),
 			       double(N),
-			       PACKAGE="modreg")$robust
+			       PACKAGE="stats")$robust
     }
     if(surface == "interpolate")
     {
@@ -300,7 +299,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 		       vert=z$vert, vval=z$vval[1:enough])
     }
     if(iterations > 1) {
-        for(k in 1:M) {        
+        for(k in 1:M) {
 		pseudovalues <- .Fortran("lowesp",
 					 as.integer(N),
 					 as.double(y[,k]),
@@ -309,7 +308,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 					 as.double(robust),
 					 double(N),
 					 pseudovalues = double(N),
-					 PACKAGE="modreg")$pseudovalues
+					 PACKAGE="stats")$pseudovalues
 		zz <- .C("loess_raw",
 			as.double(pseudovalues),
 			as.double(x),
@@ -335,7 +334,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 			delta1 = double(1),
 			delta2 = double(1),
 			as.integer(0),
-			PACKAGE="modreg")
+			PACKAGE="stats")
 		pseudo.resid.all[,k] <- pseudovalues-zz$temp
 	}
 

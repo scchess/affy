@@ -10,10 +10,10 @@
   A set of functions to obtain CDF files from various locations.
 }
 \usage{
-cdfFromBioC(cdfname, lib = .libPaths()[1], verbose = FALSE)
-cdfFromData(cdfname, pkg, verbose=FALSE)
-cdfFromLibPath(cdfname, lib = NULL, verbose=FALSE)
-cdfFromEnvironment(cdfname, where, verbose=FALSE)
+cdfFromBioC(cdfname, lib = .libPaths()[1], verbose = TRUE)
+cdfFromData(cdfname, pkg, verbose=TRUE)
+cdfFromLibPath(cdfname, lib = NULL, verbose=TRUE)
+cdfFromEnvironment(cdfname, where, verbose=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

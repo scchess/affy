@@ -7,7 +7,8 @@
   normalizes arrays in an AffyBatch each other or to a set of target intensities
 }
 \usage{
-normalize.AffyBatch.qspline(abatch,type=c("separate","pmonly","mmonly","together"),...)
+normalize.AffyBatch.qspline(abatch,type=c("together", "pmonly", "mmonly",
+                 "separate"), ...)
 
 normalize.qspline(x, target = NULL, samples = NULL, 
                   fit.iters = 5, min.offset = 5, 

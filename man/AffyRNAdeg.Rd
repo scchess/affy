@@ -10,7 +10,8 @@
 \usage{
 AffyRNAdeg(abatch,log.it=TRUE)
 summaryAffyRNAdeg(rna.deg.obj,signif.digits=3)
-plotAffyRNAdeg(rna.deg.obj,transform=c("shift.scale","shift.only","neither"),cols=NULL,...)
+plotAffyRNAdeg(rna.deg.obj, transform = "shift.scale", cols = NULL,
+                 ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

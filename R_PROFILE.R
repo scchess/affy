@@ -1,6 +1,5 @@
-  require(Biobase, quietly=TRUE)
+  require("Biobase", quietly=TRUE)
   require(modreg, quietly=TRUE)
-  require(eda, quietly=TRUE)
 
   ## DEBUG flag
   ##assign("debug.affy123", TRUE)

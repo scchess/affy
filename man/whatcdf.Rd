@@ -6,7 +6,7 @@
   Find which kind of CDF corresponds to a CEL file.
 }
 \usage{
-whatcdf(filename, compress = FALSE)
+whatcdf(filename, compress = getOption("BioC")$affy$compress.cel)
 }
 \arguments{
   \item{filename}{a '.CEL' file name}

@@ -70,7 +70,6 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), verb
 
   type <- match.arg(type)
   baseline.type <- match.arg(baseline.type)
-  require(modreg, quietly=TRUE)
 
   if (type == "pmonly"){
     pms <- unlist(pmindex(abatch))

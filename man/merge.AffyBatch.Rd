@@ -6,7 +6,9 @@
   merge two AffyBatch objects into one.
 }
 \usage{
-merge.AffyBatch(x, y, annotation = paste(x@annotation, y@annotation), description = NULL, notes = paste(x@notes, y@notes), ...)
+merge.AffyBatch(x, y, annotation = paste(annotation(x),
+                 annotation(y)), description = NULL, notes =
+                 paste(x@notes, y@notes), ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

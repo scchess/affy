@@ -1,4 +1,3 @@
-library(modreg)
 mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="gaussian",digits=3,line.col=2,main="MVA plot",...){
   if(log.it) x <-log2(x)
   J <- dim(x)[2]
