@@ -67,7 +67,7 @@ It will be a data frame with
 
  \code{AllButCelsForReadAffy} is an internal function that gets called
  by \code{ReadAffy}. It gets all the information expect the cel intencities.
-}
+
 
 \code{description} is read using \code{\link[Biobase]{read.MIAME}}. If a
 character is given it tries to read the file with that name to obtain a
@@ -77,12 +77,8 @@ character is given it tries to read the file with that name to obtain a
 \code{MIAME} is created..
 
 
-The arguments \code{rm.masks}, \code{rm.outliers}, \code{rm.extra} are
-passed along to the function \code{\link{read.celfile}}.
-
-  
-  
-
+%%The arguments \code{rm.masks}, \code{rm.outliers}, \code{rm.extra} are
+%%passed along to the function \code{\link{read.celfile}}.
 }
 \value{
   An \code{AffyBatch} object.

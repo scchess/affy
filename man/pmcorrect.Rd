@@ -31,14 +31,11 @@ pmcorrect.mas(object, contrast.tau=0.03, scale.tau=10, delta=2.0e-20)
 }
 \details{
 These are the pm correction methods perfromed by Affymetrix MAS 4.0
-(subtractmm) and MAS 5.0 (mas). See the Affymetrix Manual for details.}
-  
-pmonly does what you think: does not change the PM values.}  
-\value{
-  A \code{\link[affy:ProbeSet-class]{ProbeSet}} for which the \code{pm} slot contains the
-  corrected
-  PM values.
-}
+(subtractmm) and MAS 5.0 (mas). See the Affymetrix Manual for details.
+pmonly does what you think: does not change the PM values.}
+\value{A \code{\link[affy:ProbeSet-class]{ProbeSet}} for which the
+  \code{pm} slot contains the  corrected  PM values.}
+
 \references{Affymetrix MAS 4.0 and 5.0 manual}
 
 \examples{

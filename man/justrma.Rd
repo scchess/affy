@@ -75,7 +75,7 @@ object as described in \code{\link[Biobase]{read.phenoData}}. If left
 \code{NULL} and \code{widget=FALSE} then a default object is created.
 It will be an object of class \code{\link[Biobase]{phenoData}} with
    \code{new("phenoData",pData=data.frame(x=1:length(CELfiles)),varLabels=list(x="arbitrary number"))}
-}
+
 
 \code{description} is read using \code{\link[Biobase]{read.MIAME}}. If a
 character is given it tries to read the file with that name to obtain a
