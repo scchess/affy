@@ -13,7 +13,7 @@
  ** this implements the same background as that included within affy (1.0.2) 
  ** and also the background in affy 1.1 and later releases.
  **
- ** Last changed: Nov 4, 2002 
+ ** Last changed: Feb 6, 2003 
  **
  ** Pre Nov 2002 - original version
  ** Nov 4, 2002 - make changes for Affy2. Add in Alternate bg computation.
@@ -25,6 +25,7 @@
  **             of course not fully standards compliant :)
  **
  ** Jan 9, 2003 - check that background version switching happens
+ ** Feb 6, 2003 - change two printf to Rprintf (so Windows users actually see some verbage)
  **
  *****************************************************************************/
 
@@ -398,7 +399,8 @@ SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho, SEXP bgtype){
   
   PM = NUMERIC_POINTER(AS_NUMERIC(PMmat));
   MM = NUMERIC_POINTER(AS_NUMERIC(MMmat));
-  printf("Background correcting\n");
+  /* printf("Background correcting\n"); */
+  Rprintf("Background correcting\n");
   for (j=0; j < cols; j++){
     if (INTEGER(bgtype)[0] == 2){
       bg_parameters2(PM,MM,param,rows,cols,j,densfunc,rho);
@@ -450,7 +452,8 @@ SEXP bg_correct_c_copy(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho, SEXP bgt
 
   PM = NUMERIC_POINTER(AS_NUMERIC(PMcopy));
   MM = NUMERIC_POINTER(AS_NUMERIC(MMmat));
-  printf("Background correcting\n");
+  /* printf("Background correcting\n"); */
+  Rprintf("Background correcting\n");
   /* printf("%d \n", INTEGER(bgtype)[0]); */
   for (j=0; j < cols; j++){
     if (asInteger(bgtype)==2){

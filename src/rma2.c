@@ -7,7 +7,7 @@
  **
  ** last modified: January 6, 2003
  ** 
- ** last modified: Dec 26, 2002 (Laurent)
+ ** last modified: Feb 6, 2003
  **
  ** License: GPL V2 or later (same as the rest of the Affy package)
  **
@@ -76,6 +76,8 @@
  ** Dec 26, 2002 - '//' is not a valid way to comment out (and some C compilers complain about it)
  **                (Laurent)
  ** Jan 6, 2003 - fix merging. Note "//" is valid according to the language standards (http://anubis.dkuug.dk/jtc1/sc22/open/n2794/n2794.txt)
+ ** Feb 6, 2003 - change some printfs to Rprintfs this will allow the windows users to see some
+ **               verbage when running rma
  ** 
  ************************************************************************/
 
@@ -593,7 +595,8 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   /* printf("%d ",INTEGER(norm_flag)[0]); */
   if (INTEGER(norm_flag)[0]){
   /* normalize PM using quantile normalization */
-    printf("Normalizing\n");
+  /*  printf("Normalizing\n"); */
+    Rprintf("Normalizing\n");
     qnorm_c(PM,&rows,&cols);
   }
 
@@ -611,7 +614,10 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
 
   outexpr = NUMERIC_POINTER(outvec);
  	    
-  printf("Calculating Expression\n");
+  /* printf("Calculating Expression\n"); */
+  Rprintf("Calculating Expression\n");
+
+
   do_RMA(PM, ProbeNames, &rows, &cols,outexpr,outnames,nprobesets);
 
   UNPROTECT(2);
