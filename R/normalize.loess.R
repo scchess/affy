@@ -1,48 +1,40 @@
 normalize.Cel.container.loess <- function(listcel, ...) {
   
   cols <- length(listcel)
-  rows <- length(listcel[[1]]@intensity) # assuming all the Cel are of the same size in listcel
-  chipdim <- dim(listcel[[1]]@intensity)
+  rows <- length(intensity(listcel[[1]])) # assuming all the Cel are of the same size in listcel
+  chipdim <- dim(intensity(listcel[[1]]))
   
   ## this is may be too much.. I am taking every intensity in there... something like
   ## taking only the PM (see invariantset) could be what you want (this is only a trial,
   ## know better your own algorithm that I will ever... modify if needed).  
   x <- matrix(0,rows,cols)
-  for (i in 1:cols) x[,i] <- c(listcel[[i]]@intensity)
+  for (i in 1:cols) x[,i] <- c(intensity(listcel[[i]]))
 
   x <- normalize.loess(x, ...)
 
   ##cat(cols,rows)
   for (i in 1:cols) {
-    listcel[[i]]@intensity  <- matrix(x[,i],chipdim[1], chipdim[2])
-    listcel[[i]]@history$name <- "normalized by quantiles"
-    listcel[[i]]@sd <- matrix() # set 'sd' to nothing (meaningless after normalization)
+    intensity(listcel[[i]])  <- matrix(x[,i],chipdim[1], chipdim[2])
+    history(listcel[[i]])$name <- "normalized by quantiles"
+    spotsd(listcel[[i]]) <- matrix() # set 'sd' to nothing (meaningless after normalization)
   }
 
   return(listcel)
 }
 
-
-## note for Rafael:
-## The principle is:
-## the normalize.XYZ.ABC methods only do data structure conversion and call the methods normalize.ABC in turn
-##            -- Laurent
-
 normalize.Plob.loess <- function(plob,...){
 
-  x <-  matrix(0, plob@nprobes*2, plob@nchips)
-  for (i in 1:plob@nchips) {
-    x[1:plob@nprobes, i] <- plob@pm[,i]
-    x[plob@nprobes+1:plob@nprobes*2, i] <- plob@mm[,i]
+  x <-  matrix(0, nrow(plob)*2, ncol(plob))
+  for (i in 1:ncol(plob)) {
+    x[1:nrow(plob), i] <- pm(plob)[,i]
+    x[nrow(plob)+1:nrow(plob)*2, i] <- mm(plob)[,i]
   }
 
   x <- normalize.loess(x, ...)
-
-  
   
   for (i in 1:plob@nchips) {
-    plob@pm[,i] <- x[1:plob@nprobes, i]
-    plob@mm[,i] <- x[plob@nprobes+1:plob@nprobes*2, i]
+    pm(plob)[,i] <- x[1:nrow(plob), i]
+    mm(plob)[,i] <- x[nrow(plob)+1:nrow(plob)*2, i]
   }
 
   
