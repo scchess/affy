@@ -10,7 +10,7 @@ cleancdfname <- function(cdfname, addcdf=TRUE) {
   if ( nchar(cdfname)[1] == 0 )
                stop("supplied cdf name has zero length")
 
-  data(mapCdfName)
+  data(mapCdfName,envir=environment())
   i <- match(cdfname, mapCdfName$inCDF)
   if (is.na(i)) {
     tmp <- tolower(cdfname) #make lower case
