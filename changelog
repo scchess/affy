@@ -38,6 +38,6 @@ on the command line but fails through 'R CMD check' (??!?!!!?)
 number 0.8.0
 - started to finish the part about generateExprSet
 
-
+- accessor function sd in Cel moved to spotsd 
 
 	
