@@ -618,7 +618,7 @@
                           ##notes=c(notes(x))
               ##if (verbose) cat(".....done.\n")
 
-              attribute(eset, "pps.warnings") <- pps.warnings
+              attr(eset, "pps.warnings") <- pps.warnings
               ##return(list(exprSet=eset, pps.warnings=pps.warnings))
             },
             where=where)
