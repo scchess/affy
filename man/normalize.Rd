@@ -3,7 +3,7 @@
 \title{Normalize - generic}
 \description{
 A generic function which normalizes microarray data.
-Normalization is intended to remove from the expression measures any
+Normalization is intended to remove from the intensity measures any
 systematic trends which arise from the microarray technology rather than
 from differences between the probes or between the target RNA samples
 hybridized to the arrays. 
