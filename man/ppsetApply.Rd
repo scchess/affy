@@ -1,0 +1,51 @@
+\name{ppsetApply}
+\alias{ppsetApply}
+\title{ Apply a function over the ProbeSets in an AffyBatch }
+\description{
+  Apply a function over the ProbeSets in an AffyBatch
+}
+\usage{
+ppsetApply(abatch, FUN, genenames = NULL, ...)
+
+ppset.ttest(ppset, covariate, pmcorrect.fun = pmcorrect.pmonly, ...)
+}
+\arguments{
+  \item{abatch}{ An object inheriting from \code{AffyBatch}.}
+  \item{FUN}{ A function working on a \code{ProbeSet} }
+  \item{genenames}{ A list of Affymetrix probesets ids to work with. All
+  probe set ids used when \code{NULL}.}
+  \item{\dots}{ Optional parameters to the function \code{FUN} }
+}
+\details{
+  
+}
+\value{
+  Returns a \code{list} of objects, or values, as returned by the
+  function \code{FUN}
+  for each \code{ProbeSet} it processes.
+}
+\author{Laurent Gautier <laurent@cbs.dtu.dk>}
+\seealso{\code{\link[affy]{ProbeSet-class}} }
+\examples{
+ppset.ttest <- function(ppset, covariate, pmcorrect.fun = pmcorrect.pmonly, ...) {
+  probes <- do.call("pmcorrect.fun", list(ppset))
+  my.ttest <- function(x) {
+    y <- split(x, get(covariate))
+    t.test(y[[1]], y[[2]])$p.value
+  }
+  r <- apply(probes, 1, my.ttest)
+  return(r)
+}
+
+## craft a dataset
+data(affybatch.example)
+abatch <- merge(affybatch.example, affybatch.example)
+intensity(abatch) <- jitter(intensity(abatch))
+chip.variate <- c("a", "b", "a", "a", "b", "a", "a")
+pData(abatch) <- data.frame(whatever = chip.variate)
+
+## run a test over _all_ probes.
+all.ttest <- ppsetApply(abatch, ppset.ttest, covariate="whatever")
+
+}
+\keyword{ manip }
