@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{HOWTO: custom provessing methods in affy}
+%\VignetteIndexEntry{HOWTO: custom processing methods in affy}
 %\VignetteKeywords{Preprocessing, Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
@@ -19,7 +19,7 @@
 
 \newcommand{\scscst}{\scriptscriptstyle}
 \newcommand{\scst}{\scriptstyle}
-
+\author{Laurent}
 \begin{document}
 \title{Processing methods in the package affy}
 
@@ -46,7 +46,7 @@ library(affy)
 
 \section{How-to}
 For each processing step, labels for the methods known to the package
-are stored in respective variables. 
+are stored in variables. 
 
 <<>>=
 normalize.AffyBatch.methods
@@ -135,7 +135,28 @@ pmcorrect.methods <- c(pmcorrect.methods, "subtractmmsometimes")
 The second new method intends to be an robust alternative to the summary expression value computation \verb+avgdiff+.
 The idea is to use the function \verb+huber+ of the package \verb+MASS+.
 <<>>=
-library(MASS)
+huber <- function (y, k = 1.5, tol = 1e-06) {
+    y <- y[!is.na(y)]
+    n <- length(y)
+    mu <- median(y)
+    s <- mad(y)
+    if (s == 0) 
+        stop("cannot estimate scale: MAD is zero for this sample")
+    repeat {
+        yy <- pmin(pmax(mu - k * s, y), mu + k * s)
+        mu1 <- sum(yy)/n
+        if (abs(mu - mu1) < tol * s) 
+            break
+        mu <- mu1
+    }
+    list(mu = mu, s = s)
+}
+@
+This method returns P.J. Huber's location estimate with MAD scale. You
+think this is what you want to compute the summary expression value
+from the probe intensities. What is needed to have as a processing method
+is a simple wrapper:
+<<>>=
 computeExprVal.huber <- function(probes) {
   res <- apply(probes, 2, huber)
   mu <- unlist(lapply(res, function(x) x$mu))

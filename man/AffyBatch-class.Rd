@@ -127,7 +127,7 @@ Class \code{"exprSet"}, directly.
 \seealso{  related methods \code{\link{merge.AffyBatch}},
   \code{\link{split.AffyBatch}} and \code{\link{pairs.AffyBatch}}, and related classes \code{\link{Cel}},
   \code{\link{Cdf}} and 
-  \code{\link{exprSet-class}}} 
+  \code{\link[Biobase]{exprSet-class}}} 
 
 \examples{
 ## load example
@@ -147,6 +147,7 @@ mypmindex <- indexProbes(affybatch.example, which="pm", genenames="A28102_at")[[
 intensity(affybatch.example)[mypmindex, ]
 
 ## load bigger example (try 'help(Dilution)' )
+require(affydata)
 data(Dilution)
 description(Dilution) ##we can also use the methods of exprSet
 sampleNames(Dilution)

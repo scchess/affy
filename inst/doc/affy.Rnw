@@ -1,4 +1,4 @@
-% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+
 %\VignetteIndexEntry{affy primer}
 %\VignetteKeywords{Preprocessing, Affymetrix}
 %\VignetteDepends{affy}
@@ -509,6 +509,7 @@ is publicly available from Gene Logic
 describes the data set.
 
 <<>>=
+require(affydata)
 data(Dilution)
 Dilution
 @

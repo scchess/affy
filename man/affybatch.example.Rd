@@ -12,7 +12,7 @@
 "Comparison of gene expression estimators for oligonucleotide arrays",
 submitted 2001.]. The locations are given by the environmemt
 \code{\link{corner.Hu6800.example}}}
-\seealso{\code{\link{Dilution}},\code{\link{corner.Hu6800.example}}
+\seealso{\code{\link[affydata]{Dilution}},\code{\link{corner.Hu6800.example}}
 }
 \keyword{methods}
 

@@ -88,23 +88,25 @@
                 where <- how[[i]]$where
 
                 if (debug.affy123) {
-                  cat("what=", how[[i]]$what, "where=")
-                  print(how[[i]]$where)
+                  cat("what=", what, "where=")
+                  print(where)
                 }
                 
                 if (what == "data") {
                   ##if we can get it from data dir. otherwise load package
-                  if(cdfname %in% data(package = affy)$results[, 3]){
+                  if(cdfname %in% do.call("data", list(package=where))$results[, 3]){
                     ##RI: package="affy" doesnt work it has to be package=affy
                     ##    fix if you can
-                    where <- as.environment(match(paste("package:", where, sep = ""), search()))
-                    if(!exists(cdfname, where = where, inherits = FALSE)){
-                      path <- .path.package("affy")
+                    ##LG: weird stuff with data... but I had a workaround...
+                    where.env <- pos.to.env(match(paste("package:", where, sep = ""), search()))
+                    
+                    if( ! exists(cdfname, where = where.env, inherits = FALSE)) {
+                      path <- .path.package(where)
                       filename <- paste(cdfname, ".rda", sep="")
                       load(file.path(path, "data", filename) ,
-                           envir = where)
+                           envir = where.env)
                     }
-                    return(get(cdfname, envir=where))
+                    return(get(cdfname, envir=where.env))
                   }
                 }
                 

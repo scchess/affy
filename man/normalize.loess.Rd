@@ -36,6 +36,7 @@ normalize.AffyBatch.loess(abatch, ...)
 \seealso{
   \code{\link{normalize}}}
 \examples{
+     #require(affy)
      #data(Dilution)
      #x <- pm(Dilution[,1:3])
      #mva.pairs(x)

@@ -98,7 +98,10 @@
   
   setMethod("express.summary.stat",signature(x="ProbeSet",  pmcorrect="character", summary="character"),
             function(x, pmcorrect, summary, summary.param=list(), pmcorrect.param=list()) {
-            
+
+              pmcorrect <- match.arg(pmcorrect, pmcorrect.methods)
+              summary  <- match.arg(summary, express.summary.stat.methods)
+
               ## simple for system to let one add background correction methods
               ## relies on naming convention
               pmcorrect.methodname <- paste("pmcorrect.", pmcorrect, sep="")

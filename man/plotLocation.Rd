@@ -24,6 +24,7 @@ plotLocation(x, col="green", pch=22, ...)
 }
 \examples{
   ## loading data
+  require(affydata)
   data(Dilution)
 
   ## image of the celfile

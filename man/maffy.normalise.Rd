@@ -29,6 +29,7 @@ The normalised intensities.
 \author{Magnus Åstrand}
 \seealso{ \code{\link{maffy.subset}}}
 \examples{
+     #require(affydata)
      #data(Dilution)
      #x <- pm(Dilution[,1:3])
      #mva.pairs(x)
