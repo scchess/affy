@@ -51,7 +51,7 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), prog
   rm(w.pm)
   
   np <- sum(i.pm)                                     # number of PM probes
-  nc  <-  abatch@nexp                                 # number of CEL files
+  nc  <-  length(abatch)                                 # number of CEL files
   
   # take as a reference the array having the median overall intensity
   m <- vector("numeric", length=nc)
@@ -83,13 +83,13 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), prog
     intensity(abatch)[, i] <- tmp
 
     ## storing information about what has been done
-    history(abatch)[[i]] <- list(name="normalized by invariant set",
-                                       invariantset=i.set)
+    ##history(abatch)[[i]] <- list(name="normalized by invariant set",
+    ##                                   invariantset=i.set)
     
     if (progress) cat("done.\n")
     
   }
-  history(abatch)[[refindex]] <- list(name="reference for the invariant set")
+  ##history(abatch)[[refindex]] <- list(name="reference for the invariant set")
   
   return(abatch)
 }
