@@ -85,7 +85,6 @@ setMethod("getCdfInfo", signature("AffyBatch"),
             if (debug.affy123)
               cat("Trying to get cdfenv for", cdfname, "\n")
 
-
             i <- 0
             while(i < length(how)) {
               i <- i+1
@@ -144,18 +143,6 @@ setMethod("getCdfInfo", signature("AffyBatch"),
                 }
                 next
             }
-
-              if (what == "file") {
-                  ##now this is an actual Affymetrix filename
-                  cdfname <- paste(object@cdfName,".CDF",sep="")
-                  cdf <- read.cdffile(file.path(path.expand(where), cdfname))
-                  ## ---> extra paranoia <---
-                  if (cdf@cdfName != object@cdfName)
-                      warning(paste("The CDF file identifies as", cdf@cdfName,
-                                    "while you probably want", object@cdfName))
-                  ## ---> end of paranoia <---
-                  return(getLocations.Cdf(cdf))
-              }
 
               if (what == "environment") {
                   if(exists(object@cdfName,inherits=FALSE,where=where))
