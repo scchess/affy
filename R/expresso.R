@@ -13,6 +13,7 @@ expresso <- function(CDFfile = NULL,
                      chip.names = NULL,
                      verbose = T,
                      widget = F,
+                     hdf5 = F,
                      ...) {
 
   getTmpFileName <- function() {
@@ -27,13 +28,18 @@ expresso <- function(CDFfile = NULL,
     }
     return(tmp.filename)
   }
-  
-  require(rhdf5) || stop("library rhdf5 could not be found !")
-  
-  hdf5FilePath <- getTmpFileName()
-  
-  if (verbose)
-    cat("temporary hdf5 file:",hdf5FilePath,"\n")
+
+  ## --- temp file (if hdf5)
+  if (hdf5) {
+    require(rhdf5) || stop("library rhdf5 could not be found !")
+    
+    hdf5FilePath <- getTmpFileName()
+    
+    if (verbose)
+      cat("temporary hdf5 file:",hdf5FilePath,"\n")
+  } else {
+    hdf5FilePath <- "dummy"
+  }
   
   if (widget) {
     require(tkWidgets) || stop("library tkWidgets could not be found !")
@@ -131,9 +137,11 @@ expresso <- function(CDFfile = NULL,
 
   ## --- reading CELs
   if (verbose) cat("reading ", length(CELfiles), "CEL file(s):\n")
-  
-  on.exit(cat("unlinking temporary file", hdf5FilePath, ".\n"), add=TRUE)
-  on.exit(unlink(hdf5FilePath), add=TRUE)
+
+  if (hdf5) {
+    on.exit(cat("unlinking temporary file", hdf5FilePath, ".\n"), add=TRUE)
+    on.exit(unlink(hdf5FilePath), add=TRUE)
+  }
   
 #   listcel <- try(read.container.celfile(filenames=CELfiles,
 #                                         compress=compress.cel,
@@ -164,38 +172,44 @@ expresso <- function(CDFfile = NULL,
                                     rm.outliers=rm.outliers,
                                     rm.extra=rm.extra,
                                     sd=FALSE,
-                                    hdf5=TRUE,
+                                    hdf5=hdf5,
                                     hdf5FilePath=hdf5FilePath,
                                     verbose=verbose)
-
+  
   
   ## -- normalize (if wished)
   if (normalize) {
-    
-    hdf5FilePath2 <- getTmpFileName()
-    on.exit(cat("unlinking temporary file", hdf5FilePath2, ".\n"), add=TRUE)
-    on.exit(unlink(hdf5FilePath2), add=TRUE)
-    
-    if (verbose) {
-      cat("temporary hdf5 file:",hdf5FilePath2,"\n")
-      cat("making a copy of the raw values...")
-    }
-    
-    ## trick: make a copy of listcel (as it will be modifed by the
-    ## normalization routines)
 
-    listcel.n <- convert2hdf5.Cel.container(listcel,
-                                            hdf5FilePath2,
-                                            hdfile.group = "normalized")
-    
-    if (verbose) {
-      cat("done.\n")
-      cat("normalizing...")
+    if (hdf5) {
+      hdf5FilePath2 <- getTmpFileName()
+      on.exit(cat("unlinking temporary file", hdf5FilePath2, ".\n"), add=TRUE)
+      on.exit(unlink(hdf5FilePath2), add=TRUE)
+      
+      if (verbose) {
+        cat("temporary hdf5 file:",hdf5FilePath2,"\n")
+        cat("making a copy of the raw values...")
+      }
+      
+      ## trick: make a copy of listcel (as it will be modifed by the
+      ## normalization routines)
+      
+      listcel.n <- convert2hdf5.Cel.container(listcel,
+                                              hdf5FilePath2,
+                                              hdfile.group = "normalized")
+      
+      if (verbose) {
+        cat("done.\n")
+        cat("normalizing...")
+      }
+      
+      listcel.n <- normalize(listcel.n, cdf, method=normalize.method, ...)
+      
+      listcel <- listcel.n
+      
+    } else {
+      ## hdf5 == FALSE
+      listcel <- normalize(listcel.n, cdf, method=normalize.method, ...)
     }
-    
-    listcel.n <- normalize(listcel.n, cdf, method=normalize.method, ...)
-    
-    listcel <- listcel.n
     
     if (verbose) cat("done.\n")
   }

@@ -25,6 +25,7 @@ expresso(
          chip.names = NULL,
          verbose = TRUE,
          widget = TRUE,
+         hdf5 = FALSE,
          ...)
 }
 \arguments{
@@ -46,6 +47,7 @@ expresso(
   \item{verbose}{logical value. If \code{TRUE} it writes out some messages.}
   \item{widget}{a boolean to specify the use of widgets (the package
     tkWidget is required).}
+  \item{hdf5}{Use of hdf5 or not (requires the package \code{rhdf5}).}
   \item{...}{extra stuff passed over to the normalization function}
 }
 \details{
