@@ -108,7 +108,9 @@ read.affybatch <- function(..., filenames=character(0),
     if (verbose) cat("done.\n")
     
     if (cel@cdfName != ref.cdfName)
-      warning(paste("cdfName mismatch !\n(", filenames[[i]], ")"))
+      warning(paste("\n*****\nDetected a mismatch of the cdfName: found ", cel@cdfName,
+              ", expected ", ref.cdfName, "\nin file number", i, "(", filenames[[i]], ")\n",
+              "Please make sure all cel files belong to the same chip type!\n****\n", sep=""))
 
     intensity(conty)[, i] <- c(intensity(cel))
     
@@ -120,6 +122,7 @@ read.affybatch <- function(..., filenames=character(0),
     ##history(conty)[[i]] <- history(cel) now through MIAME
   }
   
+  colnames(intensity(conty)) = filenames
   return(conty)
 }
 
