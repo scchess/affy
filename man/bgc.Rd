@@ -35,7 +35,7 @@ bgc(object, bg = bg.adjust)
 \examples{
      data(Dilution)
      tmp <- bgc(Dilution)
-     plot(pm(Dilution)[,1]),pm(tmp)[,1],log="xy",main="PMs before and
-          after background correction")
+     plot(pm(Dilution)[,1],pm(tmp)[,1],log="xy",
+	  main="PMs before and after background correction")
 }
 \keyword{manip}
