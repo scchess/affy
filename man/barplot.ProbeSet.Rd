@@ -26,7 +26,7 @@ barplot.ProbeSet(height, xlab = "Probe pair", ylab = "Intensity", main = NA, col
 \examples{
 data(affybatch.example)
 gn <- geneNames(affybatch.example)
-pps <- probeset(affybatch, gn[1])[[1]]
+pps <- probeset(affybatch.example, gn[1])[[1]]
 
 barplot(pps)
 }
