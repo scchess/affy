@@ -10,7 +10,7 @@
 \usage{
 normalize.Cel.container.qspline(listcel, ...)
 
-normalize.Plob.qspline(plob, ...)
+%normalize.Plob.qspline(plob, ...)
 
 normalize.qspline(x, target = NULL, samples = NULL, 
                   fit.iters = 5, min.offset = 5, 
@@ -22,7 +22,7 @@ normalize.qspline(x, target = NULL, samples = NULL,
 \arguments{
   \item{x}{a \code{data.matrix} of intensities}
   \item{listcel}{a \code{Cel.container}}
-  \item{plob}{a \code{Plob}}
+%  \item{plob}{a \code{Plob}}
   \item{target}{numerical vector of intensity values to normalize to.
                 (could be the name for one of the celfiles in 'listcel')}
   \item{samples}{numerical, the number of quantiles to be used for spline.

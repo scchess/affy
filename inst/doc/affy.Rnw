@@ -3,11 +3,13 @@
 \usepackage{hyperref}
 \usepackage[dvips]{graphicx}
 
-\title{NOTES ON AFFY PACKAGE}
+\title{NOTES ON THE AFFY (version 1.0) PACKAGE}
 
-\author{Laurent Gautier, Rafael A. Irizarry, Leslie Cope}
-%\author{Rafael A. Irizarry, Laurent Gautier, Leslie Cope}
+% alphabetical order
 % :-)
+\author{Laurent Gautier\footnote{<laurent@cbs.dtu.dk>, Center for Biological Sequencing, DTU, Denmark},
+	 Rafael A. Irizarry\footnote{<rafa@jhu.edu>, Department of Biostatistics (JHU), USA}}
+
 
 % erh... I copied that blindly from a .Rnw in Biobase but I am not sure it is usefull
 \newcommand{\classdef}[1]{%
@@ -73,15 +75,15 @@ On MS Windows
 XXX ?
 \end{verbatim}
 
-The package relies on the presence of other packages or on the presence of external libraries for some of its
+The package requires R-1.5.0 (or eventually greater) and relies on the presence of other packages or on the presence of external libraries for some of its
 funcionalities. More specifically:
 \begin{enumerate} 
- \item The library {\it zlib} is required to read through compressed files with the
+ \item The library {\it zlib} is required to read compressed data files with the
 functions \verb+read.cdffile+ and \verb+read.celfile+
  \item The R package \verb+methods+ is required for almost anything to work
  \item The R package \verb+Biobase+ is required for almost anything to work too.
  \item The R package \verb+modreg+ is required for some of the normalization routines
- \item The R package \verb+tcltk+ is required for the functions involving GUI.
+ \item The R package \verb+tkWidgets+ is required for the user interface \emph{widgets}.
 \end{enumerate}
 The command \verb+library()+ within an R console will list the package installed.
 The missing packages can be downloaded from the {\it CRAN} website ({\it http://www.r-project.org/}) or from the
@@ -99,10 +101,10 @@ of the functionalities of the package. An instance of a class is a XXX.
 For an instance \verb+a+ of a class \verb+MyClass+ having a attribute called \verb+myAttribute+, one can access the
 attribute simply by writing \verb+a@myAttribute+.
 For the most common attributes, accessor methods are built in the class. Using the previous example, we would have an accessor
-function \verb+myAttribute+ applied to the instance \verb+a+: verb+myAttribute(a)+ .
+function \verb+myAttribute+ applied to the instance \verb+a+: \verb+myAttribute(a)+ .
 
 Different classes have been implemented in the package to ease the manipulation of the data. The main ones are described below,
-with a note for their main verb+slots+ and verb+methods+.
+with a note for their main \verb+slots+ and \verb+methods+.
 Users who are already familiar with the different categories of files involved in the analysis will not be surprised to find
 classes corresponding to the \verb+Cdf+ and \verb+Cel+ files.
 
@@ -111,7 +113,7 @@ classes corresponding to the \verb+Cdf+ and \verb+Cel+ files.
 The {\it Chip Definition Files} ({\it CDF} files) are used to store informations related to
 a type of oligonucleotide array sold by the manufacturer. All the arrays belonging to a given type will share this same information.
 As the quantity of informations in a {\it CDF} can be rather large, this is an important point. This is kept in the design of the package,
-as there will be only one verb+Cdf+ object in memory, to which will refer the corresponding \verb+Cel+ files.
+as there will be only one \verb+Cdf+ object in memory, to which will refer the corresponding \verb+Cel+ files.
 
 For instance when during an experiment a total of 30 arrays of type {\it Hu6800} are used, the information relative the array type is
 common to all the chips. Knowing that a {\it CDF} files weights 20 Megabytes, will help to realize the interest of avoiding to repeat this information.
@@ -126,9 +128,10 @@ attribute \verb+name.levels+.
 
 Example:
 %\vignette{Cdf-class}
-<<>>= 
+<<R.hide, echo=FALSE>>=
   library(affy)
-
+@
+<<>>=
   data(CDF.example)
 
   geneid <- "D13640_at"
@@ -152,7 +155,7 @@ Example:
  \item[tbase] In the {\it CDF} files, the column called {\it TBASE} holds also a nucleic acid letter. From trials and errors where the {\it t}
  was assumed to stand for {\it tbase}.
  \item[tbase.levels] The four same letters than for \verb+pbase.levels+ are found here.
- \item[atoms] Each {\it probe pair} (XXX make sure this term has been defined earlier) in a probe pair set is given a unique integer as an indentifier.
+ \item[atoms] Each {\it probe pair} in a {\it probe pair set} is given a unique integer as an indentifier.
 This number is refered as the {\it atom} number. The corresponding {\it perfect matches} and {\it mismatches} are found by using this number.
 
 Example:
@@ -197,12 +200,12 @@ The combination of the \verb+Cel+ and the \verb+Cdf+ allows to extract XXXblabla
 The choices in the design might be considered awkward, as the resulting data structure can be perceived as more
  complex. It should not turn away the novice user.
 Objects of class \verb+Plob+ (see~\ref{subsection:Plob}, page~\pageref{subsection:Plob}) have a different
-data structure and can be an alternative. A convenience function to shuttle between the data structure can be
+data structure and can be an alternative. A convenience function to shuttle between the data structures can be
 found in the package (try \verb+help(convert)+ in R). 
 
 \begin{description}
-  \item[image]
-  \item[show]
+  \item[image] Display an {\it image} of the data in the \verb+Cel+ object. Among the other parameters, \verb+transfo=log+ can be convenient.
+  \item[show] Outputs few general facts about the object on the console.
 \end{description}
 
 \subsection{class Cel.container}
@@ -227,16 +230,16 @@ together. Typically, a \verb+Cel.container+ will contain \verb+Cel+ instances sh
 \end{description}
 
 \begin{description}
-  \item[show]
-  \item[barplot]
-  \item[plot]
+  \item[show] Outputs few general facts about the object on the console.
+  \item[barplot] Display a \verb+barplot+ of the probes informations
+  \item[plot] Plot the probes informations in a lines graph.
 \end{description}
 
 
 \subsection{class PPSet.container}
 
 \begin{description}
-  \item[show]
+  \item[show] Outputs few general facts about the object on the console.
 \end{description}
 
 \subsection{class Plob}
@@ -248,9 +251,10 @@ are organised in a different structure. We think of it as an another point of vi
 %>>>LG: RAFA: HELP for below!!!
 
 \begin{description}
-  \item[normalize] 
+  \item[normalize] A \verb+Plob+ can be {\it normalized}, which means the data coming from different the arrays
+ will be scaled to be comparable. More details about normalization can be found in the section~\ref{sec:normalize}, page~\pageref{sec:normalize}.
   \item[normalize.methods] Return the known normalization methods for the \verb+Cel+.
-  \item[show] Display global information about the object
+  \item[show] Display global information about the object.
 \end{description}
 
 \subsection{Summary tables for the classes}
@@ -280,8 +284,7 @@ atom & matrix of atom numbers.\\
 \hline
 name & the name given to this CEL file data... the file name by default.\\
 intensity & intensity values in a matrix of dimension (nrow,ncol)\\
-sd & standard deviation for the intensity values (as they are
-    included in the CEL files there might be a use for them).\\
+sd & standard deviation for the \emph{spot}.\\
 masks & \\
 outliers & \\
 history & a list. Informations about the nature of the data.\\
@@ -289,38 +292,49 @@ history & a list. Informations about the nature of the data.\\
 \multicolumn{2}{|l|}{\textbf{methods}}\\
 \hline
 image & Display the intensities in the \verb+Cel+ according to their spatial locations.\\
-show & \\
-\hline
-\end{tabular} 
-
-\begin{tabular}{|p{3.5cm}|p{8cm}|}
-%\label{table:Cdf}
-\hline
-\multicolumn{2}{|l|}{\textbf{Class Plob - methods}}\\
-\hline
-normalize & \\
-normalize.methods & \\
-show & \\
-\hline
-\end{tabular} 
-
-\begin{tabular}{|p{3.5cm}|p{8cm}|}
-%\label{table:Cdf}
-\hline
-\multicolumn{2}{|l|}{\textbf{Class PPSet - methods}}\\
-\hline
-show & \\
-barplot & \\
-plot & \\
+show & Outputs few general facts about the object on the console.\\
 \hline
 \end{tabular}
 
 \begin{tabular}{|p{3.5cm}|p{8cm}|}
-%\label{table:Cdf}
+%\label{table:Cel.container}
+\hline
+\multicolumn{2}{|l|}{\textbf{Class Cel.container - methods}}\\
+\hline
+normalize & return normalized object.\\
+normalize.methods & list the know normalization methods.\\
+show & Outputs few general facts about the object on the console.\\
+\hline
+\end{tabular} 
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+%\label{table:Plob}
+\hline
+\multicolumn{2}{|l|}{\textbf{Class Plob - methods}}\\
+\hline
+normalize & return normalized object.\\
+normalize.methods & list the know normalization methods.\\
+show & Outputs few general facts about the object on the console.\\
+\hline
+\end{tabular} 
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+%\label{table:PPSet}
+\hline
+\multicolumn{2}{|l|}{\textbf{Class PPSet - methods}}\\
+\hline
+show & Outputs few general facts about the object on the console.\\
+barplot & Barplot of the probes data.\\
+plot & Line plot of the probes data.\\
+\hline
+\end{tabular}
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+%\label{table:PPSet.container}
 \hline
 \multicolumn{2}{|l|}{\textbf{Class PPSet.container - methods}}\\
 \hline
-show & \\
+show & Outputs few general facts about the object on the console.\\
 \hline
 \end{tabular} 
 
@@ -330,16 +344,17 @@ show & \\
 \label{sec:kickstart}
 The impatient has urgent need for results, but intends to read the rest of the documentation later. Convenience
 functions allow to go from the \emph{Affymetrix} CEL and CDF data files to expression values without having to
-be preoccupied by the intermediate steps. They reflect recent work about the processing of probe level data
-%>>>LGL: Hey, Rafael I intend to quote your paper here, update on the refs please. Has it been submitted
- and provide what we believe a good way to obtain expression values.
+be preoccupied (in a first time) by the intermediate steps.
+They reflect recent work about the processing of probe level data
+%>>>LG: Hey, Rafael I intend to quote your paper here, update on the refs please. Has it been submitted
+ and provide what we believe being a good way to obtain expression values.
 
 The function are \verb+ReafAffy+ and \verb+express+. The script will be as simple as:
 \begin{verbatim}
-Data <- ReadAffy()
+Data <- read.affy()
 E <- express(Data)
 \end{verbatim}
-%>>>LG: is the GUI ready ? would be better here...
+%>>>LG: Are the widgets ready ? would be better here...
 The object E is of class \verb+exprSet+ (defined in the package \emph{Biobase}). A way to dump the expression
 values in a file where columns are separated by tabulations is:
 \begin{verbatim}
@@ -348,7 +363,7 @@ write.table(exprs(E), file="ny/output/file.txt", sep="\t")
 
  \subsection{Visual control}
 
- \subsection{image}
+The method \verb+image+ is defined for \verb+Cel+ objects.
 A first example shows how one can observe the physical location of the values contained in a CEL file 
 
 In the absence of {\it CEL} files, example can be used.
@@ -363,7 +378,7 @@ If a {\it CEL} file is available, the previous lines can be replaced by
 \begin{verbatim}
 mycelfile <- read.celfile("path/to/my/celfile")
 \end{verbatim}
-or if the \verb+tcltk+ library is available, the {\it CEL} file can be picked with the mouse by using
+or if the \verb+tkWidgets+ library is available, the {\it CEL} file can be picked with the mouse by using
 %>>>LG EXAMPLE !!!
 XXX
 
@@ -426,7 +441,7 @@ The expression value for an {\it affyID} is derived from the information contain
 One can obeserve how performs a set of probe pairs for a given {\it affyID}. 
 The advantage again is that one can program patterns of analysis. 
 
-The classes verb+PPSet+, verb+PPSet.container+ and verb+Plob+ give acess to the information at the probe level.
+The classes \verb+PPSet+, \verb+PPSet.container+ and \verb+Plob+ give acess to the information at the probe level.
 Each class has its own methods. The respective help pages will give comprehensive information about them.
 We present some of them to demonstrate some of the capabilities
 
@@ -458,8 +473,8 @@ XXX
 
 This section presents briefly how the package can interact with other packages of {\it bioconductor}.
 
-verb+exprSet+ objects can be generated by the functions verb+express+ and
- verb+generateExprSet+. 
+\verb+exprSet+ objects can be generated by the functions \verb+express+ and
+ \verb+generateExprSet+. 
 
 The function \verb+express+ can apply normalization and background adjustment before the computation
 of the expression values.
@@ -478,7 +493,7 @@ R BATCH < workflow.R
 The following lines show what can be written in the file {\it workflow.R}. It performs the complete
 workflow described by the manufacturer (with GUI XXX)
 
-Two paths to go from the {\it CEL} and {\it CDF} files to the expression values are suggested. One going through the verb+Plob+ objects and the
+Two paths to go from the {\it CEL} and {\it CDF} files to the expression values are suggested. One going through the \verb+Plob+ objects and the
 other going through the {Cel.container} objects.
 
 XXX

@@ -21,7 +21,6 @@ normalize.Cel.container.quantiles <- function(listcel) {
 
   x <- normalize.quantiles(x)
 
-  cat(cols,rows)
   for (i in 1:cols) {
     intensity(listcel[[i]])  <- matrix(x[,i],chipdim[1], chipdim[2])
     history(listcel[[i]])$name <- "normalized by quantiles"
@@ -30,7 +29,8 @@ normalize.Cel.container.quantiles <- function(listcel) {
 
   return(listcel)
 }
-normalize.Plob.quantiles <- function(object,...) {
+
+normalize.Plob.quantiles <- function(object) {
 
   x <- normalize.quantiles(rbind(pm(object),mm(object)))
   n <- dim(x)[1]/2
@@ -47,8 +47,3 @@ normalize.quantiles <- function(x){
   
   matrix(.C("qnorm_c",as.double(as.vector(x)),as.integer(rows),as.integer(cols))[[1]],rows,cols)
 }
-
-
-
-
-
