@@ -86,7 +86,7 @@ expresso <- function(CDFfile = NULL,
       bg.method <- pwidget.selector(bg.correct.methods,
                                     title = "Method for background correction",
                                     choices.help = NULL)
-      bg.method <- paste("bg.correct", bg.method, sep=".")
+      ##bg.method <- paste("bg.correct", bg.method, sep=".")
     } else {
       stop("bg.method missing")
     }
