@@ -1,5 +1,7 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-% \VignetteIndexEntry{"affy primer"}
+%\VignetteIndexEntry{"affy primer"}
+%\VignetteKeyword{oligonucleotide arrays/Affymetrix, preprocessing/normalization, graphics/plotting}
+%\VignetteDepends{modreg, Biobase, eda}
 \documentclass[12pt]{article}
 
 \usepackage{amsmath,pstricks}
@@ -17,7 +19,7 @@
 \newcommand{\scst}{\scriptstyle}
 
 \begin{document}
-\title{Textual Description of affy}
+\title{Textual description of affy}
 \author{Rafael A. Irizarry and Laurent Gautier}
 \maketitle
 \tableofcontents
