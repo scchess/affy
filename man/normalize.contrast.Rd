@@ -8,8 +8,8 @@
 }
 \usage{
 %normalize.contrast() ## currenlt maffy.normalize
-normalize.Cel.container.contrasts(container, refindex=1, FUN=mean, na.rm=TRUE)
-normalize.Plob.contrasts(plob, refindex, FUN=mean, na.rm=TRUE)
+normalize.Cel.container.contrasts(listcel,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric")
+normalize.Plob.contrasts(object,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric")
 }
 \arguments{
   \item{container}{a \code{\link[Biobase]{container-class}} (\code{Cel.container} for
