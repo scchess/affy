@@ -38,7 +38,7 @@ bg.correct(object, method)
   matrices (one row per probe and one column per array.
 
   details specific to \code{Plob}:
-  The default function is \code{\link{bg.correct.adjust}}.
+  The default function is \code{bg.adjust}.
   The methods provided with the package are:
   \begin{itemize}
   \item \code{subtractmm}: subtracts the MMs
