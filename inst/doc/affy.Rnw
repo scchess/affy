@@ -25,7 +25,7 @@
 
 \author{Laurent Gautier, Rafael Irizarry, Leslie Cope, and Ben Bolstad}
 \begin{document}
-\title{Textual description of affy}
+\title{Description of affy}
 
 \maketitle
 \tableofcontents
