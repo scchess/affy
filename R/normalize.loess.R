@@ -9,10 +9,10 @@ normalize.AffyBatch.loess <- function(abatch, ...) {
   ##set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
   ##cat(cols,rows)
   for (i in 1:abatch@nexp) {
-    history(listcel)[[i]] <- list(name="normalized by loess")
+    history(abatch)[[i]] <- list(name="normalized by loess")
   }
 
-  return(listcel)
+  return(abatch)
 }
 
 normalize.Cel.container.loess <- function(listcel, ...) {
