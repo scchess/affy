@@ -1,12 +1,15 @@
 \name{ProbeSet-class}
 \docType{class}
 \alias{ProbeSet-class}
-
+\alias{mm,ProbeSet-method}
+\alias{mm,matrix,ProbeSet-method}
+\alias{pm<-,"matrix",ProbeSet-method}
+\alias{pm,ProbeSet-method}
 \alias{show,ProbeSet-method}
 \alias{barplot,ProbeSet-method}
 \alias{colnames,ProbeSet-method}
-\alias{express.summary.stat,ProbeSet-method}
-\alias{sampleNames, ProbeSet-method}
+\alias{express.summary.stat,character,character,ProbeSet-method}
+\alias{sampleNames,ProbeSet-method}
 
 
 \title{Class ProbeSet}
