@@ -20,9 +20,6 @@
            prototype=list(pm=matrix(), mm=matrix()),
            where=where)
   
-  ###we need a show
-  ## --> not only... barplot and plot for PPSet should have been ported too...
-
   setMethod("show", "ProbeSet",
             function(object) {
               cat("ProbeSet object:\n")
@@ -123,8 +120,6 @@
               return(r)
             },
             where=where)
-  ##barplot... to pass check
-   if (debug.affy123) cat("--->probeset barplot\n")
 
   if( !isGeneric("barplot") )
     setGeneric("barplot",where=where)
