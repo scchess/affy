@@ -57,12 +57,15 @@
               cdfname <- cleancdfname(object@cdfName)
               
               for (i in 1:length(how)) {
+
                 what <- how[[i]]$what
                 where <- how[[i]]$where
 
                 if (what == "data") {
                   ##if we can get it from data dir. otherwise load package
-                  if(cdfname%in%data(package=where)$results[,3]){
+                  if(cdfname%in%data(package=affy)$results[,3]){
+                    ##RI: package="affy" doesnt work it has to be package=affy
+                    ##    fix if you can
                     where <- as.environment(match(paste("package:", where, sep = ""),search()))
                     if(!exists(cdfname,where=where,inherits=FALSE)){
                       path <- .path.package("affy")
@@ -79,7 +82,7 @@
                   
                   if (identical(loc, character(0)))
                     next
-                    ##stop(paste("AffyBatch: Looked for probes information in the package ", cdfname, "but could not find it.\n"))
+                  ##stop(paste("AffyBatch: Looked for probes information in the package ", cdfname, "but could not find it.\n"))
                     
                   ##may be an option to try to autoload the package from
                   ##the bioconductor website woud be nice here
@@ -110,6 +113,7 @@
                 }
                 
                 if (what == "environment") {
+                  if(exists(cleancdfname(object@cdfName),inherits=FALSE,where=where))
                   return(as.environment(get(cleancdfname(object@cdfName),
                                             where)))
                   ##object@cdfInfo <<- as.environment(get(name, where))

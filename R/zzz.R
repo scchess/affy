@@ -91,9 +91,11 @@
   
   ##affy$urls <- list( bioc = "http://www.bioconductor.org")
 
-  probesloc.first <- list(what="package", where=NULL, probesloc.autoload=TRUE)
-  probesloc.second <- list(what="environment", where=.GlobalEnv)
-  probesloc.third <- list(what="data", where="affy")
+  ##data first cause most use hgu95 and hgu133
+  probesloc.first <- list(what="data", where="affy")
+  probesloc.second <- list(what="package", where=NULL, probesloc.autoload=TRUE)
+  probesloc.third <- list(what="environment", where=.GlobalEnv)
+
   
   ## i added use.widgets=FALSE. Shuold it be true?
   ## --> I do not think so. Let's keep it FALSE. 
