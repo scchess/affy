@@ -328,15 +328,14 @@ the approaches mentioned. The function \verb+express+
 <<echo=FALSE,results=hide>>=
 e <- express(Dilution)
 @
-returns expression measures in an object of class ExprSet 
+returns expression measures in an object of class {\tt exprSet}
 (defined in the Biobase package). The {\tt exprs} slot of this class is
 a matrix with rows  representing genes and columns representing
 arrays. Standard error estimates are also provided in the \verb+se.exprs+ 
 slot.
 Various bioconductor packages can be used to explore and analyze expression 
-data. The \verb+write.exprs+ method is available to write expression
-tables to a file  
-for users who wish to use other packages for analyses.
+data. There is a \verb+write+ method which will write expression
+tables to a file for users who wish to use other packages for analyses.
 
 An expression measure for a gene can be considered a summary of the 
 background corrected and normalized 
