@@ -57,11 +57,12 @@ function (abatch,log.it=TRUE)
 "summaryAffyRNAdeg" <-
 function (rna.deg.obj, signif.digits = 3)
 {
-    temp.table <- rbind(signif(rna.deg.obj$slope, signif.digits),
-        signif(rna.deg.obj$pvalue, signif.digits))
-    colnames(temp.table) <- rna.deg.obj$sample.names
-    rownames(temp.table) <- c("slope", "pvalue")
-    write.table(temp.table, file = "", quote = FALSE)
+  temp.table <- rbind(signif(rna.deg.obj$slope, signif.digits),
+                      signif(rna.deg.obj$pvalue, signif.digits))
+  colnames(temp.table) <- rna.deg.obj$sample.names
+  rownames(temp.table) <- c("slope", "pvalue")
+  ##write.table(temp.table, file = "", quote = FALSE)
+  return(temp.table)
 }
 "plotAffyRNAdeg" <-
 function (rna.deg.obj,transform="shift.scale",cols=NULL, ...)
