@@ -82,6 +82,7 @@
  **               verbage when running rma
  ** Feb 25, 2003 - try to reduce or eliminate compiler warnings (from gcc -Wall) 
  ** Apr 4, 2003 - fix up so that the number of probes in a probeset is allowed to be more dynamic
+ ** Dec 9, 2003 - fix a bug in do_RMA (max_nrows in Calloc)
  **
  ************************************************************************/
 
@@ -504,7 +505,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
 
   /* buffers of size 200 should be enough. */
 
-  int *cur_rows=Calloc(200,int);
+  int *cur_rows=Calloc(max_nrows,int);
   int nprobes=0;
 
   double *cur_exprs = Calloc(*cols,double);
