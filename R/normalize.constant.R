@@ -13,7 +13,7 @@ normalize.AffyBatch.constant <- function(abatch, refindex=1, FUN=mean, na.rm=TRU
                       constant=attr(m,"constant"))
     attr(m,"constant") <- NULL
     intensity(abatch)[, i] <- m
-    history(abatch)[[i]] <- myhistory
+    ##history(abatch)[[i]] <- myhistory
   }
   return(abatch)
 }       
