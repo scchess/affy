@@ -5,9 +5,9 @@ version 1.2 [under development]:
   configured through the options.
 
   o slot 'preprocessing' of the MIAME attribute used to store
-  normalization step information [not finished, list returned
-  "constant" and "invariantset" for the moment. Need for a class
-  and check compliance with MIAME standards]
+  normalization step information [will be polished, list returned
+  for the moment. Need for a class and check compliance with MIAME
+  standards]
   
   o default methods for normalization, bg correction, pm correction
   and summary now in the package options [options exist for all, but
@@ -20,10 +20,10 @@ version 1.2 [under development]:
   level information.
 
   o parameter 'scale' in the method barplot for ProbeSet. All the
-  barplots are scaled to eachothers.
+  barplots are scaled to eachothers.This is the default.
 
   o bug in the parser fixed (infinite loop reported with apparently
-  non-standard CEL files).
+  non-standard CEL files.).
 
   o bug in the parser fixed (the 'sd' data returned were not correct).
 
@@ -37,11 +37,14 @@ version 1.2 [under development]:
   Insightful). The expression data matrix sent to normalize.qspline
   was mistakingly transposed.
 
-  o barplot.ProbeSet scales plots to eachothers by default.
-
   o The default background on the rma() function has been changed. Now 
   the results from rma() and expresso() should agree completely.
 
+  o New functions 'xy2indices' and 'indices2xy' to shuttle from
+  x/y pos to indices (like the ones in cdfenvs) (and reverse).
+
+  o Reformating of the documentation.
+ 
 version 1.1.x:
 
   o 'image(cel)' scales to the size (# rows and # cols) of a chip.
