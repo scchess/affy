@@ -7,4 +7,5 @@ whatcdf <- function(filename, compress=getOptions("BioC")$affy$compress.cel){
   tmp <- gsub("\.1sq","",tmp) #take out .1sq
   tmp <- gsub("_","",tmp) #take out underscore
   tmp <- tolower(tmp) #make lower case
+  return(tmp)
 }
