@@ -20,6 +20,8 @@
  **
  ** Oct 28, 2002 - added a couple of 'static' statement when declaring
  **                the functions (you never know...) -- LG
+ ** 
+ ** Feb 5, 2003 - add in I(x,y) = max(I(x,y),0.5) but commented out for now.
  **
  ***********************************************************************/
 
@@ -490,6 +492,7 @@ void static affy_background_adjust(double *probeintensity,int *x, int *y, int np
     compute_background_quadrant(&probeintensity[j*nprobes], nprobes, grid_dim, whichgrid, bg_q,noise_q);
   
     for (i=0; i < nprobes; i++){
+      /* probeintensity[j*nprobes + i] =  max(probeintensity[j*nprobes + i],0.5); */
       probeintensity[j*nprobes+ i] = max(probeintensity[j*nprobes + i]-background_correct(x[i], y[i], grid_dim,&weights[grid_dim*i],bg_q),0.5*background_correct(x[i], y[i], grid_dim, &weights[grid_dim*i],noise_q)); 
     }
   }
