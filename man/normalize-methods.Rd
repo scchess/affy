@@ -11,13 +11,11 @@
   Method for normalizing Affymetrix Probe Level Data}
 }
 \usage{
-normalize(object,  ...)
-
 normalize.methods(object)
 }
 \arguments{
   \item{object}{An \code{\link[affy:AffyBatch-class]{AffyBatch}}.}
-  \item{...}{Optional arguments to be passed along. See details.}
+%  \item{...}{Optional arguments to be passed along. See details.}
 }
 \details{
 
@@ -52,16 +50,17 @@ normalize.methods(object)
   please refer to the vignette `Custom Processing Methods'.
 
   To add your own normalization procedures please
-  refer to the customMethods.
+  refer to the customMethods vignette.
 
 }
 \seealso{
-  \code{\link{AffyBatch-class}}.
+  \code{\link{AffyBatch-class}}, \code{\link{normalize}}.
 }
 \examples{
 data(affybatch.example)
 normalize.methods(affybatch.example)
 }
 \keyword{manip}
+
 
 

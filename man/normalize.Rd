@@ -27,3 +27,4 @@ normalize(object, ...)
   \code{\link[marrayNorm]{maNorm}} in the marrayNorm package.
 }
 \keyword{models}
+

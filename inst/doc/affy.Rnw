@@ -910,69 +910,69 @@ lines(concentrations[1,],apply(mms,2,mean),lwd=3)
 \end{center}
 \end{figure}
 
-\subsection{Cel}
-Our package defines a class for storing what we consider to be relevant
-information in a CEL file. The mean intensities (and if desired the SD)
-are stored in
-matrices. The {\tt i,j} entry in these matrices contain the probe
-intensity and SD in position {\tt i,j} on the array. These objects
-also contain information on the position of masked and outlier probes,
-the name of the array, and relevant information added by the user.
-Since it is not clear how the pixel level SD information is useful,
-the default behavior was set not to load it.
+% \subsection{Cel}
+% Our package defines a class for storing what we consider to be relevant
+% information in a CEL file. The mean intensities (and if desired the SD)
+% are stored in
+% matrices. The {\tt i,j} entry in these matrices contain the probe
+% intensity and SD in position {\tt i,j} on the array. These objects
+% also contain information on the position of masked and outlier probes,
+% the name of the array, and relevant information added by the user.
+% Since it is not clear how the pixel level SD information is useful,
+% the default behavior was set not to load it.
 
-The slots are:
-\begin{description}
-\item[intensity]{Object of class "matrix" containing
-    intensity values in a matrix of dimension (nrow,ncol). The
-    position in the matrix represents the physical position on the array}
-\item[sd]{Object of class "matrix" containing the standard
-    deviation for the intensity values obtained from CEL files.}
-\item[name]{Object of class "character" the name given to
-    this CEL file data. The function \verb+read.celfile+ uses
-    the file name by default.}
-\item{cdfName} Name of corresponding {\it CDF} file.
-\item[masks]{Object of class "matrix" containing the
-    coordinates of masked measurements.}
-\item[outliers]{Object of class "matrix" containing the
-    coordinates of outlier measurements.}
-\item[history]{Object of class "list" containing details about where the file.}
-\end{description}
+% The slots are:
+% \begin{description}
+% \item[intensity]{Object of class "matrix" containing
+%     intensity values in a matrix of dimension (nrow,ncol). The
+%     position in the matrix represents the physical position on the array}
+% \item[sd]{Object of class "matrix" containing the standard
+%     deviation for the intensity values obtained from CEL files.}
+% \item[name]{Object of class "character" the name given to
+%     this CEL file data. The function \verb+read.celfile+ uses
+%     the file name by default.}
+% \item{cdfName} Name of corresponding {\it CDF} file.
+% \item[masks]{Object of class "matrix" containing the
+%     coordinates of masked measurements.}
+% \item[outliers]{Object of class "matrix" containing the
+%     coordinates of outlier measurements.}
+% \item[history]{Object of class "list" containing details about where the file.}
+% \end{description}
 
-The function {\tt read.celfile()} is used to read {\it CEL} file information
-into R. An object of class {\it Cel} is returned. In this example we read in
-a {\it CEL} file to create a {\it Cel} object:
-\begin{Sinput}
-R> cel <- read.celfile("filename.cel")
-\end{Sinput}
+% The function {\tt read.celfile()} is used to read {\it CEL} file information
+% into R. An object of class {\it Cel} is returned. In this example we read in
+% a {\it CEL} file to create a {\it Cel} object:
+% \begin{Sinput}
+% R> cel <- read.celfile("filename.cel")
+% \end{Sinput}
 
 
-The following useful methods are available for this class:
+% The following useful methods are available for this class:
 
-\begin{description}
-  \item[image] Display an {\it image} of the data in the \verb+Cel+ object.
-Among the other parameters, \verb+transfo=log+ can be convenient.
-  \item[show] Outputs few general facts about the object on the console.
-\end{description}
+% \begin{description}
+%   \item[image] Display an {\it image} of the data in the \verb+Cel+ object.
+% Among the other parameters, \verb+transfo=log+ can be convenient.
+%   \item[show] Outputs few general facts about the object on the console.
+% \end{description}
 
-Notice that the \verb+AffyBatch+ contains enough information to
-create a \verb+Cel+ object for each array. We can extract this using
-<<>>=
-mycelfile <- affybatch.example[[1]]
-@
-Now \verb+mycelfile+ is of class \verb+Cel+.
+% Notice that the \verb+AffyBatch+ contains enough information to
+% create a \verb+Cel+ object for each array. We can extract this using
+% <<>>=
+% mycelfile <- affybatch.example[[1]]
+% @
+% Now \verb+mycelfile+ is of class \verb+Cel+.
 
-By default the method {\tt image()} creates an image of the intensities.
-Figure \ref{f9} shows some results from the the \verb+image+ method.
-\begin{figure}[htbp]
-\begin{center}
-<<fig=TRUE>>=
-image(mycelfile, sub="raw values")
-@
-\caption{\label{f9}Images of $PM$ intensities from a section of a cel
-file using different colors and concentrations.}
-  \end{center}
-\end{figure}
+% By default the method {\tt image()} creates an image of the intensities.
+% Figure \ref{f9} shows some results from the the \verb+image+ method.
+% \begin{figure}[htbp]
+% \begin{center}
+% <<fig=TRUE>>=
+% image(mycelfile, sub="raw values")
+% @
+% \caption{\label{f9}Images of $PM$ intensities from a section of a cel
+% file using different colors and concentrations.}
+%   \end{center}
+% \end{figure}
 
 \subsection{Cdf}
 
@@ -1257,8 +1257,9 @@ Version 1.1 provides a unified approach to working with probe level
 data.  {\it AffyBatch} is the main class the user will manipulate.
 We believe it combines the simplicity of the former {\it Plob} with the
 flexibility of the former {\it Cel.container}. As before, it bundles the data
-from a {\it batch} of experiments. The class {\it Cel} models the data from
-a single experiment (coming from a CEL file).
+from a {\it batch} of experiments. 
+%The class {\it Cel} modeled the data from
+%a single experiment (coming from a CEL file).
 The classes {\it Cdf} contains the information of {\it CDF} file, the
 class {\it ProbeSet} contain $PM$ and $MM$ intensities for a
 particular probe set. Beginners need do not understand these
