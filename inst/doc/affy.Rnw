@@ -92,22 +92,14 @@ describes how to change the package's default options. Section
 {\bf Note:} If you use this package please cite
 \cite{gaut:cope:bols:iriz:2003} and/or \cite{iriz:gaut:cope:2003}.
 
-\section{Changes in versions 1.4.x}
+\section{Changes in versions 1.5.x}
 \label{whatsnew}
 There are some minor differences in what you can do but little
 functionality has disappeared. Memory efficiency and speed have improved.
 
 \begin{itemize}
-\item For instances of \verb+AffyBatch+ the subsetting has
-  changed. For consistency with \verb+exprSets+ one can only subset by
-  the second dimension. So to obtain the first array, \verb+abatch[1]+
-  and \verb+abatch[1,]+ will give warnints (errors in the next
-  release). The correct code is \verb+abatch[,1]+.
-\item mas5calls is now faster and reproduces Affymetrix's official
-  version much better.  
-\item If you use \verb+pm+ and \verb+mm+ to get the entire set of
-  probes, e.g. by typing \verb+pm(abatch)+ then the method will be, on
-  average, about 2-3 times faster than in version 1.3.
+\item The widgets used by ReadAffy have changed.
+\item The path of celfiles is now removed by ReadAffy.
 \end{itemize}
 
 \section{Getting Started: From probe level data to expression values}
@@ -163,7 +155,7 @@ systems users might also want to check {\it ulimit} and/or compile
 {\bf R} and the package for 64 bits when possible.}.
 An another option is to use the function \Rfunction{justRMA}.
 \begin{Sinput}
-R> eset <- justRMA(Data)
+R> eset <- justRMA()
 \end{Sinput}
 This reads the data and performs the `RMA' way to preprocess them at
 the {\it C} level. 
@@ -214,55 +206,49 @@ and working)
 \begin{Sinput}
 R> Data <-  ReadAffy(widget=TRUE) ##read data in working directory
 \end{Sinput}
-This function call will pop-up a file browser widget, see Figure
-\ref{fig:widget.filechooser}, that provides an
+This function call will pop-up a file browser widget, see Figure \ref{fig:widget.filechooser}, 
+that provides an
 easy way of choosing cel files.
 
 \newpage
 \begin{figure}[htbp]
-\begin{center}
-\includegraphics{widgetfilechooser}
-\caption{\label{fig:widget.filechooser}Graphical display for selecting {\it CEL} files. This widget is part
-of the {\it tkWidgets} package.
-% (function written by Jianhua (John) Zhang).
-}
-\end{center}
+  \begin{center}
+    \includegraphics{widgetfilechooser}
+    \caption{\label{fig:widget.filechooser}Graphical display for selecting {\it CEL} files. This widget is part
+      of the {\it tkWidgets} package.
+      (function written by Jianhua (John) Zhang).
+    }
+  \end{center}
 \end{figure}
 
-Next, a widget (not shown) permits the user to enter sample names for
-the arrays and descriptions for these samples. In the next step a
-series of three widgets permits the user
-to enter phenotype or covariate information.
-See Figure \ref{fig:widget.pd}.
-
-\begin{figure}[htbp]
-\begin{center}
-\begin{tabular}{c}
-\includegraphics{numcovariates}\\
-\includegraphics{namecovariates}\\
-\includegraphics{assigncovariates}
-\end{tabular}
-\caption{\label{fig:widget.pd}Graphical display for entering phenoData
-This widget is part
-of the {\it tkWidgets} package.}
-% (functions written by Majnu John.}
-\end{center}
-\end{figure}
-
-
+Next, a widget (not shown) permits the user to enter the \verb+phenoData+.
+%%See Figure \ref{fig:widget.pd}.
+%% \begin{figure}[htbp]
+%% \begin{center}
+%% \begin{tabular}{c}
+%% \includegraphics{numcovariates}\\
+%% \includegraphics{namecovariates}\\
+%% \includegraphics{assigncovariates}
+%% \end{tabular}
+%% \caption{\label{fig:widget.pd}Graphical display for entering phenoData
+%% This widget is part
+%% of the {\it tkWidgets} package.}
+%% % (functions written by Majnu John.}
+%% \end{center}
+%% \end{figure}
 Finally the a widget is presented for the user to enter MIAME information.
-Seen in Figure \ref{fig:widget.tkMIAME}.
+%%Seen in Figure \ref{fig:widget.tkMIAME}.
 
 
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[width=0.5\textwidth]{widgettkMIAME}
-\caption{\label{fig:widget.tkMIAME}Graphical display for entering {\it
-    MIAME} informations. This widget is part of the {\it tkWidgets}
-    package.} 
-% (function written by Majnu John).}
-\end{center}
-\end{figure}
+%% \begin{figure}[htbp]
+%% \begin{center}
+%% \includegraphics[width=0.5\textwidth]{widgettkMIAME}
+%% \caption{\label{fig:widget.tkMIAME}Graphical display for entering {\it
+%%     MIAME} informations. This widget is part of the {\it tkWidgets}
+%%     package.} 
+%% % (function written by Majnu John).}
+%% \end{center}
+%% \end{figure}
 
 Notice that it is not necessary to use widgets to enter this
 information. Please read the help file for more information on how to
@@ -957,6 +943,24 @@ There are several other vignettes addressing more specialised topics related to 
 \appendix
 
 \section{Previous Release Notes}
+
+\section{Changes in versions 1.4.x}
+\label{whatsnew}
+There are some minor differences in what you can do but little
+functionality has disappeared. Memory efficiency and speed have improved.
+
+\begin{itemize}
+\item For instances of \verb+AffyBatch+ the subsetting has
+  changed. For consistency with \verb+exprSets+ one can only subset by
+  the second dimension. So to obtain the first array, \verb+abatch[1]+
+  and \verb+abatch[1,]+ will give warnints (errors in the next
+  release). The correct code is \verb+abatch[,1]+.
+\item mas5calls is now faster and reproduces Affymetrix's official
+  version much better.  
+\item If you use \verb+pm+ and \verb+mm+ to get the entire set of
+  probes, e.g. by typing \verb+pm(abatch)+ then the method will be, on
+  average, about 2-3 times faster than in version 1.3.
+\end{itemize}
 
 \section{Changes in Version 1.3.x}
 

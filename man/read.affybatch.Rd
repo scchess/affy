@@ -1,5 +1,6 @@
 \name{read.affybatch}
 \alias{read.affybatch}
+\alias{AllButCelsForReadAffy}
 \alias{ReadAffy}
 \title{Read CEL files into an AffyBatch}
 \description{
@@ -62,6 +63,10 @@ object as described in \code{link[Biobase]{read.phenoData}}. If left
 \code{NULL} and \code{widget=FALSE} then a default object is created.
 It will be a data frame with
    \code{new("phenoData",pData=data.frame(x=1:length(CELfiles)),varLabels=list(x="arbitrary number"))}
+
+
+ \code{AllButCelsForReadAffy} is an internal function that gets called
+ by \code{ReadAffy}. It gets all the information expect the cel intencities.
 }
 
 \code{description} is read using \code{\link[Biobase]{read.MIAME}}. If a
