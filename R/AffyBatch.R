@@ -450,7 +450,7 @@
                standardGeneric("bg.correct"), where=where)
   
   setMethod("bg.correct", signature(object="AffyBatch", method="character"),
-            function(object, method, ...) {
+            function(object, method=getOption("BioC")$affy$bgcorrect.method, ...) {
 
               ## simple for system to let one add background correction methods
               ## relies on naming convention
@@ -483,11 +483,11 @@
   
   ## ---normalize  
   if (! isGeneric("normalize"))
-    setGeneric("normalize", function(object, method, ...) standardGeneric("normalize"),
+    setGeneric("normalize", function(object, ...) standardGeneric("normalize"),
                where=where)
   
-  setMethod("normalize", signature(object="AffyBatch", method="character"),
-            function(object, method, ...) { # no default. up to higher level functions.
+  setMethod("normalize", signature(object="AffyBatch"),
+            function(object, method=getOption("BioC")$affy$normalize.method, ...) {
               method <- match.arg(method, normalize.AffyBatch.methods)
               if (is.na(method))
                 stop("unknown method")
@@ -567,8 +567,6 @@
                     countprogress <- countprogress + 1
                 }
                 ## locations for an id
-                ##l.pm <- locate.name(ids[id], cdf, type="pm")
-                ##l.mm <- locate.name(ids[id], cdf, type="mm")
                 loc <- get(id, envir=CDFINFO)
                 l.pm <- loc[, 1]
                 if (ncol(loc) == 2)
