@@ -1,5 +1,11 @@
-version 1.3 [under development]
+version 1.4.x [under development]
+  o ppsetApply: a function to apply a function to ProbeSet that can be
+    built from an instance of AffyBatch. This is done in the spirit of
+    esetApply in Biobase (the covariate information in phenoData are
+    directly accessible from the function (see example in the man page). 
 
+
+version 1.3.x 
 
 Things done:
 
