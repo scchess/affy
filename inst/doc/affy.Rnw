@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-% \VignetteIndexEntry{"affy"}
+% \VignetteIndexEntry{"affy primer"}
 \documentclass[12pt]{article}
 
 \usepackage{amsmath,pstricks}
@@ -22,13 +22,15 @@
 \maketitle
 \tableofcontents
 \section*{Introduction}
-\verb+affy+ is part of the Bioconductor\footnote{http://www.bioconductor.org/} project. It is meant to be 
-an extendible, interactive environment for data analysis
-and exploration of Affymetrix oligonucleotide array probe level data. 
+\verb+affy+ is part of the
+Bioconductor\footnote{http://www.bioconductor.org/} project. It is
+meant to be an extendible, interactive environment for data analysis 
+and exploration of Affymetrix oligonucleotide array probe level data.  
 
 The software utilities provided with the Affymetrix suite summarizes
 the probe set intensities to form one {\it  
-expression measure} for each gene. As pointed out by
+expression measure} for each gene. This is the data available for
+analysis. However, as pointed out by
 \cite{li:wong:2001a}, much can be learned
 from studying the individual probe intensities, or as we call them,
 the {\it probe level data}. This is why we developed this package.
@@ -37,17 +39,19 @@ We assume that the reader is already familiar with oligonucleotide
 arrays and with the design of the Affymetrix GeneChip arrays. If your not, we recommend the Appendix of the Affymetrix MAS manual \cite{affy}. The 
 following terms are used throughout this document with a specific meaning.
 \begin{description}
-  \item[probe] oligonucleotides with length of 25 base pairs that are
-  used to probe RNA targets.
-  \item[perfect match ($PM$)] probe supposed to match perfectly the
-  target sequence. 
-  \item[mismatch ($MM$)] the probe supposed to have a base mismatch
+\item[probe] oligonucleotides with length of 25 base pairs used to
+probe RNA targets. 
+\item[perfect match] probe supposed to match perfectly the
+target sequence. 
+\item[$PM$] intensity value read from the perfect matches.
+\item[mismatch] the probe having one base mismatch
   with the target sequence. 
-  \item[probe pair] a unit composed of a  perfect
-  match and its mismatch. 
-  \item[affyID] an identification for a gene or a fraction of a gene
-  on the array. 
-  \item[probe pair set] several probes relating to a common affyID. 
+\item[$MM$] intensity value read from the mis-matches.
+\item[probe pair] a unit composed of a  perfect
+match and its mismatch. 
+\item[affyID] an identification for a gene or a fraction of a gene
+on the array. 
+  \item[probe pair set] several probes relating to a common {\it affyID}. 
 \item[{\it CEL} files] contain measured intensities and locations for
 an array that has been hybridized.
 \item[{\it CDF} file] contain the information relating probe pair sets
@@ -55,12 +59,12 @@ to locations on the array are stored.
 \end{description}
 
 The package provides two approaches to working with probe level
-data. The first is via probe level objects ({\it Plob}) and is intended 
-for thenon-experent R user. One can 
-automatically read in all the relevant information with one function
-call and store it in a {\it Plob}. Various built in function permit the
+data. The first is via probe level objects (Plobs) and is intended 
+for the non-expert R user. One can 
+automatically read in all the relevant information with one functions
+call and store it in a Plob. Various built in function permit the
 user to easily view graphical displays of the data and compute expression
-values. Section 1 demonstrates how to work with Plob. 
+values. Section 1 demonstrates how to work with Plobs. 
 The second approach is more flexible and intended for users with some R
 experience. This approach is better if you intend to do a lot of probe level
  analyses.
@@ -69,16 +73,18 @@ Cel} described through various examples in Section 2.  Section 3 gives some
 details on how to extend and alter the package for your needs.
 
 \section{Getting Started: Using Plobs}
+\label{s1}
 The first thing you need to do is {\bf load the package}. 
 \begin{Sinput}
 R> library(affy) ##load the affy package
 \end{Sinput}
 
 This section described the use of Plobs (Probe level objects) 
-through an example. This objects are easy to use. You can read
+through an example. These objects are easy to use. You can read
 data, explore, and compute expression values with one function call for each. 
 However, if you are going to be doing much probe
-level analyses we recommend using the Cel/Cdf classes described in Section 3.
+level analyses we recommend using the Cel/Cdf classes described in 
+Section \ref{s2}.
 
 The Section 2.1 describes three lines of code that can get you started if all
 you want is expression values. The rest of the Section demonstrate the
@@ -86,7 +92,7 @@ utility of the package via an example using the dilution experiment data set
 described in \cite{iriz:etal:2002}.
 
 \subsection{If you only want expression values}
-If all you want is to get to convert probe level data into expression measures
+If all you want is to convert probe level data into expression measures
 a quick way of doing it is like this: Create a directory, move all your
 {\it CEL} files and the appropriate {\it CDF} file to that directory. Start
 R in that directory. Load the library and then type:
@@ -97,43 +103,45 @@ R> e <- express(Data)
 \end{Sinput}
 Note there must be exactly one CDF file for this to work.
 
-Now expression values are contained in \verb+e+ in the form of an
-object of class \verb+exprSet+ (see Biobase). You can either use R
- and the bioconductor packages to analyze your expression data or if you 
-rather use another package you can write it out to a tab delimeted file like
+This will store expression values, in the object \verb+e+, as an 
+object of class \verb+exprSet+ (see the Biobase package). You can
+either use R and the bioconductor packages to analyze your expression
+data or if you rather use another package you can write it out to a
+tab delimited file like 
 this
 
 \begin{Sinput}
 R> write.exprs(e,file="mydata.txt")
 \end{Sinput}
 
-This \verb+mydata.txt+ file will have genes in the rows and samples/arrays on 
-the columns. The first row will be header describing the columns. The first 
-column will have the affyIDs. However, you the \verb+write.exprs+ function is
-quite flexible on what it writes (see help file).
+In the \verb+mydata.txt+ file, row will represent genes and columns
+will represent samples/arrays. The first row will be a header describing
+the columns. The first  
+column will have the {\it affyID}s. The
+\verb+write.exprs+ function is quite flexible on what it writes (see
+the help file). 
 
 \subsection{Loading Data into R}
-As described in the previous section, the simplest way to this is by 
+As described in the previous section, the simplest way to read data is by 
 using the function \verb+ReadAffy+. The 
 first step is to create a directory that contains all the {\it CEL} files
-you want to read in and the appropriate {\it CDF} file. 
+you want to read in and the appropriate {\it CDF} file. Then you can type:
 
 \begin{Sinput}
 R> Dilution <- ReadAffy() ##read data and store it in Dilution
 \end{Sinput}
-\begin{Soutput}
-reading CDF file
-processing information
-reading 9 CEL files..
-preparing probe level object
-\end{Soutput}
-
+% \begin{Soutput}
+% reading CDF file
+% processing information
+% reading 9 CEL files..
+% preparing probe level object
+% \end{Soutput}
 Note there must be exactly one CDF file for this to work. 
 
 Alternatively the user can choose what files to be read using a
 graphical display such as those shown in Figures \ref{f1} and
 \ref{f2}. In order to 
-do this, the widget argument must be true. 
+do this, the \verb+widget+ argument must be true like this:
 \begin{Sinput}
 R> Dilution <- ReadAffy(widget=T) 
 \end{Sinput}
@@ -158,9 +166,9 @@ object (Plob).
 \subsection{Exploring Data}
 For the users convenience we have included a sample data set
 containing part of the data from a Dilution experiment. The full data
-is publically available from Gene Locic 
-\url{http://qolotus02.genelogic.com/datasets.nsf/} and desribed in \cite{iriz:etal:2002}. The help file obtained via \verb+?Dilution+ describes the data set.
-Section 1.6 presents a case study using this Data.
+is publicly available from Gene Locic 
+\url{http://qolotus02.genelogic.com/datasets.nsf/} and described in \cite{iriz:etal:2002}. The help file obtained via \verb+?Dilution+ describes the data set.
+Section \ref{s1.6} presents a case study using this Data.
 
 <<echo=F,results=hide>>=
 library(affy)
@@ -170,32 +178,33 @@ library(affy)
 data(Dilution)
 print(Dilution) ##this shows some important info
 @ 
-
-This will create a {\it Plob} called \verb+Dilution+ and \verb+print+
-will shows some important information about it. These objects
+This will create the \verb+Dilution+ object of class \verb+Plob+. 
+\verb+print+ (or \verb+show+) will show some relevant information
+These objects 
 are meant to represent data from one 
-experiment. The {\it Plob} class combines the
-information of various {\it Cel} files with a common {\it Cdf} file. This
+experiment. The \verb+Plob+ class combines the
+information of various {\it CEL} files with a common {\it CDF} file. This
 class is designed to keep information of one experiment. It is
 especially useful for users who want to obtain expression values
-without much tinkering with {\it Cel} and {\it Cdf}. However, the probe
+without much tinkering with {\it Cel} and {\it Cdf} objects. However,
+the probe 
 level data is available.
 
-The data in \verb+Dilution+ is a small sample of 3 sets of triplicates
-hybridized with different concentrations of the same RNA. 
-This information is part of the Plob 
-
+The data in \verb+Dilution+ is a small sample of probe sets from 3
+sets of triplicate arrays hybridized with different concentrations of the
+same RNA.  This information is part of the \verb+Plob+ and can be
+accessed with the \verb+phenoData+ and \verb+pData+ methods: 
 <<>>=
 phenoData(Dilution)
 pData(Dilution)
 @ 
 
-The main components of the Plob class can be accessed with the {\tt
+The main slots of the \verb+Plob+ class can be accessed with the {\tt
 pm}, {\tt mm}, and {\tt probeNames} methods. 
-The components {\tt pm} and {\tt mm} are matrices with rows
-representing probes pairs and columns representing arrays. The gene
+The slots {\tt pm} and {\tt mm} are matrices with rows
+representing probe pairs and columns representing arrays. The gene
 name associated with the probe pair in row $i$ can be found in the
-$i$th entry of {\tt name}. 
+$i$th entry of the name \verb+name+ slot (accessed with {\tt probeName}).
 
 <<>>=
 pm(Dilution)[1:5,]
@@ -204,29 +213,41 @@ probeNames(Dilution)[1:5]
 @ 
 
 Other information about the experiment is
-available in this class. See the {\it Plob} help file for details. 
+available in this class. See the \verb+Plob+ help file for details. 
 
-The following useful methods  {\tt boxplot()}, {\tt hist()}, {\tt
+{\tt boxplot()}, {\tt hist()}, {\tt
 history()}, {\tt image()},  {\tt profile()},  {\tt summary()}
-are available for objects of this class.  
+are examples of useful methods available for objects of this class.  
 For example, Figure \ref{f3} shows histograms of $PM$ (red) and $MM$ (blue)
 for the 3rd array obtained using {\tt hist()}. 
 
 \begin{figure}[htbp]
 \begin{center}
 <<fig=TRUE>>=
-hist(Dilution[,3]) ##histogram of PM and MM for 3rd array
+hist(Dilution[,3]) ##histogram of $PM$ and $MM$ for 3rd array
 @     
 \caption{\label{f3} Histogram of $PM$ (red) and $MM$ (blue) of third array}
 \end{center}
 \end{figure}
 
-\subsection{Normaliztion}
+It is important to note that \verb+Dilution[i,j]+ gives back another
+\verb+Plob+ object representing the \verb+i+th probe set (as opposed to
+the \verb+i+ probe) and the
+\verb+j+th sample. Look at what happens when you show the $PM$s and
+probe names for this with \verb+i=2+ and \verb+j=3+:
+<<>>=
+pm(Dilution[2,3])
+probeNames(Dilution[2,3])
+@ 
+
+\subsection{Normalization}
+\label{s1.4}
 Various researchers have pointed out the need for normalization of Affymetrix
-arrays \cite{bols:etal:2002}. Let's look at an  example.
+arrays. See for example \cite{bols:etal:2002}. Let's look at an  example.
 The first three arrays in \verb+Dilution+ are technical replicates (same RNA),
-so the intesities obtained from these should be about the same. 
-Using the \verb+boxplot+ method for Plobs, shown in Figure \ref{f4}
+so the intensities obtained from these should be about the same. 
+Using the \verb+boxplot+ method for the \verb+Plob+ class, shown in
+Figure \ref{f4} 
 we can see if this is the case.
 
 
@@ -243,8 +264,8 @@ boxplot(Dilution[,1:3],range=0)
 Figure \ref{f4} shows the need for normalization. For example the first array
 is globally larger than the second.
 
-Another way to see that normalization is need is by looking at log ratio 
-versus average log intensity (MVA) plots. The function \verb+mva.pairs+ will
+Another way to see that normalization is needed is by looking at log ratio 
+versus average log intensity (MVA) plots. The method \verb+mva.pairs+ will
 show all MVA plots of each pairwise comparison on the top right half and 
 the interquartile range (IQR) of the log ratios on the bottom left half. 
 For replicates and cases where most genes are not differentially expressed, 
@@ -267,11 +288,12 @@ The method \verb+normalize+ lets one normalize the data.
 <<>>=
 normalized.Dilution <- normalize(Dilution[,1:3])
 @
-Various methods are availbale for normalization (see the help file). The 
-default is quantile normalization \cite{bols:etal:2002}. 
+Various methods are available for normalization (see the help file). The 
+default is quantile normalization (see \cite{bols:etal:2002}). 
 
-Fiugure (\ref{f4.2} and (\ref{5.2}) show the boxplot and mva pairs plot after 
-normalization.
+Figures \ref{f4.2} and \ref{f5.2} show the boxplot and mva pairs plot after 
+normalization. The normalization routine seems to correct the boxplots
+and mva plots.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -286,9 +308,6 @@ dilution data.}
 
 \begin{figure}[htbp]
 \begin{center}
-<<echo=F>>=
-options(warn=-1)
-@
 <<fig=TRUE>>=
 mva.pairs(normalized.Dilution[,1:3])
 @     
@@ -298,42 +317,47 @@ dilution Data}
 \end{figure}
 
 \subsection{Expression Measures}
+\label{s1.5}
 To perform gene expression analyses we need to summarize the probe set
 data available for each gene into one expression measure. Various
 approaches on how to do this have been proposed, see for example
 \cite{affy}, \cite{li:wong:2001a}, and \cite{iriz:etal:2002}. Our
 package permits the user to construct expression measures using any of
 the approaches mentioned. The function \verb+express+ 
-<<>>=
+<<echo=FALSE>>=
 e <- express(Dilution)
 @
 returns expression measures in an object of class ExprSet 
 (defined in the Biobase package). The {\tt exprs} slot of this class is
-a matrix with rows  representing genesand columns representing arrays. 
+a matrix with rows  representing genes and columns representing
+arrays. Standard error estimates are also provided in the \verb+se+ slot.
 Various bioconductor packages can be used to explore and analyze expression 
-data. The 
-\verb+write.exprs+ method is available to write expression tables to a file 
-for users who which to use other packages.
+data. The \verb+write.exprs+ method is available to write expression
+tables to a file  
+for users who wish to use other packages for analyses.
 
-An expression measure for a gene ca be considered a summary of the 
+An expression measure for a gene can be considered a summary of the 
 background corrected and normalized 
 $PM$s of the probe set representing that gene.
 The default for \verb+express+ is to use the approach presented
 in \cite{iriz:etal:2002} (which is a log scale measure).
-However, the function is quite flexible. 
-The normalization method can be change through the 
-\verb+normalize.method+ argumnet. Arbitrary functions 
+However, the function is quite flexible. The normalization method can
+be change through the  
+\verb+normalize.method+ argument. Arbitrary functions 
 can be passed along via the \verb+bg+ and \verb+summary.stat+ arguments 
 for background correction and to summarize the 20 $PM$s into one number. 
-Some background correction amd summary functions are provided with the 
-package but the user can add their own. The help file contains more 
-details. The next section presents a case study related to comparing 
+Some background correction and summary functions are provided with the 
+package but the user can add their own. 
+More details are given in
+section Section \ref{s3.2} and reading the 
+help file. The next section presents a case study related to comparing 
 expression measures.
 
 \subsection{Case Study}
+\label{s1.6}
 Two sources of cRNA A (human liver tissue) and B (Central Nervous
-System cell line) have been hybridized to human array (HGU95A) in
-a range of proportions and dilutions. The Diltion data provided with 
+System cell line) have been hybridized to human arrays (HGU95A) in
+a range of proportions and dilutions. The Dilution data provided with 
 this package is taken from arrays hybridized to source A starting with
  2.5 $\mu$g cRNA, and
 rising through 5.0, 10.0 $\mu$g. We have three replicate arrays for
@@ -341,12 +365,12 @@ each generated cRNA. Three scanners have been used in this study.
 Each array replicate was  processed in a different scanner.
 
 This dilution data
-set is a great resource for assessing the technology becuse we know
-that measures of expression for genes that are expressed showed grow
+set is a great resource for assessing the technology because we know
+that measures of expression for genes that are expressed should grow
 directly proportional to the amount of RNA hybridized (which is known) and
 that replicates should be like each other.
 
-As seen in Section ???, this data needs normalization. However, in this
+As seen in Section \ref{s1.4}, this data needs normalization. However, in this
 case we can only normalize with replicates. Normalizing across replicates
 is not recommended because the assumption needed for most normalization 
 procedures (most genes, or at least a large group of genes, don't change much).
@@ -372,10 +396,10 @@ f <- express(Dilution,normalize=F)
 @
 
 To see if normalizing makes a difference, let's look at to 
-expression for two randomley selected genes for the 9 arrays plotted against
+expression for two randomly selected genes for the 9 arrays plotted against
 known concentration. If the gene is expressed these values should be growing
 with concentration but the replicates should be close if not equal. Figure
-\ref{f6} shows the advantages of normaliztion: we still capture the signal
+\ref{f6} shows the advantages of normalization: we still capture the signal
 and reduce the variance.
 
 \begin{figure}[htbp]
@@ -408,7 +432,7 @@ Now let's assess the variance of 4 different measures of expression.
 <<results=hide>>=
 Dilution <- Dilution[,1:3] ##lets make it go faster
 e <- express(Dilution) ##the default
-##reduced model for li and wong you can get using:
+##reduced model for Li and Wong you can get using:
 LiWong <- express(Dilution, bg=subtractmm, summary.stat=li.wong)
 ##to get AvDiff: background correct by subtracting mm
 ##and the predifined avdiff function
@@ -418,19 +442,19 @@ Avdiff2<-express(Dilution,normalize=F,bg=subtractmm,summary.stat=function(x) app
 
 ##which has higher correlation between reps
 assess <- function(w){
-	x <- exprs(w)[,1]
+        x <- exprs(w)[,1]
         y <- exprs(w)[,2] 
-	z <- exprs(w)[,3]        
+        z <- exprs(w)[,3]        
         Index <- x>0 & y>0 
         signif(c(IQR(log2(x[Index]/y[Index]),na.rm=T),
-		       IQR(log2(x[Index]/z[Index]),na.rm=T),
-		       IQR(log2(y[Index]/z[Index]),na.rm=T)),2)
+                       IQR(log2(x[Index]/z[Index]),na.rm=T),
+                       IQR(log2(y[Index]/z[Index]),na.rm=T)),2)
         }
 @      
 <<>>=
 e@exprs <- 2^exprs(e) ##remember this is a log scale measure
 ##Let's look at IQR's for the 3 comparisons between replicates
-assess(e) ##the defauls
+assess(e) ##the defaults
 assess(LiWong)
 assess(Avdiff)
 assess(Avdiff2)
@@ -438,8 +462,8 @@ assess(Avdiff2)
 
 Notice the default measure has the smallest IQR between replicates. See \cite{iriz:etal:2002} for assessments such as the one presented in this Section.
 
-\section{Cdf/Cel Classes (and other classes)}
-
+\section{Working with Probe Level Data}
+\label{s2}
 %This part of the documentation probably concerns more advanced users.
 
 %Objects can be used to model actors of a process, and let one interact with it an reasonably intuitive way.
@@ -461,19 +485,34 @@ Notice the default measure has the smallest IQR between replicates. See \cite{ir
 %Users who are already familiar with the different categories of files involved in the analysis will not be surprised to find
 %classes corresponding to the \verb+Cdf+ and \verb+Cel+ files.
 
-The classes \verb+Cdf+ and \verb+Cel+ model the physical files in which data are stored. This can be useful for particular
-operations. As stated in the introduction there is an alternative way of manipulating the data, which allows manipulation
-of the data at a lower level.
-The complete processing of the data presented in the previous section could be done using these objects.
-It means more freedom, but it also means more complexity, and the need to
-know the steps of the analysis leading from the probes data on different arrays and in different files to the expression values,
-in an \verb+exprSet+.
-However, this section should not be considered for advanced users only\footnote{Advanced users will not find enough details in the following this section and are recommended to read the help files}. While you may want to rely on the steps and methods
-carefully crafted in the function \verb+express+, we also encourage you to observe the raw data contained in the {\it CEL} files.
-It might be informative about problems that occured during the experimental steps leading to the data. 
+The class  \verb+Plob+ combines the
+information of various {\it CEL} files with a common {\it CDF}. This
+class is designed to keep information of one experiment. It is
+especially useful for users who want to obtain only expression values. 
+For the user that is interested in detailed analyses of the the probe
+level data the \verb+Cdf+ and \verb+Cel+ classes are available.
 
-For several attributes of the \verb+Cdf+ and \verb+Cel+ objects, it was decided to use matrices to store the data.
-The lookup of values at particular positions on the chip becomes extremely easy (see figure~\ref{fig:gridcel}). 
+The classes \verb+Cdf+ and \verb+Cel+ model the physical files in
+which data are stored.
+The complete processing of the data presented in the previous section
+could be done using these objects. Although the coding would be more
+complex, they provide more flexibility. The user would need
+to understand the steps of the analysis leading from the probes data on
+different arrays/files to the expression values  
+(stored in an \verb+exprSet+). 
+However, this section should not be considered
+for advanced users only\footnote{Advanced users will not find enough
+details in the following this section and are recommended to read the
+help files}. While you may want to rely on the steps and methods 
+carefully crafted in the function \verb+express+, we also encourage
+you to explore the raw data contained in the {\it CEL} files. 
+It might be informative about problems that occurred during the
+experimental steps leading to the data.  
+
+Due to  several attributes of the \verb+Cdf+ and \verb+Cel+ objects,
+matrices are used to store the data. 
+The look-up of values at particular positions on the chip becomes
+extremely easy (see figure~\ref{fig:gridcel}).  
 \begin{figure}[h]
    \label{fig:gridcel}
    \begin{center}
@@ -483,27 +522,42 @@ The lookup of values at particular positions on the chip becomes extremely easy 
 for them is done by indexing the corresponding elements.}
 \end{figure}
 
-The information is extracted from the combination of the \verb+Cel+ and the corresponding \verb+Cdf+.
-Objects of class \verb+Plob+ (see~\ref{subsection:Plob}, page~\pageref{subsection:Plob}) have a different
-data structure but also take their informations from a \verb+Cdf+ and \verb+Cel+ objects. A convenience function to shuttle between the data structures is included in the package (try \verb+help(convert)+ in R). 
+The information is extracted from the combination of the \verb+Cel+
+and the corresponding \verb+Cdf+. 
+Objects of class \verb+Plob+  have a different 
+data structure but also obtain information from a \verb+Cdf+ and
+\verb+Cel+ objects. A convenience function to shuttle between the data
+structures is included in the package (try \verb+help("convert")+ in R).   
 
-While focusing on \verb+Cdf+ and \verb+Cel+, the section presents briefly other classes defined in the package. 
+In this Section we give more details about the 
+functions, classes, and methods in the \verb+affy+ package
 
-  \subsection{Cdf-class}
+\subsection{Cdf-class}
 
-The {\it Chip Definition Files} ({\it CDF} files) are used to store informations related to
-a type of oligonucleotide array sold by the manufacturer. All the arrays belonging to a given type will share this same information.
-As the quantity of informations in a {\it CDF} can be rather large, this is an important point. This is kept in the design of the package,
-as there will be only one \verb+Cdf+ object in memory, to which will refer the corresponding \verb+Cel+ files.
+The {\it Chip Definition Files} ({\it CDF} files) are used to store
+information related to Affymetrix's 
+GeneChip arrays (a type of high density oligonucleotide array sold by
+the manufacturer). All the arrays belonging to a given type will share
+this same information.  As the quantity of information in a {\it CDF}
+can be rather large, this is an important point. This is kept in the
+design of the package, as there will be only one \verb+Cdf+ object in
+memory, to which will refer the corresponding \verb+Cel+ files.  
 
-For instance when during an experiment a total of 30 arrays of type {\it Hu6800} are used, the information relative the array type is
-common to all the chips. Knowing that a {\it CDF} files weights 20 Megabytes, will help to realize the interest of avoiding to repeat this information.
+For instance, if during an experiment a total of 30 arrays of type
+{\it Hu6800} are used, the information relative to the array type is 
+common to all the chips. Knowing that {\it CDF} files are usually of
+size 20 Megabytes, illustrates the reason for avoiding having multiple
+instances of 
+this information. 
 
+The \verb+Cdf+ class is designed to store the information in a {\it
+CDF} file. The slots are:
 
 \begin{description}
- \item[name] Each {\it probe} (or {\it feature}) on an array is an oligonucleotide from a larger sequence of nucleic acids 
+ \item[name] Each {\it probe} (or {\it feature}) on an array is an
+ oligonucleotide from a larger sequence of nucleic acids  
 (generally a gene or a fraction of a gene, we refer to as a probe pairs set).
- All these {\it large sequences} were given a unique name by the chip manufacturer. We call this name {\it affyID}. By design of the arrays severals probes correspond to different
+ All these {\it large sequences} were given a unique name by the chip manufacturer. We call this name {\it affyID}. By design of the arrays several probes correspond to different
 parts of the same larger sequence, hence have the same name. Names are stored as factors, and the corresponding factors labels (or levels) are found in the
 attribute \verb+name.levels+.
  \item[name.level]
@@ -515,12 +569,25 @@ attribute \verb+name.levels+.
  \item[tbase] In the {\it CDF} files, the column called {\it TBASE} holds also a nucleic acid letter. From trials and errors where the {\it t}
  was assumed to stand for {\it tbase}.
  \item[tbase.levels] The four same letters than for \verb+pbase.levels+ are found here.
- \item[atoms] Each {\it probe pair} in a {\it probe pair set} is given a unique integer as an indentifier.
-This number is refered as the {\it atom} number. The corresponding {\it perfect matches} and {\it mismatches} are found by using this number.
+ \item[atoms] Each {\it probe pair} in a {\it probe pair set} is given a unique integer as an identifier.
+This number is refereed as the {\it atom} number. The corresponding {\it perfect matches} and {\it mismatches} are found by using this number.
 \end{description}
 
-In the following example, we look for the locations where a particular {\it affyID} is found on the chip.
-Then we plot them over over a grid.
+The function \verb+read.cdffile+ can be used to create an object of
+class \verb+Cdf+ from a file:
+\begin{Sinput}
+R> cdf <- read.cdffile("filename.CDF")
+\end{Sinput}
+This function has various useful arguments. For example, the \verb+compress+
+argument permits you to specify if the file you are reading is
+compressed. See the help file 
+for more details.
+
+In the following example, we look for the physical locations on a chip
+of a particular {\it affyID}. We then plot them over over a grid.
+
+\begin{figure}[htbp]
+\begin{center}
 <<fig=TRUE>>=
 data(CDF.example)
 cdf <- CDF.example # to make the expression below clearer
@@ -540,6 +607,10 @@ grid(n.x, n.y)
 points(l.pm, col="red")
 points(l.mm, col="blue")
 @ 
+\caption{\label{f9}Location of the $PM$ (red) and $MM$ (blue) for the
+D13640 probe set on the HU6800 chip.} 
+  \end{center}
+\end{figure}
 
 %>>>LG: removed from the previous R statements
 %Example:
@@ -582,69 +653,220 @@ points(l.mm, col="blue")
 %@
 %\end{verbatim}
 
-\subsection{class Cel}
+\subsection{Class Cel}
+Our package defines a class for storing what we consider to be relevant 
+information in a CEL file. The mean intensities (and if desired the SD) 
+are stored in   
+matrices. The {\tt i,j} entry in these matrices contain the probe
+intensity and SD in position {\tt i,j} on the array. These objects
+also contain information on the position of masked and outlier probes,
+the name of the array, and relevant information added by the user. 
+Since it is not clear how the pixel level SD information is useful,
+the default behavior was set not to load it.  
 
-Objects of class \verb+Cel+ contain the informations held in {\it CEL} files.
+The slots are:
+\begin{description}
+\item[intensity]{Object of class "matrix" containing
+    intensity values in a matrix of dimension (nrow,ncol). The
+    position in the matrix represents the physical position on the array} 
+\item[sd]{Object of class "matrix" containing the standard
+    deviation for the intensity values obtained from CEL files.}
+\item[name]{Object of class "character" the name given to
+    this CEL file data. The function \verb+read.celfile+ uses
+    the file name by default.} 
+\item[masks]{Object of class "matrix" containing the
+    coordinates of masked measurements.}
+\item[outliers]{Object of class "matrix" containing the
+    coordinates of outlier measurements.}
+\item[history]{Object of class "list" containing details about where the file.}
+\end{description}
+  
+The function {\tt read.celfile()} is used to read CEL file information
+into R. An object of class {\it Cel} is returned. In this example we read in
+a CEL file to create a {\it Cel} object:
+\begin{Sinput}
+R> cel <- read.celfile("filename.cel")
+\end{Sinput}
+
+For the users convenience a \verb+Cel.container+ (see next section to learn 
+about \verb+Cel.containers+ and Biobase to learn about containers in general)
+is available. For an example of a \verb+Cel+ object use
+<<>>=
+data(listcel)
+mycelfile <- listcel[[1]]
+@
+
+The following useful methods are available for this class:
 
 \begin{description}
-  \item[image] Display an {\it image} of the data in the \verb+Cel+ object. Among the other parameters, \verb+transfo=log+ can be convenient.
+  \item[image] Display an {\it image} of the data in the \verb+Cel+ object. 
+Among the other parameters, \verb+transfo=log+ can be convenient. 
   \item[show] Outputs few general facts about the object on the console.
 \end{description}
 
-\subsection{class Cel.container}
+By default the method {\tt image()} creates an image of the intensities.
+Figure \ref{f9} shows some results from the the \verb+image+ method.
+\begin{figure}[htbp]
+\begin{center}
+<<fig=TRUE>>=
+par(mfrow=c(2,2))
+image(mycelfile, sub="raw values")
+image(mycelfile, col=rainbow(32), sub="raw values")
+image(mycelfile, transf=log, sub="log-transformed values")
+image(mycelfile, transf=log, col=rainbow(32), sub="log-tranfomed values")
+@
+\caption{\label{f9}Images of $PM$ intensities from a section of a cel
+file using different colors and concentrations.}
+  \end{center}
+\end{figure}
+These images are quite useful for quality control. We recommend
+looking at these images as a first step 
+in data exploration.  The top panels show the effect of an air
+bubble. In the bottom panels we see ``cloudy'' areas which were
+caused by a leak in an assembly joint around the devices for injecting
+solutions onto the chip. Both are shown with raw (left panels) and
+log-transformed values (right panels). In our experience, the log
+scale is more useful for detecting biases. This seems to be the case
+in Figure 1. 
 
-The class \verb+Cel.container+ extends the class \verb+container+ of the package {\it Biobase}. It allows to bundle a collection of \verb+Cel+ instances
-together. Typically, a \verb+Cel.container+ will contain \verb+Cel+ instances sharing the same \verb+Cdf+
-% \footnote{We plan to have
-%a link to the \verb+Cdf+ included in \verb+Cel.container+... probably in the next version...}.
+Objects of class \verb+Cel+ contain the information held in {\it CEL} files.
 
+\subsection{Class Cel.container}
+The class \verb+Cel.container+ extends the class \verb+container+ of the 
+package {\it Biobase}. It allows the user 
+to bundle a collection of \verb+Cel+ instances together. 
+Typically, a \verb+Cel.container+ will 
+contain \verb+Cel+ instances sharing the same \verb+Cdf+. The
+\verb+listcel+ example provided with the package is an example of
+\verb+Cel.containter+.  
+
+%% \footnote{We plan to have
+%%a link to the \verb+Cdf+ included in \verb+Cel.container+... probably in the next version...}.
+
+The following useful methods are available.
 \begin{description}
   \item[generateExprSet] Compute expression values and return them in an \verb+exprSet+ object.
-  \item[normalize] A \verb+Cel.container+ can be {\it normalized}, which means its \verb+Cel+ elements will be scaled to be comparable. More details about normalization can be found in the section~\ref{sec:normalize}, page~\pageref{sec:normalize}.
+  \item[normalize] A \verb+Cel.container+ can be {\it normalized},
+  which means its \verb+Cel+ elements will be scaled to be
+  comparable. More details about normalization can be found in the
+  Section \ref{s3}.
   \item[normalize.methods] Return the known normalization methods for the \verb+Cel+.
   \item[show] Display global information about the object
 \end{description}
 
-\subsection{class PPSet}
-
+\subsection{Class PPSet}
+The probe pair set (\verb+PPSet+) class holds the information of all
+the probes related to a {\it affyID}. The components are:
 \begin{description}
   \item[probes] a data frame having two column named {\it pm} and {\it mm} respectively. 
   \item[name] the name of the probe pair set
 \end{description}
 
+Useful methods available for this class are:
 \begin{description}
   \item[show] Outputs few general facts about the object on the console.
-  \item[barplot] Display a \verb+barplot+ of the probes informations
-  \item[plot] Plot the probes informations in a lines graph.
+  \item[barplot] Display a \verb+barplot+ of the probes information
+  \item[plot] Plot the probes information in a lines graph.
 \end{description}
 
+The function {\tt get.PPSet()} can be used to obtain a \verb+PPSet+ object
+from its Affymetrix identifier, and from objects of class \verb+Cel+
+and \verb+Cdf+. In the example below, after finding the number 
+of different identifiers on an array, we pick one at random
+and extract the \verb+PPSet+.
+<<>>=
+data(CDF.example)
+data(listcel)
 
-\subsection{class PPSet.container}
 
-\begin{description}
-  \item[show] Outputs few general facts about the object on the console.
-\end{description}
+mylevel <- sample(1:100,1) ##pick a gene at random
+myname <- name.levels(CDF.example)[mylevel] ##get the name of that gene
 
-\subsection{class Plob}
+mypps <- get.PPSet(myname, CDF.example, listcel[[1]])
+@ 
 
-The class \verb+Plob+ has been introduced in the previous section. One could think of it as related to the class \verb+Cel.container+
-as it contains most of the information contained in it. It also contains informations from the corresponding CDF file. The data
-are organised in a different structure. We think of it as an another view on the data.
+The methods {\tt barplot()} and {\tt plot()} can be used to
+graphically explore the intensities of a {\it PPSet} object. See
+figure \ref{f10}.
 
-%>>>LG: RAFA: HELP for below!!!
+\begin{figure}[htbp]
+\begin{center}
+<<fig=TRUE>>=
+<<>>=
+par(mfrow=c(2,1))
+barplot(mypps)
+plot(mypps)
+@ 
+\caption{\label{f10}$PM$s (red) and $MM$s (blue) for a randomely
+chosen probe set.}
+  \end{center}
+\end{figure}
 
-\begin{description}
-  \item[normalize] A \verb+Plob+ can be {\it normalized}, which means the data coming from different the arrays
- will be scaled to be comparable. More details about normalization can be found in the section~\ref{sec:normalize}, page~\pageref{sec:normalize}.
-  \item[normalize.methods] Return the known normalization methods for the \verb+Cel+.
-  \item[plot] Displays plots.
-  \item[show] Display global information about the object.
-\end{description}
 
+As an illustrative example we show how one can find the intensities of
+a particular gene, say {\tt myname} without using {\tt get.PPSet}.
+From the name entry number in a \verb+Cdf+ object, we look for the
+positions 
+of the related probes. From these positions on the array, 
+we extract intensities from a {\it Cel} object. This gives
+the $PM$ and $MM$ information in one vector.  
+
+<<>>=
+positions <- which(probeNames(CDF.example) == mylevel, arr.ind=TRUE)
+intensities <- intensity(listcel[[1]])
+@ 
+
+%$
+
+The generation of an expression value from the probe set intensities
+is straight forward. Two lines give us a naive version of Affymetrix's
+average difference measure.
+
+<<>>=
+difference <- mypps$probes$pm - mypps$probes$mm
+averagediff <- mean(difference)
+@
+
+
+\subsection{Class PPSet.container}
+
+A class of \verb+PPSet+ containers is also available. For the users
+convenience we include an example containing intensities read from 12
+arrays where the concentration of the control cRNA BioB-5 was added at
+known concentrations. The concentrations (pM) are also available
+thought the example data set:
+
+<<>>=
+data(SpikeIn)
+print(concentrations)
+@ 
+Notice the concentrations are growing exponentially. 
+Figure \ref{f11} shows, using the example data
+set, that the $PM$s in fact detect the growth in concentration.
+This figure also shows that the $MM$s detect the growth as well.
+
+
+\begin{figure}[htbp]
+\begin{center}
+<<fig=TRUE>>=
+par(mfrow=c(1,2))
+plot(concentrations,concentrations,ylim=c(20,20000),main="PM",ylab="Intensity",log="xy",type="n")
+for(i in 1:12)
+  points(rep(concentrations[i],20),pm(SpikeIn[[i]]),col=rainbow(20),pch=1:20)
+plot(concentrations,concentrations,ylim=c(20,20000),main="MM",ylab="Intensity",log="xy",type="n")
+for(i in 1:12)
+  points(rep(concentrations[i],20),mm(SpikeIn[[i]]),col=rainbow(20),pch=1:20)
+@ 
+\caption{\label{f11}$PM$ and $MM$ intensities read from 12 different arrays
+plotted against known concentrations of BioB-5 added to each array.} 
+  \end{center}
+\end{figure}
 \section{Extending the package}
- \subsection{Normalization}
+\label{s3}
+\subsection{Normalization}
 
-Different approaches to normalize array data have already been suggested, but new methods are very likely be developped too.
+Different approaches to normalize array data have already been
+suggested, but new methods are very likely be developed too. 
  We tried to make the addition of new normalization methods straightforward.
 It should be the case if the following indications are carefully observed.
 Brave people may want to add new normalization methods without taking these rules into considerations. It should be possible, but they are on their own.
@@ -655,7 +877,7 @@ Currently XYZ can only be \verb+Cel.container+ or \verb+Plob+\footnote{A general
 {\it Affymetrix} or cDNA (or even others in the future (?)) is currently evaluated.}. You are free to implement a normalization
  method working on one object without having to implement it for the others.
  \item[-] The first argument passed to the function must be of class \verb+XYZ+. Optional parameter can be appended as long
-as they have default values./
+as they have default values.
  \item[-] The {\it nickname} of the new normalization method must be registered in the variable \verb+normalize.XYZ.methods+
  (a vector of mode {\it character}).
 \end{itemize}
@@ -673,36 +895,77 @@ data(listcel)
 listcel.n <- normalize(listcel, method="nothing")
 @
 
-\subsection{expression values}
-Expression values are generated from the probes informations.                                         
+\subsection{Measures of Expression}
+\label{s3.2}
+As seen in Section \ref{s1.5} the function \verb+express+ creates
+\verb+exprSet+ from \verb+Plob+ objects. The function \verb+express+
+is quite flexible.
 
+One can choose from various normalization routines through the
+argument \verb+normalize.method+. The default is quantile
+normalization, but one can also use constant, loess, invariantset, or
+contrasts normalization (see help file for normalize for more
+information on these routines). The option not to normalize is also
+available via the logic argument \verb+normalize+.
 
+The way in which $PM$ values are ``background'' corrected can be changed
+through an arbitrary function sent via the argument \verb+bg+. The
+current default is based on a background correction method described
+in \cite{iriz:etal:2002} and available throuh the function
+\verb+bg.adjust+.
+If something other than a function is sent, no background correction is
+performed. If a function is sent, it must receive a matrix containing
+the $PM$s in the first half of the rows and the $MM$s in the bottom. The
+function must return a matrix with the background corrected $PM$s. For
+example, the function \verb+subtractmm+, made available in this
+package, receives \verb+x+ (typically \verb+rbind(pm(plob),mm(plob)+
+wiht \verb+plob+ an object of class \verb+Plob+) and returns
+{\tt x[1:(nrow(x)/2),]-x[(nrow(x)/2 + 1):nrow(x),]}. 
 
+Once background corrected $PM$s are available we compute expression
+measures via some summary statistic. The $PM$ data will be a matrix,
+say \verb+mat+ of
+dimensions probes times number of arrays. The default is to return the
+overall plus column effect of a median polish. In general one can use
+any function that returns one value for every column, i.e. one measure
+of expression for each array. The function \verb+express+ takes care
+of doing this for every gene. As an example, the function
+\verb+avdiff+ is available through this package, an returns something
+quite similar to \verb+apply(mat,2,mean,trim=.9)+. 
+Much can be learned  by looking at the function \verb+express+.
 
-
- A way to include new approaches is to go through the \verb+PPSet+ objects,                            
+Expression values can also be obtained for some other classes.
+A way to include new approaches is to go through the \verb+PPSet+
+objects,                             
 or more precisely \verb+PPSset.container+ objects.
- As described above, a container is used to bundle several \verb+PPSet+
-objects and it                                                                         
-used here to collect the {\it PPSet} for a given gene in different hybridizations (i.e. on different arrays).                      
-Methods that generate expression values accept as first parameter a list of \verb+data.frame+. There i
-s one \verb+data.frame+ per hybridization.                                                            
-All the data are related to the same probe pair set on a chip. Each data.frame has a column called {\i
-t pm} and a column called {\it mm} (note: each of these data.frame correspond to the slot \verb+probes+ of the \verb+PPSet+).                                                                   
-The method can then accept other optional parameters, but default must be defined. The name of the met
-hod must be of the form                                                                               
-\verb+generateExprVal.method.xyz+, where \verb+xyz+ in the name of the method.                        
-Then the methods nickname must be registered in \verb+generateExprSet.methods+.
+ As described above, a container is used to bundle several
+\verb+PPSet+  
+objects and it                                                                      
+used here to collect the {\it PPSet} for a given gene in different 
+hybridizations (i.e. on different arrays).                       
+Methods that generate expression values accept as first parameter a
+list of \verb+data.frame+. There is one \verb+data.frame+ per
+hybridization.                                                             
+All the data are related to the same probe pair set on a chip. Each
+data.frame has a column called {\it pm} and a column called {\it mm}
+(note: each of these data.frame 
+correspond to the slot \verb+probes+ of the \verb+PPSet+).                                                                    
+The method can then accept other optional parameters, but default must
+be defined. The name of the met 
+hod must be of the form \verb+generateExprVal.method.xyz+, where
+\verb+xyz+ in the name of the method. Then the methods nickname must
+be registered in \verb+generateExprSet.methods+. 
 % shit ! I just realized the slight inconsistency in the name of all the stuff
-The mecanism is not unlike the one used for \verb+normalize+.                                                                                                      
-As an illustrative example, we present a method called \it{outlieraverage} that generates expression v
-alues in two steps.                                                                                   
- In a first step, identical {\it pm} probes across the probes sets from the different hybridizations a
-re processed.                                                                                         
-Probe values that are more than  2 times away from the median absolute deviation (mad) are replaced by
- the median value                                                                                     
- for these probes. In a second step the average of all the probes in the set is calculated for each hy
-bridization experiment.                                                                               
+The mechanism is not unlike the one used for \verb+normalize+.   
+As an illustrative example, we present a method called
+{\it outlieraverage}, that generates expression values in two
+steps. In a first step, identical {\it pm} probes across the probes
+sets from the different hybridizations are processed.                                                                                         
+Probe values that are more than  2 times away from the median absolute
+deviation (mad) are replaced by the median value  for these probes. In
+a second step the average of all the probes in the set is calculated
+for each hyridization experiment. 
+
 \begin{verbatim}                                                                                      
 generateExprVal.method.outlieraverage <- function(probes) {                                           
   ## probes is a list of data.frame                              
@@ -738,3 +1001,9 @@ generateExprSet.methods <- c(generateExprSet.methods, "outlieraverage")
 \bibliography{affy} 
 
 \end{document}
+
+
+
+
+
+
