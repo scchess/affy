@@ -117,7 +117,7 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
 
   Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
 
-  cdfInfo <- multiget(ls(getCdfInfo(Data)),-1,getCdfInfo(Data))
+  cdfInfo <- contents(getCdfInfo(Data))
   .Call("read_probeintensities", filenames,
         compress, rm.mask, rm.outliers, rm.extra, ref.cdfName,
         dim.intensity, verbose, cdfInfo,which, PACKAGE="affy")

@@ -149,8 +149,7 @@ setMethod("indexProbes", signature("AffyBatch", which="character"),
             ## (eventually more readable too)
             ## note: genenames could be confusing (the same gene can be
             ## found in several affyid (ex: the 3' and 5' controls)
-
-            ans <-  multiget(genenames, pos, envir, iffail=NA)
+            ans <- mget(genenames, envir, ifnotfound=NA)
 
             ## this kind of thing could be included in 'multiget' as
             ## an extra feature. A function could be specified to
