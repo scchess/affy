@@ -118,10 +118,10 @@ for (i in 1:nmet) {
   else
     results[, i] <- ev$exprs
 }
-matplot(results, matrix(1:3, nr=nc, nc=nmet), type="l", lty=1:3, col=rainbow(nmet),
-        xlab="expression value", lab="sample")
+##matplot(results, matrix(1:3, nr=nc, nc=nmet), type="l", lty=1:3, col=rainbow(nmet),
+##        xlab="expression value", lab="sample")
 dotchart(results, labels=paste("sample", 1:nc))
-legend()
+##legend()
 
 par(opar)
 rm(opar)
