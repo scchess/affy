@@ -49,7 +49,7 @@ library(affy)
 @
 
 \section*{Why and how}
-The \{it cdfenvs} are associative data structures to map efficiently a
+The {\it cdfenvs} are associative data structures to map efficiently a
 {\it probeset id} with indices for the corresponding probes. These
 indices are used to subset a matrix storing probe level
 intensities.

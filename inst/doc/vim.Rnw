@@ -28,7 +28,7 @@
 \tableofcontents
 \section{Introduction}
 This document describes briefly how to write import methods for
-the \verb+affy+ pacakge. As one might know, the Affymetrix data are
+the \verb+affy+ package. As one might know, the Affymetrix data are
 originally stored in files of type \verb+.CEL+ and \verb+.CDF+. The
 package extracts and store the information contained in \verb+R+ data
 structures using file parsers. This document outlines how to get the

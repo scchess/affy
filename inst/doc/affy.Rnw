@@ -1121,6 +1121,16 @@ element {\it what} can be one of {\it package}, {\it environment}.
 \end{itemize}
 
 
+\section{Where can I get more information?}
+\label{moreinfo}
+
+
+
+
+
+
+\appendix
+
 \section{Previous Release Notes}
 \label{whatwasnew}
 \subsection{Changes in Version 1.1.x}
