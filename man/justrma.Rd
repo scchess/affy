@@ -42,7 +42,6 @@ justRMA(..., filenames=character(0),
   \item{hdf5FilePath}{ a filename to use with hdf5 (not available yet)}
   \item{verbose}{ verbosity flag }
   \item{widget}{a logical specifying if widgets should be used.}
-  \item{celpath}{a character specifying the path where to look for celfiles}
   \item{celfile.path}{a character denoting the path \code{ReadAffy}
     should look for cel files}
   \item{sampleNames}{a character vector of sample names to be used in

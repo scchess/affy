@@ -14,7 +14,6 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 \arguments{
   \item{abatch}{an \code{\link[affy:AffyBatch-class]{AffyBatch}}}
   \item{data}{a vector of intensities on a chip (to normalize to the reference).}
-  \item{f.cdf}{a \code{Cdf} object.}
   \item{ref}{a vector of reference intensities.}
   \item{prd.td}{cutoff parameter (details in the bibliographic
     reference)}
