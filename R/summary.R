@@ -26,7 +26,7 @@ li.wong <- function(data.matrix,remove.outliers=T,
 medianpolish <- function(x,...){
   tmp <- medpolish(log2(x),trace.iter=F,...)
   ##rough estimate
-  sigma_sqrt(1.483*median(abs(as.vector(tmp$residuals)))/nrow(x))
+  sigma_1.483*median(abs(as.vector(tmp$residuals)))/sqrt(nrow(x))
   c(tmp$overall + tmp$col,rep(sigma,ncol(x)))
 }
 

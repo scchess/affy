@@ -525,8 +525,8 @@ par(mfrow=c(2,2))
 
 data(Dilution)
 
-boxplot(Dilution)
-boxplot(normalize(Dilution))
+boxplot(Dilution[,1:3]) ##the three are replicates.. should be similar
+boxplot(normalize(Dilution[,1:3]))
 @
 
 Individual help files for the normalization methods can be accessed with \verb+normalize?<method nickname>+.
