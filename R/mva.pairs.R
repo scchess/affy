@@ -16,7 +16,7 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
   sigma <- IQR(M)
   mean <- median(M)
   xloc <- max(A) - 1
-  yloc <- max(M) - 1
+  yloc <- max(M)*0.75
   aux <- loess(M[subset]~A[subset],degree=1,span=span,family=family.loess)$fitted
   
   plot(A,M,...)
