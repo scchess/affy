@@ -147,9 +147,11 @@ ReadAffy <- function(..., filenames=character(0),
   ##first figure out filenames
   auxnames <- unlist(as.list(substitute(list(...)))[-1])
 
-  if (widget) 
+  if (widget){
+    require(tkWidgets)
     widgetfiles <- fileBrowser(textToShow="Choose CEL files",
                                testFun=hasSuffix("[cC][eE][lL]"))
+  }
   else
     widgetfiles <- character(0)
 
@@ -164,6 +166,7 @@ ReadAffy <- function(..., filenames=character(0),
   if(is.null(phenoData)){
     if(is.null(sampleNames)){
       if(widget){
+        require(tkWidgets)
         sampleNames <- tkSampleNames(filenames=filenames)[,2]
       }
       else{
@@ -183,8 +186,10 @@ ReadAffy <- function(..., filenames=character(0),
     phenoData <- read.phenoData(filename=phenoData)
   else{
     if(class(phenoData)!="phenoData"){
-      if(widget)
+      if(widget){
+        require(tkWidgets)
         phenoData <- read.phenoData(sampleNames=sampleNames,widget=TRUE)
+      }
       else
         phenoData <- read.phenoData(sampleNames=sampleNames,widget=FALSE)
     }
@@ -196,13 +201,15 @@ ReadAffy <- function(..., filenames=character(0),
   }
   else{
     if(class(description)!="MIAME"){
-      if(widget)
+      if(widget){
+        require(tkWidgets)
         description <- read.MIAME(widget=TRUE)
+      }
       else
         description <- new("MIAME")
-      }
+    }
   }
-
+  
   
   ##and now we are ready to read cel files
   return(read.affybatch(filenames=filenames,
