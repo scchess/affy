@@ -43,7 +43,7 @@ cdfFromData <- function(cdfname, pkg, verbose=TRUE) {
         ## check if the cdfenv is already loaded. If not load it *in* the environment
         ## of the package (where.env)
         if(!exists(cdfname, where = where.env, inherits = FALSE)) {
-            path <- .path.package(where)
+            path <- .path.package(pkg)
             filename <- paste(cdfname, ".rda", sep="")
             load(file.path(path, "data", filename) ,
                  envir = where.env)
@@ -52,7 +52,7 @@ cdfFromData <- function(cdfname, pkg, verbose=TRUE) {
         return(cdfenv)
     }
     else
-        return(list(paste("Data for package",pkg)))
+        return(list(paste("Data for package",pkg,"did not contain",cdfname)))
 }
 
 cdfFromEnvironment <- function(cdfname, where, verbose=TRUE) {
@@ -156,6 +156,7 @@ cdfFromLibPath <- function(cdfname, lib = NULL, verbose=TRUE) {
     if (verbose)
         print(paste("Checking to see if package",cdfname,
                     "is already installed"))
+
     if (length(.find.package(cdfname, lib.loc=lib, quiet=TRUE)) == 0)
         return(list(paste("Library - package",cdfname,"not installed")))
 
