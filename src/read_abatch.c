@@ -84,6 +84,7 @@
  **                to prevent namespace pollution
  ** Oct 3, 2003  - fix an error in check_cel_file /check_gzcel_file
  **                cdffile was not being properly checked
+ ** Oct 14, 2003 - fix a long standing memory leak.
  **
  *************************************************************/
  
@@ -639,8 +640,8 @@ static char *get_header_info(char *filename, int *dim1, int *dim2){
       
       cdfName= Calloc(endpos+1,char);
       strncpy(cdfName,get_token(cur_tokenset,i),endpos);
-      cdfName[endpos+1] = '\0';
-
+      cdfName[endpos] = '\0';
+      
       break;
     }
     if (i == (tokenset_size(cur_tokenset) - 1)){
@@ -1020,7 +1021,7 @@ static char *gz_get_header_info(char *filename, int *dim1, int *dim2){
       
       cdfName= Calloc(endpos+1,char);
       strncpy(cdfName,get_token(cur_tokenset,i),endpos);
-      cdfName[endpos+1] = '\0';
+      cdfName[endpos] = '\0';
 
       break;
     }
