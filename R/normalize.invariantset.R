@@ -31,7 +31,7 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), verb
     } else if (baseline.type == "pseudo-median"){
     # construct a pseudo chip to serve as the baseline by taking probewise medians
       refindex <- 0
-      baseline.chip <- apply(intensity(abatch)[pms,],1,median)
+      baseline.chip <- rowMedians(intensity(abatch)[pms,])
     }
 
 

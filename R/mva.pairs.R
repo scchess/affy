@@ -113,7 +113,7 @@ setMethod("Mbox",signature("AffyBatch"),
             } else {
               x <- intensity(object)[pms, ]
             }
-            medianchip <- apply(x, 1, median)
+            medianchip <- rowMedians(x)
             M <- sweep(x,1,medianchip,FUN='-')
             boxplot(data.frame(M),...)
           })
@@ -146,7 +146,7 @@ setMethod("MAplot",signature("AffyBatch"),
 
             if (is.null(subset)){
               if (is.null(ref)){
-                medianchip <- apply(x, 1, median)
+                medianchip <- rowMedians(x)
               } else {
                 medianchip <- x[,ref]
               }
@@ -167,7 +167,7 @@ setMethod("MAplot",signature("AffyBatch"),
               }
             } else {
               if (is.null(ref)){
-                medianchip <- apply(x[,subset], 1, median)
+                medianchip <- rowMedians(x[,subset])
               } else {
                 if (is.element(ref,subset)){
                   medianchip <- x[,ref]
