@@ -1,0 +1,164 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+%\VignetteIndexEntry{HOWTO: cdfenvs and affy}
+%\VignetteKeywords{Affymetrix}
+%\VignetteDepends{affy}
+%\VignettePackage{affy}
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage[authoryear,round]{natbib}
+\usepackage{hyperref}
+
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
+\bibliographystyle{plainnat}
+
+\author{Laurent}
+\begin{document}
+\title{cdfens and the package affy}
+
+\maketitle
+\tableofcontents
+\section*{Introduction}
+This document describes briefly how the package gets (or tries to get)
+the needed cdfenvs. Various issues like security and configuring the
+options for the package \Rpackage{affy} are outlined. 
+
+As usual, loading the package in your \verb+R+ session is required. 
+\begin{Sinput}
+R> library(affy) ##load the affy package
+\end{Sinput}
+<<echo=F,results=hide>>=
+library(affy)
+@
+
+\section*{Why and how}
+The \{it cdfenvs} are associative data structures to map efficiently a
+{\it probeset id} with indices for the corresponding probes. These
+indices are used to subset a matrix storing probe level
+intensities.
+
+The complete structure of the options for the package is not
+completely described, but one can refer the source code for the function
+\Rfunction{.setAffyOptions()}. The entry {\it probesloc} in the
+options details the path used to look for the corresponding {\it cdfenv}.
+We introduce a simple function to display the content of the options
+for the {\it cdfenvs}:
+<<>>=
+print.probesloc.opt <- function(affy.opt, fields) {
+  all.fields <- c("what", "where", "autoload", "repository", "installdir")
+  
+  if (sum (! (fields %in% all.fields)) > 0)
+    stop(paste("'fields' can only contain elements of:",
+         paste(all.fields, collapse=" ")))
+
+  l <- lapply(affy.opt$probesloc, 
+              function(x) x[fields])
+  l <- lapply(l, function(x) {
+                   unk <- is.na(names(x))
+                   x[unk] <- rep(list(unk=NA), sum(unk))
+		   x <- lapply(x, function(y) if (is.null(y)) "NULL"
+		   else y )
+		   return(x)
+                 }
+              )
+  ul <-  as.character(unlist(l))
+  m <- t(matrix(ul, nr=length(fields)))  
+  colnames(m) <- fields
+  print(m)
+}
+@ 
+
+The default search path for {\it cdfenvs} will be:
+<<>>=
+affy.opt <- getOption("BioC")$affy
+
+print.probesloc.opt(affy.opt, c("what", "where", "autoload"))
+@
+
+The option {\it autoload} is only relevant where {\it where}
+is equal to {\it package}. Having it set to \verb+TRUE+ means
+that an attempt of download will be made in case the package is not found
+in \Rfunction{.libPaths()} (and of course that the relevant {\it cdfenv} was not
+found in the search path shown above).
+
+The following function returns a set of options with any existing automatic download
+desactivated :
+<<>>=
+desactivate.autoload <- function(affy.opt) {
+  l <- lapply(affy.opt$probesloc, 
+              function(x) {
+                i <- names(x) == "autoload"
+                x[i] <- list(FALSE)
+		return(x)
+              })
+    affy.opt$probesloc <- l
+    return(affy.opt)
+  }	      
+@ 
+It can be used to desactivate any automatic download:
+<<>>=
+affy.opt <- getOption("BioC")$affy
+
+affy.opt.noauto <- desactivate.autoload(affy.opt)
+
+# commit the changes
+.setAffyOptions(affy.opt.noauto)
+@
+
+
+\section*{Security}
+
+The autoload mecanism can be perceived as a security breach. It is the
+case, but not more than any {\bf R} package you might install (unless you
+inspect carefully the source of every single package you install).
+
+By default the {\it cdfenv} packages are downloaded from the bioconductor
+repository. 
+This can be changed through the options for the package.
+One might want to check what it is like on his/her local installation:
+<<>>=
+print.probesloc.opt(affy.opt, c("what", "autoload", "repository"))
+@
+
+If you do not have install
+permissions, you might consider installing the {\it cdfenvs} packages to a
+particular place. For that you need to change the {\it installdir} (passed
+to the function \Rfunction{install.packages2} of the package \Rpackage{reposTools}).
+<<>>=
+my.installdir <- "mydir/is/here"
+has.installdir <- unlist(lapply(affy.opt$probesloc,
+                                function(x) grep(names(x), "installdir")))
+l <- lapply(affy.opt$probesloc,
+            function(x)  {
+              if("installdir" %in% names(x)) {
+                 x$installdir <- my.installdir
+              } 
+              return(x)
+            })
+
+affy.opt$probesloc <- l
+
+.setAffyOptions(affy.opt)
+@
+
+Note that you will have to update{\it where} to look for the packages
+(like by putting it in your \Rfunction{.libPaths()}, or the field {\it
+where} for the probelocs).
+\end{document}

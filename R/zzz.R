@@ -46,6 +46,61 @@
   assign("mapCdfName", mapCdfName, envir=as.environment(where))
 }
 
+.setAffyOptions <- function(affy.opt=NA) {
+  
+  if (! any(is.na(affy.opt))) {
+    if (class(affy.opt) != "BioCPkg")
+      stop("obviously invalid package options !")
+    
+    BioC <- getOption("BioC")
+    BioC$affy <- affy.opt
+    options("BioC"=BioC)
+    return()
+  }
+  
+  ## add affy specific options
+  ## (not unlike what is done in 'Biobase')
+  if (is.null(getOption("BioC"))) {
+    BioC <- list()
+    class(BioC) <- "BioCOptions"
+    options("BioC"=BioC)
+  }
+
+  probesloc.first <- list(what="environment", where=.GlobalEnv)
+  ## no autoload in the first place, to give 'data' a chance
+  probesloc.second <- list(what="package", where=NULL,
+                           autoload=FALSE,
+                           installdir=NULL,
+                           repository="http://www.bioconductor.org/data/cdfenvs/repos/")
+  probesloc.third <- list(what="data", where="affy")
+  ## still no available cdfenvs... give autoload a try...
+  probesloc.forth <- list(what="package", where=NULL,
+                          autoload=TRUE,
+                          installdir=NULL,
+                          repository="http://www.bioconductor.org/data/cdfenvs/repos/")
+
+  ## default for the methods
+  bgcorrect.method <- "mas"
+  normalize.method <- "quantiles"
+  pmcorrect.method <- "pmonly"
+  summary.method <- "liwong"
+  
+  affy.opt <- list(compress.cdf=FALSE, compress.cel=FALSE,
+                   use.widgets=FALSE,
+                   probesloc = list(probesloc.first, probesloc.second, probesloc.third, probesloc.forth),
+                   bgcorrect.method = bgcorrect.method,
+                   normalize.method = normalize.method,
+                   pmcorrect.method = pmcorrect.method,
+                   summary.method = summary.method)
+  
+  class(affy.opt) <- "BioCPkg"
+  
+  BioC <- getOption("BioC")
+  BioC$affy <- affy.opt
+  options("BioC"=BioC)
+  ## ---
+}
+
 .First.lib <- function(libname, pkgname, where) {
   
 
@@ -87,47 +142,7 @@
   .initAffyBatch(match(paste("package:", pkgname, sep=""), search()))
   .initProbeSet(match(paste("package:", pkgname, sep=""), search()))
 
-  ## add affy specific options
-  ## (not unlike what is done in 'Biobase')
-  if (is.null(getOption("BioC"))) {
-    BioC <- list()
-    class(BioC) <- "BioCOptions"
-    options("BioC"=BioC)
-  }
-
-  probesloc.first <- list(what="environment", where=.GlobalEnv)
-  ## no autoload in the first place, to give 'data' a chance
-  probesloc.second <- list(what="package", where=NULL,
-                           autoload=FALSE,
-                           installdir=NULL,
-                           repository="http://www.bioconductor.org/data/cdfenvs/repos/")
-  probesloc.third <- list(what="data", where="affy")
-  ## still no available cdfenvs... give autoload a try...
-  probesloc.forth <- list(what="package", where=NULL,
-                          autoload=TRUE,
-                          installdir=NULL,
-                          repository="http://www.bioconductor.org/data/cdfenvs/repos/")
-
-  ## default for the methods
-  bgcorrect.method <- "mas"
-  normalize.method <- "quantiles"
-  pmcorrect.method <- "pmonly"
-  summary.method <- "liwong"
-  
-  affy <- list(compress.cdf=FALSE, compress.cel=FALSE,
-               use.widgets=FALSE,
-               probesloc = list(probesloc.first, probesloc.second, probesloc.third, probesloc.forth),
-               bgcorrect.method = bgcorrect.method,
-               normalize.method = normalize.method,
-               pmcorrect.method = pmcorrect.method,
-               summary.method = summary.method)
-  
-  class(affy) <- "BioCPkg"
-  
-  BioC <- getOption("BioC")
-  BioC$affy <- affy
-  options("BioC"=BioC)
-  ## ---
+  .setAffyOptions()
 
   cacheMetaData(as.environment(where))
 
