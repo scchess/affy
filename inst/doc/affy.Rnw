@@ -1,6 +1,6 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 %\VignetteIndexEntry{affy primer}
-%\VignetteKeyword{Preprocessing, Affymetrix}
+%\VignetteKeywords{Preprocessing, Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
 \documentclass[12pt]{article}
