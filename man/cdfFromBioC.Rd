@@ -20,7 +20,8 @@ cdfFromEnvironment(cdfname, where, verbose=FALSE)
   \item{cdfname}{ The CDF desired }
   \item{lib}{ Directory to install the CDF package to }
   \item{pkg}{What package to search}
-  \item{verbose}{Controls extra output}
+  \item{where}{What environment to search}
+  \item{verbose}{Controls extra output}  
 }
 \details{
   These functions all take a requested CDF environment name and will
