@@ -126,6 +126,7 @@
   .initMapCdfName(match(paste("package:", pkgname, sep=""), search()))
 
   .setAffyOptions()
+
   cacheMetaData(as.environment(where))
 
 

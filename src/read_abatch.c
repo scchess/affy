@@ -82,7 +82,8 @@
  **                as individual matrices.
  **                Made all the internal functions static
  **                to prevent namespace pollution
- **
+ ** Oct 3, 2003  - fix an error in check_cel_file /check_gzcel_file
+ **                cdffile was not being properly checked
  **
  *************************************************************/
  
@@ -433,7 +434,7 @@ static int check_cel_file(char *filename, char *ref_cdfName, int ref_dim_1, int 
   findStartsWith(currentFile,"DatHeader",buffer);
   cur_tokenset = tokenize(buffer," ");
   for (i =0; i < tokenset_size(cur_tokenset);i++){
-    if (strncmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) != 0){
+    if (strncmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) == 0){
       break;
     }
     if (i == (tokenset_size(cur_tokenset) - 1)){
@@ -810,7 +811,7 @@ static int check_gzcel_file(char *filename, char *ref_cdfName, int ref_dim_1, in
   gzfindStartsWith(currentFile,"DatHeader",buffer);
   cur_tokenset = tokenize(buffer," ");
   for (i =0; i < tokenset_size(cur_tokenset);i++){
-    if (strncmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) != 0){
+    if (strncmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) == 0){
       break;
     }
     if (i == (tokenset_size(cur_tokenset) - 1)){

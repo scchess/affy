@@ -71,7 +71,7 @@ read.affybatch <- function(..., filenames=character(0),
   
   if (verbose)
     cat(paste("instanciating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
-
+  
 
  
   if (verbose)
@@ -81,8 +81,8 @@ read.affybatch <- function(..., filenames=character(0),
   #### what we will do here is read in from the 1st to the nth CEL file
   
   return(new("AffyBatch",
-               exprs  =  .Call("read_abatch",filenames,compress, rm.mask,
-                 rm.outliers, rm.extra, ref.cdfName, dim.intensity,verbose) ,       
+               exprs  = .Call("read_abatch",filenames,compress, rm.mask,
+                 rm.outliers, rm.extra, ref.cdfName, dim.intensity,verbose),       
                ##se.exprs = array(NaN, dim=dim.sd),
                cdfName    = ref.cdfName,   ##cel@cdfName,
                phenoData  = phenoData,
