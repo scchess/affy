@@ -53,16 +53,13 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), prog
   
     if (progress) cat("normalizing array", chipNames(abatch)[i], "...")
     
-    mydim <- dim(intensity(abatch)[, i])
-    
     ##temporary
     tmp <- normalize.invariantset(c(intensity(abatch)[, i])[i.pm],
                                   c(intensity(abatch)[, refindex])[i.pm],
                                   prd.td)
     i.set <- which(i.pm)[tmp$i.set]
-    tmp <- array(as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                   xout=intensity(abatch)[, i], rule=2)$y),
-                 mydim)
+    tmp <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                             xout=intensity(abatch)[, i], rule=2)$y)
     attr(tmp,"invariant.set") <- NULL
     intensity(abatch)[, i] <- tmp
 
