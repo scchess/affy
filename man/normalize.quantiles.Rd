@@ -27,6 +27,8 @@
   Bolstad, B (2001) \emph{Probe Level Quantile Normalization of High Density
     Oligonucleotide Array Data}. Unpublished manuscript
   \url{http://oz.berkeley.edu/~bolstad/stuff/qnorm.pdf}
+
+  Bolstad, B. M., Irizarry R. A., Astrand, M, and Speed, T. P. (2002) \emph{A Comparison of Normalization Methods for High Density Oligonucleotide Array Data Based on Bias and Variance.} To appear in Bioinformatics. \url{http://www.stat.berkeley.edu/~bolstad/normalize/normalize.html}
   }
 
 \author{Ben Bolstad, \email{bolstad@stat.berkeley.edu}}
