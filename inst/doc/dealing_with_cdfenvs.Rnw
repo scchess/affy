@@ -174,7 +174,7 @@ affy.opt$probesloc <- l
 .setAffyOptions(affy.opt)
 @
 
-Note that a given {\if cdfenv} package is searched as specified in the
+Note that a given {\it cdfenv} package is searched as specified in the
 argument {\it where}. Depending on your settings, you might prefer updating
 the \Rfunction{.libPaths()} of your {\bf R} session, or the field {\it
 where} for the probelocs).

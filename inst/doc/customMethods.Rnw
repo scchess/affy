@@ -19,6 +19,14 @@
 
 \newcommand{\scscst}{\scriptscriptstyle}
 \newcommand{\scst}{\scriptstyle}
+
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\texttt{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+
 \author{Laurent}
 \begin{document}
 \title{affy: Custom Processing Methods (HowTo)}
@@ -170,6 +178,8 @@ generateExprSet.methods <- c(generateExprSet.methods, "huber")
 From now the package is aware of the two new methods\ldots in this session.
 
 The code for the methods included in the package can be informative if you plan to develop methods.
-An example that demonstrates how a normalization method can be added is given by the function \code{normalize.AffyBatch.vsn} in the package \pkgname{vsn}; see its help file.
+An example that demonstrates how a normalization method can be added is given
+by the function \Rfunction{normalize.AffyBatch.vsn} in the package
+ \Rpackage{vsn}; see its help file.
 
 \end{document}
