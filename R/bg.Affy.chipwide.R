@@ -1,0 +1,28 @@
+bg.Affy.chipwide <- function(object, griddim=16)
+{
+   nchips <- length(object)
+
+   pm.index <- indexProbes(object, "pm")
+   mm.index <- indexProbes(object, "mm")
+   
+   rows <- object@nrow
+   cols <- object@ncol
+   
+   allintensities <- intensity(object)[c(pm.index, mm.index), ]
+   
+   allx <- c(pm.index, mm.index) %% nrow(object)
+   ally <- c(pm.index, mm.index) %/% nrow(object) + 1
+   
+   nprobes <- length(allx)
+   
+   corrected <- matrix(.C("affy_background_adjust_R",
+                          as.double(as.vector(allintensities)), as.integer(allx), as.integer(ally),
+                          as.integer(nprobes), as.integer(nchips), as.integer(rows), as.integer(cols),
+                          as.integer(griddim))[[1]], nprobes, nchips)
+   
+   intensity(object)[pm.index, ] <- corrected
+   ## and what with the 'non pm or mm' probes ?
+   
+   return(object)
+   
+ }
