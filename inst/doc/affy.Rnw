@@ -141,6 +141,7 @@ R> library(affy) ##load the affy package
 \end{Sinput}
 <<echo=F,results=hide>>=
 library(affy)
+gctorture(TRUE)
 @
 
 And download and install the cdf environment you need

@@ -30,7 +30,7 @@ plotLocation(x, col="green", pch=22, ...)
   image(Dilution[[1]])
 
   ## genenames
-  n <- geneNames(Dilution)
+  n <- geneNames(Dilution)[1]
 
   ## getting the location for the gene n
   l <- indexProbes(Dilution, "both", n, xy=TRUE)

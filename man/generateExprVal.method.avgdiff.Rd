@@ -36,9 +36,8 @@ generateExprVal.method.mas(probes, ...)
   medianpolish <- generateExprVal.method.medianpolish(probes)
   liwong <- generateExprVal.method.liwong(probes)
   playerout <- generateExprVal.method.playerout(probes)
-  #mas <- generateExprVal.method.mas(probes)
-  mas <- avgdiff ##while we fix bug
-
+  mas <- generateExprVal.method.mas(probes)
+  
   concentrations <- as.numeric(sampleNames(SpikeIn))
   plot(concentrations,avgdiff$exprs,log="xy",ylim=c(50,10000),pch="a",type="b")
   points(concentrations,2^medianpolish$exprs,pch="m",col=2,type="b",lty=2)
