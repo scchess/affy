@@ -40,7 +40,8 @@ just.rma <- function(..., filenames=character(0),
   
   cdfname <- whatcdf(filenames[1], compress=compress)
   tmp <- new("AffyBatch",
-             cdfName=cdfname)
+             cdfName=cdfname,
+             annotation=cleancdfname(cdfname, addcdf=FALSE))
   pmIndex <- pmindex(tmp)
   probenames <- rep(names(pmIndex), unlist(lapply(pmIndex,length)))
   pmIndex <- unlist(pmIndex)
