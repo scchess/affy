@@ -19,7 +19,6 @@ normalize.qspline(x, target = NULL, samples = NULL,
 \arguments{
   \item{x}{a \code{data.matrix} of intensities}
   \item{abatch}{an \code{AffyBatch}}
-%  \item{plob}{a \code{Plob}}
   \item{target}{numerical vector of intensity values to normalize to.
                 (could be the name for one of the celfiles in 'abatch')}
   \item{samples}{numerical, the number of quantiles to be used for spline.

@@ -10,9 +10,8 @@
 \section{Methods}{\describe{
 \item{object = Cdf}{ An accesor function for the
       \code{name} slot.}
-\item{object = PPSet.container}{ An accessor function for the
-      \code{name} slot of the Cdf that goes with the container.}
-\item{object = Plob}{  An accessor function for the
-      \code{name} slot. }
+\item{object = probeNames}{Returns the probe names associated with the
+  rownames of the intensity matrices one gets with the \code{pm} and
+  \code{mm} methods.}
 }}
 \keyword{methods}

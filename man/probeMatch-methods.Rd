@@ -9,10 +9,10 @@
 \alias{mm<-}
 \description{Methods for perfect matches and mismatches probes}
 \section{Methods}{\describe{
-    \item{object = Plob}{All the \emph{perfect match} (pm) or
+    \item{object = AffyBatch}{All the \emph{perfect match} (pm) or
       \emph{mismatch} (mm) probes on the
       arrays the object represents are returned.}
-    \item{object = PPSet}{The \code{pm} or \code{mm} of the object are returned}
+    \item{object = ProbeSet}{The \code{pm} or \code{mm} of the object are returned}
   }
 }
 \keyword{methods}
