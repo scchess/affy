@@ -101,7 +101,7 @@
 
   where <- match(paste("package:", pkgname, sep=""), search())
   all.affy <- ls(where)
- message <- TRUE
+ message <- FALSE
 
   if (message) {
     cat(rep("*",13),"\n",sep="")
