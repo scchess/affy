@@ -11,6 +11,9 @@ ppset.ttest(ppset, covariate, pmcorrect.fun = pmcorrect.pmonly, ...)
 }
 \arguments{
   \item{abatch}{ An object inheriting from \code{AffyBatch}.}
+  \item{ppset}{ An object of class \code{ProbeSet}.}
+  \item{covariate}{ the name a covariate in the slot \code{phenoData}.}
+  \item{pmcorrect.fun}{ a function to corrrect PM intensities}
   \item{FUN}{ A function working on a \code{ProbeSet} }
   \item{genenames}{ A list of Affymetrix probesets ids to work with. All
   probe set ids used when \code{NULL}.}
