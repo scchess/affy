@@ -78,7 +78,7 @@
               
               
               i <- 0
-              while(i <= length(how)) {
+              while(i < length(how)) {
                 i <- i+1
                 
                 if (debug.affy123)
@@ -123,13 +123,17 @@
                     ## download the missing cdfenv pack
                     
                     if (how[[i]]$autoload) {
-                      cat(paste("Trying to download the package '", cdfname, "'...\n", sep=""))
+                      cat(paste("Environment",cdfname,"is not available.\n"))
+                      cat("This environment contains needed probe location information.\n\n")
+                      
+                      cat(paste("We will try to download and install the",
+                                cdfname,"package.\n\n"))
                       if (! "package:reposTools" %in% search()) {
                         on.exit(detach("package:reposTools"))
                       }
                       
                       if (! require(reposTools))
-                        stop("The package reposTools is required to download environments.")
+                        stop("The package reposTools is required to download environments.\nPlease download and install it.\n")
                       
                       reposEntry <- getReposEntry(how[[i]]$repository)
                       
@@ -148,9 +152,13 @@
                   if (length(loc) > 1)
                     warning(paste("several packages with a matching name. Using the one at", loc[1]))
                   
-                  do.call("library", list(cdfname, lib.loc=dirname(loc[1])))
-                  
-                  return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
+                  existsnow<- .find.package(cdfname, lib.loc=where, quiet=TRUE)
+
+                  if(!identical(loc, character(0))){
+                    do.call("library", list(cdfname, lib.loc=dirname(loc[1])))
+                    
+                    return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
+                  }
                 }
                 
                 
@@ -171,11 +179,18 @@
                     return(as.environment(get(object@cdfName,inherits=FALSE,envir=where)))
                 }
               }
-              stop(paste("Information about probe locations for",
-                         object@cdfName,
-                         " could not be found.\nTry downloading the",
-                         cleancdfname(object@cdfName),
-                         "package from\nhttp://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n"))
+              stop(paste("\nWe could not find and/or install the necessary probe location information.\n",
+                         "Here is a list of common problems and possible solutions:\n\n",
+                         "Problem 1: You are not connected to the Internet.\n",
+                         "Solution:  Try again once you connect to the Internet.\n\n",
+                         "Problem 2: You do not have the necessary permissions to install packages.\n",
+                         "Solution:  Ask your system administrator to install ",cleancdfname(object@cdfName), " package from:\n",
+                         "           http://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n\n",
+                         "Problem 3: Necessary package not available from Bioconductor.\n",
+                         "Solution:  Use makecdfenv package to create environment from CDF file.\n",
+                         "           See the dealing_with_cdfenvs vignette for more details\n\n",
+                         "NOTE: Once you install ",cleancdfname(object@cdfName)," you should not have this problem again.\n",
+                         sep=""))
             },
             where=where)
   
