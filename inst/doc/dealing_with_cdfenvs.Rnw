@@ -171,8 +171,11 @@ particular place. For that you need to change the {\it installdir} (passed
 to the function \Rfunction{install.packages2} of the package \Rpackage{reposTools}).
 <<results=hide>>=
 my.installdir <- "mydir/is/here"
-has.installdir <- unlist(lapply(affy.opt$probesloc,
-                                function(x) grep(names(x), "installdir")))
+has.installdir <- unlist(lapply(affy.opt$probesloc, function(x) 
+                                if("installdir"%in%names(x)) 
+                                grep("installdir",names(x))
+                                else numeric(0)
+                                ))
 l <- lapply(affy.opt$probesloc,
             function(x)  {
               if("installdir" %in% names(x)) {
