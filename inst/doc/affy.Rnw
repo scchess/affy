@@ -89,6 +89,8 @@ The command \verb+library()+ within an R console will list the package installed
 The missing packages can be downloaded from the {\it CRAN} website ({\it http://www.r-project.org/}) or from the
 {\it bioconductor} website ({\it http://www.bioconductor.org/}).
 
+The package has demo script showing some of the functionalities. Enter \verb+demo(affy.tour)+ after having loaded the library (with the command \verb+library(affy)+.
+
 \section{Classes}
 
 Objects can be used to model actors of a process, and let one interact with it an reasonably intuitive way.
