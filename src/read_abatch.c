@@ -485,6 +485,11 @@ static int read_cel_file_intensities(char *filename, double *intensity, int chip
     cur_y = atoi(get_token(cur_tokenset,1));
     cur_mean = atof(get_token(cur_tokenset,2)); */
     
+    if (strlen(buffer) <=2){
+      Rprintf("Warning: found an empty line where not expected in %s.\n This means that there is a cel intensity missing from the cel file.\n Sucessfully read to cel intensity %d of %d expected\n", filename, i-1, i);
+      break;
+    }
+
     current_token = strtok(buffer," \t");
     cur_x = atoi(current_token);
     current_token = strtok(NULL," \t");
