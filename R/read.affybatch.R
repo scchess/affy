@@ -108,9 +108,9 @@ read.affybatch <- function(..., filenames=character(0),
     if (verbose) cat("done.\n")
     
     if (cel@cdfName != ref.cdfName)
-      warning(paste("\n*****\nDetected a mismatch of the cdfName: found ", cel@cdfName,
-              ", expected ", ref.cdfName, "\nin file number", i, "(", filenames[[i]], ")\n",
-              "Please make sure all cel files belong to the same chip type!\n****\n", sep=""))
+      warning(paste("\n***\nDetected a mismatch of the cdfName: found ", cel@cdfName,
+              ", expected ", ref.cdfName, "\nin file number ", i, " (", filenames[[i]], ")\n",
+              "Please make sure all cel files belong to the same chip type!\n***\n", sep=""))
 
     intensity(conty)[, i] <- c(intensity(cel))
     
