@@ -16,6 +16,9 @@ Things done:
     type which specifies whether to be pmonly, mmonly, both together 
     or both separately. This introduces more consistency to the how
     the normalization routines are actually applied to affybatchs.
+ 
+  o express() has been completely removed.
+
 
 Things that would be good to see before next release:
   o More consistent usage/application of MIAME

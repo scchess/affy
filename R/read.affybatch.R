@@ -209,7 +209,7 @@ ReadAffy <- function(..., filenames=character(0),
   description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
 
   ##and now we are ready to read cel files
-  return(read.affybatch(filenames=filenames,
+  return(read.affybatch2(filenames=filenames,
                         phenoData=phenoData,
                         description=description,
                         notes=notes,

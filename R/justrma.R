@@ -1,3 +1,6 @@
+## Sept 11, 2003 - justRMA calls just.rma2
+
+
 just.rma <- function(..., filenames=character(0),
                      phenoData=new("phenoData"),
                      description=NULL,
@@ -170,7 +173,7 @@ justRMA <- function(..., filenames=character(0),
   description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
 
   ##and now we are ready to read cel files
-  return(just.rma(filenames=filenames,
+  return(just.rma2(filenames=filenames,
                         phenoData=phenoData,
                         description=description,
                         notes=notes,

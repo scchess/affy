@@ -58,7 +58,7 @@ justRMA(..., filenames=character(0),
 }
 
 \details{
-\code{justRMA} is a wrapper for \code{just.rma} that permits the
+\code{justRMA} is a wrapper for \code{just.rma2} that permits the
 user to read in phenoData, MIAME information, and CEL files using
 widgets. One can also define files where to read phenoData and MIAME
 information.
@@ -94,7 +94,8 @@ passed along to the function \code{\link{read.celfile}}.
   An \code{exprSet} object.
 }
 
-\author{James MacDonald <jmacdon@med.umich.edu>}
+\author{In the beginning: James MacDonald <jmacdon@med.umich.edu>
+Supporting routines, maintainence and just.rma2: Ben Bolstad <bolstad@stat.berkeley.edu>}
 \seealso{\code{\link[affy]{rma}},\code{\link[affy]{ReadAffy}}}
 
 \examples{
