@@ -49,11 +49,11 @@ Calling this method actually does nothing. It returns the object unchanged. May 
 
 \subsection{rma/rma2}
 
-These are background adjustment implementations for the rma method \cite{iriz:etal:2003}. They differ only in how they estimate a set of parameters (generally you should use \verb+rma+ in preference to \verb+rma2+. In both cases PM probe intensities are corrected by using a global model for the distribution of probe intensities. The model is suggested by looking at plots of the empirical distribution of probe intensities.  In particular the observed PM probes are modeled as the sum of a normal noise component N (Normal with mean $\mu$ and variance $\sigma^2$) and a exponential signal component S (exponential with mean $\alpha$). To avoid any possibilty of negatives, the normal is trucated at zero. Given we have O the observed intensity, this leads to an adjustment.
+These are background adjustment implementations for the rma method \cite{iriz:etal:2003}. They differ only in how they estimate a set of parameters (generally you should use \verb+rma+ in preference to \verb+rma2+. In both cases PM probe intensities are corrected by using a global model for the distribution of probe intensities. The model is suggested by looking at plots of the empirical distribution of probe intensities.  In particular the observed PM probes are modeled as the sum of a normal noise component N (Normal with mean $\mu$ and variance $\sigma^2$) and a exponential signal component S (exponential with mean $\alpha$). To avoid any possibilty of negatives, the normal is trucated at zero. Given we have O the observed intensity, this then leads to an adjustment.
 \begin{equation*}
 E\left(s \lvert O=o\right) = a + b \frac{\phi\left(\frac{a}{b}\right) - \phi\left(\frac{o-a}{b}\right)}{\Phi\left(\frac{a}{b}\right) + \Phi\left(\frac{o-a}{b}\right) - 1 }
 \end{equation*}
-where $a =  s- \mu - \sigma^2\alpha$ and $b = \sigma$.
+where $a =  s- \mu - \sigma^2\alpha$ and $b = \sigma$. Note that $\phi$ and $\Phi$ are the standard normal distribution density and distribution functions respectively.
 
 Note that MM probe intensitys are not corrrected by either of these routines.
 
