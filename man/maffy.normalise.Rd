@@ -1,5 +1,6 @@
 \name{maffy.normalise}
 \alias{maffy.normalise}
+\alias{normalize.contrast}
 \title{Normalise Itensities}
 \description{Normalises feauture intensities from
   \code{\link{probe.level.object}}s}

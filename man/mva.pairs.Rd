@@ -23,12 +23,12 @@ mva.pairs(x, labels=colnames(x), log.it=T,span=2/3,family.loess="symmetric",
   \item{\dots}{graphical parameters can be given as arguments to \code{mva.plot}}}
 \author{Rafael A. Irizarry}
 \examples{
-    ##affy.mva.pairs calls the function mva.pairs. here is an example:
+    
     x <- matrix(rnorm(4000),1000,4)
     x[,1] <- x[,1]^2
     dimnames(x) <- list(NULL,c("chip 1","chip 2","chip 3","chip 4"))
     mva.pairs(x,log=F,main="example")
 }
 
-\seealso{\code{\link{affy.mva.pairs}}}
+\seealso{\code{\link{Plob}}}
 \keyword{hplot}

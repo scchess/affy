@@ -35,7 +35,7 @@ normalize.Plob.quantiles <- function(object) {
 
   x <- normalize.quantiles(rbind(pm(object),mm(object)))
   n <- dim(x)[1]/2
-  pm(object) <- x[1:n,]
+  pm(object) <- x[1:n,] 
   mm(object) <- x[(n+1):(2*n),]
   return(object)
 

@@ -38,10 +38,13 @@ normalize.Plob.loess <- function(plob,...){
 
   x <- normalize.loess(x, ...)
 
+  
+  
   for (i in 1:plob@nchips) {
     plob@pm[,i] <- x[1:plob@nprobes, i]
     plob@mm[,i] <- x[plob@nprobes+1:plob@nprobes*2, i]
   }
+
   
   return(plob)
 }
