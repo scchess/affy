@@ -15,7 +15,7 @@ normalize.Cel.container.constant <- function(container, refindex=1, FUN=mean, na
                       constant=attr(m,"constant"))
     attr(m,"constant") <- NULL
     intensity(container)[, , i] <- m
-    history(listcel)[[i]] <- myhistory
+    history(container)[[i]] <- myhistory
   }
   return(container)
 }       
