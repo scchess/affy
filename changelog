@@ -1,98 +1,28 @@
-##took out the names functions
-*names.Cdf
-*names.Cel.R
-*names.Plob.R
-*names.PPSet.R
-	
-##added the following S4 methods for Plob
-pm
-mm
-nchips
-nprobes
-chip.names
-probe.names
-cdf
-ngenes
-x
-y
-numbers	
-ncol
-nrow
-plot
-hist
-pData
-varLabels
-phenoData
-	
-##removed the function plot.Plob
-*cvs remove plot.Plob.R
-##removed the function hist.Plob
-*cvs remove hist.Plob.R
-##removed the function boxplot.Plob
-*cvs remove boxplot.Plob.R
-
-##changed Plob class to have the following slots to make more similar to
-##exprSet and also to avoid slots that are not needed 
-
-pm
-mm
-name
-numbers
-cdf.names
-x
-y
-nrow
-ncol
-phenoData
-annotation
-description
-notes
-
-added the following methods to cel
-intensity
-sd
-chipName
-masks
-outliers
-history
-image
-
-*remove the file image.Cel
-
-added the following methods for cdf
-name.levels
-pbase
-pbase.levels
-tbase
-tbase.levels
-atom
-probeNames
-
-added the following methods for PPSet
-probes
-probeName
-pm
-mm
-barplot
-plot
-
-*removed files plot.PPSet and barplot.PPSet
-
-changed normalize generic 
-added normalize.Plob.quantiles
-added normalize.Plob.contrasts
-added normalize.Cel.contrasts
-*added file normalize.contrasts
-##laurent: can you add a normalize.Cel.contrast
-	
-for PPSet.container i added:
-probeNames
 ###ask laurent: whats wrong with CDF.example
+----> For some (mysterious) reasons, save(..., ascii=TRUE) is behaving wrong on my linux box
+at home. I saved it  with ascii=FALSE (portability could be .....)   LG
 ###why not have a slot in cel.container denoting the default Cdf
 ###then change all functions so that one does not need to pass Cdf
 ###with this and some methods we maybe able to get rid of Plobs entirely 
 ###maybe this is a version 2.0 task.
+----> Yep... mentioned in the file TODO for some time now...
 
+
+Yo, Laurentz takin' the mike now:
+
+- fixed a problem with CDF.example.RData
+- updated the documentation for the normalize functions
+(should keep 'R CMD check happy')
+- introduced a generic method 'normalize.methods' (Plob and Cel.container)
+- variables related to normalize.methods (normalize.Cel.container.methods and
+normalize.Plob.methods) are created.
+- changed the methods names 'normalize.Cel.XYZ' to 'normalize.Cel.container.XYZ'
+(more consistent). Documentation shoudlhave been updated accordingly.
+- removed image.Cel.Rd
+- fixed the method image for Cel-class. Added better ways of asking the function
+to mask areas. updated the documentation accordingly.
+- did a bit more with affy.Rnw (in inst/doc/). Now it goes through Sweave ok.
+- update the file 'TODO'
 
 
 

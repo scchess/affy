@@ -1,4 +1,4 @@
-normalize.Cel.loess <- function(listcel, ...) {
+normalize.Cel.container.loess <- function(listcel, ...) {
   
   cols <- length(listcel)
   rows <- length(listcel[[1]]@intensity) # assuming all the Cel are of the same size in listcel

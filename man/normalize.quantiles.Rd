@@ -1,6 +1,7 @@
 \name{normalize.quantiles}
 \alias{normalize.quantiles}
-\alias{normalize.Cel.quantiles}
+\alias{normalize.Cel.container.quantiles}
+\alias{normalize.Plob.quantiles}
 \title{Quantile Normalization}
 \description{
   Using a normalization based upon quantiles, this function
@@ -8,20 +9,22 @@
 }
 \usage{
   normalize.quantiles(x)
-  normalize.Cel.quantiles(listcel)
+  normalize.Cel.container.quantiles(listcel)
+  normalize.Plob.quantiles(plob)
 }
 \arguments{
   \item{x}{A matrix of intensities where each column corresponds to a
     chip and each row is a probe.}
   \item{listcel}{A \code{\link{Cel.container}}}
+  \item{plob}{A \code{\link{Plob}}}
 }
 \details{This method is based upon the concept of a quantile-quantile
   plot extended to n dimensions. No special allowances are made for outliers.
 }
 
 \value{
-  a matrix of normalized intensites or a \code{Cel.container} of
-  normalized arrays.}
+  a matrix of normalized intensites, or a \code{Cel.container} of
+  normalized arrays, or a \code{Plob}.} 
 
 \author{Ben Bolstad, \email{bolstad@stat.berkeley.edu}}
 

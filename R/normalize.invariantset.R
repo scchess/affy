@@ -95,7 +95,7 @@ normalize.Plob.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007),
 
 
 
-normalize.Cel.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
+normalize.Cel.container.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
 
   if (! inherits(container, "Cel.container"))
     stop("container must be a 'Cel.container' obejct")

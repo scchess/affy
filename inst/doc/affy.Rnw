@@ -1,7 +1,7 @@
 \documentclass[a4,11pt]{article}
 
 \usepackage{hyperref}
-\usepackage[dvips]{grahicx}
+\usepackage[dvips]{graphicx}
 
 \title{AN R SOFTWARE ENVIRONMENT FOR ANALYSIS OF OLIGONUCLEOTIDES ARRAY DATA}
 
@@ -13,7 +13,7 @@
 
 \begin{document}
 
-\maketile
+\maketitle
 
 \section{Introduction}
 The package results from the fusion of simultaneous efforts. When he became aware of the existence of {\it an another one},
@@ -122,8 +122,8 @@ parts of the same larger sequence, hence have the same name. Names are stored as
 attribute \verb+name.levels+.
 
 Example:
-\vignette{Cdf-class}
-  ## 
+%\vignette{Cdf-class}
+<<>>= 
   data(CDF.example)
 
   geneid <- "D13640_at"
@@ -135,8 +135,8 @@ Example:
   genepos <- which(CDF.example@name == i, arr.ind=TRUE)
   ## genepos holds the x,y's corresponding to "D13640_at"
   ## the function locate.name() is working this way.
-
-\end{verbatim}
+@
+%\end{verbatim}
 
  \item[name.level]
  \item[pbase] In the {\it CDF} files, the column called {\it PBASE} holds one of the nucleic acid letters. From trials and errors
@@ -151,8 +151,8 @@ Example:
 This number is refered as the {\it atom} number. The corresponding {\it perfect matches} and {\it mismatches} are found by using this number.
 
 Example:
-\vignette{Cdf-class}
-  ## 
+%\vignette{Cdf-class}
+<<>>= 
   data(CDF.example)
 
   ## store in x the size of the probe pair sets
@@ -167,23 +167,9 @@ Example:
   
   ## note: these probe pair sets mostly exist because of the example CDF
   ## (which is a corner of a Hu6800 chip).
-\end{verbatim}
+@
+%\end{verbatim}
 \end{description}
-
-\begin{tabular}{|p{2.5cm}|p{8cm}|}
-%\label{table:Cdf}
-\hline
-\multicolumn{2}{|c|}{\textbf{Class Cdf - slots}}\\
-\hline
-name & matrix of 'factors' for the gene names corresponding to the probes.\\
-name.levels & the levels corresponding to the `name'. \\
-pbase & matrix of 'factors' of pbases.\\
-pbase.levels & the corresponding levels.\\
-tbase & matrix of 'factors' of tbases.\\
-tbase.levels & the corresponding levels.\\
-atom & matrix of atom numbers.\\
-\hline
-\end{tabular} 
 
 \subsection{class Cel}
 
@@ -208,42 +194,24 @@ Objects of class \verb+Plob+ (see~\ref{subsection:Plob}, page~\pageref{subsectio
 data structure and can be an alternative. A convenience function to shuttle between the data structure can be
 found in the package (XXX ref). 
 
-\begin{tabular}{|p{2.5cm}|p{8cm}|}
-%\label{table:Cel}
-\hline
-\multicolumn{2}{|c|}{\textbf{Class Cel - slots}}\\
-\hline
-name & the name given to this CEL file data... the file name by default.\\
-intensity & intensity values in a matrix of dimension (nrow,ncol)\\
-sd & standard deviation for the intensity values (as they are
-    included in the CEL files there might be a use for them).\\
-masks & \\
-outliers & \\
-history & a list. Informations about the nature of the data.\\
-\hline
-\end{tabular} 
-
 \begin{description}
   \item[show]
   \item[image]
 \end{description}
 
-\begin{tabular}{|p{2.5cm}|p{8cm}|}
-%\label{table:Cdf}
-\hline
-\multicolumn{2}{|c|}{\textbf{Class Cel - methods}}\\
-\hline
-show & \\
-image & Display the intensities in the \verb+Cel+ according to their spatial locations.\\
-\hline
-\end{tabular} 
-
 \subsection{class Cel.container}
 
 The class \verb+Cel.container+ extends the class \verb+container+ of the package {\it Biobase}. It allows to bundle a collection of \verb+Cel+ instances
-together. Typically, a \verb+Cel.container+ will contain \verb+Cel+ intances sharing the same \verb+Cdf+.
-A \verb+Cel.container+ can be {\it normalized}, which means its \verb+Cel+ elements will be scaled to be comparable. More details about
-normalizing can be found in the section~\ref{XXXnormalize}, page~\pageref{XXXnormalize}
+together. Typically, a \verb+Cel.container+ will contain \verb+Cel+ instances sharing the same \verb+Cdf+
+% \footnote{We plan to have
+%a link to the \verb+Cdf+ included in \verb+Cel.container+... probably in the next version...}.
+
+\begin{description}
+  \item[show]
+  \item[normalize] A \verb+Cel.container+ can be {\it normalized}, which means its \verb+Cel+ elements will be scaled to be comparable. More details about normalization can be found in the section~\ref{sec:normalize}, page~\pageref{sec:normalize}.
+  \item[normalize.methods] Returns the known normalization methods for the \verb+Cel+.
+
+\end{description}
 
 \subsection{class PPSet}
 
@@ -258,31 +226,12 @@ normalizing can be found in the section~\ref{XXXnormalize}, page~\pageref{XXXnor
   \item[plot]
 \end{description}
 
-\begin{tabular}{|p{2.5cm}|p{8cm}|}
-%\label{table:Cdf}
-\hline
-\multicolumn{2}{|c|}{\textbf{Class PPSet - methods}}\\
-\hline
-show & \\
-barplot & \\
-plot & \\
-\hline
-\end{tabular}
 
 \subsection{class PPSet.container}
 
 \begin{description}
   \item[show]
 \end{description}
-
-\begin{tabular}{|p{2.5cm}|p{8cm}|}
-%\label{table:Cdf}
-\hline
-\multicolumn{2}{|c|}{\textbf{Class PPSet.container - methods}}\\
-\hline
-show & \\
-\hline
-\end{tabular} 
 
 \subsection{class Plob}
 
@@ -297,17 +246,78 @@ are organised in a different structure. We think of it as an another point of vi
   \item[normalize]
 \end{description}
 
-\begin{tabular}{|p{2.5cm}|p{8cm}|}
+\subsection{Summary tables for the classes}
+The tables below show the main classes with their slots and methods that we thought being of prime importance.
+Comprehensive description of the classes can be found in the help files.
+
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
 %\label{table:Cdf}
 \hline
-\multicolumn{2}{|c|}{\textbf{Class Plob - methods}}\\
+\multicolumn{2}{|l|}{\textbf{Class Cdf - slots}}\\
 \hline
-show & \\
-normalize & \\
+name & matrix of 'factors' for the gene names corresponding to the probes.\\
+name.levels & the levels corresponding to the `name'. \\
+pbase & matrix of 'factors' of pbases.\\
+pbase.levels & the corresponding levels.\\
+tbase & matrix of 'factors' of tbases.\\
+tbase.levels & the corresponding levels.\\
+atom & matrix of atom numbers.\\
 \hline
 \end{tabular} 
 
-\section{}
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+%\label{table:Cel}
+\hline
+\multicolumn{2}{|l|}{\textbf{Class Cel - slots}}\\
+\hline
+name & the name given to this CEL file data... the file name by default.\\
+intensity & intensity values in a matrix of dimension (nrow,ncol)\\
+sd & standard deviation for the intensity values (as they are
+    included in the CEL files there might be a use for them).\\
+masks & \\
+outliers & \\
+history & a list. Informations about the nature of the data.\\
+\hline
+\multicolumn{2}{|l|}{\textbf{methods}}\\
+\hline
+image & Display the intensities in the \verb+Cel+ according to their spatial locations.\\
+show & \\
+\hline
+\end{tabular} 
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+%\label{table:Cdf}
+\hline
+\multicolumn{2}{|l|}{\textbf{Class Plob - methods}}\\
+\hline
+normalize & \\
+normalize.methods & \\
+show & \\
+\hline
+\end{tabular} 
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+%\label{table:Cdf}
+\hline
+\multicolumn{2}{|l|}{\textbf{Class PPSet - methods}}\\
+\hline
+show & \\
+barplot & \\
+plot & \\
+\hline
+\end{tabular}
+
+\begin{tabular}{|p{3.5cm}|p{8cm}|}
+%\label{table:Cdf}
+\hline
+\multicolumn{2}{|l|}{\textbf{Class PPSet.container - methods}}\\
+\hline
+show & \\
+\hline
+\end{tabular} 
+
+\section{Overview through steps in the data processing/data analysis}
 
  \subsection{Visual control}
 
@@ -315,34 +325,72 @@ normalize & \\
 A first example shows how one can observe the physical location of the values contained in a CEL file 
 
 In the absence of {\it CEL} files, an example can be used.
-\vignette{image.Cel}
+%\vignette{image.Cel}
+<<>>=
 library(affy)
 data(listcel)
 mycelfile <- listcel[[1]]
-\end{verbatim}
+@
+%\end{verbatim}
 If a {\it CEL} file is available, the previous lines can be replaced by
 \begin{verbatim}
 mycelfile <- read.celfile("path/to/my/celfile")
 \end{verbatim}
-or if the verb+tcltk+ library is available, the {\it CEL} file can be picked with the mouse
+or if the verb+tcltk+ library is available, the {\it CEL} file can be picked with the mouse by using
 %>>>L EXAMPLE !!!
 XXX
 
-\vignette{image.Cel}
-image(mycelfile, transf=log, main=\"log-transformed values\")
+%\vignette{image.Cel}
+<<>>=
+image(mycelfile, transf=log, main="log-transformed values")
 image(mycelfile, transf=log, col=rainbow(32),
-      main=\"log-tranfomed values\", sub=\"rainbow coloring\")
-\end{verbatim}
+      main="log-tranfomed values", sub="rainbow coloring")
+@
+%\end{verbatim}
 
-The result of these lines is show on the figure \ref{fig:image}.
+%The result of these lines is show on the figure \ref{fig:image}.
 
-\begin{figure}
-   \label{fig:image}
-   \begin{center}
-     \includegraphics[scale=.7,angle=0]{image1.pdf}
-   \end{center}
-   \caption{}
-\end{figure}
+%\begin{figure}
+%   \label{fig:image}
+%   \begin{center}
+%     \includegraphics[scale=.7,angle=0]{image1}
+%   \end{center}
+%   \caption{}
+%\end{figure}
+
+ \subsection{Normalization}
+\label{sec:normzalize}
+An important issue in microarray data analysis is to adjust the signal obtained from different arrays in order to make them
+comparable. The different approaches will only be outlined here. The reader will refer to XXX (ref!) for more details.
+
+Different approaches to normalize array data have been suggested. New methods are very likely be developped too, so
+addition of new normalization methods should be straightforward.
+It should be the case if the following indications are carefully observed.
+Brave people may want to add new normalization methods without taking these rules into considerations. 
+It should be possible, but they are on their own.
+\begin{itemize}
+ \item[-] Normalization method must obey a naming convention. The name of the function should be like \verb+normalize.XYZ.abc+,
+where \verb+abc+ is the {\it nickname} of the method and \verb+XYZ+ is the name of the object the normalization methods works on.
+Currently XYZ can only be \verb+Cel.container+ or \verb+Plob+\footnote{A general scheme for normalization of arrays, whether
+{\it Affymetrix} or cDNA (or even others in the future (?)) is currently evaluated.}
+ \item[-] The first argument passed to the function must be of class \verb+XYZ+. Optional parameter can be appended as long
+as they have default values./
+ \item[-] The {\it nickname} of the new normalization method must be registered in the variable \verb+normalize.XYZ.methods+
+ (a vector of mode {\it character}).
+\end{itemize}
+
+The following example shows how to create a normalization methods that does... absolutely nothing:
+
+%\begin{vignette}
+<<>>=
+normalize.Cel.container.nothing <- function(object) return(object)
+normalize.Cel.container.methods <- c(normalize.Cel.container.methods, "nothing")
+
+data(listcel)
+
+listcel.n <- normalize(listcel, method="nothing")
+@
+%\end{verbatim}
 
  \subsection{Probe level}
 
@@ -359,41 +407,43 @@ XXX
 
  \subsection{Expression values}
 
-The computation of expression values is done from the set of related probe pairs.
+The computation of expression values is done from the set of the corresponding probe pairs. The details of
+the different approaches suggested will not be detailed here. More details can be found in the help files
+for the respective functions.
 
 XXX
 %>>>L blablabla
 
 \section{Link with other packages}
 
-This section presents briefly how the package XXX to {\it bioconductor}.
+This section presents briefly how the package can interact with other packages of {\it bioconductor}.
 
 verb+exprSet+ objects can be generated by the functions verb+express+ and
- verb+generateExprSet.Cel.container+. XXX
+ verb+generateExprSet+. XXX
 
 %>>>L Rafael... tell us about 'express'...
 
 XXX
 
-\section{Processing workflow}
+\section{Scripting steps of the analysis}
 
 \begin{verbatim}
 R BATCH < workflow.R
-\end{vervbatim}
+\end{verbatim}
 
 
-The following lines show what can be written in the file \it{workflow.R}. It performs the complete
+The following lines show what can be written in the file {\it workflow.R}. It performs the complete
 workflow described by the manufacturer (with GUI XXX)
 
 Two paths to go from the {\it CEL} and {\it CDF} files to the expression values are suggested. One going through the verb+Plob+ objects and the
 other going through the {Cel.container} objects.
 
 XXX
-%>>>L  Rafael.... could have one for the Plobs ?
+%>>>L  Rafael.... could you have one for the Plobs ?
 
 
 
-\begin{berbatim}
+\begin{verbatim}
 
 ## ------------------
 ## load the data
@@ -408,17 +458,19 @@ cels <- read.Cel.container(XXX)
 ## scale/normalize the data
 ## ------------------
 
-
+cels.n <- normalize(cels)
 
 ## ------------------
 ## generate expression values
 ## ------------------
 
+eset <- generateExprSet(cels.n)
 
 ## ------------------
-## save the exprSet
+## save the expression values in the exprSet
 ## ------------------
 
+write.table(exprs(eset), file="flatexpr.txt", sep="\t")
 
 \end{verbatim}
 

@@ -16,7 +16,7 @@ normalize.Plob.contrasts <- function(object,span=2/3,choose.subset=T,subset.size
   return(object)
 }
 
-normalize.Cel.contrasts <- function(listcel,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric") { 
+normalize.Cel.container.contrasts <- function(listcel,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric") { 
   
   cols <- length(listcel)
   rows <- length(listcel[[1]]@intensity)
@@ -40,3 +40,11 @@ normalize.Cel.contrasts <- function(listcel,span=2/3,choose.subset=T,subset.size
   }
   return(listcel)
 }
+
+
+
+
+
+
+
+

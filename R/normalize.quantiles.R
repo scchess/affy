@@ -1,4 +1,4 @@
-normalize.Cel.quantiles <- function(listcel) {
+normalize.Cel.container.quantiles <- function(listcel) {
   ## make the matrix (not very memory friendly... will be better when HDF5,
   ## or an another mecanism is around...)
   ## note to Rafael: I hope I did not butcher your code too much... this is just

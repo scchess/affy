@@ -1,6 +1,6 @@
 \name{normalize.quantiles.robust}
 \alias{normalize.quantiles.robust}
-\title{Robusst Quantile Normalization}
+\title{Robust Quantile Normalization}
 \description{Using a normalization based upon quantiles, this function
   normalizes a matrix of probe level intensities. Special allowances are
   made for outliers on the high side.

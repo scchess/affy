@@ -23,14 +23,12 @@
   .initPlob(where)
 
   if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
-  ## this will probably move into the respective methods of Plob and Cel.container
-  ## note: inconsistency (my own fault) in the naming convention 'Cel' will probably
-  ## have to move them to 'Cel.container'
-  assign("normalize.Cel.container.methods", substr(ls(where)[grep("normalize\.Cel\.*", ls(where))],
-                                                   15, 100),
+  ## this could move into the respective methods of Plob and Cel.container later
+  assign("normalize.Cel.container.methods", substr(ls(where)[grep("normalize\.Cel\.container\.*", ls(where))],
+                                                   25, 100),
                                                    envir=as.environment(where))
   assign("normalize.Plobs.methods", substr(ls(where)[grep("normalize\.Plob\.*", ls(where))],
-                                          15,100),
+                                          25,100),
                                           envir=as.environment(where))
   
   cacheMetaData(as.environment(where))

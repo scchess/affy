@@ -1,6 +1,6 @@
 \name{normalize.loess}
 \alias{normalize.loess}
-\alias{normalize.Cel.loess}
+\alias{normalize.Cel.container.loess}
 \alias{normalize.Plob.loess}
 \title{Scale microarray data}
 \description{
@@ -10,7 +10,7 @@
 normalize.loess(mat, subset=sample(1:(dim(mat)[2]),5000),
                 epsilon=10^-2,maxit=1,log.it=T,verbose=T,span=2/3,
                 family.loess="symmetric")
-normalize.Cel.loess(listcel, ...)
+normalize.Cel.container.loess(listcel, ...)
 normalize.Plob.loess(plob, ...)
 }
 \arguments{

@@ -1,6 +1,6 @@
 ## (see normalize.invariantset.R to know more....)
 
-normalize.Cel.constant <- function(container, refindex=1, FUN=mean, na.rm=TRUE) {
+normalize.Cel.container.constant <- function(container, refindex=1, FUN=mean, na.rm=TRUE) {
   if (! inherits(container, "Cel.container"))
     stop("container must be a 'Cel.container'")
   
