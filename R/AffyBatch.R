@@ -618,6 +618,7 @@
               ##if (verbose) cat(".....done.\n")
 
               attr(eset, "pps.warnings") <- pps.warnings
+              return(eset)
               ##return(list(exprSet=eset, pps.warnings=pps.warnings))
             },
             where=where)
