@@ -19,5 +19,4 @@ Depends: R (>= 1.9.0), Biobase (>= 1.3.10), reposTools, tkWidgets (>= 1.2.2)
 Description: The package contains functions for exploratory oligonucleotide array analysis. The dependance to tkWidgets only concerns few convenience functions. 'affy' is fully functional without it.
 License: LGPL version 2 or newer
 Collate: ProgressBarText.R ppset.ttest.R ppsetApply.R expressoWidget.R getCDFenv.R AffyRNAdeg.R avdiff.R barplot.ProbeSet.R bg.Affy.chipwide.R bg.R expresso.R fit.li.wong.R generateExprVal.method.avgdiff.R generateExprVal.method.liwong.R generateExprVal.method.mas.R generateExprVal.method.medianpolish.R generateExprVal.method.playerout.R hlog.R justrma.R loess.normalize.R maffy.R mas5.R merge.AffyBatch.R  normalize.constant.R normalize.contrasts.R normalize.invariantset.R normalize.loess.R normalize.qspline.R normalize.quantiles.R pairs.AffyBatch.R plot.density.R plotLocation.R plot.ProbeSet.R pmcorrect.mas.R AffyBatch.R mva.pairs.R ProbeSet.R read.affybatch.R rma.R split.AffyBatch.R summary.R tukey.biweight.R whatcdf.R xy2indices.R zzz.R
-ReleaseLevel: devel
 
