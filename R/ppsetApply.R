@@ -22,7 +22,7 @@ ppsetApply <- function(abatch, FUN, genenames=NULL, ...) {
   names(r) <- genenames
   
   for (i in seq(along=genenames)) {
-    ## use multiget to get NA when genenames[i] not found
+    ## use mget to get NA when genenames[i] not found
     probes.i <- mget(genenames[i], envir = cdfenv, ifnotfound = NA)[[1]]
     if (all(is.na(probes.i)))
       next

@@ -160,7 +160,7 @@ setMethod("indexProbes", signature("AffyBatch", which="character"),
             ## note: the variable name genenames could be confusing (the same gene can be
             ## found in several affyid (ex: the 3' and 5' controls)
 
-            ans <-  multiget(genenames, pos, envir, iffail=NA)
+            ans <-  mget(genenames, envir, ifnotfound=NA)
 
             ## this kind of thing could be included in 'mget' as
             ## an extra feature. A function could be specified to
@@ -626,7 +626,7 @@ if (debug.affy123) cat("--->hist\n")
 if( is.null(getGeneric("hist")) )
   setGeneric("hist")
 
-setMethod("hist",signature(x="AffyBatch"),function(x,...) plotDensity.AffyBatch(x,...))
+setMethod("hist",signature(x="AffyBatch"), function(x,...) plotDensity.AffyBatch(x,...))
 
 
 if( is.null(getGeneric("mas5calls")) )

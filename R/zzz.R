@@ -101,14 +101,14 @@
 
   where <- match(paste("package:", pkgname, sep=""), search())
   all.affy <- ls(where)
- message <- FALSE
+ message <- TRUE
 
   if (message) {
     cat(rep("*",13),"\n",sep="")
     cat("affy: development version\n")
     cat(rep("*",13),"\n",sep="")
     cat(rep("*",13),"\n",sep="")
-    cat("IMPORTANT: you need the latest versions of the required packages too.\n")
+    cat("update versions of the required packages if necessary.\n")
     cat(rep("*",13),"\n",sep="")
   }
 
