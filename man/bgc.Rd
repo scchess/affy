@@ -6,6 +6,7 @@
 \alias{bg.correct.none} %took out .pmonly casue rma is pm-only
 %\alias{bg.correct.subtractmm}
 \alias{bg.correct.rma}
+\alias{bg.correct.rma2}
 \alias{bg.correct.mas}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Background Correction}
