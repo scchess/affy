@@ -330,8 +330,9 @@
               oldim <- dim(intensity(x))
               dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
               ##new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=chipNames(x)[i], cdfName=x@cdfName, outliers=outliers(x)[[i]], masks=masks(x)[[i]], history=history(x)[[i]]) ## commented out becuase no 'outliers' or 'masks'.
-              new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=chipNames(x)[i], cdfName=x@cdfName, outliers=matrix(), masks=matrix(), history=history(x)[[i]])
+              cel <- new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=chipNames(x)[i], cdfName=x@cdfName, outliers=matrix(), masks=matrix(), history=history(x)[[i]])
               dim(intensity(x)) <- oldim
+              return(cel)
             },
             where=where)
 
