@@ -152,7 +152,7 @@ This is the summarization used in the RMA expression summary \cite{iriz:etal:200
 \begin{equation*}
 \log_2\left(PM^{(k)}_{ij}\right) = \alpha_i^{(k)} + \beta_j^{(k)} + \epsilon_{ij}^{(k)}
 \end{equation*}
-where $\alpha_i$ is a probe effect and $\beta_j$ is the $\log_2$ expression value. The medianpolish is an algorithm (see \cite{tukey:1977}) for fitting this model robustly.
+where $\alpha_i$ is a probe effect and $\beta_j$ is the $\log_2$ expression value. The medianpolish is an algorithm (see \cite{tukey:1977}) for fitting this model robustly. Please note that expression values you get using this summary measure will be in $\log_2$ scale.
 
 \subsection{playerout}
 
