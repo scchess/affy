@@ -9,8 +9,6 @@
 ## All the functions in such a 'scaling function' file must be like
 ## 'normalize.xxx.yyy' or 'normalize.yyy'. 'xxx' has to be whether 'Cel' for Affymetrix worshipers,
 ## whether 'cdna' cDNA arrays devotees (other names will come if other popular formats show up).
-## NOTE TO SANDRINE: You are the cDNA array objects guru... it's up to you there... comments ?
-##'yyy' has to be the name of the scaling function.
 
 ## As you probably already suspect it from above, there is one single function 'normalize.yyy'
 ## per file. This last function is the data-format-independant algorithm.
@@ -26,20 +24,6 @@
 ## procedure (note: they come from the 'scale.yyy' as an attribute). This is probably
 ## a temporary (but decent) solution.
 ##
-## Careful readers will notice that while the function 'normalize.xxx.yyy' works on a container
-## of all the cel objects to scale, the 'normalize.yyy' works on a pair of dataset, one being the
-## set to scale and the other the being the reference. This is an attempt to minimize memory
-## consumption as this algorithm works sequencially on the data to scale (more careful readers
-## may object that this may not change much in the memory usage, to whom I would reply that well
-## may be but it would let one make a routine to read sequencially the files and normalize them
-## more easily this... anyways HDF5 is coming so those are peculiar considerations... but in the
-## meanwhile I can scale 50 chips on my computer at home...=) ).
-##
-## See Normalize.Cel.Rd to know more about how will one scale painlessly...
-
-
-
-
 
 normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), progress=FALSE) {
 
