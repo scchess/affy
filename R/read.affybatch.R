@@ -73,12 +73,6 @@ read.affybatch <- function(..., filenames=character(0),
   if (verbose)
     cat("done.\n")
   
-  if (insitu) {
-    intensity(conty) <- get("<+")(intensity(conty), , 1, c(intensity(cel)))
-  } else {
-    intensity(conty)[, 1] <- c(intensity(cel))
-  }
-  
   ##if (sd)
   ##  spotsd(conty)[, , 1] <- spotsd(cel)
   
