@@ -13,7 +13,7 @@ SEXP getallLocations(SEXP namesR, SEXP dimR, SEXP atomsR, SEXP ispmR, SEXP nb_af
 /* Takes as input a matrix of integers (the slot 'name'
    of a 'Cdf' object), and return a list of 'locations'.
    Each locations is a (n,2) array (n being the number of
-   probes related to an affyid).
+   probes related to an affyid).*/
 /*********************************************/
 
 
@@ -22,8 +22,8 @@ SEXP getallLocations(SEXP namesR, SEXP dimR, SEXP atomsR, SEXP selectR, SEXP nb_
   int ii, jj;
   int *names, *atoms, *select;
   int *nbElements;
-  //int *iLastElement;
-  int x;
+  int iLastElementNA;
+  int x, nAtom;
   
   SEXP loc_list;
   SEXP tmp_dim;
@@ -34,14 +34,15 @@ SEXP getallLocations(SEXP namesR, SEXP dimR, SEXP atomsR, SEXP selectR, SEXP nb_
   names = INTEGER_POINTER(namesR);
   atoms = INTEGER_POINTER(atomsR);
   select = INTEGER_POINTER(selectR);
+  
   nbElements = (int *)R_alloc(nb_affyid, sizeof(int));
+  iLastElementNA = 0;
   
   PROTECT(loc_list = NEW_LIST(nb_affyid));
   PROTECT(tmp_dim = NEW_INTEGER(2));
   
   for (ii=0; ii<nb_affyid; ii++) {
     nbElements[ii] = 0;
-    //iLastElement[ii] = 0;
   }
   
   /* count the number of elemets for each affyid */
@@ -73,7 +74,7 @@ SEXP getallLocations(SEXP namesR, SEXP dimR, SEXP atomsR, SEXP selectR, SEXP nb_
       INTEGER_POINTER(tmp_dim)[1] = 2;
     }
     SET_DIM(VECTOR_ELT(loc_list, ii), tmp_dim);
-    //printf("%i:%i  -- ",ii,nbElements[ii]);
+    
     /* extra-paranoia set the locations to NA */
     for (jj = 0; jj<nbElements[ii]*2; jj++) {
       INTEGER_POINTER(VECTOR_ELT(loc_list, ii))[jj] = NA_INTEGER;
@@ -90,23 +91,29 @@ SEXP getallLocations(SEXP namesR, SEXP dimR, SEXP atomsR, SEXP selectR, SEXP nb_
       
       x = names[ii + nrows * jj];
       
+      /* sanity check */      
       if (x == NA_INTEGER) {
 	x = nb_affyid;
+	nAtom = iLastElementNA++;
+      } else {
+	nAtom = atoms[ii + nrows * jj];
       }
-      /* sanity check */
-      /*DEBUG*/
-      if (x == 29) {
-	//printf("ii=%i, jj=%i, affyid=%i, atom=%i, maxatom=%i\n", ii+1, jj+1, x, atoms[ii + nrows * (jj)], nbElements[x-1]);
+      if ((nAtom < 0) | (nAtom > nbElements[x-1])) {
+	error("Inconsistency in the Cdf object (slot atom, element [%i,%i])!", ii+1, jj+1);
       }
-      
-      INTEGER_POINTER(VECTOR_ELT(loc_list, x-1))[atoms[ii + nrows * jj] + nbElements[x-1] * 0] = ii+1;
-      INTEGER_POINTER(VECTOR_ELT(loc_list, x-1))[atoms[ii + nrows * jj] + nbElements[x-1] * 1] = jj+1;
+	
+      INTEGER_POINTER(VECTOR_ELT(loc_list, x-1))[nAtom + nbElements[x-1] * 0] = ii+1;
+      INTEGER_POINTER(VECTOR_ELT(loc_list, x-1))[nAtom + nbElements[x-1] * 1] = jj+1;
       //iLastElement[x-1]++;
     }
   }
   UNPROTECT(2);
   return loc_list;
 }
+
+
+
+
 
 
 
