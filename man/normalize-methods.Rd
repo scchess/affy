@@ -50,7 +50,7 @@ normalize.methods(object)
   \code{normalize.Plob.methods} respectively. See the general documentation of the
   package to know more (like how to add your own methods).
   (if you do not know how to use Sweave to generate the documentation,
-  you can get from http://www.cbs.dtu/laurent/download#affy.html).
+  you can get it from http://www.cbs.dtu/laurent/download/index.html#affy).
   
 }
 \seealso{
