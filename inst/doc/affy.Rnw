@@ -1,6 +1,7 @@
 \documentclass[a4,11pt]{article}
 
 \usepackage{hyperref}
+\usepackage[dvips]{grahicx}
 
 \title{AN R SOFTWARE ENVIRONMENT FOR ANALYSIS OF OLIGONUCLEOTIDES ARRAY DATA}
 
@@ -10,7 +11,6 @@
   {\em #1}
 }
 
-\usepackage{graphicx}
 \begin{document}
 
 \maketile
@@ -191,6 +191,15 @@ Objects of class \verb+Cel+ contain the informations held in {\it CEL} files.
 
 It was decided to use matrices to store the data. The lookup of values at particular
 positions on the chip becomes extremely easy.
+
+\begin{figure}[h]
+   \label{fig:image}
+   \begin{center}
+     \includegraphics[scale=.6,angle=0]{gridcel.ps}
+   \end{center}
+   \caption{The data matrix used to store the data can be thought of as a grid. Knowing the position of probes on the grid, finding the values
+for them is done by indexing the corresponding elements.}
+\end{figure}
 
 The combination of the \verb+Cel+ and the \verb+Cdf+ allows to extract XXXblabla any kind of informations XXX.
 The choices in the design might be considered awkward, as the resulting data structure can be perceived as more
@@ -404,8 +413,6 @@ cels <- read.Cel.container(XXX)
 ## ------------------
 ## generate expression values
 ## ------------------
-
-res <- generate.all.ev(cellist, CDF, method="affy")
 
 
 ## ------------------
