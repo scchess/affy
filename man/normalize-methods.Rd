@@ -11,20 +11,19 @@
   Normalize chips intensity data.
 }
 \usage{
-normalize(object, method, ...)
+normalize(object,...)
 
 normalize.methods(object)
 }
 \arguments{
   \item{object}{An \code{AffyBatch}}
-  \item{method}{the method used to scale. Different methods will be
-    available for the different type of array data.}
-  \item{...}{Optional arguments for the normalization funtion. See the
+  \item{...}{Optional arguments for the normalization funtion, amond
+    which \code{method}. See
     details below.}
 }
 \details{
   Generic methods related to array data normalization. Currently defined for
-  \code{AffyBatch} objects...
+  \code{AffyBatch}\ldots
 
   The method \code{normalize} returns a normalized object, which can be
   used further for analysis or expression values generation.
@@ -33,16 +32,12 @@ normalize.methods(object)
   A list of \emph{nicknames} for the known methods for an object is returned by
   \code{normalize.methods}. If the nickname of a method is called for
   example "loess", the help page can be accessed by doing \code{normalize?loess}.
-  The \emph{nicknames} are stored in
-  \code{normalize.AffyBatch.methods}. See the general
-  documentation of the package to know more (like how to add your own methods).
-}
-\author{
-  laurent
+  Refer to the vignette describing how to add processing methods for
+  further details.
 }
 \seealso{
   \code{\link{AffyBatch-class}} and the
-  documentations for the respective normalizarion methods.
+  documentations for the respective normalization methods.
   }
 \examples{
 }

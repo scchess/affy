@@ -104,8 +104,11 @@ Class \code{"exprSet"}, directly.
       for \code{ncol}.}
     \item{nrow}{\code{signature(x = "AffyBatch")}: an accessor function
       for \code{nrow}}.}
-    \item{normalize}{\code{signature(object = "AffyBatch", method="character")}: a method to
-    \code{\link{normalize}}.}
+    \item{normalize}{\code{signature(object = "AffyBatch")}: a method to
+      \code{\link{normalize}}. The method accepts an argument
+      \code{method}. The default methods is specified in package options
+      (see the main vignette).
+    }
     \item{normalize.methods}{\code{signature(object = "AffyBatch")}:
       returns the normalization methods defined for this class. See \code{\link{normalize}}.}
     \item{probeNames}{\code{signature(object = "AffyBatch")}: returns
