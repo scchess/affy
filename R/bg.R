@@ -33,3 +33,8 @@ bg.adjust <- function(pmmm,n.pts=2^14){
 }
 
 subtractmm <- function(pmmm) pmmm[1:n.probes] - pmmm[(n.probes+1):(2*n.probes)]
+
+bgc <- function(object,bg=bg.adjust){
+  pm(object) <- apply(rbind(pm(object),mm(object)),2,bg)
+  object
+}

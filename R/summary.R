@@ -22,6 +22,13 @@ li.wong <- function(x,remove.outliers=T,
   c(e$theta,e$sigma.theta)
 }
 
+medianpolish <- function(x,...){
+  cat(".")
+  tmp <- medpolish(log2(x),...)
+  c(tmp$overall + tmp$col,rep(NA,ncol(x)))
+}
+
+
 biweight <- function(x,...){
   Nprobes <- dim(x)[1]
   Nchips <- dim(x)[2]
@@ -29,7 +36,7 @@ biweight <- function(x,...){
   probes <- as.factor(rep(1:Nprobes,Nchips))
   samps <- as.factor(rep(1:Nchips,rep(Nprobes,Nchips)))
   
-  z  <-rlm(as.vector(log2(x))~samps+probes,psi=psi.bisquare,maxit=50,...)
+  z  <- rlm(as.vector(log2(x))~samps+probes,psi=psi.bisquare,maxit=50,...)
 ##add se's later
   c(z$coef[1],z$coef[1]+z$coef[2:Nchips],rep(NA,Nchips))
 }
