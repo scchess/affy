@@ -383,7 +383,7 @@
       else
         intensity.mm <- intensity(object)[i.mm, ,drop=FALSE]
       
-      p.pps[[i]] <- new("ProbeSet", pm = intensity.pm, mm = intensity.mm)
+      p.pps[[i]] <- new("ProbeSet", id = genenames[i], pm = intensity.pm, mm = intensity.mm)
     }
     
     options("BioC"=oldoptions)
@@ -411,17 +411,17 @@
       phenoData(x) <- phenoData(x)[i, , ..., drop=FALSE]
       intensity(x) <- intensity(x)[ ,i, ..., drop=FALSE]
     }
-    x
+    return(x)
   },where=where)
   
   setReplaceMethod("[", "AffyBatch", function(x, i, j,..., value) {
     phenoData(x)[i,, ...] <- phenoData(value)[i, , ..., drop=FALSE]
     intensity(x)[,i]      <- intensity(value)[ ,i,... , drop=FALSE]
-    x
+    return(x)
   },where=where)
 
-  ## normalize.methods
-  if (debug.affy123) cat("--->normzalize.methods\n")
+  ## --- normalize.methods
+  if (debug.affy123) cat("--->normalize.methods\n")
   if( !isGeneric("normalize.methods") )
     setGeneric("normalize.methods", function(object)
                standardGeneric("normalize.methods"),
@@ -594,10 +594,10 @@
               eset <- new("exprSet",
                           exprs=exp.mat,
                           se.exprs=se.mat, ##this changed
-                          phenoData=phenoData(x),
-                          description=description(x),
-                          annotation=annotation(x),
-                          notes=notes(x))
+                          phenoData=phenoData(x))
+                          ##description=description(x)
+                          ##annotation=annotation(x),
+                          ##notes=notes(x))
               ##if (verbose) cat(".....done.\n")
               
               return(eset)
