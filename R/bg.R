@@ -31,7 +31,7 @@ bg.adjust <- function(pm, mm, n.pts=2^14){
 }
 
 subtractmm <- function(pm, mm){
-  pm - mm
+  return(pm - mm)
 }
 
 bgc <- function(object,bg=bg.adjust){
