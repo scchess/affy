@@ -7,15 +7,16 @@
   Generate an expression from the probes
 }
 \usage{
-generateExprVal.method.avgdiff(probes)
-generateExprVal.method.medianpolish(probes)
-generateExprVal.method.liwong(probes)
+generateExprVal.method.avgdiff(probes, ...)
+generateExprVal.method.medianpolish(probes, ...)
+generateExprVal.method.liwong(probes, ...)
 }
 \arguments{
   \item{probes}{a matrix of probe intesities with rows representing
     probes and columns representing
     samples. Usually \code{pm(probeset)} where \code{probeset} is a
     of class \code{\link{ProbeSet}}}
+  \item{...}{extra arguments to pass to the respective function}
 }
 \value{
   A list containing entries:

@@ -8,17 +8,14 @@
 \usage{
 expresso(
         afbatch,
-    # normalize
         normalize = TRUE,
         normalize.method = NULL,
         normalize.param = list(),
-    # background correction
+        bg.correct = TRUE,
         bg.method = NULL,
-    # expression values
         summary.method = NULL,
         summary.param = list(),
         summary.subset = NULL,
-    # misc.
         verbose = TRUE,
         widget = FALSE)
 }
@@ -29,6 +26,8 @@ expresso(
   \item{normalize.method}{the normalization method to use}
   \item{normalize.param}{a list of parameters to be passed to the
     normalization method (if wanted).}
+  \item{bg.correct}{logical value. If \code{TRUE} the \code{AffyBatch}
+    object is  background corrected}
   \item{bg.method}{a background adjustment function}
   \item{summary.method}{the method used for the computation of expression values}
   \item{summary.param}{ a list of parameters to be passed to the

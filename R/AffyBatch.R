@@ -404,7 +404,7 @@
   
   ##[[ we need replacement that takes an entry by the Cel in value
     
-  ##[ subseting. can only happen by sample. for now not by gene
+  ##[ subseting. get it from exprSet
   setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
     if( !missing(i) ) {
       phenoData(x) <- phenoData(x)[i, , ..., drop=FALSE]
@@ -430,11 +430,11 @@
   ## ---bg.correct
   ## method bg.correct 
   if( !isGeneric("bg.correct") )
-    setGeneric("bg.correct", function(x, method, ...)
+    setGeneric("bg.correct", function(object, method, ...)
                standardGeneric("bg.correct"), where=where)
   
-  setMethod("bg.correct", signature(x="AffyBatch", method="character"),
-            function(x, method, ...) {
+  setMethod("bg.correct", signature(object="AffyBatch", method="character"),
+            function(object, method, ...) {
 
               ## simple for system to let one add background correction methods
               ## relies on naming convention
@@ -444,7 +444,7 @@
               if (! exists(methodname))
                  stop(paste("Unknown method (cannot find function", methodname, ")"))
               
-              r <- do.call(methodname, alist(x, ...))
+              r <- do.call(methodname, alist(object, ...))
               
               return(r)
             }, where=where)

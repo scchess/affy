@@ -12,7 +12,7 @@ Background corrects the PM values in an object of class
 \code{\link{AffyBatch}}.
 }
 \usage{
-bg.correct(object, method)
+bg.correct(object, method, ...)
 
 bg.correct.subtractmm(object)
 
@@ -24,6 +24,7 @@ bg.correct.none(object)}
   \item{object}{An object of class \code{\link{AffyBatch}}.}
   \item{method}{An element of mode \code{character} defining one of the
     methods defined in \code{bg.correct.methods}. }
+  \item{...}{extra arguments to pass to the background correction method}
 }
 \details{
   The name of the method to apply must be double-quoted.

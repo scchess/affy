@@ -12,8 +12,9 @@ read.affybatch(..., filenames = character(0),
                notes = "",
                compress = getOption("BioC")$affy$compress.cel,
                rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE,
-               hdf5 = FALSE, hdf5FilePath = NULL,
+               hdf5 = FALSE,hdf5FilePath = NULL,
                verbose = FALSE)
+
 ReadAffy(..., filenames=character(0),
               widget=getOption("BioC")$affy$use.widgets,
               compress=getOption("BioC")$affy$compress.cel,
@@ -23,9 +24,7 @@ ReadAffy(..., filenames=character(0),
               description=NULL,
               notes="",
               rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-              hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE){
-
-
+              hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE)
 }
 \arguments{
   \item{\dots}{ file names separated by comma.}
@@ -41,8 +40,13 @@ ReadAffy(..., filenames=character(0),
   \item{hdf5FilePath}{ a filename to use with hdf5 (not available yet)}
   \item{verbose}{ verbosity flag }
   \item{widget}{a logical specifying if widgets should be used.}
-\item{celpath}{a character specifying the path where to look for celfiles}
+  \item{celpath}{a character specifying the path where to look for celfiles}
+  \item{celfile.path}{a character denoting the path \code{ReadAffy}
+    should look for cel files}
+  \item{sampleNames}{a character vector of sample names to be used in
+    the \code{AffyBatch}}
 }
+
 \details{
 \code{ReadAffy} is a wrapper for \code{read.affybatch} that permits the
 user to read in phenoData, MIAME information, and CEL files using

@@ -8,13 +8,13 @@
 }
 \usage{
   normalize.quantiles(x)
-  normalize.AffyBatch.quantiles(abatch, ...)
+  normalize.AffyBatch.quantiles(abatch, pmonly=FALSE)
 }
 \arguments{
   \item{x}{A matrix of intensities where each column corresponds to a
     chip and each row is a probe.}
   \item{abatch}{An \code{\link{AffyBatch}}}
-  \item{...}{extra arguments can be passed (we dont use them yet).} 
+  \item{pmonly}{logical value. If \code{TRUE} only PMs are used.}
 }
 \details{This method is based upon the concept of a quantile-quantile
   plot extended to n dimensions. No special allowances are made for outliers.

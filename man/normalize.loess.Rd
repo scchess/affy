@@ -9,11 +9,12 @@
 normalize.loess(mat, subset=sample(1:(dim(mat)[2]),5000),
                 epsilon=10^-2,maxit=1,log.it=TRUE,verbose=TRUE,span=2/3,
                 family.loess="symmetric")
-normalize.AffyBatch.loess(ab, ...)
+normalize.AffyBatch.loess(abatch, ...)
 }
 \arguments{
   \item{mat}{a matrix with columns containing the values of the chips
     to normalize.}
+  \item{abatch}{an \code{\link{AffyBatch}} object.}
   \item{subset}{a subset of the data to fit a loess to.}
   \item{epsilon}{a tolerance value (supposed to be a small value - used
     as a stopping criterium).}
@@ -25,7 +26,6 @@ normalize.AffyBatch.loess(ab, ...)
   \item{family.loess}{parameter to be passed the function
     \code{\link[modreg]{loess}}. \code{"gaussian"} or \code{"symmetric"}
     are acceptable values for this parameter.}
-  \item{abtach}{a \code{\link{AffyBatch}} object}
   \item{...}{any of the options of normalize.loess you would like to
     modify (described above).}
 }

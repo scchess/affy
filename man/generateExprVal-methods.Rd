@@ -13,11 +13,11 @@
 \usage{
 generateExprVal.methods # vector of names of methods
 
-express.summary.stat(pps.container, method, ...)
+express.summary.stat(x, method, ...)
 express.summary.stat.methods # vector of names of methods
 }
 \arguments{
-  \item{pps.container}{a \code{\link[Biobase]{container-class}} (\code{PPSet.container} for
+  \item{x}{a \code{\link[Biobase]{container-class}} (\code{PPSet.container} for
     now.. .a \code{Plob} in the future ?..)}
   \item{method}{the method used to generate the expression value.}
   \item{...}{other parameters the method might need... (see the

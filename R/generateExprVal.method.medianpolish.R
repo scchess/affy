@@ -1,3 +1,3 @@
-generateExprVal.method.medianpolish <- function(matos, ...) 
-  medianpolish(matos, ...)
+generateExprVal.method.medianpolish <- function(probes, ...) 
+  medianpolish(probes, ...)
 
