@@ -40,7 +40,7 @@
 \alias{bg.correct,AffyBatch,character-method}
 \alias{indexProbes,AffyBatch,character-method}
 \alias{computeExprSet,AffyBatch,character,character-method}
-
+\alias{cdfName,AffyBatch-method}
 \title{Class AffyBatch}
 \description{This is a class representation for Affymetrix GeneChip probe
   level data. The main component are the intensities from multiple
