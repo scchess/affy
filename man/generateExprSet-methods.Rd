@@ -54,7 +54,8 @@
 
  ids <- c( "A28102_at","AB000114_at")
   
-  eset <- computeExprSet(affybatch.example, summary.method="avgdiff", ids=ids)
+  eset <- computeExprSet(affybatch.example, pmcorrect.method="pmonly",
+summary.method="avgdiff", ids=ids, warnings=FALSE)
 }
 \keyword{manip}
 

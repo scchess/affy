@@ -25,6 +25,7 @@ expresso(
         summary.subset = NULL,
     # misc.
         verbose = TRUE,
+        warnings = TRUE,
         widget = FALSE)
 }
 
@@ -45,7 +46,9 @@ expresso(
     \code{summary.method} (if wanted).}
   \item{summary.subset}{a list of 'affyids'. If \code{NULL}, a
     expression summary value is computed for everything on the chip.}
-  \item{verbose}{logical value. If \code{TRUE} it writes out some messages.}
+  \item{verbose}{logical value. If \code{TRUE} it writes out some
+    messages.}
+  \item{warnings}{warning when something goes wrong}
   \item{widget}{a boolean to specify the use of widgets (the package
     tkWidget is required).}
 }
@@ -62,7 +65,8 @@ expresso(
 \examples{
 data(affybatch.example)
 
-eset <- expresso(affybatch.example, normalize.method="constant",
-                 bgcorrect.method="rma", pmcorrect.method="pmonly", summary.method="avgdiff")
+eset <- expresso(affybatch.example, bgcorrect.method="rma",
+                 normalize.method="constant",pmcorrect.method="pmonly",
+                 summary.method="avgdiff", warnings=FALSE)
 }
 \keyword{ manip }
