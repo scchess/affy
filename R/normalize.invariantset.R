@@ -40,14 +40,10 @@
 
 
 
-## DEBUG
-## requires package modreg
-library(modreg)
-## needed ?
-
 
 normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), progress=FALSE) {
-  
+
+  require(modreg, quietly=TRUE)
   
   w.pm <- unlist(indexProbes(abatch, which="pm"))             # boolean to find the PM probes
   i.pm <- rep(FALSE, abatch@nrow * abatch@ncol)
@@ -99,62 +95,6 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), prog
 }
 
 
-normalize.Cel.container.invariantset <- function(cel.container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
-  
-  if (! inherits(cel.container, c("Cel.container","Cel.container.hdf5")))
-    stop("cel.container must inherits from 'Cel.container.abstract'")
-
-  if(is.null(f.cdf))
-    stop("You need to specify a Cdf object")
-  ##DEBUG
-  ## test refindex
-
-  i.pm <- pmormm(f.cdf)                               # boolean to find the PM probes
-  i.pm[is.na(i.pm)] <- FALSE                          # mark as FALSE the unknown probes too
-
-  np <- sum(i.pm)                                     # number of PM probes
-  nc  <-  length(cel.container)                       # number of CEL files
-  
-  # take as a reference the array having the median overall intensity
-  m <- vector("numeric", length=nc)
-  for (i in 1:nc)
-    m[i] <- mean(intensity(cel.container)[, , i][i.pm])
-  refindex <- trunc(median(rank(m)))
-  rm(m)           
-
-  if (progress) cat("Data from",cel.container@name[refindex],"used as baseline.\n")
-
-  set.na.spotsd(cel.container)
-  
-  ## loop over the CEL files and normalize them
-  for (i in (1:nc)[-refindex]) {
-  
-    if (progress) cat("normalizing array", cel.container@name[i], "...")
-
-    mydim <- dim(intensity(cel.container)[, , i])
-    
-    ##temporary
-    tmp <- normalize.invariantset(c(intensity(cel.container)[, , i])[i.pm],
-                                  c(intensity(cel.container)[, , refindex])[i.pm],
-                                  prd.td)
-    i.set <- which(i.pm)[tmp$i.set]
-    tmp <- array(as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                   xout=intensity(cel.container)[, , i], rule=2)$y),
-                 mydim)
-    attr(tmp,"invariant.set") <- NULL
-    intensity(cel.container)[, , i] <- tmp
-
-    ## storing information about what has been done
-    history(cel.container)[[i]] <- list(name="normalized by invariant set",
-                                       invariantset=i.set)
-    
-    if (progress) cat("done.\n")
-    
-  }
-  history(cel.container)[[refindex]] <- list(name="reference for the invariant set")
-  
-  return(cel.container)
-}
 
 ##  The 'common-to-all' part of the algorithm. Operates on two vectors of numeric data
 ##

@@ -16,30 +16,6 @@ normalize.AffyBatch.loess <- function(abatch, ...) {
   return(abatch)
 }
 
-normalize.Cel.container.loess <- function(listcel, ...) {
-  
-  cols <- length(listcel)
-  rows <- length(intensity(listcel[[1]])) # assuming all the Cel are of the same size in listcel
-  chipdim <- dim(intensity(listcel[[1]]))
-  
-  ## this is may be too much.. I am taking every intensity in there... something like
-  ## taking only the PM (see invariantset) could be what you want (this is only a trial,
-  ## know better your own algorithm that I will ever... modify if needed).  
-  x <- matrix(0,rows,cols)
-  for (i in 1:cols) x[,i] <- c(intensity(listcel[[i]]))
-
-  x <- normalize.loess(x, ...)
-
-  set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
-  ##cat(cols,rows)
-  for (i in 1:cols) {
-    intensity(listcel)[, , i]  <- matrix(x[,i],chipdim[1], chipdim[2])
-    history(listcel)[[i]] <- list(name="normalized by loess")
-  }
-
-  return(listcel)
-}
-
 
 
 normalize.loess <- function(mat, subset=sample(1:(dim(mat)[1]), min(c(5000, nrow(mat)))),

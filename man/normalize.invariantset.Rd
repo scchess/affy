@@ -1,8 +1,6 @@
 \name{normalize.invariantset}
 \alias{normalize.invariantset}
-\alias{normalize.Cel.container.invariantset}
 \alias{normalize.AffyBatch.invariantset}
-\alias{normalize.Plob.invariantset}
 \title{Scale Cel objects in a container}
 \description{
   Scale chip objects in a container.
@@ -11,18 +9,10 @@
 normalize.AffyBatch.invariantset(abatch,
                    prd.td=c(0.003, 0.007), progress=FALSE)
 
-
-normalize.Cel.container.invariantset(container, f.cdf, prd.td=c(0.003,
-0.007), progress=FALSE)
-
-normalize.Plob.invariantset(container, prd.td=c(0.003, 0.007),
-progress=FALSE)
-
 normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 }
 \arguments{
   \item{abatch}{an \code{\link{AffyBatch}}}
-  \item{container}{a \code{\link{Cel.container}} or a \code{\link{Plob}}.}
   \item{data}{a vector of intensities on a chip (to normalize to the reference).}
   \item{f.cdf}{a \code{Cdf} object.}
   \item{ref}{a vector of reference intensities.}

@@ -1,17 +1,13 @@
 \name{normalize.celfile.qspline}
 \alias{qspline-normalize}
 \alias{normalize.qspline}
-\alias{normalize.Cel.container.qspline}
 \alias{normalize.AffyBatch.qspline}
-\alias{normalize.Plob.qspline}
 \title{Normalize CEL files}
 \description{
   normalizes a list of CEL files to each other or to a set of target intensities
 }
 \usage{
-normalize.Cel.container.qspline(listcel, ...)
-
-%normalize.Plob.qspline(plob, ...)
+normalize.Cel.container.qspline(abatch, ...)
 
 normalize.qspline(x, target = NULL, samples = NULL, 
                   fit.iters = 5, min.offset = 5, 
@@ -22,7 +18,7 @@ normalize.qspline(x, target = NULL, samples = NULL,
 }
 \arguments{
   \item{x}{a \code{data.matrix} of intensities}
-  \item{listcel}{a \code{Cel.container}}
+  \item{abatch}{an \code{AffyBatch}}
 %  \item{plob}{a \code{Plob}}
   \item{target}{numerical vector of intensity values to normalize to.
                 (could be the name for one of the celfiles in 'listcel')}
@@ -46,8 +42,7 @@ normalize.qspline(x, target = NULL, samples = NULL,
   \item{...}{Optional parameters to be passed through}
 }
 \value{
-  a list of normalized celfile objects, each of them having the extra list
-  element \code{method}.
+  a normalized \code{AffyBatch}.
 }
 \details{
   This normalization method uses the quantiles from each array and the 
