@@ -7,7 +7,7 @@
 the robust multi-array average (RMA) expression measure.
 }
 \usage{
-rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,...)
+rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,background=TRUE,bgversion=1,...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -16,11 +16,17 @@ rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,...)
     converted to expression. (not currently implemented)}
   \item{verbose}{logical value. If \code{TRUE} it writes out some messages. (Curently ignored)}
   \item{destructive}{logical value. If \code{TRUE} works on the PM matrix in place as much as possible, good for large datasets, but dangerous because it will leave the PM element of the AffyBatch changed after a call to \code{rma}}
-  \item{normalize}{logical value. If \code{TRUE} normalize data using quantile normalization}
+  \item{normalize}{logical value. If \code{TRUE} normalize data using
+    quantile normalization}
+  \item{background}{logical value. If \code{TRUE} background correct
+    using RMA background correction}
+  \item{bgversion}{integer value indicating which RMA background to use
+1: use background similar to pure R rma background given in affy version 1.0 - 1.0.2
+2: use background similar to pure R rma background given in affy version 1.1 and above}
   \item{\dots}{further arguments to be passed (not currently implemented - stub for future use)}
 }
 \details{
-This function creates the expression measure described in Irizarry et al
+This function computes the expression measure described in Irizarry et al
 Biostatistics (2003).
 }
 \value{

@@ -18,7 +18,7 @@
 #
 ########################################################
 
-rma <- function(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,...){
+rma <- function(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,background=TRUE,bgversion=1,...){
 
   rows <- length(probeNames(object))
   cols <- length(object)
@@ -29,9 +29,9 @@ rma <- function(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=
   bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
 
   if (destructive){
-  	exprs <- .Call("rma_c_complete",pm(object),mm(object),probeNames(object),ngenes,body(bg.dens),new.env(),normalize)
+  	exprs <- .Call("rma_c_complete",pm(object),mm(object),probeNames(object),ngenes,body(bg.dens),new.env(),normalize,background,bgverison)
   } else {
-	exprs <- .Call("rma_c_complete_copy",pm(object),mm(object),probeNames(object),ngenes,body(bg.dens),new.env(),normalize)
+	exprs <- .Call("rma_c_complete_copy",pm(object),mm(object),probeNames(object),ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
   }
   colnames(exprs) <- sampleNames(object)
   se.exprs <- array(NA, dim(exprs)) # to be fixed later, besides which don't believe much in nominal se's with medianpolish

@@ -1,20 +1,40 @@
 /**********************************************************
- 
-   qnorm.c
-
-   A c implementation of the quantile normalization method 
-
-   B. M. Bolstad
-
-   written: Feb 2, 2002
-   last modified: Apr 19, 2002
-
-***********************************************************/
+ **
+ ** file: qnorm.c
+ **
+ ** aim: A c implementation of the quantile normalization method 
+ **
+ ** written by: B. M. Bolstad  <bolstad@stat.berkeley.edu>
+ **
+ ** written: Feb 2, 2002
+ ** last modified: Apr 19, 2002
+ ** 
+ ** This c code implements the quantile normalization method
+ ** for normalizing high density oligonucleotide data as discussed
+ ** in
+ **
+ ** Bolstad et al (2003) A comparison of Normalization Algorithms for High
+ ** Density Oligonucleotide data. Bioinformatics
+ **
+ ** History
+ ** Feb 2, 2002 - Intial c code version from original R code
+ ** Apr 19, 2002 - Update to deal more correctly with ties (equal rank)
+ ** Jan 2, 2003 - Documentation/Commenting updates reformating
+ **
+ ***********************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 /*#include "rma_common.c"*/
+
+/*************************************************************
+ **
+ ** the dataitem record is used to keep track of data indicies 
+ ** along with data value when sorting and unsorting in the 
+ ** quantile algorithm.
+ **
+ ************************************************************/
 
 typedef struct{
   double data;
@@ -23,13 +43,12 @@ typedef struct{
   
 
 /***********************************************************
-  
-  int min(int x1, int x2)							    
-
-  returns the minimum of x1 and x2
-		    
-**********************************************************/
-
+ **  
+ ** int min(int x1, int x2)							    
+ **
+ ** returns the minimum of x1 and x2
+ **		    
+ **********************************************************/
 
 int min(int x1,int x2){
   if (x1 > x2)
@@ -39,14 +58,13 @@ int min(int x1,int x2){
 }
 
 /**********************************************************
-
- int sort_fn(const void *a1,const void *a2)
- 
- a sorting function of sorting objects of the dataitem type.
-
-
-**********************************************************/
-
+ **
+ ** int sort_fn(const void *a1,const void *a2)
+ **
+ ** a comparison function for sorting objects of the dataitem type.
+ **
+ **
+ **********************************************************/
 
 int sort_fn(const void *a1,const void *a2){
   dataitem *s1, *s2;
@@ -62,14 +80,14 @@ int sort_fn(const void *a1,const void *a2){
 
 
 /************************************************************
-
- dataitem **get_di_matrix(double *data, int rows, int cols)
-
- given data  form a matrix of dataitems, each element of
- matrix holds datavalue and original index so that 
- normalized data values can be resorted to the original order
-
-***********************************************************/
+ **
+ ** dataitem **get_di_matrix(double *data, int rows, int cols)
+ **
+ ** given data  form a matrix of dataitems, each element of
+ ** matrix holds datavalue and original index so that 
+ ** normalized data values can be resorted to the original order
+ **
+ ***********************************************************/
 
 dataitem **get_di_matrix(double *data, int rows, int cols){
   int i,j;
@@ -96,13 +114,13 @@ dataitem **get_di_matrix(double *data, int rows, int cols){
 }
 
 /************************************************************
-
- double *get_ranks(dataitem *x,int n)
-
- get ranks in the same manner as R does. Assume that *x is
- already sorted
-
-*************************************************************/
+ **
+ ** double *get_ranks(dataitem *x,int n)
+ **
+ ** get ranks in the same manner as R does. Assume that *x is
+ ** already sorted
+ **
+ *************************************************************/
 
 void get_ranks(double *rank, dataitem *x,int n){
   int i,j,k;
@@ -125,13 +143,13 @@ void get_ranks(double *rank, dataitem *x,int n){
 }
 
 /*********************************************************
-
-  void qnorm_c(double *data, int *rows, int *cols)
-
-  this is the function that actually implements the 
-  quantile normalization algorithm. It is called from R
-
-********************************************************/
+ **
+ ** void qnorm_c(double *data, int *rows, int *cols)
+ **
+ **  this is the function that actually implements the 
+ ** quantile normalization algorithm. It is called from R
+ **
+ ********************************************************/
 
 void qnorm_c(double *data, int *rows, int *cols){
   int i,j,ind;
@@ -177,15 +195,15 @@ void qnorm_c(double *data, int *rows, int *cols){
 
 
 /*********************************************************
-
-  void qnorm_robust_c(double *data, int *rows, int *cols)
-
-  this is the function that actually implements the 
-  quantile normalization algorithm. It is called from R. 
-  this function allows the user to downweight particular
-  chips, in the calculation of the mean.
-
-********************************************************/
+ **
+ ** void qnorm_robust_c(double *data, int *rows, int *cols)
+ **
+ ** this is the function that actually implements the 
+ ** quantile normalization algorithm. It is called from R. 
+ ** this function allows the user to downweight particular
+ ** chips, in the calculation of the mean.
+ **
+ ********************************************************/
 
 void qnorm_robust_c(double *data,double *weights, int *rows, int *cols){
   int i,j,ind;

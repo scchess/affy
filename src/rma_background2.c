@@ -1,19 +1,28 @@
 /******************************************************************************
  **
  ** file: rma_background.c
+ ** 
+ ** Written by: B. M. Bolstad  <bolstad@stat.berkeley.edu>
+ ** Implementation dates: 2002-2003
  **
  ** implement background correction/PM adjustment for rma calculation
  ** note this is meant to be called from within R.
  ** 
  ** Note that the density estimation is carried out by a user supplied R function
  **
- ** this implements the same background as that included within affy_1.1.1
- **
+ ** this implements the same background as that included within affy (1.0.2) 
+ ** and also the background in affy 1.1 and later releases.
  **
  ** Last changed: Nov 4, 2002 
  **
- ** Nov 4, 2002 - make changes for Affy2.
- ** Dec 26, 2002 - fixed non-ANSI C way of commenting out lines (Laurent)
+ ** Pre Nov 2002 - original version
+ ** Nov 4, 2002 - make changes for Affy2. Add in Alternate bg computation.
+ ** Nov 8, 2002 - testing
+ ** Dec 31, 2002 - integrate changes into affy package
+ ** Jan 2, 2003 - Documentation clean up
+ ** Dec 26, 2002 - fixed non-ANSI C way of commenting out lines (Laurent)  
+ ** Jan 6, 2003 actually // is correct according to standards. SOme compilers are 
+ **             of course not fully standards compliant :)
  **
  *****************************************************************************/
 
@@ -26,7 +35,6 @@
 #include <math.h>
 #include <stdlib.h> 
 #include <R_ext/Applic.h>
-
 
 /***********************************************************
  **
@@ -57,6 +65,11 @@ double find_max(double *x,int length){
 /***************************************************************
  **
  ** double get_sd(double *MM, double MMmax, int rows, int cols, int column)
+ ** 
+ ** double *PM - pm matrix
+ ** double PMmax - value of mode of PMs for column
+ ** int rows,cols - dimensions of matrix
+ ** int column - column (chip) of interest
  **
  ** estimate the sigma parameter given vector MM value of maximum of density
  ** of MM, dimensions of MM matrix and column of interest
@@ -82,15 +95,20 @@ double get_sd(double *MM, double MMmax, int rows, int cols, int column){
   
 }
 
-/***************************************************************
+/*********************************************************************************
  **
  ** double  get_alpha(double *PM,double PMmax, int rows,int cols,int column)
+ **
+ ** double *PM - pm matrix
+ ** double PMmax - value of mode of PMs for column
+ ** int rows,cols - dimensions of matrix
+ ** int column - column (chip) of interest
  **
  ** estimate the alpha parameter given vector PM value of maximum of density
  ** of PM, dimensions of MM matrix and column of interest
  **
  **
- ***************************************************************/
+ ***********************************************************************/
 
 double get_alpha(double *PM,double PMmax, int rows,int cols,int column){
   double alpha;
@@ -191,7 +209,6 @@ double max_density(double *z,int rows,int cols,int column, SEXP fn,SEXP rho){
  **
  *******************************************************************************/
 
-
 void bg_parameters(double *PM,double *MM, double *param, int rows, int cols, int column,SEXP fn,SEXP rho){
   
   double PMmax;
@@ -263,6 +280,88 @@ void bg_adjust(double *PM,double *MM, double *param, int rows, int cols, int col
   
 }
 
+/***************************************************************
+ **
+ ** double  get_alpha2(double *PM,double PMmax, int rows,int cols,int column)
+ **
+ ** estimate the alpha parameter given vector PM value of maximum of density
+ ** of PM, dimensions of MM matrix and column of interest using method proposed
+ ** in affy2
+ **
+ **
+ ***************************************************************/
+
+double get_alpha2(double *PM, double PMmax, int length,SEXP fn,SEXP rho){
+  double alpha;
+  double tmpsum = 0.0;
+  int numtop=0;
+  int i;
+
+  for (i=0; i < length; i++){
+    PM[i] = PM[i] - PMmax;
+  }
+
+  alpha = max_density(PM,length, 1,0,fn,rho);
+
+  alpha = 1.0/alpha;
+  return alpha ;  
+}
+
+/********************************************************************************
+ **
+ ** void bg_parameters2(double *PM,double *MM, double *param, int rows, int cols, int column,SEXP fn,SEXP rho)
+ **
+ ** estimate the parameters for the background, they will be returned in *param
+ ** param[0] is alpha, param[1] is mu, param[2] is sigma.
+ **
+ ** parameter estimates are same as those given by affy in bg.correct.rma (Version 1.1 release of affy)
+ **
+ *******************************************************************************/
+
+
+void bg_parameters2(double *PM,double *MM, double *param, int rows, int cols, int column,SEXP fn,SEXP rho){
+  int i = 0;
+  double PMmax;
+  double MMmax;
+  double sd,alpha;
+  int n_less=0,n_more=0;
+  double *tmp_less = (double *)malloc(rows*sizeof(double));
+  double *tmp_more = (double *)malloc(rows*sizeof(double));
+  
+  
+  PMmax = max_density(PM,rows, cols, column,fn,rho);
+  
+  for (i=0; i < rows; i++){
+    if (PM[column*rows +i] <= PMmax){
+      tmp_less[n_less] = PM[column*rows +i];
+      n_less++;
+    }
+
+  }  
+
+  PMmax = max_density(tmp_less,n_less+1,1,0,fn,rho);
+  sd = get_sd(PM,PMmax,rows,cols,column)*0.85; 
+
+  for (i=0; i < rows; i++){
+    if (PM[column*rows +i] > PMmax) {
+      tmp_more[n_more] = PM[column*rows +i];
+      n_more++;
+    }
+  }
+
+  /* the 0.85 is to fix up constant in above */
+  alpha = get_alpha2(tmp_more,PMmax,n_more+1,fn,rho);
+
+  param[0] = alpha;
+  param[1] = PMmax;
+  param[2] = sd;
+
+  printf("%f %f %f\n",param[0],param[1],param[2]);
+
+
+  free(tmp_less);
+  free(tmp_more);
+}
 
 /************************************************************************************
  **
@@ -281,7 +380,7 @@ void bg_adjust(double *PM,double *MM, double *param, int rows, int cols, int col
  **
  ***********************************************************************************/
 
-SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho){
+SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho, SEXP bgtype){
   
   SEXP dim1;
   int j;
@@ -299,7 +398,11 @@ SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho){
   MM = NUMERIC_POINTER(AS_NUMERIC(MMmat));
   printf("Background correcting\n");
   for (j=0; j < cols; j++){
-    bg_parameters(PM,MM,param,rows,cols,j,densfunc,rho);
+    if (INTEGER(bgtype)[0] == 2){
+      bg_parameters2(PM,MM,param,rows,cols,j,densfunc,rho);
+    } else {
+      bg_parameters(PM,MM,param,rows,cols,j,densfunc,rho);
+    } 
     bg_adjust(PM,MM,param,rows,cols,j);
   }
   
@@ -307,7 +410,6 @@ SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho){
 
   return PMmat;
 }
-
 
 /************************************************************************************
  **
@@ -326,8 +428,7 @@ SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho){
  ** 
  ***********************************************************************************/
 
-
-SEXP bg_correct_c_copy(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho){
+SEXP bg_correct_c_copy(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho, SEXP bgtype){
   
   SEXP dim1,PMcopy;
   int j;
@@ -345,12 +446,17 @@ SEXP bg_correct_c_copy(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho){
     
   copyMatrix(PMcopy,PMmat,0);
 
-
   PM = NUMERIC_POINTER(AS_NUMERIC(PMcopy));
   MM = NUMERIC_POINTER(AS_NUMERIC(MMmat));
   printf("Background correcting\n");
+  /* printf("%d \n", INTEGER(bgtype)[0]); */
   for (j=0; j < cols; j++){
-    bg_parameters(PM,MM,param,rows,cols,j,densfunc,rho);
+    if (INTEGER(bgtype)[0]){
+      /*  printf("using type 2\n"); */
+      bg_parameters2(PM,MM,param,rows,cols,j,densfunc,rho);
+    } else {
+      bg_parameters(PM,MM,param,rows,cols,j,densfunc,rho);
+    } 
     bg_adjust(PM,MM,param,rows,cols,j);
   }
   
@@ -358,4 +464,8 @@ SEXP bg_correct_c_copy(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho){
 
   return PMcopy;
 }
+
+
+
+
 

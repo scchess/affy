@@ -7,7 +7,7 @@
 #include <Rinternals.h>
 
 
-SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho);
-SEXP bg_correct_c_copy(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho);
+SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho, SEXP bgtype);
+SEXP bg_correct_c_copy(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho, SEXP bytype);
 
 #endif

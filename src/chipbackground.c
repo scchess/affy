@@ -5,7 +5,7 @@
  ** aim: an implementation of the affymetrix background/noise correction
  **      as documented in Affymetrix Statistical Algorithm whitesheet
  **
- ** written by: B. M. Bolstad
+ ** written by: B. M. Bolstad   <bolstad@stat.berkeley.edu>
  ** 
  ** created: Oct 3, 2002
  **
