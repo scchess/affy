@@ -3,11 +3,11 @@ read.affybatch <- function(..., filenames=character(0),
                            phenoData=new("phenoData"),
                            description=NULL,
                            notes="",
-                           compress=getOption("BioC")$affy$compress.cel,
-                           rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-                           hdf5=FALSE, hdf5FilePath=NULL,
+                           compress = getOption("BioC")$affy$compress.cel,
+                           rm.mask = FALSE, rm.outliers=FALSE, rm.extra=FALSE,
+                           insitu = FALSE,
                            ##widget = FALSE, ##now a separate function to get filenames
-                           verbose=FALSE) {
+                           verbose = FALSE) {
   
   auxnames <- as.list(substitute(list(...)))[-1]
   filenames <- .Primitive("c")(filenames, auxnames)
@@ -20,7 +20,7 @@ read.affybatch <- function(..., filenames=character(0),
   
   pdata <- pData(phenoData)
   ##try to read sample names form phenoData. if not there use CEL filenames
-  if(dim(pdata)[1]!=n) {
+  if(dim(pdata)[1] != n) {
     ##if empty pdata filename are samplenames
     warning("Incompatible phenoData object. Created a new one.\n")
     
@@ -57,40 +57,63 @@ read.affybatch <- function(..., filenames=character(0),
   ##else
   ##  dim.sd <- c(1,1)
 
-  batchexprs <- array(NaN, dim=c(prod(dim.intensity), n))
-  colnames(batchexprs) <- samplenames
-  batchexprs[, 1] <- as.vector(intensity(cel))
+  if (verbose)
+    cat(paste("instanciating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
+  conty <- new("AffyBatch",
+               exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
+               ##se.exprs = array(NaN, dim=dim.sd),
+               cdfName    = cel@cdfName,
+               phenoData  = phenoData,
+               nrow       = dim.intensity[1],
+               ncol       = dim.intensity[2],
+               annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
+               description= description,
+               notes      = notes)
+  ##           history    = vector("list", length=n)) we need to put this in MIAME
+  ##we have to use phenoData here: dimnames(intensity(conty)) <- list(NULL, NULL, rep("", n))
+  if (verbose)
+    cat("done.\n")
+  
+  if (insitu) {
+    intensity(conty) <- get("<+")(intensity(conty), , 1, c(intensity(cel)))
+  } else {
+    intensity(conty)[, 1] <- c(intensity(cel))
+  }
   
   ##if (sd)
   ##  spotsd(conty)[, , 1] <- spotsd(cel)
-
+  
   ##We need to get names from phenoData
   ##c.names <- rep("", n)
   ##c.names[1] <- cel@name
   ##outliers(conty)[[1]] <- outliers(cel)
   ##masks(conty)[[1]] <- masks(cel)
   ##history(conty)[[1]] <- history(cel) ###this must be done through MIAME
-
+  
   ## finish if only one file.. we have to make phenoData agree. cant return just yet
   ##if (n == 1)
   ##  return(conty)
   
-  for (i in (2:n)[-1]) {
+  for (i in (1:n)[-1]) {
     
     if (verbose) cat(i, "reading",filenames[[i]],"...")
     cel <- read.celfile(filenames[[i]],
                         ##sd=sd,
                         compress=compress, rm.mask=rm.mask,
                         rm.outliers=rm.outliers, rm.extra=rm.extra)
+    
     if (dim(intensity(cel)) != dim.intensity)
       stop(paste("CEL file dimension mismatch !\n(file",filenames[[i]],")"))
     if (verbose) cat("done.\n")
     
     if (cel@cdfName != ref.cdfName)
       warning(paste("cdfName mismatch !\n(", filenames[[i]], ")"))
-    
-    batchexprs[, i] <- c(intensity(cel))
-    
+
+    if (insitu)
+      intensity(conty) <- get("<+")(intensity(conty), , i, c(intensity(cel)))
+    else
+      intensity(conty)[, i] <- c(intensity(cel))
+
     ##      dimnames(intensity(conty))[[3]][i] <- cel@name ##now through phenoData
     ##if (sd)
     ##  spotsd(conty)[, , i] <- spotsd(cel)
@@ -103,35 +126,6 @@ read.affybatch <- function(..., filenames=character(0),
   ##dim(intensity(conty)) <- c(prod(dim.intensity), n) ##alread done. by definition
   ##chipNames(conty) <- c.names  ##now phenoData
   
-  
-  if (hdf5) {
-    require(rhdf5) || stop("The package rhdf5 is required !")
-    if (is.null(hdf5FilePath))
-      stop("A path for tmp files must be specified")
-    if (! is.na(file.info(hdf5FilePath)$size)) {
-      warning(paste("The file \"", hdf5FilePath, "\" already exists !", sep=""))
-    }
-    conty <- new.AffyBatch.hdf5(n, prod(dim.intensity), ##prod cause no 2d array
-                                hdfile.group="raw",
-                                hdfile.name=hdf5FilePath,
-                                cdfName = ref.cdfName
-                                )
-    
-  } else {
-    conty <- new("AffyBatch",
-                 exprs  = batchexprs,
-                 ##se.exprs = array(NA, dim=dim.sd),
-                 cdfName    = cel@cdfName,
-                 phenoData  = phenoData,
-                 nrow       = dim.intensity[1],
-                 ncol       = dim.intensity[2],
-                 annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
-                 description= description,
-                 notes      = notes)
-    ##           history    = vector("list", length=n)) we need to put this in MIAME
-    ##we have to use phenoData here: dimnames(intensity(conty)) <- list(NULL, NULL, rep("", n))
-    
-  }
   
   return(conty)
 }
