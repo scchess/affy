@@ -12,6 +12,7 @@
 \alias{pmindex}
 \alias{mmindex}
 \alias{probeset}
+\alias{$.AffyBatch}
 
 \title{Class AffyBatch}
 \description{This is a class representation for Affymetrix GeneChip probe

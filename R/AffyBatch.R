@@ -715,3 +715,9 @@
   
 }
 
+
+##like for exprSet
+
+"$.AffyBatch" <- function(affybatch, val)
+    (pData(affybatch))[[as.character(val)]]
+
