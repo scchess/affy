@@ -1,4 +1,4 @@
-bg.correct.Affy.chipwide <- function(object, griddim=16)
+bg.correct.mas <- function(object, griddim=16)
 {
    nchips <- length(object)
 
