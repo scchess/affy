@@ -53,7 +53,8 @@ bg.correct.pmonly <- function(pm, mm) {
   return(pm)
 }
 
-bg.correct.adjust <- function(pm ,mm, all.param){
+# previously bg.correct.rma
+bg.correct.rma <- function(pm ,mm, all.param){
   r <- matrix(NA, nrow(pm), ncol(pm))
   #cat(str(r))
   for (i in 1:ncol(r)) {
