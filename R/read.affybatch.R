@@ -30,8 +30,11 @@ read.affybatch <- function(..., filenames=character(0),
   else samplenames <- rownames(pdata)
   
   if (is.null(description))
-    description <- new("MIAME")
-  
+    {
+      description <- new("MIAME")
+      description@preprocessing$filenames <- filenames
+      description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
+    }
   ## read the first file to see what we have
   if (verbose) cat(1, "reading",filenames[[1]],"...")
   
@@ -81,7 +84,7 @@ read.affybatch <- function(..., filenames=character(0),
   }
   
   intensity(conty)[, 1] <- as.vector(firstintensity)
-   
+  
   ##if (sd)
   ##  spotsd(conty)[, , 1] <- spotsd(cel)
 
@@ -138,7 +141,7 @@ list.celfiles <-   function(...){
 ReadAffy <- function(..., filenames=character(0),
                      widget=getOption("BioC")$affy$use.widgets,
                      compress=getOption("BioC")$affy$compress.cel,
-                     celfile.path=".",
+                     celfile.path=getwd(),
                      sampleNames=NULL,
                      phenoData=NULL,
                      description=NULL,
@@ -158,9 +161,9 @@ ReadAffy <- function(..., filenames=character(0),
   
   filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
   
-  if(length(filenames)==0) filenames <- list.celfiles(celfile.path)
+  if(length(filenames)==0) filenames <- list.celfiles(celfile.path,full.names=TRUE)
   
-  if(length(filenames)==0) stop("No cel filennames specified and no cel files in specified directory:",cel.path,"\n")
+  if(length(filenames)==0) stop("No cel filennames specified and no cel files in specified directory:",celfile.path,"\n")
   
   
   ##now assign sampleNames if phenoData not given
@@ -168,7 +171,8 @@ ReadAffy <- function(..., filenames=character(0),
     if(is.null(sampleNames)){
       if(widget){
         require(tkWidgets)
-        sampleNames <- tkSampleNames(filenames=filenames)[,1]
+        tksn <- tkSampleNames(filenames=filenames)
+        sampleNames <- tksn[,1]
         ##notice that a description of the files is ingored for now
         ##soon to go into MIAME
       }
@@ -213,7 +217,11 @@ ReadAffy <- function(..., filenames=character(0),
     }
   }
   
-  
+  ##MIAME stuff
+  description@preprocessing$filenames <- filenames
+  if(exists("tksn")) description@samples$description <- tksn[,2]
+  description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
+
   ##and now we are ready to read cel files
   return(read.affybatch(filenames=filenames,
                         phenoData=phenoData,
@@ -227,3 +235,11 @@ ReadAffy <- function(..., filenames=character(0),
                         hdf5FilePath=hdf5FilePath,
                         verbose=verbose))
 }
+
+
+
+
+
+
+
+
