@@ -115,7 +115,7 @@
   
   affy <- list(compress.cdf=FALSE, compress.cel=FALSE,
                use.widgets=FALSE,
-               probesloc = list(probesloc.first, probesloc.second, probesloc.third),
+               probesloc = list(probesloc.first, probesloc.second, probesloc.third, probesloc.forth),
                bgcorrect.method = bgcorrect.method,
                normalize.method = normalize.method,
                pmcorrect.method = pmcorrect.method,

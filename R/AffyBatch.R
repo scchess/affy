@@ -71,13 +71,27 @@
               ## "where" is where it can be found
 
               cdfname <- cleancdfname(object@cdfName)
+              second.try <- FALSE
+
+              if (debug.affy123)
+                cat("Trying to get cdfenv for", cdfname, "\n")
+              
               
               i <- 0
               while(i <= length(how)) {
                 i <- i+1
+                
+                if (debug.affy123)
+                  cat(i, ":")
+                
                 what <- how[[i]]$what
                 where <- how[[i]]$where
 
+                if (debug.affy123) {
+                  cat("what=", how[[i]]$what, "where=")
+                  print(how[[i]]$where)
+                }
+                
                 if (what == "data") {
                   ##if we can get it from data dir. otherwise load package
                   if(cdfname %in% data(package = affy)$results[, 3]){
@@ -97,7 +111,7 @@
                 if (what == "package") {
                   loc <- .find.package(cdfname, lib.loc=where, quiet=TRUE)
                   
-                  if (identical(loc, character(0))) {
+                  if (!second.try && identical(loc, character(0))) {
                     ## before jumping to the next option, check the possibility to
                     ## download the missing cdfenv pack
                     
@@ -119,6 +133,7 @@
                       
                       ## rewind the iterator i and try again
                       i <- i-1
+                      second.try <- TRUE
                     }
                     ## jump to next way to get the cdfenv
                     next
@@ -142,15 +157,11 @@
                                   "while you probably want", object@cdfName))
                   ## ---> end of paranoia <---
                   return(getLocations.Cdf(cdf))
-                  ##object@cdfInfo <<- getLocations.Cdf(cdf)
-                  rm(cdf)
-                  gc() # since cdf can be rather large
                 }
                 
                 if (what == "environment") {
                   if(exists(object@cdfName,inherits=FALSE,where=where))
                     return(as.environment(get(object@cdfName,inherits=FALSE,envir=where)))
-                  ##object@cdfInfo <<- as.environment(get(name, where))
                 }
               }
               stop(paste("Information about probe locations for",
@@ -503,6 +514,15 @@
                 stop("unknown method")
               method <- paste("normalize.AffyBatch", method, sep=".")
               object <- do.call(method, alist(object, ...))
+              ## collect info in the attribute "normalization" 
+              preproc <- c(description(object)@preprocessing,
+                           list(normalization = attr(object, "normalization")))
+              attr(object, "normalization") <- NULL
+              ## and store it miame
+              MIAME <- description(object)
+              MIAME@preprocessing <- preproc
+              description(abatch) <- MIAME
+              ##
               return(object)
             },
             where=where)
