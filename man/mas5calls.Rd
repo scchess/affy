@@ -17,10 +17,10 @@ mas5calls(object,...)
 
 mas5calls.AffyBatch(object, ids = NULL, verbose = TRUE, tau = 0.015,
                     alpha1 = 0.04, alpha2 = 0.06,
-                    exact.pvals = FALSE, cont.correct = FALSE)
+                    ignore.saturated=TRUE) 
 
 mas5calls.ProbeSet(object, tau = 0.015, alpha1 = 0.04, alpha2 = 0.06,
-                   exact.pvals = FALSE, cont.correct = FALSE)
+                   ignore.saturated=TRUE) 
 
 mas5.detection(mat, tau = 0.015, alpha1 = 0.04, alpha2 = 0.06,
                exact.pvals = FALSE, cont.correct = FALSE)
@@ -37,6 +37,7 @@ mas5.detection(mat, tau = 0.015, alpha1 = 0.04, alpha2 = 0.06,
   \item{exact.pvals}{a boolean controlling whether exact p-values are computed
     (irrelevant if n<50 and there are no ties).  Otherwise the
     normal approximation is used}
+  \item{ignore.saturated}{ if true do the saturation correction described in the paper, with a saturation level of 46000 }
   \item{cont.correct}{a boolean controlling whether continuity
     correction is used in the p-value normal approximation  }
   \item{...}{any of the above arguments that applies}
@@ -86,7 +87,9 @@ Currently exact.pvals=TRUE is not supported, and cont.correct=TRUE works but
  were identical on the validation
  set) -- so this implementation will still be of use.
  
-
+The function \code{mas5.detect} is no longer the engine function for the
+others. C code is no available that computes the wilcox test faster. THe
+function is kept so that people can look at the R code (instead of C)}
 }
 \value{\code{mas5.detect} returns a list containing the following components:
   \item{pval}{	a real p-value in [0,1] equal to the probability of
@@ -119,7 +122,7 @@ whitepaper.
 \url{http://www.affymetrix.com/support/technical/whitepapers/sadd_whitepaper.pdf},
 \url{http://www.affymetrix.com/support/technical/whitepapers/sadd_whitepaper.pdf}
 }
-\author{Benjamin I. P. Rubinstein, Rafael A. Irizarry}
+\author{Crispin Miller, Benjamin I. P. Rubinstein, Rafael A. Irizarry}
 \examples{
 
 data(affybatch.example)
