@@ -113,17 +113,15 @@ pmcorrect.methods
 @
 \subsection{mas}
 
-The ideal mismatch documented by \cite{affy:tech:2002}
+An {\it ideal mismatch} is subtracted from PM. The ideal mismatch is documented by \cite{affy:tech:2002}. It has been designed so that you subtract MM when possible (ie MM is less than PM) or something else when it is not possible. The Ideal Mismatch will always be less than the corresponding PM and thus we can safely subtract it without risk of negative values. 
 
 \subsection{pmonly}
 
 Make no adjustment to the pm values.
 
-
 \subsection{subtractmm}
 
-Subtract MM from PM
-
+Subtract MM from PM. This would be the approach taken in MAS 4 \cite{affy4}. It could also be used in conjustion with the Li-Wong model.
 
 \section{Summarization methods}
 
@@ -133,23 +131,27 @@ express.summary.stat.methods
 
 \subsection{avgdiff}
 
+Compute the average. This is the approach that was taken in \cite{affy4}.
 
 \subsection{liwong}
 
-
- \cite{li:wong:2001a} and \cite{li:wong:2001b}
+This is an implementation of the methods proposed in \cite{li:wong:2001a} and \cite{li:wong:2001b}. A multichip model is fit.
 
 \subsection{mas}
 
-\cite{affy:tech:2002}
-
+As documented in \cite{affy:tech:2002}, a robust average using 1-step Tukey biweight on $\log_2$ scale.
 
 \subsection{medianpolish}
 
+This is the summarization used in the RMA expression summary \cite{iriz:etal:2003}. A multichip linear model is fit to data from each probeset. In particular for a probeset $k$ with $i=1,\dots,I_k$ probes and data from $j=1,\dots,J$ arrays we fit the following model
+\begin{equation*}
+\log_2\left(PM^{(k)}_{ij}\right) = \alpha_i^{(k)} + \beta_j^{(k)} + \epsilon_{ij}^{(k)}
+\end{equation*}
+where $\alpha_i$ is a probe effect and $\beta_j$ is the $\log_2$ expression value. The medianpolish is an algorithm (see \cite{tukey:1977}) for fitting this model robustly.
 
 \subsection{playerout}
 
-\cite{Lazardis:etal:2002}
+This method is detailed in \cite{Lazardis:etal:2002}. A non parameteric method is used to determine weights. The expression value is then the weighted average.
 
 
 \section{Putting it altogether using {\tt expresso}}
