@@ -30,9 +30,6 @@ normalize.methods(object)
 %\value{
 %A \code{\link[Biobase]{container-class}} of normalized objects.
 %}
-%\author{
-%  L. Gautier <laurent@cbs.dtu.dk>
-}
 \details{
   Generic methods related to array data normalization. Currently defined for
   \code{Plob} and \code{Cel.container} objects...
@@ -50,8 +47,11 @@ normalize.methods(object)
   \code{normalize.Plob.methods} respectively. See the general documentation of the
   package to know more (like how to add your own methods).
   (if you do not know how to use Sweave to generate the documentation,
-  you can get it from http://www.cbs.dtu/laurent/download/index.html\#affy).
+  you can get it from http://www.cbs.dtu.dk/laurent/download/index.html\#affy).
   
+}
+\author{
+  laurent
 }
 \seealso{
   \code{\link{Cel.container-class}}, \code{\link{Plob}}, and the
