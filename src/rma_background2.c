@@ -1,6 +1,8 @@
 /******************************************************************************
  **
  ** file: rma_background.c
+ **
+ ** Copyright (C) 2002 - 2003 B. M. Bolstad
  ** 
  ** Written by: B. M. Bolstad  <bolstad@stat.berkeley.edu>
  ** Implementation dates: 2002-2003

@@ -2,12 +2,14 @@
  **
  ** file: rma.c
  **
+ ** Copyright (C) 2002 - 2003   B. M. Bolstad
+ **
  ** created by: B. M. Bolstad   <bolstad@stat.berkeley.edu>
  ** created on: June 26, 2002
  **
  ** last modified: January 6, 2003
  ** 
- ** last modified: Feb 6, 2003
+ ** last modified: Apr 4, 2003
  **
  ** License: GPL V2 or later (same as the rest of the Affy package)
  **
@@ -79,6 +81,7 @@
  ** Feb 6, 2003 - change some printfs to Rprintfs this will allow the windows users to see some
  **               verbage when running rma
  ** Feb 25, 2003 - try to reduce or eliminate compiler warnings (from gcc -Wall) 
+ ** Apr 4, 2003 - fix up so that the number of probes in a probeset is allowed to be more dynamic
  **
  ************************************************************************/
 
@@ -496,10 +499,11 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
   int size;
   char *first;
   int first_ind;
+  int max_nrows = 1000;
+
 
   /* buffers of size 200 should be enough. */
 
-  char *curname=Calloc(200,char);
   int *cur_rows=Calloc(200,int);
   int nprobes=0;
 
@@ -515,14 +519,20 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
     if ((strcmp(first,ProbeNames[j]) != 0) | (j == (*rows -1))){
       if (j == (*rows -1)){
 	nprobes++;
-       	for (k = 0; k < nprobes; k++){
+       	for (k = 0; k < nprobes; k++){ 
+	  if (k >= max_nrows){
+	    max_nrows = 2*max_nrows;
+	    cur_rows = Realloc(cur_rows, max_nrows, int);
+	  }
 	  cur_rows[k] = (j+1 - nprobes)+k; 
-	  /* printf("%d ", (j+1 - nprobes)+k); */
 	}
       } else {
 	for (k = 0; k < nprobes; k++){
+	  if (k >= max_nrows){
+	    max_nrows = 2*max_nrows;
+	    cur_rows = Realloc(cur_rows, max_nrows, int);
+	  } 
 	  cur_rows[k] = (j - nprobes)+k; 
-	  /* printf("%d ", (j - nprobes)+k); */
 	}
       }
       /* printf("%d \n", nprobes); */
@@ -542,7 +552,6 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
   }
 
   Free(cur_exprs);
-  Free(curname);
   Free(cur_rows);
 }
 
