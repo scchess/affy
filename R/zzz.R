@@ -56,15 +56,12 @@
   ##assign("debug.affy123", TRUE, envir=as.environment(where))
   assign("debug.affy123", FALSE, envir=as.environment(where))
   
-  message <- FALSE
+  message <- TRUE
   
   if (message) {
     cat(rep("*",13),"\n",sep="")
     cat("affy: development version\n")
     cat(rep("*",13),"\n",sep="")
-    ##cat("The package is under major changes.\n")
-    cat(rep("*",13),"\n",sep="")
-    cat("demo(affy.tour) will eventually work and give an overview...\n")
     cat(rep("*",13),"\n",sep="")
     cat("IMPORTANT: you need the latest versions of the required packages too.\n")
     cat(rep("*",13),"\n",sep="")
@@ -103,11 +100,20 @@
   probesloc.second <- list(what="package", where=NULL, probesloc.autoload=TRUE)
   probesloc.third <- list(what="data", where="affy")
 
+  ## default for the methods
+  bgcorrect.method <- "mas"
+  normalize.method <- "quantiles"
+  pmcorrect.method <- "pmonly"
+  summary.method <- "liwong"
   
-  ## i added use.widgets=FALSE. Shuold it be true?
-  ## --> I do not think so. Let's keep it FALSE. 
-  affy <- list(compress.cdf=FALSE, compress.cel=FALSE, use.widgets=FALSE,
-               probesloc = list(probesloc.first, probesloc.second, probesloc.third))
+  affy <- list(compress.cdf=FALSE, compress.cel=FALSE,
+               use.widgets=FALSE,
+               probesloc = list(probesloc.first, probesloc.second, probesloc.third),
+               bgcorrect.method = bgcorrect.method,
+               normalize.method = normalize.method,
+               pmcorrect.method = pmcorrect.method,
+               summary.method = summary.method)
+  
   class(affy) <- "BioCPkg"
   
   BioC <- getOption("BioC")
