@@ -5,7 +5,7 @@ whatcdf <- function(filename, compress=getOption("BioC")$affy$compress.cel){
   tmp <- strsplit(tmp," ")[[1]] #split by space
   tmp <- tmp[grep(".1sq",tmp)] #pick the one with 1sq (from experience)
   if (identical(tmp, character(0))) {
-    warning("could not find CDFALSE name, setting it to 'unknown'")
+    warning("could not find CDF name, setting it to 'unknown'")
     tmp <- "unknown"
   } else {
     tmp <- gsub("\.1sq","",tmp) #take out .1sq

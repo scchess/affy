@@ -8,6 +8,7 @@
 \alias{normalize.methods-methods}
 \alias{normalize.Cel.container.methods}
 \alias{normalize.Plob.methods}
+\alias{normalize.AffyBatch.methods}
 \description{
   Normalize data from from arrays to eachothers.
 }
@@ -17,7 +18,7 @@ normalize(object, ...)
 normalize.methods(object)
 }
 \arguments{
-  \item{object}{A \code{Cel.container} or a \code{Plob}}
+  \item{object}{An \code{AffyBatch}, a \code{Cel.container} or a \code{Plob}}
   \item{...}{Optional arguments for the normalization funtion. See the
     details below.}
 %  \item{f.cdf}{a chip definition object object (as it is likely to be used by
@@ -32,7 +33,7 @@ normalize.methods(object)
 }
 \details{
   Generic methods related to array data normalization. Currently defined for
-  \code{Plob} and \code{Cel.container} objects...
+  \code{AffyBatch}, \code{Plob} and \code{Cel.container} objects...
 
   The method \code{normalize} returns a normalized object, which can be
   used further for analysis or expression values generation.
@@ -44,15 +45,12 @@ normalize.methods(object)
   The \emph{nicknames} are stored in \code{normalize.Cel.container.methods} and in
   \code{normalize.Plob.methods} respectively. See the general documentation of the
   package to know more (like how to add your own methods).
-  (if you do not know how to use Sweave to generate the documentation,
-  you can get it from http://www.cbs.dtu.dk/laurent/download/index.html\#affy).
-  
 }
 \author{
   laurent
 }
 \seealso{
-  \code{\link{Cel.container-class}}, \code{\link{Plob}}, and the
+  \code{\link{AffyBatch-class}}, \code{\link{Cel.container-class}}, \code{\link{Plob}}, and the
   documentations for the respective normalizarion methods.
   }
 \examples{

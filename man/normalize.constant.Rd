@@ -1,6 +1,7 @@
 \name{normalize.constant}
 \alias{normalize.constant}
 \alias{normalize.Cel.container.constant}
+\alias{normalize.AffyBatch.constant}
 \alias{normalize.Plob.constant}
 \title{Scale Cel objects in a container}
 \description{

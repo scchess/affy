@@ -1,12 +1,17 @@
 \name{normalize.invariantset}
 \alias{normalize.invariantset}
 \alias{normalize.Cel.container.invariantset}
+\alias{normalize.AffyBatch.invariantset}
 \alias{normalize.Plob.invariantset}
 \title{Scale Cel objects in a container}
 \description{
   Scale chip objects in a container.
 }
 \usage{
+normalize.AffyBatch.invariantset(abatch,
+                   prd.td=c(0.003, 0.007), progress=FALSE)
+
+
 normalize.Cel.container.invariantset(container, f.cdf, prd.td=c(0.003,
 0.007), progress=FALSE)
 
@@ -16,6 +21,7 @@ progress=FALSE)
 normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 }
 \arguments{
+  \item{abatch}{an \code{\link{AffyBatch}}}
   \item{container}{a \code{\link{Cel.container}} or a \code{\link{Plob}}.}
   \item{data}{a vector of intensities on a chip (to normalize to the reference).}
   \item{f.cdf}{a \code{Cdf} object.}
@@ -24,7 +30,7 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
   \item{progress}{A flag to have a dumps throughout the normalization}
 }
 \value{
-  Respectively a \code{\link{Cel.container}} of normalized objects, or
+  Respectively a \code{\link{AffyBatch}} of normalized objects, or
   a vector of normalized intensities, with an attribute "invariant.set"
   holding the indexes of the 'invariant' intensities.
 }
@@ -45,7 +51,7 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
   standard error application. Genome Biology 2001, 2(8):research0032.1-0032.11
 }
 \seealso{
-  \code{\link{normalize}} to normalize \code{\link{Cel.container}} objects.
+  \code{\link{normalize}} to normalize \code{\link{AffyBatch}} objects.
 }
 
 }

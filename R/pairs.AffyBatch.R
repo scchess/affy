@@ -16,7 +16,7 @@ pairs.AffyBatch <- function(x, panel=points, ..., transfo=I, main=NULL, oma=NULL
   
   labels <- paste(chipNames(x), unlist(lapply(history(x), function(z) if (is.null(z$name)) "" else z$name)), sep="\n")
   ##y <- matrix(intensity(x)[, , seq(along=x)], ncol=length(x))
-  y <- x
+  y <- intensity(x)
   
   pairs(transfo(y), labels=labels,
         panel=panel, ..., main=main, oma=oma,

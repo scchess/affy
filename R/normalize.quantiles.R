@@ -1,3 +1,21 @@
+normalize.AffyBatch.quantiles <- function(abatch) {
+  ## make the matrix (not very memory friendly... will be better when HDF5,
+  ## or an another mecanism is around...)
+  
+  ## this is may be too much.. I am taking every intensity in there... something like
+  ## taking only the PM (see invariantset) could be what you want (this is only a trial,
+  ## know better your own algorithm that I will ever... modify if needed).
+   
+  intensity(abatch) <- normalize.quantiles(intensity(abatch))
+  
+  ##set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
+  for (i in 1:abatch@nexp) {
+    history(abatch)[[i]]$name <- "normalized by quantiles"
+  }
+
+  return(abatch)
+}
+
 normalize.Cel.container.quantiles <- function(listcel) {
   ## make the matrix (not very memory friendly... will be better when HDF5,
   ## or an another mecanism is around...)

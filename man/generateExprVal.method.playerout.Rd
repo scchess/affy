@@ -6,11 +6,12 @@
   Generate an expression from the probes
 }
 \usage{
-  generateExprVal.method.playerout(probes, weights=FALSE)
+  generateExprVal.method.playerout(probes, weights=FALSE, optim.method="L-BFGS-B")
 }
 \arguments{
   \item{probes}{a list of \code{probes} slots from \code{PPSet.container}}
   \item{weights}{Should the resulting weights be returned ?}
+  \item{optim.method}{see parameter 'optim' for the function \code{\link{optim}}}
 }
 \value{
   A vector of expression values.

@@ -16,7 +16,8 @@ z <- outer(x, y, f)
 z[is.na(z)] <- 1
 ## ------------------
 z <- z - min(z)
- 
+
+z <- matrix(runif(50^2, min=1, max=8000), nrow=50, ncol=50)
 #DEBUG: cleaner way to get a temp file ?
 tmpfile <- .getTmpFileName()
 cel <- new("Cel", intensity=z, sd=z/10, name="", cdfName="dummy.1sq",
@@ -50,9 +51,7 @@ n.afbatch <- normalize(afbatch, method="constant")
 cat("done.\n")
 
 ## compute expression values
-cat("---> computing expression values...\n")
-e.set <- computeExprSet(n.afbatch, summary.method="liwong", bg.method="bg.correct.pmonly")
-cat("done.\n")
+#cat("---> computing expression values...\n")
+#e.set <- computeExprSet(n.afbatch, summary.method="avgdiff", bg.method="bg.correct.pmonly")
+#cat("done.\n")
 
-## restore old options
-options(BioC=old.opt)

@@ -1,19 +1,15 @@
 require(modreg)
 
-normalize.AffyBatch.qspline <- function(afbatch, ...) {
-  x <- matrix(data=intensity(afbatch)[1:length(afbatch), , ],
-              ncol=length(afbatch))
-  dimcel <- dim(intensity(afbatch))[1:2]
-  y <- normalize.qspline(t(x), ...)
+normalize.AffyBatch.qspline <- function(abatch, ...) {
+  intensity(abatch) <- normalize.qspline(t(intensity(abatch)), ...)
   
   #set.na.spotsd(listcel)
   
-  for (i in 1:length(afbatch)) {
-    intensity(afbatch)[, , i] <- array(y[,i], dimcel)
-    history(afbatch)[[i]] <- list(name="normalized by qspline")
+  for (i in 1:length(abatch)) {
+    history(abatch)[[i]] <- list(name="normalized by qspline")
   }
   
-  return(afbatch)
+  return(abatch)
 }
 
 

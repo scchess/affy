@@ -21,7 +21,7 @@ read.affybatch <- function(..., filenames=character(0),
     description <- tkMIAME()
   }
   if (is.null(description))
-    description <- new("miame")
+    description <- new("MIAME")
   
   n <- length(filenames)
   

@@ -2,6 +2,7 @@
 \alias{qspline-normalize}
 \alias{normalize.qspline}
 \alias{normalize.Cel.container.qspline}
+\alias{normalize.AffyBatch.qspline}
 \alias{normalize.Plob.qspline}
 \title{Normalize CEL files}
 \description{

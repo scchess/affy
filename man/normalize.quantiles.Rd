@@ -1,6 +1,7 @@
 \name{normalize.quantiles}
 \alias{normalize.quantiles}
 \alias{normalize.Cel.container.quantiles}
+\alias{normalize.AffyBatch.quantiles}
 \alias{normalize.Plob.quantiles}
 \title{Quantile Normalization}
 \description{

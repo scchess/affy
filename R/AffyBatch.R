@@ -11,7 +11,7 @@
                           ncol="numeric",
                           nexp="numeric",
                           annotation="character",
-                          description="characterORmiame",
+                          description="characterORMIAME",
                           notes="character",
                           history="list"),
            where=where)
@@ -27,7 +27,17 @@
                      object@intensity <- value
                      object
                    }, where=where)
-
+  
+  setMethod("chipNames", signature(object="AffyBatch"),
+            function(object) object@chipNames,
+            where=where)
+  
+  setReplaceMethod("chipNames", signature(object="AffyBatch"),
+                   function(object, value){
+                     object@chipNames <- value
+                     object
+                   }, where=where)
+  
   setMethod("history", signature(max.show="AffyBatch", reverse="missing"),
             function(max.show) max.show@history,
             where=where)
@@ -79,7 +89,7 @@
                   cdf <- read.cdffile(file.path(path.expand(where), object@cdfName))
                   ## ---> extra paranoia <---
                   if (cdf@cdfName != object@cdfName)
-                    warning(paste("The CDFALSE file identifies as", cdf@cdfName,
+                    warning(paste("The CDF file identifies as", cdf@cdfName,
                                   "while you probably want", object@cdfName))
                   ## ---> end <---
                   return(getLocations.Cdf(cdf))
@@ -135,7 +145,7 @@
             function(object) {
               tmp <- geneNames(object)
               cat("AffyBatch object\n")
-              cat("size of arrays=",object@ncol,"x",object@nrow,
+              cat("size of arrays=",object@nrow,"x",object@ncol,
                   " features\n",sep="")
               #cat("cdf=",object@cdffile,"\n",sep="")
               cdf.env <- getCdfInfo(object)
@@ -206,7 +216,7 @@
 
   ##wrapper
   setMethod("pmindex", "AffyBatch",
-            function(object,genenames=NULL,xy=FALSE) 
+            function(object, genenames=NULL,xy=FALSE) 
             indexProbes(object, "pm", genenames=genenames, xy=xy),
             where=where
             )
@@ -388,11 +398,7 @@
               if (is.na(method))
                 stop("unknown method")
               method <- paste("normalize.AffyBatch", method, sep=".")
-              ## change dimension to re-use Celc.container related code
-              oldim <- dim(intensity(object))
-              dim(intensity(object)) <- c(object@nrow, object@ncol, object@nexp)
               object <- do.call(method, alist(object, ...))
-              dim(intensity(object)) <- oldim
               return(object)
             },
             where=where)
@@ -408,8 +414,9 @@
   setMethod("computeExprSet", signature(x="AffyBatch", bg.method="character", summary.method="character"),
             function(x, bg.method, summary.method, ids=NULL, verbose=TRUE, bg.param=list(), summary.param=list()) {
               
+              bg.method <- match.arg(bg.method, bg.correct.methods)
+              summary.method <- match.arg(summary.method, express.summary.stat.methods)
               
-              ##DEBUG: check the existence of bg.method and summary.method HERE !
               n <- length(x)
 
               ## if NULL compute for all
@@ -420,36 +427,19 @@
               
               idsi <- match(ids, geneNames(x))
               
-              
               ## cheap trick to (try to) save time
               c.pps <- new("PPSet.container",
                            pmProbes=matrix(),
                            mmProbes=matrix())
-
               
               ## matrix to hold expression values
               exp.mat <- matrix(NA, m, n)
-
-              
-              ##if (verbose) cat("getting the locations for all affyIDs.....")
-              ##all.l.pm <- .Call("getallLocations", as.integer(cdf@name), as.integer(dim(cdf@name)),
-              ##                  as.integer(atom(cdf)), as.integer(pmormm(cdf)),
-              ##                  as.integer(max(cdf@name, na.rm=TRUE)+1) )
-              ##all.l.mm <- .Call("getallLocations", as.integer(cdf@name), as.integer(dim(cdf@name)),
-              ##                  as.integer(atom(cdf)), as.integer(! pmormm(cdf)),
-              ##                  as.integer(max(cdf@name, na.rm=TRUE)+1) )
-
-              if (verbose) cat(".....done.\n")
               
               ##DEBUG: hackish (put global adjsutment names below
               if (bg.method %in% c("bg.correct.rma")) {
                 if (verbose) cat("computing parameters for global background adjustement.....")
                 all.l.pm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,1]))
                 all.l.mm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,2]))
-                ##all.l.pm.mat <- cbind(unlist(lapply(all.l.pm, function(x) if (ncol(x) == 2) x[,1])),
-                ##                      unlist(lapply(all.l.pm, function(x) if (ncol(x) == 2) x[,2])))
-                ##all.l.mm.mat <- cbind(unlist(lapply(all.l.mm, function(x) if (ncol(x) == 2) x[,1])),
-                ##                      unlist(lapply(all.l.mm, function(x) if (ncol(x) == 2) x[,2])))
                 all.param <- lapply(seq(1:n), function(i) {
                   notNA <- !(is.na(intensity(x)[, i][all.l.pm.mat]) | is.na(intensity(x)[, i][all.l.mm.mat]))
                   bg.parameters(intensity(x)[, i][notNA], intensity(x)[, i][notNA])
@@ -459,7 +449,7 @@
               }
               
              if (verbose) {
-                cat(m,"ids to be processed\n")
+                cat(m, "ids to be processed\n")
                 countprogress <- 0
               }
               
@@ -489,7 +479,7 @@
                 ##l.mm <- locate.name(ids[id], cdf, type="mm")
                 loc <- get(id ,envir=getCdfInfo(x))
                 l.pm <- loc[, 1]
-                if (ncol == 2)
+                if (ncol(loc) == 2)
                   l.mm <- loc[ ,2]
                 else
                   l.mm <- NA
@@ -502,7 +492,6 @@
                 
                 ##names are skipped
 
-                warning("indexing of probes not yet checked (possibly wrong)")
                 c.pps@pmProbes <- matrix(intensity(x)[l.pm, ],
                                          np, n, byrow=TRUE)
                 c.pps@mmProbes <- matrix(intensity(x)[l.mm, ],
@@ -536,7 +525,7 @@
 
               ## instance exprSet
               ##if (verbose) cat("instancianting an exprSet.....")
-              dimnames(exp.mat) <- list(ids, deparse(x))
+              dimnames(exp.mat) <- list(ids, chipNames(x))
               eset <- new("exprSet", exprs=exp.mat, se.exprs=matrix())
               ##if (verbose) cat(".....done.\n")
               
@@ -561,114 +550,7 @@
 #             },where=where)
   
 
- #  setMethod("pmindex", "AffyBatch", function(object,genenames=NULL,xy=FALSE){
-#    envir <- loadcdf(object)
-    
-#    if(is.null(genenames)) 
-#      genenames <- ls(envir )
-     
-#    ##this is multiget except we return only pm indeces and the xy condition
-#    lengenenames <- length(genenames)
-#    ans <- vector("list", length=lengenenames)
-    
-#    if( ! is.environment(envir) )
-#      stop("The cdffile slot does not define an environment")
-    
-#    opt.err <- options(show.error.messages)
-#    options(show.error.messages = FALSE)
-#    on.exit(options(show.error.messages = opt.err))
-    
-#    if (xy)
-#      for(i in 1:lengenenames){
-#        tmp <-  try(get(genenames[i],pos,envir, "any", TRUE)[,1])
-#        y <- floor(tmp/object@nrow)
-#        ans[[i]] <- cbind(x=tmp-y*object@nrow-1,y)
-#      }
-#    else
-#      for(i in 1:lengenenames)
-#        ans[[i]] <- try(get(genenames[i],pos,envir, "any", TRUE)[,1])
-    
-#    options(show.error.messages = opt.err)
-#    on.exit(NULL)
-    
-#    failfun <- function(x) {
-#      cx <- class(x)
-#      if( !is.null(cx) && cx == "try-error")
-#        TRUE
-#      else
-#        FALSE
-#    }
-#    failed <- sapply(ans, failfun)
-#    ans[failed] <- NA
-    
-#    names(ans) <- genenames
-#    ans
-#  },where=where) 
 
-#  setMethod("mmindex","AffyBatch",function(object,genenames=NULL,xy=FALSE){
-#    envir <- loadcdf(object)
-#    if(is.null(genenames))
-#      genenames <- ls(envir)
-    
-#    ##this is multiget except we return only mm indeces and the xy condition
-#    lengenenames <- length(genenames)
-#    ans <- vector("list", length=lengenenames)
-#    if( ! is.environment(envir) )
-#      stop("The cdffile slot does not define an environment")
-#    options(show.error.messages = FALSE)
-#    on.exit(options(show.error.messages = TRUE))
-#    if(xy)
-#      for(i in 1:lengenenames){
-#        tmp <-  try(get(genenames[i],pos,envir, "any", TRUE)[,2])
-#        y <- floor(tmp/object@nrow)
-#        ans[[i]] <- cbind(x=tmp-y*object@nrow-1,y)
-#      }
-#    else
-#      for(i in 1:lengenenames)
-#        ans[[i]] <- try(get(genenames[i],pos,envir, "any", TRUE)[,2])
-#    options(show.error.messages = TRUE)
-#    on.exit(NULL)
-    
-#    failfun <- function(x) {
-#      cx <- class(x)
-#      if( !is.null(cx) && cx == "try-error")
-#        TRUE
-#      else
-#        FALSE
-#    }
-#    failed <- sapply(ans, failfun)
-#    ans[failed] <- NA
-    
-#    names(ans) <- genenames
-#    ans
-#  },where=where)
-  
-#  setMethod("pm","AffyBatch",function(object, genenames=NULL){
-#    Index <- pmindex(object,genenames)
-#    if(LISTRUE)
-#      ans <- lapply(Index,function(i) object@intensity[i,])
-#    else{
-#      Index2 <- unlist(Index)
-#      ans <- object@intensity[Index2,]
-#      colnames(ans) <- sampleNames(object)
-#      rownames(ans) <- names(Index2)
-#    }
-#    return(ans)
-#  },where=where)
-
-#  setMethod("mm","AffyBatch",function(object,genenames=NULL,LISTRUE=FALSE){
-#    Index <- mmindex(object,genenames)
-#    if(LISTRUE)
-#      ans <- lapply(Index,function(i) object@intensity[i,])
-#    else{
-#      Index2 <- unlist(Index)
-#      ans <- object@intensity[Index2,]
-#      colnames(ans) <- sampleNames(object)
-#      rownames(ans) <- names(Index2)
-#    }
-#    return(ans)
-#  },where=where)  
-  
 }
 
 

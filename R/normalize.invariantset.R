@@ -86,6 +86,59 @@ normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progre
   return(container)
 }
 
+normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), progress=FALSE) {
+  
+  
+  w.pm <- unlist(indexProbes(abatch, which="pm"))             # boolean to find the PM probes
+  i.pm <- rep(FALSE, abatch@nrow * abatch@ncol)
+  i.pm[w.pm] <- TRUE
+  rm(w.pm)
+  
+  np <- sum(i.pm)                                     # number of PM probes
+  nc  <-  abatch@nexp                                 # number of CEL files
+  
+  # take as a reference the array having the median overall intensity
+  m <- vector("numeric", length=nc)
+  for (i in 1:nc)
+    m[i] <- mean(intensity(abatch)[, i][i.pm])
+  refindex <- trunc(median(rank(m)))
+  rm(m)           
+
+  if (progress) cat("Data from", chipNames(abatch)[refindex], "used as baseline.\n")
+  
+  ##set.na.spotsd(cel.container)
+  
+  ## loop over the CEL files and normalize them
+  for (i in (1:nc)[-refindex]) {
+  
+    if (progress) cat("normalizing array", chipNames(abatch)[i], "...")
+    
+    mydim <- dim(intensity(abatch)[, i])
+    
+    ##temporary
+    tmp <- normalize.invariantset(c(intensity(abatch)[, i])[i.pm],
+                                  c(intensity(abatch)[, refindex])[i.pm],
+                                  prd.td)
+    i.set <- which(i.pm)[tmp$i.set]
+    tmp <- array(as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                                   xout=intensity(abatch)[, i], rule=2)$y),
+                 mydim)
+    attr(tmp,"invariant.set") <- NULL
+    intensity(abatch)[, i] <- tmp
+
+    ## storing information about what has been done
+    history(abatch)[[i]] <- list(name="normalized by invariant set",
+                                       invariantset=i.set)
+    
+    if (progress) cat("done.\n")
+    
+  }
+  history(abatch)[[refindex]] <- list(name="reference for the invariant set")
+  
+  return(abatch)
+}
+
+
 normalize.Cel.container.invariantset <- function(cel.container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
   
   if (! inherits(cel.container, c("Cel.container","Cel.container.hdf5")))

@@ -13,11 +13,25 @@ for (m in normalize.methods(listcel)) {
 }
 
 ## Plob
-cat("Plob\n")
+#cat("Plob\n")
 
-data(Dilution)
-for (m in normalize.methods(listcel)) {
+#data(Dilution)
+#for (m in normalize.methods(listcel)) {
+#  cat("-->", m, "...")
+#  listcel.n <- normalize(Dilution, method=m)
+#  cat("done.\n")
+#}
+
+## AFfyBatch
+cat("AffyBatch\n")
+
+data(affybatch.example)
+n.meth <- normalize.methods(affybatch.example)
+## remove loess an qspline
+n.meth <- n.meth[ ! (n.meth %in% c("loess", "pspline"))]
+for (m in n.meth) {
   cat("-->", m, "...")
-  listcel.n <- normalize(Dilution, method=m)
+  affybatch.example.n <- normalize(affybatch.example, method=m)
   cat("done.\n")
 }
+

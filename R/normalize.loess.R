@@ -1,3 +1,20 @@
+normalize.AffyBatch.loess <- function(abatch, ...) {
+  
+  ## this is may be too much.. I am taking every intensity in there... something like
+  ## taking only the PM (see invariantset) could be what you want (this is only a trial,
+  ## know better your own algorithm that I will ever... modify if needed).  
+  
+  intensity(abatch) <- normalize.loess(intensity(abatch), ...)
+
+  ##set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
+  ##cat(cols,rows)
+  for (i in 1:abatch@nexp) {
+    history(listcel)[[i]] <- list(name="normalized by loess")
+  }
+
+  return(listcel)
+}
+
 normalize.Cel.container.loess <- function(listcel, ...) {
   
   cols <- length(listcel)

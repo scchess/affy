@@ -10,7 +10,7 @@
 fit.li.wong(data.matrix, remove.outliers=TRUE, normal.array.quantile=0.5,
             normal.resid.quantile=0.9, large.threshold=3, large.variation=0.8,
             outlier.fraction=0.14, delta=1e-06, maxit=50,
-            outer.maxit=50,verbose=FALSE)
+            outer.maxit=50,verbose=FALSE, ...)
 
 li.wong(data.matrix,remove.outliers=TRUE, normal.array.quantile=0.5,
             normal.resid.quantile=0.9, large.threshold=3, large.variation=0.8,
@@ -43,6 +43,7 @@ li.wong(data.matrix,remove.outliers=TRUE, normal.array.quantile=0.5,
   \item{outer.maxit}{ maximum number of iterations of defined outliers.}
   \item{verbose}{logical value. If \code{TRUE} information is given of
     the status of the algorithm.}
+  \item{...}{       }
 }
 \details{Please refer to references.}
 \value{\code{li.wong} returns a vector of expression measures (or column

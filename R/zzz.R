@@ -50,15 +50,18 @@
   ## but the following trick did cheat R check... :(
   ##assign("T", TRUE, envir=as.environment(where))
   ##assign("F", FALSE, envir=as.environment(where))
-  
-  if (debug.affy123) {
+
+  message <- TRUE
+  if (message) {
     cat(rep("*",13),"\n",sep="")
-    cat("affy: development version (...this is usable...)\n")
-    cat("read the file NEWS to know what is changing.\n")
+    cat("affy: development version\n")
+    cat(rep("*",13),"\n",sep="")
+    cat("The package is under major changes.\n")
+    cat("unpack the package and read the file NEWS to know more....\n")
+    cat("The draft for the new vignette (called 'affy2') is distributed with the pacakge\n")
     cat(rep("*",13),"\n",sep="")
     cat("demo(affy.tour) will eventually work and give an overview...\n")
     cat(rep("*",13),"\n",sep="")
-    cat("If you have tkWidgets and rhdf5 installed, try\nexpresso(widget=TRUE, hdf5=TRUE)\n for a real thrill...\n")
   }
   
   library.dynam("affy", pkgname, libname)

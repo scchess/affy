@@ -1,21 +1,21 @@
-normalize.AffyBatch.constant <- function(afbatch, refindex=1, FUN=mean, na.rm=TRUE) {
+normalize.AffyBatch.constant <- function(abatch, refindex=1, FUN=mean, na.rm=TRUE) {
   
-  n <- length( afbatch )
+  n <- length( abatch )
   
   if (! (refindex %in% 1:n)) stop("invalid reference index for normalization")
-  refconstant <- FUN(intensity(afbatch[[refindex]]), na.rm=na.rm)
+  refconstant <- FUN(intensity(abatch[[refindex]]), na.rm=na.rm)
   
   #set.na.spotsd(container)
                              
   for (i in (1:n)[-refindex]) {
-    m <- normalize.constant(intensity(afbatch[[i]]), refconstant, FUN=FUN, na.rm=na.rm)
+    m <- normalize.constant(intensity(abatch[[i]]), refconstant, FUN=FUN, na.rm=na.rm)
     myhistory <- list(name="normalized by constant",
                       constant=attr(m,"constant"))
     attr(m,"constant") <- NULL
-    intensity(afbatch)[, , i] <- m
-    history(afbatch)[[i]] <- myhistory
+    intensity(abatch)[, i] <- m
+    history(abatch)[[i]] <- myhistory
   }
-  return(afbatch)
+  return(abatch)
 }       
 
 
