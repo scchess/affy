@@ -251,7 +251,7 @@ setMethod("pm","AffyBatch",
               psets<- as.list(cdfname)
               psets<- psets[order(names(psets))]
               index <-unlist(sapply(psets, function(x) x[,1]),use.names=FALSE)
-              return(exprs(object)[index,])
+              return(exprs(object)[index,,drop=FALSE])
             }
             else{
               return(probes(object, "pm", genenames, LISTRUE=LISTRUE))
@@ -288,7 +288,7 @@ setMethod("mm",signature("AffyBatch"),
               psets<- as.list(cdfname)
               psets<- psets[order(names(psets))]
               index <-unlist(sapply(psets, function(x) x[,2]),use.names=FALSE)
-              return(exprs(object)[index,])
+              return(exprs(object)[index,,drop=FALSE])
             }
             else{
               probes(object, "mm", genenames, LISTRUE=LISTRUE)
