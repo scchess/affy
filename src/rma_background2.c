@@ -26,6 +26,7 @@
  **
  ** Jan 9, 2003 - check that background version switching happens
  ** Feb 6, 2003 - change two printf to Rprintf (so Windows users actually see some verbage)
+ ** Feb 17,2003 - change a free to Free in find_max()
  **
  *****************************************************************************/
 
@@ -61,7 +62,7 @@ double find_max(double *x,int length){
   max = buffer[length-1];
   
   /* printf("max is %f \n", max); */
-  free(buffer);
+  Free(buffer);
   return max;
 }
 

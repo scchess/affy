@@ -20,6 +20,7 @@
  ** Feb 2, 2002 - Intial c code version from original R code
  ** Apr 19, 2002 - Update to deal more correctly with ties (equal rank)
  ** Jan 2, 2003 - Documentation/Commenting updates reformating
+ ** Feb 17, 2003 - add in a free(datvec) to qnorm(). clean up freeing of dimat
  **
  ***********************************************************/
 
@@ -100,16 +101,20 @@ dataitem **get_di_matrix(double *data, int rows, int cols){
     printf("\nERROR - Sorry the normalization routine could not allocate adequate memory\n       You probably need more memory to work with a dataset this large\n");
   }
 
-  xtmp = malloc(cols*rows*sizeof(dataitem));
+  /* xtmp = malloc(cols*rows*sizeof(dataitem));
+     for (j=0; j < cols; j++, xtmp +=rows) dimat[j] = xtmp; */
   
-  for (j=0; j < cols; j++, xtmp +=rows) dimat[j] = xtmp;
-  
+  for (j=0; j < cols; j++)
+    dimat[j] = malloc(rows*sizeof(dataitem));
+
+
+
   for (j =0; j < cols; j++)
     for (i =0; i < rows; i++){
       dimat[j][i].data = data[j*rows + i];
       dimat[j][i].rank = i;
     }
-  
+
   return(dimat); 
 }
 
@@ -189,6 +194,12 @@ void qnorm_c(double *data, int *rows, int *cols){
     }
   }
   free(ranks);
+  free(datvec);   
+
+  for (j=0; j < *cols; j++){
+    free(dimat[j]);
+  }
+
   free(dimat);
   free(row_mean); 
 }
