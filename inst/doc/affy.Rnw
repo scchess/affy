@@ -409,9 +409,11 @@ probe intensities.}
 To obtain MAS 5.0 use
 %<<>>=
 \begin{Sinput}
-eset <- expresso(affybatch.example, normalize=FALSE, bgcorrect.method="mas", 
-                 pmcorrect.method="mas",summary.method="mas")
-eset <- affy.scalevalue.exprSet(eset)
+R> eset <- expresso(affybatch.example, normalize=FALSE, 
+                 bgcorrect.method="mas", 
+                 pmcorrect.method="mas",
+                 summary.method="mas")
+R> eset <- affy.scalevalue.exprSet(eset)
 \end{Sinput}
 %@ 
 Notice that normalization occurs after we obtain expression
@@ -422,7 +424,7 @@ normalization similar to that described in the MAS 5.0 manual.
 To obtain a measure similar to Li and Wong's MBEI one can use
 \begin{Sinput}
 %<<>>=
-eset <- expresso(affybatch.example, normalize.method="invarianteset", 
+R> eset <- expresso(affybatch.example, normalize.method="invarianteset", 
                  bg.correct=FALSE,
                  pmcorrect.method="pmonly",summary.method="liwong")
 %@
@@ -439,9 +441,11 @@ of minutes for datasets that may have taken hours in previous versions
 of \verb+affy+. The function serves as an interface to a hard coded C
 implementation of the RMA method \cite{iriz:etal:2003}. Generally, the
 following would be sufficient to compute RMA expression measures:  
-<<>>=
-eset <- rma(affybatch.example)
-@ 
+\begin{Sinput}
+%<<>>=
+R> eset <- rma(affybatch.example)
+%@ 
+\end{Sinput}
 
 Currently the \verb+rma+ function implements RMA in the following manner
 \begin{enumerate}
@@ -1005,8 +1009,8 @@ method \verb+getCdfInfo+ takes as an argument an \verb+AffyBatch+ and
 returns the 
 necessary environment. If \verb+x+ is an \verb+AffyBatch+, this
 function will look for an environment with name 
-\verb+cleancdfname(x@cdfName)+. Here 
-are two examples.
+\verb+cleancdfname(x@cdfName)+. 
+For example:
 
 The call to \verb+data+ loads an \verb+AffyBatch+ and also an
 environment that corresponds to a small corner of the HG6800 chip,
@@ -1020,7 +1024,8 @@ ls(myenv)[1:5]
 
 Now lets look at \verb+Dilution+
 <<>>=
-Dilution@cdfName
+data(Dilution)
+print(Dilution@cdfName)
 myenv <- getCdfInfo(Dilution)
 ls(myenv)[1:5]
 @ 
@@ -1074,15 +1079,13 @@ options.
 <<>>=
 opt <- getOption("BioC")
 affy.opt <- opt$affy
-names(affy.opt)
+print(names(affy.opt))
 affy.opt$compress.cel <- TRUE
 @
 
 The second example explains how the finding locations of probes
 environment works.
 <<>>=
-opt <- getOption("BioC")
-affy.opt <- opt$affy
 print(affy.opt$probesloc)
 @
 The option {\it probesloc} is a list. Each element of the list is it
