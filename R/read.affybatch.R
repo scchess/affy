@@ -16,6 +16,8 @@
 ##           reads in PM, MM or both into matrices
 ## Sep 28    changed name from read.affybatch2 to read.affybatch
 ##           and cleaned up some old commented stuff
+## Apr 13, 2004 - fixed problem in read.probematrix
+##
 #############################################################
 
 
@@ -117,7 +119,10 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
 
   Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
 
-  cdfInfo <- contents(getCdfInfo(Data))
+  cdfInfo<- as.list(getCdfInfo(object))
+  cdfInfo <- cdfInfo[order(names(cdfInfo))]
+
+  
   .Call("read_probeintensities", filenames,
         compress, rm.mask, rm.outliers, rm.extra, ref.cdfName,
         dim.intensity, verbose, cdfInfo,which, PACKAGE="affy")
