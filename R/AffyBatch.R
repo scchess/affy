@@ -69,9 +69,8 @@ setMethod("getCdfInfo", signature("AffyBatch"),
             ## "where" is where it can be found
 
             cdfname <- cleancdfname(object@cdfName)
-            if( !is.name(cdfname) )
-                stop(paste("getCdfInfo, this: ", object@cdfName,
-                           ", is not a valid CDF name", sep=""))
+            if( !is.character(cdfname) || nchar(cdfname)[1] == 0 )
+                stop(paste("invalid CDF name:", cdfname))
             second.try <- FALSE
 
             if (debug.affy123)
