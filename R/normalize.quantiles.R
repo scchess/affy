@@ -1,5 +1,3 @@
-.First.lib <- function(lib, pkg) library.dynam("affy", pkg, lib) 
-
 
 normalize.Cel.quantiles <- function(listcel) {
   ## make the matrix (not very memory friendly... will be better when HDF5,
