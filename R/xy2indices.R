@@ -19,7 +19,7 @@ indices2xy <- function(i, nr=NULL, cel=NULL, abatch=NULL) {
   ct <- sum(c(is.null(nr), is.null(cel), is.null(abatch)))
   
   if (ct != 2)
-    stop("One and only one of 'nc', 'cel', 'abatch' should be specified.")
+    stop("One and only one of 'nr', 'cel', 'abatch' should be specified.")
   if (! is.null(cel))
     nr <- nrow(intensity(cel))
   if (! is.null((abatch)))

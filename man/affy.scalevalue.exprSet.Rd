@@ -1,7 +1,9 @@
 %%%THIS FUNCTION SHOULD BE In BIOBASE or SOMEWHERE ELSE... NEXT RELEASE
+%% LG: In such a case, I assume the long awaited agreement about
+%% normalization methods will be here and all the normalization methods
+%% will be stored together
 \name{affy.scalevalue.exprSet}
 \alias{affy.scalevalue.exprSet}
-%- Also NEED an `\alias' for EACH other topic documented here.
 \title{Scale normalization for expreSets}
 \description{
   Normalizes expression values using the method described in the
@@ -10,7 +12,6 @@
 \usage{
 affy.scalevalue.exprSet(eset, sc = 500, analysis="absolute")
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{eset}{An \code{\link[affy:exprSet-class]{exprSet}} object.}
   \item{sc}{Value at which all arrays will be scaled to.}
@@ -18,9 +19,12 @@ affy.scalevalue.exprSet(eset, sc = 500, analysis="absolute")
   "comparison" is still not implemented.}
 }
 \details{
-  See the affymetrix user manual for details.
+  This is function was implemented from the Affymetrix technical
+  documentation for MAS 5.0. It can be downloaded from the website of
+  the company. Please refer to this document for details.
 }
+\author{Laurent}
 \value{
-  A normalize \code{\link[Biobase]{exprSet}}}
-\keyword{manip}% at least one, from doc/KEYWORDS
+  A normalized \code{\link[Biobase]{exprSet}}}
+\keyword{manip}
 

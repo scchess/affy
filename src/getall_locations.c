@@ -99,7 +99,7 @@ SEXP getallLocations(SEXP namesR, SEXP dimR, SEXP atomsR, SEXP selectR, SEXP nb_
 	nAtom = atoms[ii + nrows * jj];
       }
       if ((nAtom < 0) | (nAtom > nbElements[x-1])) {
-	error("Inconsistency in the Cdf object (slot atom, element [%i,%i])!", ii+1, jj+1);
+	error("Inconsistency in the Cdf object (slot atom, element [%i,%i])! The atom value %i should be positive and lower than %i for the probeset %i.", ii+1, jj+1, nAtom, nbElements[x-1], x-1);
       }
 	
       INTEGER_POINTER(VECTOR_ELT(loc_list, x-1))[nAtom + nbElements[x-1] * 0] = ii+1;

@@ -1,4 +1,4 @@
-\name{affy}
+\name{affy-options}
 \alias{affy-options}
 \title{Options for the affy package}
 \description{

@@ -39,12 +39,6 @@
   "bg.correct.subtractmm", "bg.correct.pmonly" and "bg.correct.adjust"
   (see documentation for the method \code{express}).
 
-  IMPORTANTRUE NOTE: This a 'development version'. Names used for methods,
-  including the name of this method
-  itself are likely to change in the near future. The aim is to merge
-  more completely the \code{Cel.container} and \code{Cdf}, and the
-  \code{Plob} object. This method and the fucntion \code{express} will
-  be unified.
 }
 \seealso{
   method \code{generateExprSet} of the class

@@ -170,6 +170,6 @@ generateExprSet.methods <- c(generateExprSet.methods, "huber")
 From now the package is aware of the two new methods\ldots in this session.
 
 The code for the methods included in the package can be informative if you plan to develop methods.
-The package vsn adds a normalization method using the mecanism outlined above.
+An example that demonstrates how a normalization method can be added is given by the function \code{normalize.AffyBatch.vsn} in the package \pkgname{vsn}; see its help file.
 
 \end{document}

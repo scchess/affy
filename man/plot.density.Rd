@@ -1,4 +1,6 @@
+%\name{matdensity}
 \name{plotDensity}
+%\alias{matdensity}
 \alias{plotDensity}
 \alias{plotDensity.AffyBatch}
 %- Also NEED an `\alias' for EACH other topic documented here.
@@ -8,7 +10,9 @@ Plots the non-parametric density estimates using values contained in the
 columns of a matrix.
 }
 \usage{
-plotDensity(mat, ylab = "density", xlab="x", ...)
+%matdensity(mat, ylab = "density", xlab="x", type="l", ...)
+
+plotDensity(mat, ylab = "density", xlab="x", type="l", ...)
 
 plotDensity.AffyBatch(x, col = rainbow(dim(x)[2]), log=TRUE,
 which=c("pm","mm","both"), ylab = "density", xlab = NULL, ...)
@@ -24,12 +28,25 @@ which=c("pm","mm","both"), ylab = "density", xlab = NULL, ...)
   \item{col}{The colors to use fot the different arrays}
   \item{ylab}{a title for the y axis.}
   \item{xlab}{ a title for the x axis.}
+  \item{type}{ type for the plot.}
   \item{\dots}{graphical parameters can be given as arguments to \code{\link{plot}}}
 }
-\author{Ben Bolstad}
+%\details{
+%  The function \code{plotDensity} is being deprecated.
+%  The function \code{matdensity} should be preferred. It is felt to belong to the same family
+%  than the functions \code{matplot} and \code{matlines}. It returns
+%  invisibly a list of two matrices `x' and `y'.
+%  This can be convenient for large
+%  input matrices (the computation of the densities can take some time).
+%}
+\author{Ben Bolstad and Laurent}
 \examples{
 data(affybatch.example)
-hist(affybatch.example) ##this call plotDensity.AffyBatch
+
+m <- exprs(affybatch.example)
+
+plotDensity(exprs(affybatch.example))
+
 }
 \keyword{hplot}% at least one, from doc/KEYWORDS
 

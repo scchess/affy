@@ -1,7 +1,7 @@
 \name{.setAffyOptions}
 \alias{.setAffyOptions}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ ~~function to do set options ~~ }
+\title{ ~~function to set options ~~ }
 \description{
   ~~ Set the options for the package 
 }

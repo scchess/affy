@@ -1,7 +1,7 @@
 \name{normalize.invariantset}
 \alias{normalize.invariantset}
 \alias{normalize.AffyBatch.invariantset}
-\title{InvarianteSet normalization}
+\title{Invariante Set normalization}
 \description{
 Normalize arrays in an  \code{\link[affy:AffyBatch-class]{AffyBatch}} using an invariant set.
 }

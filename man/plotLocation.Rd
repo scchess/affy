@@ -19,6 +19,9 @@ plotLocation(x, col="green", pch=22, ...)
   \item{...}{Other parameters passed to the function \code{points}}
   }
 }
+\author{
+  Laurent
+}
 \seealso{
   \code{\link[affy:AffyBatch-class]{AffyBatch}}
 }
@@ -33,11 +36,13 @@ plotLocation(x, col="green", pch=22, ...)
   ## genenames
   n <- geneNames(Dilution)[1]
 
-  ## getting the location for the gene n
-  l <- indexProbes(Dilution, "both", n, xy=TRUE)
+  ## get the location for the gene n
+  l <- indexProbes(Dilution, "both", n)[[1]]
+  ## convert the index to X/Y coordinates
+  xy <- indices2xy(l, abatch=Dilution) 
 
   ## plot
-  plotLocation(l)
+  plotLocation(xy)
 
 }
 \keyword{aplot}

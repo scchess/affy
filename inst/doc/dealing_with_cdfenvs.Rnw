@@ -38,8 +38,8 @@
 \section*{Introduction}
 This document describes briefly how the package gets (or tries to get)
 the needed cdfenvs. Various issues like security and configuring the
-options for the package \Rpackage{affy} are outlined. To some extent,
-what is developed here could\footnote{Currently this would require
+options for the package \Rpackage{affy} are outlined. To some extend,
+what is developped here could\footnote{Currently this would require
 a bit of effort, but it should become very easy very soon}
  be applied to the package \Rpackage{oligochips}.
 
@@ -61,7 +61,7 @@ The functions \Rfunction{get} and \Rfunction{multiget} (in \Rpackage{Biobase})
 are a convenient way to access what is in an environment.
 Expert users only will consider modifying what is those environment.
 
-In the case of {\it Affymetrix} data, the {\it cdfenvs} are built from
+In the case of {\it Affynetrix} data, the {\it cdfenvs} are built from
 the {\it .CDF} files. The package \Rpackage{makecdfenvs} is dedicated
 to the building of packages with {\it cdfenvs}. The simpliest way
 to proceed is to have the package needed for the analysis installed.
@@ -108,7 +108,7 @@ affy.opt <- getOption("BioC")$affy
 print.probesloc.opt(affy.opt, c("what", "where", "autoload"))
 @
 
-The option \Rfunarg{autoload} is only relevant where \Rfunarg{where}
+The option \Rfunarg{autoload} is only relevant where \Rfunarg{what}
 is equal to {\it package}. Having it set to \verb+TRUE+ means
 that an attempt of download will be made in case the package is not found
 in \Rfunction{.libPaths()} (and of course that the relevant {\it cdfenv} was not
@@ -128,8 +128,8 @@ deactivate.autoload <- function(affy.opt) {
     return(affy.opt)
   }	      
 @ 
-It can be used to deactivate any automatic download:
-<<>>=
+It can be used to desactivate any automatic download:
+<<results=hide>>=
 affy.opt <- getOption("BioC")$affy
 
 affy.opt.noauto <- deactivate.autoload(affy.opt)
@@ -141,7 +141,7 @@ affy.opt.noauto <- deactivate.autoload(affy.opt)
 
 \section*{Security}
 
-The autoload mechanism can be perceived as a security breach. It is the
+The autoload mecanism can be perceived as a security breach. It is the
 case, but not more than any {\bf R} package you might install (unless you
 inspect carefully the source of every single package you install).
 
@@ -157,7 +157,7 @@ If you do not have install
 permissions, you might consider installing the {\it cdfenvs} packages to a
 particular place. For that you need to change the {\it installdir} (passed
 to the function \Rfunction{install.packages2} of the package \Rpackage{reposTools}).
-<<>>=
+<<results=hide>>=
 my.installdir <- "mydir/is/here"
 has.installdir <- unlist(lapply(affy.opt$probesloc,
                                 function(x) grep(names(x), "installdir")))
@@ -174,9 +174,8 @@ affy.opt$probesloc <- l
 .setAffyOptions(affy.opt)
 @
 
-Note that you will have to update{\it where} to look for the packages
-(like by putting it in your \Rfunction{.libPaths()}, or the field {\it
+Note that a given {\if cdfenv} package is searched as specified in the
+argument {\it where}. Depending on your settings, you might prefer updating
+the \Rfunction{.libPaths()} of your {\bf R} session, or the field {\it
 where} for the probelocs).
 \end{document}
-
-% LocalWords:  Affynetrix

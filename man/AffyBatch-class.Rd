@@ -29,18 +29,12 @@
       the physical number of rows in the arrays.}
     \item{\code{ncol}:}{Object of class \code{"numeric"} representing
       the physical number of columns in the arrays.}
-    \item{\code{exprs}:}{Object of class "matrix". The observed
-      intensities. This is 
-     a matrix with columns representing arrays and rows
-     representing cel intensities. }
-    \item{\code{se.exprs}:}{Object of class "matrix". This is
-     a matrix of the same dimensions as \code{exprs} which may contains
-     standard error estimates for the estimated intensity levels. }
-    \item{\code{phenoData}:}{Object of class "phenoData" This is an
-      instance of class \code{phenoData} 
-    containing the patient (or case) level data. The columns of the
-    pData slot of this entity represent
-    variables and the rows represent patients or cases. }
+    \item{\code{exprs}:}{Object of class "matrix" inherited from
+      \code{exprSet}. The matrix contains one probe per row and one chip
+    per column.}
+    \item{\code{se.exprs}:}{Object of class "matrix" inherited from \code{exprSet}.}
+    \item{\code{phenoData}:}{Object of class "phenoData" inherited from
+      \code{exprSet}.}
     \item{\code{annotation}}{A character string identifying the
       annotation that may be used for the \code{exprSet} instance.}
     \item{\code{description}:}{Object of class "MIAME". For

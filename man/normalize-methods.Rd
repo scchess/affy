@@ -46,7 +46,7 @@ normalize.methods(object)
   be accessed by typing \code{?normalize.loess}. 
 
   For more on the normalization methodologies currently implemented
-  please refer to the builtinMethods vignette.
+  please refer to the vignette `Custom Processing Methods'.
 
   To add your own normalization procedures please
   refer to the customMethods.
