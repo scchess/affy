@@ -78,14 +78,15 @@
  ** Jan 6, 2003 - fix merging. Note "//" is valid according to the language standards (http://anubis.dkuug.dk/jtc1/sc22/open/n2794/n2794.txt)
  ** Feb 6, 2003 - change some printfs to Rprintfs this will allow the windows users to see some
  **               verbage when running rma
- ** 
+ ** Feb 25, 2003 - try to reduce or eliminate compiler warnings (from gcc -Wall) 
+ **
  ************************************************************************/
 
 
 /* #include "rma_structures.h" */
 #include "rma_common.h"
 #include "rma_background2.h"
-/* #include "qnorm.h" */
+#include "qnorm.h" 
 
 #include <R.h> 
 #include <Rdefines.h>
@@ -310,7 +311,7 @@ void cmod(double *c, double *cdelta, int cols){
 
 void R_median_polish(double *data, int *rs, int *cs){
   
-  int rows = *rs, cols = *cs, nprobes=*rs;
+  int cols = *cs, nprobes=*rs; /* rows = *rs, */
 
   int i,j,iter;
   int maxiter = 10;
@@ -346,7 +347,7 @@ void R_median_polish(double *data, int *rs, int *cs){
   } 
   
   
-  for (iter = 1; iter <= 10; iter++){
+  for (iter = 1; iter <= maxiter; iter++){
     get_row_median(z,rdelta,nprobes,cols);
     subtract_by_row(z,rdelta,nprobes,cols);
     rmod(r,rdelta,nprobes);
@@ -435,7 +436,7 @@ void median_polish(double *data, int rows, int cols, int *cur_rows, double *resu
   } 
   
   
-  for (iter = 1; iter <= 10; iter++){
+  for (iter = 1; iter <= maxiter; iter++){
     get_row_median(z,rdelta,nprobes,cols);
     subtract_by_row(z,rdelta,nprobes,cols);
     rmod(r,rdelta,nprobes);
@@ -504,7 +505,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
 
   double *cur_exprs = Calloc(*cols,double);
 
-  double *OLDPM = NULL;
+  /* double *OLDPM = NULL; */
 
   first = ProbeNames[0];
   first_ind = 0;
@@ -579,7 +580,7 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
 
 
   SEXP dim1;
-  SEXP outvec,outnamesvec;
+  SEXP outvec; /* ,outnamesvec; */
   SEXP dimnames,names;
   
   PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol)); 

@@ -21,6 +21,7 @@
  ** Apr 19, 2002 - Update to deal more correctly with ties (equal rank)
  ** Jan 2, 2003 - Documentation/Commenting updates reformating
  ** Feb 17, 2003 - add in a free(datvec) to qnorm(). clean up freeing of dimat
+ ** Feb 25, 2003 - try to reduce or eliminate compiler warnings (with gcc -Wall)
  **
  ***********************************************************/
 
@@ -93,7 +94,7 @@ int sort_fn(const void *a1,const void *a2){
 dataitem **get_di_matrix(double *data, int rows, int cols){
   int i,j;
   dataitem **dimat;
-  dataitem *xtmp;
+  /* dataitem *xtmp; */
   
   dimat = (dataitem **)malloc((cols)*sizeof(dataitem *));
   

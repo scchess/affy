@@ -22,9 +22,12 @@
  **                the functions (you never know...) -- LG
  ** 
  ** Feb 5, 2003 - add in I(x,y) = max(I(x,y),0.5) but commented out for now.
+ ** Feb 25, 2003 - fix up some compiler warnings by adding some includes
+ **                and remove a declared but unused variable. (gcc -Wall)                
  **
  ***********************************************************************/
 
+#include <stdlib.h>
 #include <math.h>
 #include "rma_common.h"
 
@@ -241,7 +244,7 @@ void static compute_weights(int *x, int *y, int nprobes, int grid_dim, int *cent
 
 void static Compute_grids(int *x, int *y, int rows, int cols, int nprobes, int grid_dim, int *gridpt_x, int *gridpt_y, int *whichgrid){
   int i =0,j=0;  
-  int thisgrid,in_range;
+  int thisgrid = 0,in_range;
   int high, low;
   int grid_dim1d = (int)sqrt(grid_dim);
 
@@ -382,7 +385,7 @@ void static compute_background_quadrant(double *probeintensity, int nprobes, int
   }
   
   for (j=0; j < grid_dim; j++){
-    qsort(data_by_sector[j],cur_n[j],sizeof(double),sort_double);
+    qsort(data_by_sector[j],cur_n[j],sizeof(double),(int(*)(const void*, const void*))sort_double);
   }
   
   for (j=0; j < grid_dim; j++){
@@ -433,7 +436,7 @@ double static background_correct(int x, int y,int grid_dim,double *weights, doub
   int i;
   double sum = 0.0;
   double sum_weights = 0.0;
-  double smooth = 100.0;
+  /* double smooth = 100.0; */
 
   for (i = 0 ; i < grid_dim; i++){
     sum += weights[i]*Centroid_background[i];

@@ -15,18 +15,21 @@
  **
  ** Last changed: Feb 6, 2003 
  **
+ ** History
+ **
  ** Pre Nov 2002 - original version
  ** Nov 4, 2002 - make changes for Affy2. Add in Alternate bg computation.
  ** Nov 8, 2002 - testing
  ** Dec 31, 2002 - integrate changes into affy package
  ** Jan 2, 2003 - Documentation clean up
  ** Dec 26, 2002 - fixed non-ANSI C way of commenting out lines (Laurent)  
- ** Jan 6, 2003 actually // is correct according to standards. SOme compilers are 
+ ** Jan 6, 2003 actually // is correct according to standards. Some compilers are 
  **             of course not fully standards compliant :)
  **
  ** Jan 9, 2003 - check that background version switching happens
  ** Feb 6, 2003 - change two printf to Rprintf (so Windows users actually see some verbage)
  ** Feb 17,2003 - change a free to Free in find_max()
+ ** Feb 25, 2003 - Fixes to remove some compiler warnings (show up when using -Wall with gcc)
  **
  *****************************************************************************/
 
@@ -150,7 +153,7 @@ double max_density(double *z,int rows,int cols,int column, SEXP fn,SEXP rho){
   int N;
   SEXP x;
   SEXP results;
-  SEXP names;
+
   double *dens_x;
   double *dens_y;
   double max_y,max_x;
@@ -297,8 +300,8 @@ void bg_adjust(double *PM,double *MM, double *param, int rows, int cols, int col
 
 double get_alpha2(double *PM, double PMmax, int length,SEXP fn,SEXP rho){
   double alpha;
-  double tmpsum = 0.0;
-  int numtop=0;
+  /* double tmpsum = 0.0;
+     int numtop=0; */
   int i;
 
   for (i=0; i < length; i++){
@@ -326,7 +329,7 @@ double get_alpha2(double *PM, double PMmax, int length,SEXP fn,SEXP rho){
 void bg_parameters2(double *PM,double *MM, double *param, int rows, int cols, int column,SEXP fn,SEXP rho){
   int i = 0;
   double PMmax;
-  double MMmax;
+  /* double MMmax; */
   double sd,alpha;
   int n_less=0,n_more=0;
   double *tmp_less = (double *)malloc(rows*sizeof(double));
