@@ -154,8 +154,9 @@ ReadAffy <- function(..., filenames=character(0),
     widgetfiles <- fileBrowser(textToShow="Choose CEL files",
                                testFun=hasSuffix("[cC][eE][lL]"))
   }
-  else
+  else{
     widgetfiles <- character(0)
+  }
 
   filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
 
@@ -163,30 +164,16 @@ ReadAffy <- function(..., filenames=character(0),
 
   if(length(filenames)==0) stop("No cel filennames specified and no cel files in specified directory:",celfile.path,"\n")
 
-
-  ##now assign sampleNames if phenoData not given
-  if(is.null(phenoData)){
-    if(is.null(sampleNames)){
-      if(widget){
-        require(tkWidgets)
-        tksn <- tkSampleNames(filenames=filenames)
-        sampleNames <- tksn[,1]
-        ##notice that a description of the files is ingored for now
-        ##soon to go into MIAME
-      }
-      else{
-        sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
-      }
-    }
-    else{
-      if(length(sampleNames)!=length(filenames)){
-        warning("sampleNames not same length as filenames. Using filenames as sampleNames instead\n")
-        sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
-      }
+  if(is.null(sampleNames)){
+    sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+  }
+  else{
+    if(length(sampleNames)!=length(filenames)){
+      warning("sampleNames not same length as filenames. Using filenames as sampleNames instead\n")
+      sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
     }
   }
-
-  ##now get phenoData
+  
   if(is.character(phenoData)) ##if character read file
     phenoData <- read.phenoData(filename=phenoData)
   else{
@@ -200,6 +187,8 @@ ReadAffy <- function(..., filenames=character(0),
     }
   }
 
+  sampleNames <- rownames(pData(phenoData))
+  
   ##get MIAME information
   if(is.character(description)){
     description <- read.MIAME(filename=description,widget=FALSE)
@@ -221,7 +210,7 @@ ReadAffy <- function(..., filenames=character(0),
   description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
 
   ##and now we are ready to read cel files
-  return(read.affybatch(filenames=filenames,
+  ret <- read.affybatch(filenames=filenames,
                         phenoData=phenoData,
                         description=description,
                         notes=notes,
@@ -229,9 +218,11 @@ ReadAffy <- function(..., filenames=character(0),
                         rm.mask=rm.mask,
                         rm.outliers=rm.outliers,
                         rm.extra=rm.extra,
-                        verbose=verbose))
-}
+                        verbose=verbose)
 
+  sampleNames(ret) <- sampleNames
+  return(ret)
+}
 
 
 
