@@ -76,7 +76,7 @@
  **                To avoid ugly pre-processor constructs code
  **                for gz functions is seperate from that in
  **                text files.
- **                
+ **                Made BUF_SIZE 1024
  **
  *************************************************************/
  
@@ -92,7 +92,7 @@
 #include <zlib.h>
 #endif
 
-#define BUF_SIZE 200
+#define BUF_SIZE 1024
 
 
 /****************************************************************
