@@ -40,6 +40,16 @@
   setMethod("length",signature(x="AffyBatch"),
             function(x) ncol(x@exprs), ##RI: assumes matrices
             where=where)
+  if( !isGeneric("ncol") )
+    setGeneric("ncol",where=where)
+  setMethod("ncol",signature(x="AffyBatch"),
+            function(x) x@ncol, ##RI: assumes matrices
+            where=where)
+  if( !isGeneric("nrow") )
+    setGeneric("nrow",where=where)
+  setMethod("nrow",signature(x="AffyBatch"),
+            function(x) x@nrow, ##RI: assumes matrices
+            where=where)
   
   ##sample Names now comes from Biobase
   if (debug.affy123) cat("--->getCdfInfo\n")
@@ -113,10 +123,9 @@
                 }
                 
                 if (what == "environment") {
-                  if(exists(cleancdfname(object@cdfName),inherits=FALSE,where=where))
-                  return(as.environment(get(cleancdfname(object@cdfName),
-                                            where)))
-                  ##object@cdfInfo <<- as.environment(get(name, where))
+                  if(exists(object@cdfName,inherits=FALSE,where=where))
+                    return(as.environment(get(object@cdfName,inherits=FALSE,envir=where)))
+                ##object@cdfInfo <<- as.environment(get(name, where))
                 }
               }
               stop(paste("AffyBatch: information about probe locations for ", object@cdfName, " could not be found"))
@@ -170,13 +179,16 @@
                standardGeneric("indexProbes"), where=where)
 
   setMethod("indexProbes", signature("AffyBatch", which="character"),
-            function(object, which=c("pm", "mm"), genenames=NULL, xy=FALSE) {
+            function(object, which=c("pm", "mm","both"),
+                     genenames=NULL, xy=FALSE) {
               
               which <- match.arg(which)
               
-              i.probes <- match(which, c("pm", "mm"))
+              i.probes <- match(which, c("pm", "mm", "both"))
               ## i.probes will know if "[,1]" or "[,2]"
-              
+              ## if both then [,c(1,2)]
+              if(i.probes==3) i.probes=c(1,2)
+               
               envir <- getCdfInfo(object)
               
               if(is.null(genenames)) 
@@ -197,12 +209,14 @@
                 if ( is.na(ans[[i]]) )
                   next
                 
-                tmp <- ans[[i]][, i.probes]
+                ##as.vector cause it might be a matrix if both
+                tmp <- as.vector(ans[[i]][, i.probes])
+                
                 
                 if (xy) {
                   x <- tmp %% nrow(object)
                   y <- tmp %/% nrow(object) + 1
-                  ans[[i]] <- cbind(x, y)
+                  tmp <- cbind(x, y)
                 }
                 
                 ans[[i]] <- tmp
@@ -304,16 +318,30 @@
             )
 
   
-  if (debug.affy123) cat("--->ppset\n")
-  if( !isGeneric("ppset") )
-    setGeneric("ppset", function(object, ...)
-               standardGeneric("ppset"), where=where)
+  if (debug.affy123) cat("--->pp\n")
   
-  setMethod("ppset", "AffyBatch", function(object, genenames=NULL){
-    envir <- loadcdf(object)
+  if( !isGeneric("pp") )
+    setGeneric("pp", function(object, ...)
+               standardGeneric("pp"), where=where)
+  
+  setMethod("pp", "AffyBatch", function(object, genenames=NULL,
+                                        locations=NULL){
+    oldoptions <- getOption("BioC")
+    if(is.null(locations)) ##use info in cdf
+      envir <- getCdfInfo(object)
+    else{
+      ##if the user gives a list of locations let them use that as enviromnet
+      envir <- new.env()
+      multiassign(names(locations),locations,envir)
+      object@cdfName <- "envir"
+      newoptions <- oldoptions
+      newoptions$affy$probesloc[[1]]$what <- "environment" 
+      newoptions$affy$probesloc[[1]]$where <- parent.env(envir)
+      options("BioC"=newoptions)
+    }
     if(is.null(genenames))
       genenames <- ls(envir)
-
+    
     p.pps <- vector("list", length(genenames))
     names(p.pps) <- genenames
     
@@ -323,25 +351,24 @@
       if (is.na(i.pm))
         intensity.pm <- NA
       else
-        intensity.pm <- object(intensity[i.pm, ])
+        intensity.pm <- intensity(object)[i.pm, ]
       
       i.mm <- indexProbes(object, "mm", genenames[i])[[1]]
       if (is.na(i.mm))
         intensity.mm <- NA
       else
-        intensity.mm <- object(intensity[i.pm, ])
+        intensity.mm <- intensity(object)[i.mm, ]
       
-      intensity.mm <- object(intensity[i.pm, ])
-      p.pps[[i]] <- new("PPSetBatch",
-                        pmProbes = intensity.pm,
-                        mmProbes = intensity.mm)
+      p.pps[[i]] <- new("ProbeSet", pm = intensity.pm, mm = intensity.mm)
     }
     
+    options("BioC"=oldoptions)
     return(p.pps)
-    
   },where=where)
   
   if (debug.affy123) cat("--->[[\n")
+
+
   ##[[
   setMethod("[[", "AffyBatch",
             function(x, i, j, ...) { ##no need for j
@@ -423,9 +450,9 @@
               idsi <- match(ids, geneNames(x))
               
               ## cheap trick to (try to) save time
-              c.pps <- new("PPSet.container",
-                           pmProbes=matrix(),
-                           mmProbes=matrix())
+              c.pps <- new("ProbeSet",
+                           pm=matrix(),
+                           mm=matrix())
               
               ## matrix to hold expression values
               exp.mat <- matrix(NA, m, n)
@@ -449,7 +476,7 @@
               }
               
               ## loop over the ids
-              mycall <- as.call(c(getMethod("express.summary.stat", signature=c("PPSet.container","character","character")),
+              mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character","character")),
                                   list(c.pps, method=summary.method, bg.correct=bg.method, param.bg.correct=bg.param, param.method=summary.param)))
 
               options(show.error.messages = FALSE)
@@ -480,22 +507,22 @@
                   l.mm <- NA
                 
                 ## fill the PPSet.container
-                ##c.pps@pmProbes <- matrix(NA, nrow=length(l.pm), ncol=n)
-                ##c.pps@mmProbes <- matrix(NA, nrow=length(l.pm), ncol=n)
+                ##c.pps@pm <- matrix(NA, nrow=length(l.pm), ncol=n)
+                ##c.pps@mm <- matrix(NA, nrow=length(l.pm), ncol=n)
 
                 np <- length(l.pm)
                 
                 ##names are skipped
 
-                c.pps@pmProbes <- matrix(intensity(x)[l.pm, ],
+                c.pps@pm <- matrix(intensity(x)[l.pm, ],
                                          np, n, byrow=TRUE)
-                c.pps@mmProbes <- matrix(intensity(x)[l.mm, ],
+                c.pps@mm <- matrix(intensity(x)[l.mm, ],
                                          np, n, byrow=TRUE)
                 
-                ##c.pps@pmProbes <- matrix(intensity(x)[cbind(matrix(rep(l.pm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=FALSE),
+                ##c.pps@pm <- matrix(intensity(x)[cbind(matrix(rep(l.pm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=FALSE),
                 ##                                            rep(1:n, np))],
                 ##                         np, n, byrow=TRUE)
-                ##c.pps@mmProbes <- matrix(intensity(x)[cbind(matrix(rep(l.mm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=FALSE),
+                ##c.pps@mm <- matrix(intensity(x)[cbind(matrix(rep(l.mm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=FALSE),
                 ##                                            rep(1:n, np))],
                 ##                         np, n, byrow=TRUE)
                 
@@ -527,7 +554,7 @@
                           phenoData=phenoData(x),
                           description=description(x),
                           annotation=annotation(x),
-                          notes=x@notes)
+                          notes=notes(x))
               ##if (verbose) cat(".....done.\n")
               
               return(eset)

@@ -76,10 +76,9 @@
   .initMapCdfName(where)
   .initCdf(where)
   .initCel(where)
-  .initPPSet(where)
-  .initPPSet.container(where)
   .initAffyBatch(where)
-  .initCel.container(where)
+  .initProbeSet(where)
+
 
   ## add affy specific options
   ## (not unlike what is done in 'Biobase')
@@ -91,10 +90,9 @@
   
   ##affy$urls <- list( bioc = "http://www.bioconductor.org")
 
-  ##data first cause most use hgu95 and hgu133
-  probesloc.first <- list(what="data", where="affy")
+  probesloc.first <- list(what="environment", where=.GlobalEnv)
   probesloc.second <- list(what="package", where=NULL, probesloc.autoload=TRUE)
-  probesloc.third <- list(what="environment", where=.GlobalEnv)
+  probesloc.third <- list(what="data", where="affy")
 
   
   ## i added use.widgets=FALSE. Shuold it be true?
