@@ -1,8 +1,8 @@
 
 version 1.2 [under development]:
 
-  o Autoload of cdfenvs on demand [to be done. Use of getBioC and
-  friends planed]
+  o Autoload of cdfenvs on demand (uses reposTools). Can be
+  configured through the options.
 
   o slot 'preprocessing' of the MIAME attribute used to store
   normalization step information [not finished, list returned
