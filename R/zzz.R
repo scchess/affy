@@ -8,6 +8,8 @@
     cat("affy: development version (...this is usable...)\n")
     cat(rep("*",13),"\n",sep="")
     cat("demo(affy.tour) will eventually work and give an overview...\n")
+    cat(rep("*",13),"\n",sep="")
+    cat("If you have tkWidgets and rhdf5 installed, try\nexpresso(widget=T, hdf5=T)\n for a real thrill...\n") 
   }
   
   library.dynam("affy", pkgname, libname)
