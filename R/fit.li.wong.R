@@ -10,7 +10,7 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
   J <- dim(data.matrix)[2]
   if(J==1){
     warning("Li and Wong's algorithm is not suitable when only one probe pair")
-    return(list(theta = as.vector(data.matrix), phi = 1, sigma.eps = NA, sigma.theta = NA, sigma.phi=NA, theta.outliers=NA, phi.outliers=NA, single.outliers=NA,convergence1=NA,convergence2=NA,iter = NA, delta = NA)) 
+    return(list(theta = as.vector(data.matrix), phi = 1, sigma.eps = NA, sigma.theta = NA, sigma.phi=NA, theta.outliers=NA, phi.outliers=NA, single.outliers=NA,convergence1=NA,convergence2=NA,iter = NA, delta = NA))
   }
   cI <- II ##current I
   cJ <- J ##current J
@@ -25,17 +25,17 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
   if(remove.outliers){
     flag1 <- TRUE; flag2<-TRUE
     original.data.matrix <- data.matrix ##so we can get it back after outlier removal
-    change.theta <- 1 #start with 1 
+    change.theta <- 1 #start with 1
     change.phi <- 1
     change.single <- 1
-    outer.iter <- 0 
+    outer.iter <- 0
     while(flag1 & flag2 & change.theta+change.phi+change.single >0 & outer.iter < outer.maxit) {
       outer.iter <- outer.iter + 1
-      
+
       if((outer.iter%%3==0 & change.theta>0)  |
          (outer.iter%%3==1 & change.phi>0)){ #something has to change
         ##starting values
-        phi <- apply(data.matrix, 2, mean)
+        phi <- colMeans(data.matrix)
         c <- sqrt(cJ/sum(phi[!phi.outliers]^2))
         phi <- c * phi
         theta <- (data.matrix[, !phi.outliers, drop=FALSE] %*% phi[!phi.outliers, drop=FALSE])/cJ
@@ -62,7 +62,7 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
         }
         theta <- as.vector(theta)
         phi <- as.vector(phi)
-                
+
         data.matrixhat <- outer(theta, phi)
         resid <- data.matrix-data.matrixhat
       }
@@ -71,9 +71,9 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
       ##if even iteration take out thetas that are outliers (as defined by Li and Wong).
       if(outer.iter%%3==1){ ## we start with single outliers
         single.outliers <- resid > large.threshold*quantile(abs(resid),normal.resid.quantile)
-        single.outliers[apply(single.outliers,1,sum) > outlier.fraction*cJ,]<-rep(FALSE,J)
+        single.outliers[rowSums(single.outliers) > outlier.fraction*cJ,]<-rep(FALSE,J)
         ##probably chip oulier, defer calling outlier
-        single.outliers[,apply(single.outliers,2,sum) > outlier.fraction*cI]<-rep(FALSE,II)
+        single.outliers[,colSums(single.outliers) > outlier.fraction*cI]<-rep(FALSE,II)
         ##probably probe outlier, defer calling outlier
         data.matrix[single.outliers] <- data.matrixhat[single.outliers]
         data.matrix[!single.outliers] <- original.data.matrix[!single.outliers]
@@ -81,8 +81,8 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
         single.outliers.old <- single.outliers
       }
       else{
-        sigma.theta <- sqrt(apply(resid[, !phi.outliers, drop=FALSE]^2, 1, sum)/(cJ - 1))
-        sigma.phi <- sqrt(apply(resid[!theta.outliers, , drop=FALSE]^2, 2, sum)/(cI - 1))
+        sigma.theta <- sqrt(rowSums(resid[, !phi.outliers, drop=FALSE]^2)/(cJ - 1))
+        sigma.phi <- sqrt(colSums(resid[!theta.outliers, , drop=FALSE]^2)/(cI - 1))
         ###THETA OUTLIERS
         if(outer.iter%%3==2){
           theta.outliers <- sigma.theta > large.threshold*quantile(sigma.theta,normal.array.quantile) | theta^2/sum(theta^2) > large.variation
@@ -127,13 +127,13 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
     all.outliers <- outer(theta.outliers,phi.outliers,FUN="|") | single.outliers
     sigma <- sqrt(sum(resid[!all.outliers]^2)/sum(!all.outliers))
     ##in case we leave iteration and these havent been defined
-    sigma.theta <- sqrt(apply(resid[,!phi.outliers, drop=FALSE]^2, 1, sum)/(cJ - 1))
-    sigma.phi <- sqrt(apply(resid[!theta.outliers, ,drop=FALSE]^2, 2, sum)/(cI - 1))
+    sigma.theta <- sqrt(rowSums(resid[,!phi.outliers, drop=FALSE]^2)/(cJ - 1))
+    sigma.phi <- sqrt(colSums(resid[!theta.outliers, ,drop=FALSE]^2)/(cI - 1))
   }
   ###code for NO OUTLIER REMOVAL
   else{
     flag1 <- TRUE
-    phi <- apply(data.matrix, 2, mean)
+    phi <- colMeans(data.matrix)
     c <- sqrt(J/sum(phi^2))
     phi <- c * phi
     theta <- (data.matrix %*% phi)/J
@@ -163,9 +163,9 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
     theta <- as.vector(theta)
     phi <- as.vector(phi)
     data.matrixhat <- outer(theta, phi)
-    sigma.theta <- sqrt(apply((data.matrix - data.matrixhat)^2, 1, sum)/(J - 1))
-    sigma.phi <- sqrt(apply((data.matrix - data.matrixhat)^2, 2, sum)/(II - 1))
+    sigma.theta <- sqrt(rowSums((data.matrix - data.matrixhat)^2)/(J - 1))
+    sigma.phi <- sqrt(colSums((data.matrix - data.matrixhat)^2)/(II - 1))
     sigma <- sqrt(sum((data.matrix - data.matrixhat)^2)/(II * J))
   }
-  return(list(theta = theta, phi = phi, sigma.eps = sigma, sigma.theta = sigma.theta, sigma.phi=sigma.phi,theta.outliers=theta.outliers,phi.outliers=phi.outliers,single.outliers=single.outliers,convergence1=flag1,convergence2=flag2,iter = iter, delta = change)) 
+  return(list(theta = theta, phi = phi, sigma.eps = sigma, sigma.theta = sigma.theta, sigma.phi=sigma.phi,theta.outliers=theta.outliers,phi.outliers=phi.outliers,single.outliers=single.outliers,convergence1=flag1,convergence2=flag2,iter = iter, delta = change))
 }

@@ -4,8 +4,8 @@
 ##
 ## For a description of quantile normalization method see
 ##
-##  Bolstad, B. M., Irizarry R. A., Astrand, M, and Speed, T. P. (2003)(2003) 
-##  A Comparison of Normalization Methods for High 
+##  Bolstad, B. M., Irizarry R. A., Astrand, M, and Speed, T. P. (2003)(2003)
+##  A Comparison of Normalization Methods for High
 ##  Density Oligonucleotide Array Data Based on Bias and Variance.
 ##  Bioinformatics 19,2,pp 185-193
 ##
@@ -34,7 +34,7 @@ normalize.AffyBatch.quantiles <- function(abatch,type=c("separate","pmonly","mmo
     pms <- pms[noNA]
     intensity(abatch)[pms,] <- normalize.quantiles(intensity(abatch)[pms,,drop=FALSE ],copy=FALSE)
   }
-  if((type == "mmonly") | (type == "separate")){ 
+  if((type == "mmonly") | (type == "separate")){
     mms <- unlist(mmindex(abatch))
     ## Change to faster computation of noNA - SDR 11/06/2003
     ##noNA <- apply(intensity(abatch)[mms,,drop=FALSE],1,function(x) all(!is.na(x)))
@@ -47,7 +47,7 @@ normalize.AffyBatch.quantiles <- function(abatch,type=c("separate","pmonly","mmo
     pms <- unlist(indexProbes(abatch,"both"))
     intensity(abatch)[pms,]  <- normalize.quantiles(intensity(abatch)[pms,,drop=FALSE ],copy=FALSE)
   }
-    
+
   ##this is MIAME we need to decide how to do this properly.
   ##for (i in 1:length(abatch)) {
   ##  history(abatch)[[i]]$name <- "normalized by quantiles"
@@ -55,7 +55,7 @@ normalize.AffyBatch.quantiles <- function(abatch,type=c("separate","pmonly","mmo
 
   return(abatch)
 }
-  
+
 normalize.quantiles <- function(x,copy=TRUE){
 
   rows <- dim(x)[1]
@@ -64,7 +64,7 @@ normalize.quantiles <- function(x,copy=TRUE){
   if (!is.matrix(x)){
     stop("Matrix expected in normalize.quantiles")
   }
-  
+
   #matrix(.C("qnorm_c", as.double(as.vector(x)), as.integer(rows), as.integer(cols))[[1]], rows, cols)
 
   .Call("R_qnorm_c",x,copy);
@@ -88,8 +88,8 @@ normalize.AffyBatch.quantiles.robust <- function(abatch, type=c("separate","pmon
     intensity(abatch)  <- normalize.quantiles.robust(intensity(abatch),weights,remove.extreme,n.remove,approx.meth,use.median,use.log2)
   }
 
-  
-  
+
+
   ##this is MIAME we need to decide how to do this properly.
   ##for (i in 1:length(abatch)) {
   ##  history(abatch)[[i]]$name <- "normalized by quantiles"
@@ -99,7 +99,7 @@ normalize.AffyBatch.quantiles.robust <- function(abatch, type=c("separate","pmon
 }
 
 normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,approx.meth = FALSE,use.median=FALSE,use.log2=FALSE){
-  
+
   calc.var.ratios <- function(x){
     cols <- dim(x)[2]
     vars <- apply(x,2,var)
@@ -114,7 +114,7 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
 
   calc.mean.dists <- function(x){
     cols <- dim(x)[2]
-    means <- apply(x,2,mean)
+    means <- colMeans(x)
     results <- matrix(0,cols,cols)
     for (i in 1:cols-1)
       for (j in (i+1):cols){
@@ -126,31 +126,31 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
 
 
   remove.extreme <- match.arg(remove.extreme)
-  
+
   rows <- dim(x)[1]
   cols <- dim(x)[2]
-  
+
   if (is.null(weights)){
     weights <- rep(1,cols)
     if (remove.extreme == "variance"){
       var.ratios <- calc.var.ratios(x)
-      vars.big <- apply(var.ratios,1,sum)
-      vars.small <- apply(var.ratios,2,sum)
+      vars.big <- rowSums(var.ratios)
+      vars.small <- colSums(var.ratios)
       var.adj <- vars.big + vars.small
       remove.order <- order(-var.adj)
       weights[remove.order[1:n.remove]] <- 0
     }
     if (remove.extreme == "mean"){
-      means <- abs(apply(calc.mean.dists(x),2,sum))
+        means <- abs(colSums(calc.mean.dists(x)))
       remove.order <- order(-means)
       weights[remove.order[1:n.remove]] <- 0
     }
     if (remove.extreme == "both"){
       var.ratios <- calc.var.ratios(x)
-      vars.big <- apply(var.ratios,1,sum)
-      vars.small <- apply(var.ratios,2,sum)
+      vars.big <- rowSums(var.ratios)
+      vars.small <- colSums(var.ratios)
       var.adj <- vars.big + vars.small
-      means <- abs(apply(calc.mean.dists(x),2,sum))
+      means <- abs(colSums(calc.mean.dists(x)))
       # by convention we will remove first the most extreme variance, then the most extreme mean
       remove.order <- order(-var.adj)
       weights[remove.order[1]] <- 0
@@ -164,7 +164,7 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
   if (sum(weights > 0) < 2){
     stop("Need at least two non negative weights\n")
   }
-  cat("Chip weights are ",weights,"\n") 
+  cat("Chip weights are ",weights,"\n")
   if (approx.meth == FALSE){
     matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2))[[1]],rows,cols)
   } else {

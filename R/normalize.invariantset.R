@@ -27,25 +27,25 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), verb
     } else if (baseline.type == "pseudo-mean"){
                                         # construct a psuedo chip to serve as the baseline by taking probewise means
       refindex <- 0
-      baseline.chip <- apply(intensity(abatch)[pms,],1,mean)    
+      baseline.chip <- rowMeans(intensity(abatch)[pms,])
     } else if (baseline.type == "pseudo-median"){
     # construct a pseudo chip to serve as the baseline by taking probewise medians
       refindex <- 0
       baseline.chip <- apply(intensity(abatch)[pms,],1,median)
     }
-  
-    
+
+
   ##set.na.spotsd(cel.container)
-  
+
     normhisto <- vector("list", length=nc)
 #  normhisto[[refindex]] <- list(name="reference for the invariant set")
-  
+
   ## loop over the CEL files and normalize them
-  
+
     for (i in (1:nc)) {
       if (i != refindex){
         if (verbose) cat("normalizing array", chipNames(abatch)[i], "...")
-        
+
         ##temporary
         tmp <- normalize.invariantset(c(intensity(abatch)[pms, i]),
                                       c(baseline.chip),
@@ -55,23 +55,23 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), verb
                                xout=intensity(abatch)[pms, i], rule=2)$y)
         attr(tmp,"invariant.set") <- NULL
         intensity(abatch)[pms, i] <- tmp
-        
+
         ## storing information about what has been done
                                         #normhisto[[i]] <- list(name="normalized by invariant set",
                                         #                       invariantset=i.set)
-      
+
         if (verbose) cat("done.\n")
-        
+
       }
-    } 
+    }
     attr(abatch, "normalization") <- normhisto
     return(abatch)
   }
-  
+
   type <- match.arg(type)
-  baseline.type <- match.arg(baseline.type) 
+  baseline.type <- match.arg(baseline.type)
   require(modreg, quietly=TRUE)
-  
+
   if (type == "pmonly"){
     pms <- unlist(pmindex(abatch))
     do.normalize.Affybatch.invariantset(abatch, pms, prd.td, baseline.type)
@@ -99,32 +99,32 @@ normalize.invariantset <- function(data, ref, prd.td=c(0.003,0.007)) {
   np <- length(data)
   r.ref <- rank(ref)
   r.array <- rank(data)
-  
+
   ## init
   prd.td.adj <- prd.td*10                           # adjusted threshold things
   i.set <- rep(TRUE, np)                            # index all the PM probes as being in the invariant set
   ns <- sum(i.set)                                  # number of probes in the invariant set
   ns.old <- ns+50+1                                 # number of probes previously in the invariant set
-    
+
   ## iterate while the number of genes in the invariant set (ns) still varies...
   while ( (ns.old-ns) > 50 ) {
     air <- (r.ref[i.set] + r.array[i.set]) / (2*ns)  # average intensity rank for the probe intensities
     prd <- abs(r.ref[i.set] - r.array[i.set]) / ns
     threshold <- (prd.td.adj[2]-prd.td[1]) * air + prd.td.adj[1]
     i.set[i.set] <- (prd < threshold)
-    
+
     ns.old <- ns
     ns <- sum(i.set)
-    
+
     if (prd.td.adj[1] > prd.td[1])
       prd.td.adj <- prd.td.adj * 0.9  # update the adjusted threshold parameters
   }
-  
+
   ## the index i.set corresponds to the 'invariant genes'
   n.curve <- smooth.spline(ref[i.set], data[i.set])
   ## n.curve$x contains smoothed reference intensities
   ## n.curve$y contains smoothed i-th array intensities
-  
+
   ##data <- as.numeric(approx(n.curve$y, n.curve$x, xout=data)$y)
   ##attr(data,"invariant.set") <- i.set
   ##return(data)

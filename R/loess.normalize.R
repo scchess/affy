@@ -26,14 +26,14 @@ loess.normalize <- function(mat,subset=sample(1:(dim(mat)[2]),5000),
         yy <- y[index]
         aux <-loess(yy~xx,span=span,degree=1,weights=w,family=family.loess)
         aux <- predict(aux,data.frame(xx=x))/J
-        means[,j] <- means[,j] + aux 
+        means[,j] <- means[,j] + aux
         means[,k] <- means[,k] - aux
         if(verbose) cat("Done with",j,"vs",k," in iteration ",iter,"\n")
       }
     }
     fs <- fs+means
     newData <- mat-fs
-    change <- max(apply((means[subset,])^2,2,mean))
+    change <- max(colMeans((means[subset,])^2))
     if(verbose) cat(iter,change,"\n")
     oldfs <- fs
   }
