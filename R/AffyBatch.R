@@ -113,6 +113,7 @@
                     cdfenv <- get(cdfname, envir=where.env)
                     return(cdfenv)
                   }
+                  next
                 }
                 
                 if (what == "package") {
@@ -133,18 +134,25 @@
                       }
                       
                       if (! require(reposTools))
-                        stop("The package reposTools is required to download environments.\nPlease download and install it.\n")
+                        stop(paste("The package reposTools is required to download environments.",
+                                   "Please download and install it.\n", sep="\n"))
                       
                       reposEntry <- getReposEntry(how[[i]]$repository)
                       
                       if (is.null(how[[i]]$installdir))
-                        install.packages2(cdfname, reposEntry)
+                        status.install <- install.packages2(cdfname, reposEntry)
                       else
-                        install.packages2(cdfname, reposEntry, how[[i]]$installdir)
-                      
-                      ## rewind the iterator i and try again
-                      i <- i-1
-                      second.try <- TRUE
+                        status.install <- install.packages2(cdfname, reposEntry, how[[i]]$installdir)
+
+                      if (length(statusList(status.install)) == 0) {
+                        warning(paste("Data package", cdfname, "does not seem to exist", 
+                                      "in the repository\n",
+                                      how[[i]]$repository, "\n"))
+                      } else {
+                        ## rewind the iterator i and try again
+                        i <- i-1
+                        second.try <- TRUE
+                      }
                     }
                     ## jump to next way to get the cdfenv
                     next
@@ -159,8 +167,8 @@
                     
                     return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
                   }
-                }
-                
+                  next
+                }                
                 
                 if (what == "file") {
                   ##now this is an actual Affymetrix filename
@@ -177,21 +185,36 @@
                 if (what == "environment") {
                   if(exists(object@cdfName,inherits=FALSE,where=where))
                     return(as.environment(get(object@cdfName,inherits=FALSE,envir=where)))
+                  next
                 }
               }
-              stop(paste("\nWe could not find and/or install the necessary probe location information.\n",
-                         "Here is a list of common problems and possible solutions:\n\n",
-                         "Problem 1: You are not connected to the Internet.\n",
-                         "Solution:  Try again once you connect to the Internet.\n\n",
-                         "Problem 2: You do not have the necessary permissions to install packages.\n",
-                         "Solution:  Ask your system administrator to install ",cleancdfname(object@cdfName), " package from:\n",
-                         "           http://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n\n",
-                         "Problem 3: Necessary package not available from Bioconductor.\n",
-                         "Solution:  Use makecdfenv package to create environment from CDF file.\n",
-                         "           See the dealing_with_cdfenvs vignette for more details\n\n",
-                         "NOTE: Once you install ",cleancdfname(object@cdfName)," you should not have this problem again.\n",
-                         sep=""))
-            },
+              
+              warning(paste("\nWe could not find and/or install the necessary probe location information.\n",
+                            "Here is a list of common problems and possible solutions:\n\n",
+                            "Problem 1: You are not connected to the Internet.\n",
+                            "Solution:  Try again once you connect to the Internet.\n\n",
+                            "Problem 2: You do not have the necessary permissions to install packages.\n",
+                            "Solution:  Ask your system administrator to install ",cleancdfname(object@cdfName), " package from:\n",
+                            "           http://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n\n",
+                            "Problem 3: Necessary package not available from Bioconductor.\n",
+                            "Solution:  Use makecdfenv package to create environment from CDF file.\n",
+                            "           See the dealing_with_cdfenvs vignette for more details\n\n",
+                            "NOTE: Once you install ",cleancdfname(object@cdfName)," you should not have this problem again.\n",
+                            sep=""))
+              warning(paste("To let you proceed for now, a dummy cdfenv", cleancdfname(object@cdfName),
+                            "will be created..."))
+              if (exists(object@cdfName, envir=.GlobalEnv)) {
+                stop("Could not create dummy environment. Giving up.")
+              }
+              assign(object@cdfName,
+                     new.env(parent=.GlobalEnv),
+                     envir=.GlobalEnv)
+              warning(paste("IMPORTANT: Depending on your settings, you might have to delete the object",
+                            object@cdfName, " after you install right the package !\n(command 'rm(",
+                            object@cdfName,")' )\n"))
+              return(get(object@cdfName, envir=.GlobalEnv))
+            }
+            ,
             where=where)
   
   ##geneNames method
