@@ -14,7 +14,8 @@ pairs.AffyBatch <- function(x, panel=points, ..., transfo=I, main=NULL, oma=NULL
   #  text(x, y, txt, cex = cex, font = font)
   #}
   
-  labels <- paste(chipNames(x), unlist(lapply(history(x), function(z) if (is.null(z$name)) "" else z$name)), sep="\n")
+  ##labels <- paste(sampleNames(x), unlist(lapply(history(x), function(z) if (is.null(z$name)) "" else z$name)), sep="\n")
+  labels <- sampleNames(x)
   ##y <- matrix(intensity(x)[, , seq(along=x)], ncol=length(x))
   y <- intensity(x)
   

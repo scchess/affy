@@ -51,19 +51,19 @@
             function (object, how=getOption("BioC")$affy$probesloc) {
               ## "how" is a list. each element of the list must have an element
               ## tagged "what" and an element tagged "where"
-              ## "what" can be "package", "file" or "environment"
+              ## "what" can be "data", "package", "file" or "environment"
               ## "where" is where it can be found
+
+              cdfname <- cleancdfname(object@cdfName)
               
               for (i in 1:length(how)) {
                 what <- how[[i]]$what
                 where <- how[[i]]$where
-                
-                if (what == "package") {
-                  cdfname <- cleancdfname(object@cdfName)
+
+                if (what == "data") {
                   ##if we can get it from data dir. otherwise load package
-                  if(cdfname%in%data(package="affy")$results[,3]){
-                    where <- as.environment(match(paste("package:affy",
-                                                        sep = ""),search()))
+                  if(cdfname%in%data(package=where)$results[,3]){
+                    where <- as.environment(match(paste("package:", where, sep = ""),search()))
                     if(!exists(cdfname,where=where,inherits=FALSE)){
                       path <- .path.package("affy")
                       filename <- paste(cdfname,".rda",sep="")
@@ -72,23 +72,27 @@
                     }
                     return(get(cdfname, envir=where))
                   }
-                  else{
-                    loc <- .find.package(cdfname, lib.loc=where, quiet=TRUE)
-                    
-                    if (identical(loc, character(0)))
-                      stop(paste("AffyBatch: Looked for probes information in the package ", cdfname, "but could not find it.\n"))
-                    ##may be an option to try to autoload the package from
-                    ##the bioconductor website woud be nice here
-                    ## there is already a "how[[i]]$autoload" available
-                    
-                    if (length(loc) > 1)
-                      warning(paste("several packages with a matching name. Using the one at", loc[1]))
-                    
-                    do.call("library", list(cdfname, lib.loc=dirname(loc[1])))
-                    return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
-                    ##object@cdfInfo <<- get(name, envir=as.environment(paste("package:",name, sep="")))
-                  }
                 }
+                
+                if (what == "package") {
+                  loc <- .find.package(cdfname, lib.loc=where, quiet=TRUE)
+                  
+                  if (identical(loc, character(0)))
+                    next
+                    ##stop(paste("AffyBatch: Looked for probes information in the package ", cdfname, "but could not find it.\n"))
+                    
+                  ##may be an option to try to autoload the package from
+                  ##the bioconductor website woud be nice here
+                  ## there is already a "how[[i]]$autoload" available
+                  
+                  if (length(loc) > 1)
+                    warning(paste("several packages with a matching name. Using the one at", loc[1]))
+                  
+                  do.call("library", list(cdfname, lib.loc=dirname(loc[1])))
+                  return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
+                  ##object@cdfInfo <<- get(name, envir=as.environment(paste("package:",name, sep="")))
+                }
+              
                 
                 if (what == "file") {
                   ##now this is an actual Affymetrix filename
@@ -96,8 +100,8 @@
                   cdf <- read.cdffile(file.path(path.expand(where), cdfname))
                   ## ---> extra paranoia <---
                   if (cdf@cdfName != object@cdfName)
-                    warning(paste("The CDF file identifies as", cdf@cdfName,
-                                  "while you probably want", object@cdfName))
+                  warning(paste("The CDF file identifies as", cdf@cdfName,
+                                "while you probably want", object@cdfName))
                   ## ---> end <---
                   return(getLocations.Cdf(cdf))
                   ##object@cdfInfo <<- getLocations.Cdf(cdf)
@@ -111,7 +115,7 @@
                   ##object@cdfInfo <<- as.environment(get(name, where))
                 }
               }
-              stop(paste("Information about probe locations for ", object@cdfName, " could not be found"))
+              stop(paste("AffyBatch: information about probe locations for ", object@cdfName, " could not be found"))
             },
             where=where)
   
@@ -131,14 +135,14 @@
   if (debug.affy123) cat("--->show\n")
   setMethod("show", "AffyBatch",
             function(object) {
-              tmp <- geneNames(object)
+              
               cat("AffyBatch object\n")
-              cat("size of arrays=",object@nrow,"x",object@ncol,
-                  " features\n",sep="")
+              cat("size of arrays=", object@nrow, "x", object@ncol,
+                  " features (", object.size(object), " Mb)\n", sep="")
               
               ## Location from cdf env
               try( cdf.env <- getCdfInfo(object) )
-              if (! inherits(cdf.env,"try-error")) {
+              if (! inherits(cdf.env, "try-error")) {
                 num.ids <- length(ls(env=cdf.env))
               } else {
                 warning("missing cdf environment !")
@@ -149,7 +153,7 @@
                   " (", num.ids, " affyids)\n",
                   sep="")
               cat("number of experiments=",length(object),"\n",sep="")
-              cat("number of genes=",length(tmp),"\n",sep="")
+              cat("number of genes=", length(geneNames(object)), "\n",sep="")
               cat("annotation=",object@annotation,"\n",sep="")
               cat("notes=",object@notes,"\n",sep="")
               ##cat("sample names=",sampleNames(object),"\n",sep="\n")

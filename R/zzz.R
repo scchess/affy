@@ -34,6 +34,12 @@
          envir=as.environment(where))
        }
 
+.initMapCdfName <- function(where) {
+  filepath <- file.path(.path.package("affy"), "data", "mapCdfName.tab")
+  mapCdfName <- read.table(filepath, colClasses=rep("character", 3), quote="\"", sep="\t", comment="#", row.names=NULL, header=TRUE)
+  assign("mapCdfName", mapCdfName, envir=as.environment(where))
+}
+
 .First.lib <- function(libname, pkgname, where) {
   
 
@@ -42,13 +48,9 @@
   
   ## DEBUG flag
   assign("debug.affy123", FALSE, envir=as.environment(where))
-
-  ## R CMD check surprise...
-  ## but the following trick did cheat R check... :(
-  ##assign("T", TRUE, envir=as.environment(where))
-  ##assign("F", FALSE, envir=as.environment(where))
-
+  
   message <- TRUE
+  
   if (message) {
     cat(rep("*",13),"\n",sep="")
     cat("affy: development version\n")
@@ -71,6 +73,7 @@
   .initNormalize(where, all.affy)
   .initExpression(where, all.affy)
   .initBackgroundCorrect(where, all.affy)
+  .initMapCdfName(where)
   .initCdf(where)
   .initCel(where)
   .initPPSet(where)
@@ -89,10 +92,13 @@
   ##affy$urls <- list( bioc = "http://www.bioconductor.org")
 
   probesloc.first <- list(what="package", where=NULL, probesloc.autoload=TRUE)
-  probesloc.second <- list(what="environment", where=as.environment(-1))
+  probesloc.second <- list(what="environment", where=.GlobalEnv)
+  probesloc.third <- list(what="data", where="affy")
+  
   ## i added use.widgets=FALSE. Shuold it be true?
+  ## --> I do not think so. Let's keep it FALSE. 
   affy <- list(compress.cdf=FALSE, compress.cel=FALSE, use.widgets=FALSE,
-               probesloc = list(probesloc.first, probesloc.second))
+               probesloc = list(probesloc.first, probesloc.second, probesloc.third))
   class(affy) <- "BioCPkg"
   
   BioC <- getOption("BioC")

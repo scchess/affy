@@ -26,10 +26,10 @@ A list with component
 \author{Magnus Åstrand}
 \seealso{ \code{\link{maffy.normalise}}}
 \examples{
-     data(Dilution)
-     x <- log2(pm(Dilution)[,1:3])
-     Index <- maffy.subset(x,subset.size=100)$subset
-     mva.pairs(x[Index,])
+     #data(Dilution)
+     #x <- log2(pm(Dilution)[,1:3])
+     #Index <- maffy.subset(x,subset.size=100)$subset
+     #mva.pairs(x[Index,])
 }
 \keyword{internal}
 

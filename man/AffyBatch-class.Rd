@@ -62,7 +62,65 @@ Objects can be created by calls of the form \code{new("AffyBatch", ...)}.
   \code{\link{expresso.AffyBatch}} }
 
 \examples{
-data(affybatch.example)
-affybatch.example
+  data(affybatch.example)
+  affybatch.example
+
+%   abatch.n <- normalize(affybatch.example, CDF.example, method="quantiles")
+%   par(mfrow=c(2,1))
+%   plot(intensity(affybatch.example[[1]]), intensity(affybatch.example[[2]]), col="black",
+%        xlab=sampleNames(affybatch.example)[1], ylab=sampleNames(affybatch.example[[2]]),log="xy")
+%   plot(intensity(abatch.n[[1]]), intensity(abatch.n[[2]]), col="red",
+%        xlab=sampleNames(affybatch.example[[1]]), ylab=sampleNames(affybatch.example[[2]]),log="xy")
+
+%   norm.method <- c("constant", "invariantset" , "quantiles")
+
+%   par(mfrow=c(3,3))
+
+%   ## loop over the methods
+%   for (i in 1:3) {
+
+%     cat("--->",norm.method[i],"\n")  
+%     abatch.n <- normalize(affybatch.example, method=norm.method[i])
+
+%     ## plot the raw and normalized intensities
+%     plot(c(intensity(affybatch.example[[1]]), intensity(abatch.n[[1]])),
+%          c(intensity(affybatch.example[[2]]), intensity(abatch.n[[2]])),
+%          xlab=sampleNames(affybatch.example[[1]]), ylab=sampleNames(affybatch.example[[2]]),
+%          type="n", main=paste("method:", norm.method[i]))
+%     points(intensity(affybatch.example[[1]]), intensity(affybatch.example[[2]]), col="black")
+%     points(intensity(abatch.n[[1]]), intensity(abatch.n[[2]]), col="red")
+%     ## indentity line
+%     abline(0,1)
+
+%     ## kernel density estimates of the intensities
+%     md1 <- density(intensity(affybatch.example[[1]]), na.rm=TRUE)
+%     md2 <- density(intensity(affybatch.example[[2]]), na.rm=TRUE)
+%     n.md1 <- density(intensity(abatch.n[[1]]), na.rm=TRUE)
+%     n.md2 <- density(intensity(abatch.n[[2]]), na.rm=TRUE)
+
+%     ## plot the raw an normalized intensities (log scale)
+%     plot(range(md1$x, md2$x, n.md1$x, n.md2$x),
+%          range(md1$y, md2$y, n.md1$y, n.md2$y),
+%          xlab="intensity (log scale)", ylab="density estimate",
+%          type="n", log="x")
+%     points(md1, type="l", lty="solid", col="black")
+%     points(n.md1, type="l", lty="solid", col="red")
+%     points(md2, type="l", lty=5, col="black")
+%     points(n.md2, type="l", lty=5, col="red")
+
+%     plot(c(intensity(affybatch.example[[1]]), intensity(abatch.n[[1]])),
+%          c(intensity(affybatch.example[[2]]), intensity(abatch.n[[2]])),
+%          xlab=sampleNames(affybatch.example[[1]]), ylab=sampleNames(affybatch.example[[2]]), log="xy",
+%          type="n", main=paste(norm.method[i]," - axis in log scale"))
+%     points(intensity(affybatch.example[[1]]), intensity(affybatch.example[[2]]), col="black")
+%     points(intensity(abatch.n[[1]]), intensity(abatch.n[[2]]), col="red")
+%   }
+
+   panel.idline <- function(x, y, ...) {
+     abline(0,1, col="gray")
+     points(x, y, ...)
+   }
+  pairs(affybatch.example, panel=panel.idline, pch=".")
+
 }
 \keyword{classes}

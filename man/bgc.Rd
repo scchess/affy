@@ -67,14 +67,14 @@ bg.correct(object, method)
 \references{Irizarry et al. (2002)}
 \author{
   Rafael A. Irizarry\cr
-  and El Gringo (Laurent)}
+}
 
 \seealso{ \code{\link{bg.adjust}}}
 \examples{
-     data(Dilution)
-     tmp <- bgc(Dilution)
-     plot(pm(Dilution)[,1],pm(tmp)[,1],log="xy",
-	  main="PMs before and after background correction")
+     #data(Dilution)
+     #tmp <- bgc(Dilution)
+     #plot(pm(Dilution)[,1],pm(tmp)[,1],log="xy",
+	#  main="PMs before and after background correction")
 }
 \keyword{manip}
 
