@@ -27,7 +27,7 @@
   assign("normalize.Cel.container.methods", substr(ls(where)[grep("normalize\.Cel\.container\.*", ls(where))],
                                                    25, 100),
                                                    envir=as.environment(where))
-  assign("normalize.Plobs.methods", substr(ls(where)[grep("normalize\.Plob\.*", ls(where))],
+  assign("normalize.Plob.methods", substr(ls(where)[grep("normalize\.Plob\.*", ls(where))],
                                           25,100),
                                           envir=as.environment(where))
   
