@@ -74,7 +74,7 @@ an array that has been hybridized.
 to locations on the array.
 \end{description}
 
-Section \ref{whatsnew} described the main differences between version 1.0 and
+Section \ref{whatsnew} described the main differences between version 1.1 and
 this version. Section \ref{sec:get.started} describes a quick way of getting started and
 getting expression measures. Section \ref{qc} describes the different classes
 defined in the package. Section \ref{s1.4} describes normalization routines. Section \ref{classes} describes the different classes in the package.
@@ -84,38 +84,43 @@ locations to probe set membership. Section \ref{configure.options} describes how
 %%%make sure to change this when we get a publication about version 2.
 {\bf Note:} If you use this package please cite \cite{iriz:gaut:cope:2003}.
 
-\section{Changes from Version 1.0}
+\section{Changes in Version 1.2.x}
 \label{whatsnew}
 {\bf What's new?}
 \begin{itemize}
-\item Faster reading functions (type \verb+?read.affybatch+)
-\item Widgets for reading phenotypic and MIAME information and choices of
-preprocessing when computing expression measures.
-(\verb+?read.phenoData, ?read.MIAME, ?expresso+)
-\item No need to read in {\it CDF} files.
-\item More efficient expression measure functions. (\verb+?expresso+, \verb+?express+).
-\item Very fast RMA (\verb+?rma+).
-\item Our version of MAS 5.0 available (\verb+?expresso+).
-\item RNA degradation assessment. (\verb+?AffyRNAdeg+)
+\item slot 'preprocessing' of the MIAME attribute used to store
+  normalization step information [not finished, list returned
+  "constant" and "invariantset" for the moment. Need for a class
+  and check compliance with MIAME standards]
+  \item tuning of the MAS5.0 methods implemented (bgcorrect.mas, ...)
+  [Ben for details. add URL for the comparison he made]
+\item method \verb+plot.ProbeSet+, an alternative to barplot, to plot probe
+  level information.
+\item parameter 'scale' in the method barplot for ProbeSet. All the
+  barplots are scaled to eachothers.
 \end{itemize}
 
 \noindent{\bf What's different?}
-The new version is not backwards compatible! Unfurtunately the changes
-we had to make to gain efficiency has resulted in some lack of
-backwards compatibility. Here are some   
-important ones:
-\begin{itemize}
-\item Unless you are using the HG-U95Av2 chip or the HGU133A chip you
-  need to download and install a package for each chip type. They can
-  be obtained from  
-\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}
-\item You need the latest version of Biobase
-\item To get RMA you no longer use \verb+express+, you use \verb+rma+
-\item \verb+ReadAffy+ uses the argument \verb+filenames+ instead of \verb+CELS+ for denoting cel files.
-\item You can no longer subset probe level objects (now
-  \verb+AffyBatch+) by probe set name
-\end{itemize}
 
+\begin{itemize}
+\item  Autoload of cdfenvs on demand (uses reposTools). Can be configured through the options.
+\item default methods for normalization, bg correction, pm correction
+  and summary now in the package options [options exist for all, but
+  only used by normalize for the moment].
+\item The default background on the \verb+rma+ function has been changed. Now 
+  the results from \verb+rma+ and \verb+expresso+ should agree completely.
+\item  The function \verb+express+ is deprecated. It still functions normally 
+  but gives warning mesage. It will be removed in a future release.
+  The function \verb+expresso+ should be used as a replacement.
+\item bug in the parser fixed (infinite loop reported with apparently
+  non-standard CEL files).
+\item bug in the parser fixed (the 'sd' data returned were not correct).
+\item missing slot in the dataset SpikeIn fixed.
+\item  bug in normalize.AffyBatch.qspline fixed (thanks to people at
+  Insightful). The expression data matrix sent to normalize.qspline
+  was mistakingly transposed.
+\item barplot.ProbeSet scales plots to eachothers by default.
+\end{itemize}
 
 In this version, we have implemented some procedures
 described in the MAS 5.0 manual the best we could\footnote{Differences can still
@@ -474,7 +479,7 @@ Currently the \verb+rma+ function implements RMA in the following manner
 \item Probe specific correction of the PM probes using a model based
   on observed intensity being the sum of signal and noise
 \item Normalization of corrected PM probes using quantile
-  normalization \cite{bols:etal:2002}
+  normalization \cite{bols:etal:2003}
 \item Calculation of Expression measure using median polish.
 \end{enumerate}
 
@@ -663,7 +668,7 @@ az
 \section{Normalization}
 \label{s1.4}
 Various researchers have pointed out the need for normalization of Affymetrix
-arrays. See for example \cite{bols:etal:2002}. Let's look at an  example.
+arrays. See for example \cite{bols:etal:2003}. Let's look at an  example.
 The first two arrays in \verb+Dilution+ are technical replicates (same RNA),
 so the intensities obtained from these should be about the same. The
 second 2 are also replicates. The second arrays are hybridized to
@@ -713,7 +718,7 @@ Notice the function \verb+merge+ permits us to put together two
 \verb+AffyBatch+ objects.
 
 Various methods are available for normalization (see the help
-file). The default is quantile normalization \citep{bols:etal:2002}).
+file). The default is quantile normalization \citep{bols:etal:2003}).
 All the available methods are obtained using this function:
 <<>>=
 normalize.methods(Dilution)
@@ -1130,6 +1135,41 @@ the information is used (an error
 message is returned if none permits to find the information). The
 element {\it what} can be one of {\it package}, {\it environment}.
 \end{itemize}
+
+
+\section{Previous Release Notes}
+\label{whatwassnew}
+\subsection{Changes in Version 1.1.x}
+{\bf What's new?}
+\begin{itemize}
+\item Faster reading functions (type \verb+?read.affybatch+)
+\item Widgets for reading phenotypic and MIAME information and choices of
+preprocessing when computing expression measures.
+(\verb+?read.phenoData, ?read.MIAME, ?expresso+)
+\item No need to read in {\it CDF} files.
+\item More efficient expression measure functions. (\verb+?expresso+, \verb+?express+).
+\item Very fast RMA (\verb+?rma+).
+\item Our version of MAS 5.0 available (\verb+?expresso+).
+\item RNA degradation assessment. (\verb+?AffyRNAdeg+)
+\end{itemize}
+
+\noindent{\bf What's different?}
+The new version is not backwards compatible! Unfurtunately the changes
+we had to make to gain efficiency has resulted in some lack of
+backwards compatibility. Here are some   
+important ones:
+\begin{itemize}
+\item Unless you are using the HG-U95Av2 chip or the HGU133A chip you
+  need to download and install a package for each chip type. They can
+  be obtained from  
+\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}
+\item You need the latest version of Biobase
+\item To get RMA you no longer use \verb+express+, you use \verb+rma+
+\item \verb+ReadAffy+ uses the argument \verb+filenames+ instead of \verb+CELS+ for denoting cel files.
+\item You can no longer subset probe level objects (now
+  \verb+AffyBatch+) by probe set name
+\end{itemize}
+
 
 
 \bibliographystyle{plainnat}
