@@ -99,7 +99,7 @@ normalize.Cel.invariantset <- function(listcel, f.cdf, prd.td=c(0.003,0.007), pr
     if (progress) cat("done.\n")
     
   }
-  listcel[[i]]@history$name="reference for the invariant set"
+  listcel[[refindex]]@history$name="reference for the invariant set"
   
   return(listcel)
 }
@@ -142,6 +142,8 @@ normalize.invariantset <- function(data, ref, prd.td=c(0.003,0.007)) {
   attr(data,"invariant.set") <- i.set
   return(data)
 }
+
+
 
 
 
