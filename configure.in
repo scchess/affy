@@ -14,17 +14,6 @@ AC_INIT("DESCRIPTION")
 dnl
 dnl Are things (still) the same ?
 dnl (taken from the 'writing R extensions manual')
-dnl
-
-R_HOME=${R_HOME}
-if test -z "${R_HOME}"; then
-  echo 'could not determine R_HOME'
-  exit 1
-fi
-
-echo "R_HOME is ${R_HOME}"
-CC=`grep "^CC" ${R_HOME}/etc/Makeconf | sed "s/^CC *= *//"`
-CFLAGS=`grep "^CFLAGS" ${R_HOME}/etc/Makeconf | sed "s/^CFLAGS *= *//"`
 
 
 dnl
