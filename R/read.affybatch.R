@@ -134,6 +134,7 @@ list.celfiles <-   function(...){
   return(files[grep(".[cC][eE][lL]", files)])
 }
 
+###this is user friendly wrapper for read.affybatch
 ReadAffy <- function(..., filenames=character(0),
                      widget=getOption("BioC")$affy$use.widgets,
                      compress=getOption("BioC")$affy$compress.cel,
@@ -154,7 +155,7 @@ ReadAffy <- function(..., filenames=character(0),
   }
   else
     widgetfiles <- character(0)
-
+  
   filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
   
   if(length(filenames)==0) filenames <- list.celfiles(celfile.path)
@@ -167,7 +168,9 @@ ReadAffy <- function(..., filenames=character(0),
     if(is.null(sampleNames)){
       if(widget){
         require(tkWidgets)
-        sampleNames <- tkSampleNames(filenames=filenames)[,2]
+        sampleNames <- tkSampleNames(filenames=filenames)[,1]
+        ##notice that a description of the files is ingored for now
+        ##soon to go into MIAME
       }
       else{
         sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
