@@ -41,3 +41,4 @@ losing information on differentially expressed genes. The function
   \code{\link{maffy.subset}}}
 \author{Rafael A. Irizarry}
 \keyword{smooth}
+

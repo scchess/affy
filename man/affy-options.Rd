@@ -44,3 +44,4 @@ affy.opt$compress.cel <- TRUE
 options(BioC=opt)
 }
 \keyword{manip}
+
