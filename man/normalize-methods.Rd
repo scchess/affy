@@ -4,6 +4,9 @@
 \alias{normalize.AffyBatch}
 \alias{normalize.methods}
 \alias{normalize.AffyBatch.methods}
+\alias{normalize,AffyBatch-method}
+\alias{normalize.methods,AffyBatch-method}
+
 \description{
   Method for normalizing Affymetrix Probe Level Data}
 }

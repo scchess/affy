@@ -1,6 +1,14 @@
 \name{ProbeSet-class}
 \docType{class}
 \alias{ProbeSet-class}
+
+\alias{show,ProbeSet-method}
+\alias{barplot,ProbeSet-method}
+\alias{colnames,ProbeSet-method}
+\alias{express.summary.stat,ProbeSet-method}
+\alias{sampleNames, ProbeSet-method}
+
+
 \title{Class ProbeSet}
 \description{A simple class that contains the PM and MM data for a probe
   set from one or more samples} }

@@ -13,6 +13,30 @@
 \alias{mmindex}
 \alias{probeset}
 \alias{$.AffyBatch}
+\alias{probes,AffyBatch-method}
+\alias{geneNames,AffyBatch-method}
+\alias{getCdfInfo,AffyBatch-method}
+\alias{image,AffyBatch-method}
+\alias{indexProbes,AffyBatch-method}
+\alias{intensity<-,AffyBatch-method}
+\alias{intensity,AffyBatch-method}
+\alias{pmindex,AffyBatch-method}
+\alias{mmindex,AffyBatch-method}
+\alias{probeset,AffyBatch-method}
+\alias{boxplot,AffyBatch-method}
+\alias{nrow,AffyBatch-method}
+\alias{ncol,AffyBatch-method}
+\alias{show,AffyBatch-method}
+\alias{pm,AffyBatch-method}
+\alias{pm<-,AffyBatch-method}
+\alias{mm,AffyBatch-method}
+\alias{mm<-,AffyBatch-method}
+\alias{probeNames,AffyBatch-method}
+\alias{hist,AffyBatch-method}
+\alias{[<-,AffyBatch-method}
+\alias{[,AffyBatch-method}
+\alias{[[,AffyBatch-method}
+\alias{length,AffyBatch-method}
 
 \title{Class AffyBatch}
 \description{This is a class representation for Affymetrix GeneChip probe
