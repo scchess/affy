@@ -15,11 +15,11 @@
              nrow=0,
              ncol=0), contains="exprSet", where=where)
 
-  if (debug.affy123) cat("--->accessors\n")
-
 #######################################################
 ### accessors
 #######################################################
+
+  if (debug.affy123) cat("--->accessors\n")
   
   ##intensity
   setMethod("intensity", signature(object="AffyBatch"),
@@ -50,8 +50,15 @@
   setMethod("nrow",signature(x="AffyBatch"),
             function(x) x@nrow, ##RI: assumes matrices
             where=where)
+
+  
+#######################################################
+### methods
+#######################################################
+  
   
   ##sample Names now comes from Biobase
+  
   if (debug.affy123) cat("--->getCdfInfo\n")
   if( !isGeneric("getCdfInfo") )
     setGeneric("getCdfInfo", function(object, ...)
@@ -115,7 +122,7 @@
                   if (cdf@cdfName != object@cdfName)
                     warning(paste("The CDF file identifies as", cdf@cdfName,
                                   "while you probably want", object@cdfName))
-                  ## ---> end <---
+                  ## ---> end of paranoia <---
                   return(getLocations.Cdf(cdf))
                   ##object@cdfInfo <<- getLocations.Cdf(cdf)
                   rm(cdf)
@@ -128,7 +135,11 @@
                   ##object@cdfInfo <<- as.environment(get(name, where))
                 }
               }
-              stop(paste("Information about probe locations for", object@cdfName, " could not be found.\nTry downloading the",cleancdfname(object@cdfName),"package from\nhttp://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n"))
+              stop(paste("Information about probe locations for",
+                         object@cdfName,
+                         " could not be found.\nTry downloading the",
+                         cleancdfname(object@cdfName),
+                         "package from\nhttp://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n"))
             },
             where=where)
   
@@ -173,7 +184,14 @@
             },
             where=where)
 
+  
+  if ( ! isGeneric("index2xy")) {
+    setGeneric("indexProbes", function(object, which, ...)
+               standardGeneric("indexProbes"), where=where)
+  }
 
+  
+  ## indexProbes
   if( !isGeneric("indexProbes") )
     setGeneric("indexProbes", function(object, which, ...)
                standardGeneric("indexProbes"), where=where)
@@ -214,6 +232,7 @@
                 
                 
                 if (xy) {
+                  warning("flag 'xy' is deprecated")
                   x <- tmp %% nrow(object)
                   x[x == 0] <- nrow(object)
                   y <- tmp %/% nrow(object) + 1
@@ -236,7 +255,7 @@
   
   ##wrapper
   setMethod("pmindex", "AffyBatch",
-            function(object, genenames=NULL,xy=FALSE) 
+            function(object, genenames=NULL, xy=FALSE) 
             indexProbes(object, "pm", genenames=genenames, xy=xy),
             where=where
             )
@@ -248,7 +267,7 @@
   
   ##wrapper
   setMethod("mmindex", "AffyBatch",
-            function(object,genenames=NULL,xy=FALSE) 
+            function(object,genenames=NULL, xy=FALSE) 
             indexProbes(object, "mm", genenames=genenames, xy=xy),
             where=where
             )                        
@@ -261,7 +280,7 @@
                standardGeneric("probeNames"), where=where)
   
   setMethod("probeNames","AffyBatch",
-            function(object,genenames=NULL,mm=FALSE){
+            function(object, genenames=NULL, mm=FALSE){
               if(mm) Index <- mmindex(object,genenames)
               else Index <- pmindex(object,genenames)
               reps <- unlist(lapply(Index,length))
@@ -498,17 +517,13 @@
               summary.method <- match.arg(summary.method, express.summary.stat.methods)
               
               n <- length(x)
-
+              
               ## if NULL compute for all
               if (is.null(ids))
                 ids <- geneNames(x)
               
               m <- length(ids)
 
-              ##why is this defined
-              ## --> from the migration to AffyBatch... 'forget to remove it...
-              ## idsi <- match(ids, geneNames(x))
-              
               ## cheap trick to (try to) save time
               c.pps <- new("ProbeSet",
                            pm=matrix(),
@@ -530,8 +545,8 @@
                                        summary.param=summary.param, pmcorrect.param=pmcorrect.param))
                                 )
               ##only one character cause no more bg correct
-###bg.correct=bg.method, param.bg.correct=bg.param,
-
+              ##bg.correct=bg.method, param.bg.correct=bg.param,
+              
               ##WHy not show error? took it out cause sometimes we
               ##get errors and couldnt see them.
               ##options(show.error.messages = FALSE)
@@ -542,10 +557,8 @@
               for (i in seq(along=ids)) {
                 
                 id <- ids[i]
-
-                ##cat(i,"--")
+                
                 if (verbose) {
-                                        #cat(id, "\n")
                   if ( round(m/10) == countprogress) {
                     cat(".")
                     countprogress <- 0
@@ -575,11 +588,11 @@
                 mycall[[2]] <- c.pps
                 ev <- try(eval(mycall))
                 
-                if (! inherits(ev,"try-error")) {
+                if (! inherits(ev, "try-error")) {
                   exp.mat[i, ] <- ev$exprs
                   se.mat[i,] <- ev$se.exprs
                 } else if (warnings) {
-                  warning(paste("Error with affyid:", name.levels(cdf)[id]))
+                  warning(paste("Error with affyid:", id))
                 }
                 ## no need for an 'else' branching since exp.mat was initialized with NA
                 
