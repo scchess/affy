@@ -402,13 +402,13 @@
     for (i in seq(along=genenames)) {
       
       i.pm <- indexProbes(object, "pm", genenames[i])[[1]]
-      if (is.na(i.pm))
+      if (is.na(i.pm)[1])
         intensity.pm <- matrix()
       else
         intensity.pm <- intensity(object)[i.pm, , drop=FALSE]
       
       i.mm <- indexProbes(object, "mm", genenames[i])[[1]]
-      if (is.na(i.mm))
+      if (is.na(i.mm)[1])
         intensity.mm <- matrix()
       else
         intensity.mm <- intensity(object)[i.mm, , drop=FALSE]

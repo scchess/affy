@@ -23,16 +23,18 @@ barplot.ProbeSet <- function(height,
     ylim <- NULL
   }
 
+  if (is.na(main)) {
+    main <- paste(height@id, "( sample", 1:ncol(pm(height)), ")")
+  } else {
+    main <- rep(main, length=ncol(pm(height)))
+  }
+  
   for (i in 1:ncol(pm(height))) {
-    
-    if (is.na(main)) {
-      main <- paste(height@id, "(", i, ")")
-    }
     
     hh <- rbind(pm(height)[, i], mm(height)[, i])
       
     barplot(hh, xlab=xlab, ylab=ylab,
-            main=main,
+            main=main[i],
             col=col,
             beside=beside,
             names.arg=names.arg,

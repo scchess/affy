@@ -29,7 +29,8 @@ plotLocation(l.pm, CDF.example, col="red")
 l.mm <- locate.name("AFFX-BioC-5_at", CDF.example, type="mm")
 plotLocation(l.mm, CDF.example, col="blue")
 
-#legend(0.4,0,c("perfect match","mismatch"),c("red","blue"),bg="white")
+arrows(20,60, min(l.pm[,1]), min(l.pm[,2]), col="white")
+legend(20,60,c("perfect match","mismatch"),c("red","blue"),bg="white")
 
 rm(l.pm, l.mm)
 
@@ -93,25 +94,37 @@ legend(20000,10000,c("invariant set","identity line"),c("orange","grey"),bg="whi
 #boxplot(normalize(Dilution))
 
 
-p <- probeset(affybatch.example, "A28102_at")
+p <- probeset(affybatch.example, "A28102_at")[[1]]
 
-#par(mfcol=c(4,2))
-#mymethods <- c("avgdiff", "playerout", "liwong")
-#nmet <- length(mymethods)
+par(mfcol=c(5,2))
+mymethods <- express.summary.stat.methods
+nmet <- length(mymethods)
+nc <- ncol(pm(p))
 
-#layout(matrix(c(1:4, rep(5:(5+nmet-1), times=rep(4, nmet))), 4, 1+nmet),
-#       width=c(4, rep(1, nmet)))
+layout(matrix(c(1:nc, rep(nc+1, nc)), nc, 2), width = c(1, 1))
+##p@pm <- log(p@pm)
+##p@mm <- log(p@mm)
 
-#for (i in 1:4) barplot(p[[i]], ylim=ylimi, main=paste(p[[i]]@name, " - hybridization ", i))
+barplot(p)
 
-#for (i in 1:nmet) {
-#  ev <- express.summary.stat(p, method=mymethods[i], bg.correct="bg.correct.pmonly")
-#  barplot(rev(c(ev)),main=paste("expression values using\n",mymethods[i], sep=""),
-#          names.arg=rev(paste("hybrid. ",1:4)), horiz=TRUE)
-#}
-#par(opar)
-#rm(opar)
-  
+results <- matrix(0, nc, nmet)
+rownames(results) <- paste("sample", 1:nc)
+colnames(results) <- mymethods
+
+for (i in 1:nmet) {
+  ev <- express.summary.stat(p, summary=mymethods[i], pmcorrect="pmonly")
+  if (mymethods[[i]] != "medianpolish")
+    results[, i] <- log(ev$exprs)
+  else
+    results[, i] <- ev$exprs
+}
+matplot(results, matrix(1:3, nr=nc, nc=nmet), type="l", lty=1:3, col=rainbow(nmet),
+        xlab="expression value", lab="sample")
+dotchart(results, labels=paste("sample", 1:nc))
+legend()
+
+par(opar)
+rm(opar)
 
 
 
