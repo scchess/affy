@@ -15,7 +15,7 @@
  ** this implements the same background as that included within affy (1.0.2) 
  ** and also the background in affy 1.1 and later releases.
  **
- ** Last changed: Feb 6, 2003 
+ ** Last changed: Apr 22, 2003 
  **
  ** History
  **
@@ -32,6 +32,7 @@
  ** Feb 6, 2003 - change two printf to Rprintf (so Windows users actually see some verbage)
  ** Feb 17,2003 - change a free to Free in find_max()
  ** Feb 25, 2003 - Fixes to remove some compiler warnings (show up when using -Wall with gcc)
+ ** Apr 22, 2003 - fix error in bg_parameters2 so that can more closely duplicate the results in R
  **
  *****************************************************************************/
 
@@ -341,14 +342,14 @@ void bg_parameters2(double *PM,double *MM, double *param, int rows, int cols, in
   PMmax = max_density(PM,rows, cols, column,fn,rho);
   
   for (i=0; i < rows; i++){
-    if (PM[column*rows +i] <= PMmax){
+    if (PM[column*rows +i] < PMmax){
       tmp_less[n_less] = PM[column*rows +i];
       n_less++;
     }
 
   }  
 
-  PMmax = max_density(tmp_less,n_less+1,1,0,fn,rho);
+  PMmax = max_density(tmp_less,n_less,1,0,fn,rho);
   sd = get_sd(PM,PMmax,rows,cols,column)*0.85; 
 
   for (i=0; i < rows; i++){
@@ -359,7 +360,7 @@ void bg_parameters2(double *PM,double *MM, double *param, int rows, int cols, in
   }
 
   /* the 0.85 is to fix up constant in above */
-  alpha = get_alpha2(tmp_more,PMmax,n_more+1,fn,rho);
+  alpha = get_alpha2(tmp_more,PMmax,n_more,fn,rho);
 
   param[0] = alpha;
   param[1] = PMmax;
