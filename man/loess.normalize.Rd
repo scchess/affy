@@ -1,6 +1,6 @@
 \name{loess.normalize}
 \alias{loess.normalize}
-%- Also NEED an `\alias' for EACH other topic documented here.
+
 \title{Normalize arrays}
 \description{
 This function treats PM and MM as the raw data on each chip. It fits
@@ -11,7 +11,7 @@ be scattered around the same constant.}
 loess.normalize(mat, subset=sample(1:dim(mat)[2], 5000), epsilon=10^-2,
           maxit=1,log.it=TRUE, verbose=TRUE, span=2/3, family.loess="symmetric")
 }
-%- maybe also `usage' for other objects documented here.
+
 \arguments{
   \item{mat}{a matrix with columns containing the values of the chips
     to normalize.}
@@ -41,4 +41,3 @@ losing information on differentially expressed genes. The function
   \code{\link{maffy.subset}}}
 \author{Rafael A. Irizarry}
 \keyword{smooth}
-
