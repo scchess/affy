@@ -84,17 +84,17 @@ normalize.Cel.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), 
                                                      prd.td),
                               "invariant.set")
                          ]
-
-    container[[i]]@intensity <- as.numeric(approx(c(container[[i]]@intensity)[i.set],
-                                                c(container[[refindex]]@intensity)[i.set],
-                                                xout=container[[i]]@intensity)$y)
-    dim(container[[i]]@intensity) <- mydim
+    tmp <- as.numeric(approx(c(container[[i]]@intensity)[i.set],
+                             c(container[[refindex]]@intensity)[i.set],
+                             xout=container[[i]]@intensity)$y)
+    # shape back the values return to a matrix
+    container[[i]]@intensity <- matrix(tmp, mydim[1], mydim[2])
         
     ## storing information about what has been done
     container[[i]]@history <- list(name="normalized by invariant set",
                                  invariantset=i.set)
     attr(container[[i]]@intensity,"invariant.set") <- NULL
-    container[[i]]@sd <- NULL
+    container[[i]]@sd <- matrix()
 
     if (progress) cat("done.\n")
     

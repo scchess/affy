@@ -1,6 +1,7 @@
 \name{normalize.loess}
 \alias{normalize.loess}
 \alias{normalize.Cel.loess}
+\alias{normalize.Plob.loess}
 \title{Scale microarray data}
 \description{
   normalizes two microarray data to each others.
@@ -10,6 +11,7 @@ normalize.loess(mat, subset=sample(1:(dim(mat)[2]),5000),
                 epsilon=10^-2,maxit=1,log.it=T,verbose=T,span=2/3,
                 family.loess="symmetric")
 normalize.Cel.loess(listcel, ...)
+normalize.Plob.loess(plob, ...)
 }
 \arguments{
   \item{mat}{}
@@ -20,7 +22,8 @@ normalize.Cel.loess(listcel, ...)
   \item{verbose}{}
   \item{span}{}
   \item{family.loess}{}
-  \item{listcel}{A \code{Cel.container}}
+  \item{listcel}{a \code{\link{Cel.container}} object}
+  \item{plob}{a \code{\link{Plob}} object}
   \item{...}{any of the options of normalize.loess you would like to modify}
 }
 \details{
@@ -29,9 +32,11 @@ normalize.Cel.loess(listcel, ...)
 }
 \author{
   Rafael\cr
-  (if there is a problem it must be because Laurent butchered his nice code...)
+  (if there is a problem it must be because I (LG) butchered his nice code...)
 }
 \seealso{
   \code{\link{probe.profile}}
 }
 \keyword{smooth}
+
+

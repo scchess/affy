@@ -14,7 +14,7 @@ normalize.Cel.constant <- function(container, refindex=1, FUN=mean, na.rm=TRUE) 
     container[[i]]@intensity <- normalize.constant(container[[i]]@intensity, refconstant, FUN=FUN, na.rm=na.rm)
     container[[i]]@history <- list(name="normalized by constant",
                                  constant=attr(container[[i]]@intensity,"constant"))
-    container[[i]]@sd <- NULL
+    container[[i]]@sd <- matrix()
     attr(container[[i]]@intensity, "constant") <- NULL
   }
   return(container)
@@ -37,9 +37,9 @@ normalize.Plob.constant <- function(plob, refindex=1, FUN=mean, na.rm=TRUE) {
 }
 
 
-normalize.constant <- function(idata, refconstant, FUN=mean, na.rm=TRUE) {
-  thisconstant <- FUN(idata, na.rm=na.rm)
-  r <- idata / thisconstant * refconstant
+normalize.constant <- function(x, refconstant, FUN=mean, na.rm=TRUE) {
+  thisconstant <- FUN(x, na.rm=na.rm)
+  r <- x / thisconstant * refconstant
   attr(r,"constant") <- thisconstant * refconstant
   return(r)
 }
