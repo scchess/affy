@@ -29,6 +29,10 @@ version 1.2 [under development]:
 
   o missing slot in the dataset SpikeIn fixed.
 
+  o The function express() is deprecated. It still functions normally 
+  but gives warning mesage. It will be removed in a future release.
+  The function expresso() should be used as a replacement.
+
 
 version 1.1.x:
 
