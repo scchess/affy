@@ -11,6 +11,7 @@ bg.correct.mas <- function(object, griddim=16)
    allintensities <- intensity(object)[c(pm.index, mm.index), ]
    
    allx <- c(pm.index, mm.index) %% nrow(object)
+   allx[allx == 0] <- rows
    ally <- c(pm.index, mm.index) %/% nrow(object) + 1
    
    nprobes <- length(allx)

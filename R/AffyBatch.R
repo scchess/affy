@@ -215,6 +215,7 @@
                 
                 if (xy) {
                   x <- tmp %% nrow(object)
+                  x[x == 0] <- nrow(object)
                   y <- tmp %/% nrow(object) + 1
                   tmp <- cbind(x, y)
                 }
