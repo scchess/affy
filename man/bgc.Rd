@@ -59,9 +59,8 @@ bg.correct.none(object, ...)}
 }  
 \value{
   A \code{\link[affy:AffyBatch-class]{AffyBatch}} for which the background has been
-  corrected. For some methods(*), only PMs are corrected and the MMs remain
+  corrected. For some methods (rma), only PMs are corrected and the MMs remain
   the same.
-  (*) rma.
 }
 \references{Irizarry et al. (2002)}
 
@@ -72,9 +71,9 @@ bg.correct.none(object, ...)}
     ##the same as bg.correct.rma(affybatch.example)
     plot(pm(affybatch.example)[,1],pm(bgc)[,1],log="xy",
 	main="PMs before and after background correction")
-    #no subtract MM
-## chipwide segfaults (somewhere in the C code)
-    #bgc <- bg.correct(affybatch.example,method="Affy.chipwide")
+
+    #the mas 5.0 background
+    #bgc <- bg.correct(affybatch.example,method="mas")
     #Index <- pm(bgc)[,1]>0
     #plot(pm(affybatch.example)[Index,1],pm(bgc)[Index,1],log="xy",
 	#main="PMs before and after background correction")
