@@ -27,5 +27,5 @@ plotDensity.AffyBatch <- function(x, col=rainbow(length(x)), log=TRUE,
   else  if(is.null(xlab)) xlab <- "intensity"
   
   
-  plotDensity(x, ylab=ylab, xlab=xlab, ...)
+  plotDensity(x, ylab=ylab, xlab=xlab, col=col, ...)
 }
