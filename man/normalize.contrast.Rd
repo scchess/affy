@@ -9,7 +9,7 @@
 %normalize.contrast() ## currenlt maffy.normalize
 normalize.AffyBatch.contrasts(abatch,span=2/3,choose.subset=TRUE,
                               subset.size=5000,verbose=TRUE,
-                              family="symmetric",pmonly=FALSE)
+                              family="symmetric",type=c("together","pmonly","mmonly","separate"))
 }
 \arguments{
   \item{abatch}{ an \code{\link{AffyBatch-class}}}
@@ -18,7 +18,8 @@ normalize.AffyBatch.contrasts(abatch,span=2/3,choose.subset=TRUE,
   \item{subset.size}{}
   \item{verbose}{verbosity flag}
   \item{family}{parameter to be passed to the function \code{\link[modreg]{loess}}.}
-  \item{pmonly}{logical value. If \code{TRUE} only PMs are used}
+  \item{type}{A string specifying how the normalization should be
+    applied.}
 
 }
 \value{

@@ -1,6 +1,22 @@
-normalize.AffyBatch.qspline <- function(abatch, ...) {
-  intensity(abatch) <- normalize.qspline(intensity(abatch), ...)
+normalize.AffyBatch.qspline <- function(abatch, type=c("together","pmonly","mmonly","separate"),...) {
+
+  type <- match.arg(type)
   
+  if (type == "together"){
+    Index <- unlist(indexProbes(abatch,"both"))
+    intensity(abatch)[Index,] <- normalize.qspline(intensity(abatch)[Index,], ...)
+  } else if (type == "pmonly"){
+    Index <- unlist(indexProbes(abatch,"pm"))
+    intensity(abatch)[Index,] <- normalize.qspline(intensity(abatch)[Index,], ...)
+  } else if (type == "mmonly"){
+    Index <- unlist(indexProbes(abatch,"mm"))
+    intensity(abatch)[Index,] <- normalize.qspline(intensity(abatch)[Index,], ...)
+  } else if (type == "separate"){
+    Index <- unlist(indexProbes(abatch,"pm"))
+    intensity(abatch)[Index,] <- normalize.qspline(intensity(abatch)[Index,], ...)
+    Index <- unlist(indexProbes(abatch,"mm"))
+    intensity(abatch)[Index,] <- normalize.qspline(intensity(abatch)[Index,], ...)
+  }
   #set.na.spotsd(listcel)
   normhisto <- vector("list", length=ncol(intensity(abatch)))
   ##need to use MIAME for this

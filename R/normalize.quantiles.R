@@ -40,8 +40,8 @@ normalize.AffyBatch.quantiles <- function(abatch,type=c("separate","pmonly","mmo
     intensity(abatch)[mms,] <- normalize.quantiles(intensity(abatch)[mms,,drop=FALSE ],copy=FALSE)
   }
   if (type == "together"){
-
-    intensity(abatch)  <- normalize.quantiles(intensity(abatch),copy=TRUE)
+    pms <- unlist(indexProbes(abatch,"both"))
+    intensity(abatch)[pms,]  <- normalize.quantiles(intensity(abatch)[pms,,drop=FALSE ],copy=FALSE)
   }
     
   ##this is MIAME we need to decide how to do this properly.

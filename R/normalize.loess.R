@@ -1,9 +1,22 @@
-normalize.AffyBatch.loess <- function(abatch, ...) {
-  
-  
-  Index <- unlist(indexProbes(abatch,"both"))
-  intensity(abatch)[Index,] <- normalize.loess(intensity(abatch)[Index,], ...)
+normalize.AffyBatch.loess <- function(abatch,type=c("together","pmonly","mmonly","separate"),...) {
 
+  type <- match.arg(type)
+  
+  if (type == "separate"){
+    Index <- unlist(indexProbes(abatch,"pm"))
+    intensity(abatch)[Index,] <- normalize.loess(intensity(abatch)[Index,], ...)
+    Index <- unlist(indexProbes(abatch,"mm"))
+    intensity(abatch)[Index,] <- normalize.loess(intensity(abatch)[Index,], ...)
+  } else if (type=="together"){
+    Index <- unlist(indexProbes(abatch,"both"))
+    intensity(abatch)[Index,] <- normalize.loess(intensity(abatch)[Index,], ...)
+  } else if (type=="pmonly"){
+    Index <- unlist(indexProbes(abatch,"pm"))
+    intensity(abatch)[Index,] <- normalize.loess(intensity(abatch)[Index,], ...)
+  } else if (type=="mmonly"){
+    Index <- unlist(indexProbes(abatch,"mm"))
+    intensity(abatch)[Index,] <- normalize.loess(intensity(abatch)[Index,], ...)
+  }
   ##set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
   ##cat(cols,rows)
 

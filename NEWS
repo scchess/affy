@@ -1,8 +1,25 @@
 version 1.3 [under development]
 
+
+Things done:
   o read.affybatch2 reads all cel files together in one big hit
     into an affybatch
 
+  o the baseline in normalize.AffyBatch,invariant can be selected
+    using a baseline.type parameter. Also changed "progress" to the 
+    more standard "verbose". Seemed to be an error since both PM and
+    MM probes were normalized by only PM's where used to establish the 
+    normalization, now follows same standard as been introduced for
+    normalize.AffyBatch.quantiles.
+
+  o Most normalization routines can now be called with the parameter 
+    type which specifies whether to be pmonly, mmonly, both together 
+    or both separately. This introduces more consistency to the how
+    the normalization routines are actually applied to affybatchs.
+
+Things that would be good to see before next release:
+  o More consistent usage/application of MIAME
+	
 
 version 1.2.x:
 

@@ -1,54 +1,93 @@
-normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), progress=FALSE) {
+normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), verbose=FALSE,baseline.type=c("mean","median","pseudo-mean","pseudo-median"),type=c("separate","pmonly","mmonly","together")) {
 
-  require(modreg, quietly=TRUE)
-  
-  w.pm <- unlist(indexProbes(abatch, which="pm"))             # boolean to find the PM probes
-  i.pm <- rep(FALSE, nrow(abatch) * ncol(abatch))
-  i.pm[w.pm] <- TRUE
-  rm(w.pm)
-  
-  np <- sum(i.pm)                                     # number of PM probes
-  nc  <-  length(abatch)                                 # number of CEL files
-  
-  # take as a reference the array having the median overall intensity
-  m <- vector("numeric", length=nc)
-  for (i in 1:nc)
-    m[i] <- mean(intensity(abatch)[, i][i.pm])
-  refindex <- trunc(median(rank(m)))
-  rm(m)           
+  do.normalize.Affybatch.invariantset <- function(abatch, pms, prd.td, baseline.type){
 
-  if (progress) cat("Data from", chipNames(abatch)[refindex], "used as baseline.\n")
+
+    nc  <-  length(abatch)                                 # number of CEL files
+
+    if (baseline.type == "mean"){
+                                        # take as a reference the array having the median overall intensity
+      m <- vector("numeric", length=nc)
+      for (i in 1:nc)
+        m[i] <- mean(intensity(abatch)[pms, i])
+      refindex <- trunc(median(rank(m)))
+      rm(m)
+      baseline.chip <-  c(intensity(abatch)[pms, refindex])
+      if (verbose) cat("Data from", sampleNames(abatch)[refindex], "used as baseline.\n")
+    }
+    else if (baseline.type == "median"){
+                                        # take as a reference the array having the median median intensity
+      m <- vector("numeric", length=nc)
+      for (i in 1:nc)
+        m[i] <- median(intensity(abatch)[pms, i])
+      refindex <- trunc(median(rank(m)))
+      rm(m)
+      baseline.chip <-  c(intensity(abatch)[pms, refindex])
+      if (verbose) cat("Data from", sampleNames(abatch)[refindex], "used as baseline.\n")
+    } else if (baseline.type == "pseudo-mean"){
+                                        # construct a psuedo chip to serve as the baseline by taking probewise means
+      refindex <- 0
+      baseline.chip <- apply(intensity(abatch)[pms,],1,mean)    
+    } else if (baseline.type == "pseudo-median"){
+    # construct a pseudo chip to serve as the baseline by taking probewise medians
+      refindex <- 0
+      baseline.chip <- apply(intensity(abatch)[pms,],1,median)
+    }
   
+    
   ##set.na.spotsd(cel.container)
   
-  normhisto <- vector("list", length=nc)
-  normhisto[[refindex]] <- list(name="reference for the invariant set")
+    normhisto <- vector("list", length=nc)
+#  normhisto[[refindex]] <- list(name="reference for the invariant set")
   
   ## loop over the CEL files and normalize them
-  for (i in (1:nc)[-refindex]) {
   
-    if (progress) cat("normalizing array", chipNames(abatch)[i], "...")
-    
-    ##temporary
-    tmp <- normalize.invariantset(c(intensity(abatch)[, i])[i.pm],
-                                  c(intensity(abatch)[, refindex])[i.pm],
-                                  prd.td)
-    i.set <- which(i.pm)[tmp$i.set]
-    tmp <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                             xout=intensity(abatch)[, i], rule=2)$y)
-    attr(tmp,"invariant.set") <- NULL
-    intensity(abatch)[, i] <- tmp
-
-    ## storing information about what has been done
-    normhisto[[i]] <- list(name="normalized by invariant set",
-                           invariantset=i.set)
-    
-    if (progress) cat("done.\n")
-    
+    for (i in (1:nc)) {
+      if (i != refindex){
+        if (verbose) cat("normalizing array", chipNames(abatch)[i], "...")
+        
+        ##temporary
+        tmp <- normalize.invariantset(c(intensity(abatch)[pms, i]),
+                                      c(baseline.chip),
+                                      prd.td)
+                                        #i.set <- which(i.pm)[tmp$i.set]
+        tmp <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                               xout=intensity(abatch)[pms, i], rule=2)$y)
+        attr(tmp,"invariant.set") <- NULL
+        intensity(abatch)[pms, i] <- tmp
+        
+        ## storing information about what has been done
+                                        #normhisto[[i]] <- list(name="normalized by invariant set",
+                                        #                       invariantset=i.set)
+      
+        if (verbose) cat("done.\n")
+        
+      }
+    } 
+    attr(abatch, "normalization") <- normhisto
+    return(abatch)
   }
   
-  attr(abatch, "normalization") <- normhisto
-  return(abatch)
+  type <- match.arg(type)
+  baseline.type <- match.arg(baseline.type) 
+  require(modreg, quietly=TRUE)
+  
+  if (type == "pmonly"){
+    pms <- unlist(pmindex(abatch))
+    do.normalize.Affybatch.invariantset(abatch, pms, prd.td, baseline.type)
+  } else if (type == "mmonly"){
+    pms <- unlist(mmindex(abatch))
+    do.normalize.Affybatch.invariantset(abatch, pms, prd.td, baseline.type)
+  } else if (type == "together"){
+    pms <- nunlist(indexProbes(abatch,"both"))
+    do.normalize.Affybatch.invariantset(abatch, pms, prd.td, baseline.type)
+  } else if (type == "separate"){
+    pms <- unlist(pmindex(abatch))
+    abatch <- do.normalize.Affybatch.invariantset(abatch, pms, prd.td, baseline.type)
+    pms <- unlist(mmindex(abatch))
+    do.normalize.Affybatch.invariantset(abatch, pms, prd.td, baseline.type)
+  }
+
 }
 
 

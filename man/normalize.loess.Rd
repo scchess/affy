@@ -9,7 +9,7 @@
 normalize.loess(mat, subset=sample(1:(dim(mat)[2]),5000),
                 epsilon=10^-2,maxit=1,log.it=TRUE,verbose=TRUE,span=2/3,
                 family.loess="symmetric")
-normalize.AffyBatch.loess(abatch, ...)
+normalize.AffyBatch.loess(abatch,type=c("together","pmonly","mmonly","separate"), ...)
 }
 \arguments{
   \item{mat}{a matrix with columns containing the values of the chips
@@ -26,12 +26,20 @@ normalize.AffyBatch.loess(abatch, ...)
   \item{family.loess}{parameter to be passed the function
     \code{\link[modreg]{loess}}. \code{"gaussian"} or \code{"symmetric"}
     are acceptable values for this parameter.}
+  \item{type}{A string specifying how the normalization should be
+    applied. See details for more.}
+
+  
   \item{...}{any of the options of normalize.loess you would like to
     modify (described above).}
 }
 \details{
-  While a unifired scheme is on its way, please see
+  While a unified scheme is on its way, please see
   \link{loess.normalize} for a complete descritption...
+
+  The type arguement should be one of
+  \code{"separate","pmonly","mmonly","together"} which indicates whether
+  to normalize only one probe type (PM,MM) or both together or separately.
 }
 \seealso{
   \code{\link{normalize}}}

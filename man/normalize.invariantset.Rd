@@ -7,7 +7,7 @@ Normalize arrays in an  \code{\link[affy:AffyBatch-class]{AffyBatch}} using an i
 }
 \usage{
 normalize.AffyBatch.invariantset(abatch,
-                   prd.td=c(0.003, 0.007), progress=FALSE)
+                   prd.td=c(0.003, 0.007), verbose=FALSE,baseline.type=c("mean","median","pseudo-mean","pseudo-median"),type=c("separate","pmonly","mmonly","together"))
 
 normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 }
@@ -16,8 +16,12 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
   \item{data}{a vector of intensities on a chip (to normalize to the reference).}
   \item{f.cdf}{a \code{Cdf} object.}
   \item{ref}{a vector of reference intensities.}
-  \item{prd.td}{cutoff parameter (details in the bibliographic reference)}
-  \item{progress}{A flag to have a dumps throughout the normalization}
+  \item{prd.td}{cutoff parameter (details in the bibliographic
+    reference)}
+  \item{baseline.type}{Specify how to determine the baseline array}
+  \item{type}{A string specifying how the normalization should be
+    applied. See details for more.}
+  \item{verbose}{A flag to have a dumps throughout the normalization}
 }
 \value{
   Respectively a \code{\link[affy:AffyBatch-class]{AffyBatch}} of normalized objects, or
@@ -30,6 +34,11 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
   process (based on the respective ranks the intensities).
   This set of intensities is used to generate a normalization curve by
   smoothing.
+
+  The \code{type} argument should be one of
+  \code{"separate","pmonly","mmonly","together"} which indicates whether
+  to normalize only one probe type (PM,MM) or both together or separately.
+  
 }
 \author{
   L. Gautier <laurent@cbs.dtu.dk>

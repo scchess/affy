@@ -7,7 +7,7 @@
   normalizes arrays in an AffyBatch each other or to a set of target intensities
 }
 \usage{
-normalize.AffyBatch.qspline(abatch, ...)
+normalize.AffyBatch.qspline(abatch,type=c("separate","pmonly","mmonly","together"),...)
 
 normalize.qspline(x, target = NULL, samples = NULL, 
                   fit.iters = 5, min.offset = 5, 
@@ -38,6 +38,8 @@ normalize.qspline(x, target = NULL, samples = NULL,
   \item{verbose}{logical, if `TRUE' then normalization progress is reported}
   \item{na.rm}{logical, if `TRUE' then handle NA values (by ignoring
     them)}
+  \item{type}{A string specifying how the normalization should be
+    applied. See details for more.}
   \item{...}{Optional parameters to be passed through}
 }
 \value{
@@ -60,6 +62,12 @@ normalize.qspline(x, target = NULL, samples = NULL,
   \code{samples = 0.05}, for about 10000 data points use
   \code{samples = 0.02}
   (thanks to Paul Boutros).
+  
+  The \code{type} argument should be one of
+  \code{"separate","pmonly","mmonly","together"} which indicates whether
+  to normalize only one probe type (PM,MM) or both together or separately.
+  
+
   
 }
 \author{

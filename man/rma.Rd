@@ -43,7 +43,13 @@ An \code{\link[affy:exprSet-class]{exprSet}}
 
 \author{Ben Bolstad \email{bolstad@stat.berkeley.edu}}
 
-\references{Irizarry et al. Biostatistics 2003}
+\references{
+  Rafael. A. Irizarry, Benjamin M. Bolstad, Francois Collin, Leslie M. Cope, Bridget Hobbs and Terence P. Speed (2003), Summaries of Affymetrix GeneChip probe level data Nucleic Acids Research 31(4):e15
+
+  Bolstad, B.M., Irizarry R. A., Astrand M., and Speed, T.P. (2003), A Comparison of Normalization Methods for High Density Oligonucleotide Array Data Based on Bias and Variance. Bioinformatics 19(2):185-193
+
+  Irizarry, RA, Hobbs, B, Collin, F, Beazer-Barclay, YD, Antonellis, KJ, Scherf, U, Speed, TP (2003) Exploration, Normalization, and Summaries of High Density Oligonucleotide Array Probe Level Data. Biostatistics .Vol. 4, Number 2: 249-264 
+}
 \seealso{\code{\link{express}},\code{\link{expresso}} }
 
 \examples{
