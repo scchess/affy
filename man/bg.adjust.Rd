@@ -17,7 +17,7 @@ bg.parameters(pm, mm, n.pts = 2^14)
   \item{mm}{a mm matrix}
   \item{n.pts}{number of points to use in call to \code{density}.}
 }
-\details{Assumes PMs are a convultion of normal and exponentional. So we
+\details{Assumes PMs are a convolution of normal and exponentional. So we
   observe X+Y where X is backround and Y is signal. \code{bg.adjust}
     returns E[Y|X+Y,Y>0] as our backround corrected
     PM. \code{bg.parameters} provides adhoc estimates of the parameters
