@@ -7,7 +7,7 @@
 the robust multi-array average (RMA) expression measure.
 }
 \usage{
-rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,...)
+rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -16,6 +16,7 @@ rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,...)
     converted to expression. (not currently implemented)}
   \item{verbose}{logical value. If \code{TRUE} it writes out some messages. (Curently ignored)}
   \item{destructive}{logical value. If \code{TRUE} works on the PM matrix in place as much as possible, good for large datasets, but dangerous because it will leave the PM element of the AffyBatch changed after a call to \code{rma}}
+  \item{normalize}{logical value. If \code{TRUE} normalize data using quantile normalization}
   \item{\dots}{further arguments to be passed (not currently implemented - stub for future use)}
 }
 \details{

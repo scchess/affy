@@ -526,7 +526,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
  **
  **
  *************************************************************************/
-SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes){ //, SEXP outvec, SEXP outnamesvec){
+SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag){ //, SEXP outvec, SEXP outnamesvec){
   
   int rows, cols;
   double *outexpr;
@@ -551,10 +551,12 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes){ //, S
   nprobesets=INTEGER(N_probes)[0];
   
   //  printf("%i\n",nprobesets);
-  
+  printf("%d ",INTEGER(norm_flag)[0]);
+  if (INTEGER(norm_flag)[0]){
   /* normalize PM using quantile normalization */
-  printf("Normalizing\n");
-  qnorm_c(PM,&rows,&cols);
+    printf("Normalizing\n");
+    qnorm_c(PM,&rows,&cols);
+  }
 
   ProbeNames =malloc(rows*(sizeof(char *)));
 
@@ -607,10 +609,10 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes){ //, S
  **
  *******************************************************************************************************************/
 
-SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho){
+SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag){
   
   PMmat = bg_correct_c(PMmat,MMmat,densfunc,rho);
-  return rma_c_call(PMmat, MMmat, ProbeNamesVec,N_probes);
+  return rma_c_call(PMmat, MMmat, ProbeNamesVec,N_probes,norm_flag);
 }
 
 /********************************************************************************************************************
@@ -630,8 +632,8 @@ SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEX
  **
  ********************************************************************************************************************/
 
-SEXP rma_c_complete_copy(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho){
+SEXP rma_c_complete_copy(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag){
   
   PMmat = bg_correct_c_copy(PMmat,MMmat,densfunc,rho);
-  return rma_c_call(PMmat, MMmat, ProbeNamesVec,N_probes);
+  return rma_c_call(PMmat, MMmat, ProbeNamesVec,N_probes,norm_flag);
 }
