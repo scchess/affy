@@ -1,5 +1,5 @@
 Package: affy
-Version: 1.3.12
+Version: 1.3.13
 Date: 2003-09-04
 Title: Methods for Affymetrix Oligonucleotide Arrays 
 Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier <laurent@cbs.dtu.dk>, Leslie M. Cope <cope@mts.jhu.edu>, and  Benjamin Milo Bolstad <bolstad@stat.Berkeley.EDU>
@@ -11,5 +11,5 @@ Maintainer: Rafael A. Irizarry <rafa@jhu.edu>
 Depends: R (>= 1.8.0), affydata, Biobase (>= 1.3.10), eda, modreg, reposTools, tkWidgets (>= 1.2.2)
 Description: The package contains functions for exploratory oligonucleotide array analysis. The dependance to tkWidgets only concerns few convenience functions. 'affy' is fully functional without it.
 License: GPL version 2 or newer
-Collate: AffyRNAdeg.R, avdiff.R, barplot.ProbeSet.R, bg.Affy.chipwide.R, bg.R, Cdf.R, Cel.R, expresso.R, express.R, fit.li.wong.R, generateExprVal.method.avgdiff.R, generateExprVal.method.liwong.R, generateExprVal.method.mas.R, generateExprVal.method.medianpolish.R, generateExprVal.method.playerout.R, getInfoInFile.R, getLocationsData.Cdf.R, getTmpFileName.R, hlog.R, justrma.R, locate.name.R, loess.normalize.R, maffy.R, mas5.R, merge.AffyBatch.R, mva.pairs.R, normalize.constant.R, normalize.contrasts.R, normalize.invariantset.R, normalize.loess.R, normalize.qspline.R, normalize.quantiles.R, pairs.AffyBatch.R, plot.density.R, plotLocation.R, plot.ProbeSet.R, pmcorrect.mas.R, pmormm.R, AffyBatch.R, ProbeSet.R, pwidget.selector.R, read.affybatch2.R, read.affybatch.R, read.cdffile.R, read.celfile.R, rma.R, split.AffyBatch.R, summary.R, tukey.biweight.R, whatcdf.R, write.celfile.R, xy2indices.R, zzz.R
+Collate: AffyRNAdeg.R avdiff.R barplot.ProbeSet.R bg.Affy.chipwide.R bg.R Cdf.R Cel.R expresso.R express.R fit.li.wong.R generateExprVal.method.avgdiff.R generateExprVal.method.liwong.R generateExprVal.method.mas.R generateExprVal.method.medianpolish.R generateExprVal.method.playerout.R getInfoInFile.R getLocationsData.Cdf.R getTmpFileName.R hlog.R justrma.R locate.name.R loess.normalize.R maffy.R mas5.R merge.AffyBatch.R mva.pairs.R normalize.constant.R normalize.contrasts.R normalize.invariantset.R normalize.loess.R normalize.qspline.R normalize.quantiles.R pairs.AffyBatch.R plot.density.R plotLocation.R plot.ProbeSet.R pmcorrect.mas.R pmormm.R AffyBatch.R ProbeSet.R pwidget.selector.R read.affybatch2.R read.affybatch.R read.cdffile.R read.celfile.R rma.R split.AffyBatch.R summary.R tukey.biweight.R whatcdf.R write.celfile.R xy2indices.R zzz.R
 
