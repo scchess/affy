@@ -108,7 +108,6 @@ functionality has disappeared. Memory efficiency and speed have improved.
 \item If you use \verb+pm+ and \verb+mm+ to get the entire set of
   probes, e.g. by typing \verb+pm(abatch)+ then the method will be, on
   average, about 2-3 times faster than in version 1.3.
-\item The widget for phenoData has changed.
 \end{itemize}
 
 \section{Getting Started: From probe level data to expression values}
