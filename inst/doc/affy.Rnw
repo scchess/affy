@@ -1024,7 +1024,6 @@ ls(myenv)[1:5]
 
 Now lets look at \verb+Dilution+
 <<>>=
-data(Dilution)
 print(Dilution@cdfName)
 myenv <- getCdfInfo(Dilution)
 ls(myenv)[1:5]
