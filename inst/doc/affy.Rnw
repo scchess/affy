@@ -147,10 +147,7 @@ R> library(affy) ##load the affy package
 <<echo=F,results=hide>>=
 library(affy)
 @
-
-And download and install the cdf environment you need
-from \url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html} (except if
-you are using the HGU95Av2 or HGU133A chip or making your own).
+This release of the \verb+affy+ pacakge will automatically download the appropriate cdf environment when you require it. However, if you wish you may download and install the cdf environment you need from \url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html} manually. If there is no cdf environment currently built for your particular chip and you have access to the CDF file then you may use the \verb+makecdfenv+ pacakge to create one yourself.
 
 \subsection{Quick start}
 If all you want is to go from probe level data ({\it Cel} files) to
@@ -344,7 +341,7 @@ it is hard coded in C it is quite fast and efficient.
 %The function \verb+express+ lets the user define their own functions and send them as arguments.
 
 
-\subsection{expresso}
+\subsubsection{expresso}
 
 The function \verb+expresso+ performs the steps background correction, normalization,
 probe specific correction, and summary value computation.
@@ -429,27 +426,30 @@ probe intensities.}
 
 There is a separate vignette {\bf affy: Built-in Processing Methods} which explains in more detail what each of the preprocessing options does.
 
-\subsection{MAS 5.0}
-To obtain MAS 5.0 use which wraps \verb+expresso+ and \verb+affy.scalevalue.exprSet+
+\subsubsection{MAS 5.0}
+To obtain MAS 5.0 use\verb+mas5+ which wraps \verb+expresso+ and \verb+affy.scalevalue.exprSet+
 
 \begin{Sinput}
-eset <- mas5(affybatch.example)
+R> eset <- mas5(affybatch.example)
 \end{Sinput}
 
+%%%% removed due to the new mas5 wrapper routine
 %<<>>=
-\begin{Sinput}
-R> eset <- expresso(affybatch.example, normalize=FALSE,
-                 bgcorrect.method="mas",
-                 pmcorrect.method="mas",
-                 summary.method="mas")
-R> eset <- affy.scalevalue.exprSet(eset)
-\end{Sinput}
+%\begin{Sinput}
+%R> eset <- expresso(affybatch.example, normalize=FALSE,
+%                 bgcorrect.method="mas",
+%                 pmcorrect.method="mas",
+%                 summary.method="mas")
+%R> eset <- affy.scalevalue.exprSet(eset)
+%\end{Sinput}
 %@
-Notice that normalization occurs after we obtain expression
-measures. The function \verb+affy.scalevalue.exprSet+ performs a
-normalization similar to that described in the MAS 5.0 manual.
+%Notice that normalization occurs after we obtain expression
+%measures. The function \verb+affy.scalevalue.exprSet+ performs a
+%normalization similar to that described in the MAS 5.0 manual.
 
-\subsection{Li and Wong's MBEI (dchip)}
+A detailed comparison between the MAS 5.0 values that are computed by \verb+affy+ and by Affymetrix can be found at \url{http://stat-www.berkeley.edu/~bolstad/MAS5diff/Mas5difference.html}.
+
+\subsubsection{Li and Wong's MBEI (dchip)}
 To obtain our version of Li and Wong's MBEI one can use
 %<<>>=
 \begin{Sinput}
@@ -465,7 +465,7 @@ default) can be obtained using \verb+pmcorrect.method="subtractmm"+.
 %%%  REMOVE because express is deprecated
 %%Or you can use \verb+express+ to use your own implementation.
 
-\subsection{C implementation of RMA}
+\subsubsection{C implementation of RMA}
 One of the quickest ways to compute expression using the \verb+affy+
 package is to use the \verb+rma+ function. We have found that this
 method allows a user to compute the RMA expression measure in a matter
