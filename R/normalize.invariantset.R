@@ -65,24 +65,19 @@ normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progre
     if (progress) cat("normalizing array", attr(container[[i]], "name"), "...")
     
     ##temporary
-    i.set <- which(i.pm)[attr(normalize.invariantset(container@pm[,i],
-                                                     container@pm[,refindex],
-                                                     prd.td),
-                              "invariant.set")
-                         ]
+    tmp <- normalize.invariantset(container@pm[,i],
+                                  container@pm[,refindex],
+                                  prd.td)
+                         
     
     # pm first...
-    tmp <- as.numeric(approx(container@pm[,i][i.set],
-                             container@pm[,refindex][i.set],
-                             xout=container@pm[,i])$y)
-    container@pm[,i] <- tmp
+    container@pm[,i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                                          xout=container@pm[,i])$y)
     # then mm... (note: I am not quite sure whether MMs should be 'normalized' or discarded...)
-    tmp <- as.numeric(approx(container@mm[,i][i.set],
-                             container@mm[,refindex][i.set],
-                             xout=container@mm[,i])$y)
-    container@mm[,i] <- tmp
+    container@mm[,i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                                          xout=container@mm[,i])$y)
     
-    container@notes <- list(name="normalized by invariant set", invariantset=i.set)
+    container@notes <- list(name="normalized by invariant set", invariantset=tmp$i.set)
 
     if (progress) cat("done.\n")
     
@@ -126,17 +121,14 @@ normalize.Cel.container.invariantset <- function(container, f.cdf, prd.td=c(0.00
     
     mydim <- dim(container[[i]]@intensity)
     ##temporary
-    i.set <- which(i.pm)[attr(normalize.invariantset(c(container[[i]]@intensity[i.pm]),
-                                                     c(container[[refindex]]@intensity[i.pm]),
-                                                     prd.td),
-                              "invariant.set")
-                         ]
-    tmp <- as.numeric(approx(c(container[[i]]@intensity)[i.set],
-                             c(container[[refindex]]@intensity)[i.set],
-                             xout=container[[i]]@intensity)$y)
-    # shape back the values return to a matrix
-    container[[i]]@intensity <- matrix(tmp, mydim[1], mydim[2])
-        
+    tmp <- normalize.invariantset(c(container[[i]]@intensity[i.pm]),
+                                  c(container[[refindex]]@intensity[i.pm]),
+                                  prd.td)
+    
+    container[[i]]@intensity <- array(as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                                                        xout=container[[i]]@intensity)$y),
+                                      mydim)
+    i.set <- which(i.pm)[tmp$i.set]
     ## storing information about what has been done
     container[[i]]@history <- list(name="normalized by invariant set",
                                  invariantset=i.set)
@@ -184,9 +176,10 @@ normalize.invariantset <- function(data, ref, prd.td=c(0.003,0.007)) {
   ## n.curve$x contains smoothed reference intensities
   ## n.curve$y contains smoothed i-th array intensities
   
-  data <- as.numeric(approx(n.curve$y, n.curve$x, xout=data)$y)
-  attr(data,"invariant.set") <- i.set
-  return(data)
+  ##data <- as.numeric(approx(n.curve$y, n.curve$x, xout=data)$y)
+  ##attr(data,"invariant.set") <- i.set
+  ##return(data)
+  return(list(n.curve=n.curve, i.set=i.set))
 }
 
 
