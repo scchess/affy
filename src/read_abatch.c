@@ -77,6 +77,12 @@
  **                for gz functions is seperate from that in
  **                text files.
  **                Made BUF_SIZE 1024
+ ** Jul 3, 2003  - add missing pre-processor command
+ ** Jul 4, 2003  - A function for reading PM or MM or both
+ **                as individual matrices.
+ **                Made all the internal functions static
+ **                to prevent namespace pollution
+ **
  **
  *************************************************************/
  
@@ -139,7 +145,7 @@ typedef struct{
  **
  *****************************************************************/
 
-tokenset *tokenize(char *str, char *delimiters){
+static tokenset *tokenize(char *str, char *delimiters){
 
   int i=0;
 
@@ -173,7 +179,7 @@ tokenset *tokenize(char *str, char *delimiters){
  **
  ******************************************************************/
 
-int tokenset_size(tokenset *x){
+static int tokenset_size(tokenset *x){
   return x->n;
 }
 
@@ -189,7 +195,7 @@ int tokenset_size(tokenset *x){
  **
  ******************************************************************/
 
-char *get_token(tokenset *x,int i){
+static char *get_token(tokenset *x,int i){
   return x->tokens[i];
 }
 
@@ -203,7 +209,7 @@ char *get_token(tokenset *x,int i){
  **
  ******************************************************************/
 
-void delete_tokens(tokenset *x){
+static void delete_tokens(tokenset *x){
   
   int i;
 
@@ -245,7 +251,7 @@ void delete_tokens(tokenset *x){
  **
  ******************************************************************/
 
-int token_ends_with(char *token, char *ends_in){
+static int token_ends_with(char *token, char *ends_in){
   
   int tokenlength = strlen(token);
   int ends_length = strlen(ends_in);
@@ -290,7 +296,7 @@ int token_ends_with(char *token, char *ends_in){
  **
  ***************************************************************/
 
-void ReadFileLine(char *buffer, int buffersize, FILE *currentFile){
+static void ReadFileLine(char *buffer, int buffersize, FILE *currentFile){
   if (fgets(buffer, buffersize, currentFile) == NULL){
     error("End of file reached unexpectedly. Perhaps this file is truncated.\n");
   }  
@@ -311,7 +317,7 @@ void ReadFileLine(char *buffer, int buffersize, FILE *currentFile){
  **
  ***************************************************************/
 
-FILE *open_cel_file(char *filename){
+static FILE *open_cel_file(char *filename){
 
   char mode = 'r';
   FILE *currentFile; 
@@ -349,7 +355,7 @@ FILE *open_cel_file(char *filename){
  *****************************************************************/
 
 
-void  findStartsWith(FILE *my_file,char *starts, char *buffer){
+static void  findStartsWith(FILE *my_file,char *starts, char *buffer){
 
   int starts_len = strlen(starts);
   int match = 1;
@@ -372,7 +378,7 @@ void  findStartsWith(FILE *my_file,char *starts, char *buffer){
  **
  *****************************************************************/
 
-void AdvanceToSection(FILE *my_file,char *sectiontitle, char *buffer){
+static void AdvanceToSection(FILE *my_file,char *sectiontitle, char *buffer){
   findStartsWith(my_file,sectiontitle,buffer);
 }
 
@@ -397,7 +403,7 @@ void AdvanceToSection(FILE *my_file,char *sectiontitle, char *buffer){
  **
  ******************************************************************/
 
-int check_cel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim_2){
+static int check_cel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim_2){
 
   int i;
   int dim1,dim2;
@@ -457,7 +463,7 @@ int check_cel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim
  **
  ************************************************************************/
 
-int read_cel_file_intensities(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows){
+static int read_cel_file_intensities(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows){
   
   int i, cur_x,cur_y,cur_index;
   double cur_mean;
@@ -515,7 +521,7 @@ int read_cel_file_intensities(char *filename, double *intensity, int chip_num, i
  **
  ****************************************************************/
 
-void apply_masks(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows, int rm_mask, int rm_outliers){
+static void apply_masks(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows, int rm_mask, int rm_outliers){
   
   int i;
   int numcells, cur_x, cur_y, cur_index;
@@ -596,7 +602,7 @@ void apply_masks(char *filename, double *intensity, int chip_num, int rows, int 
  **
  ************************************************************************/
 
-char *get_header_info(char *filename, int *dim1, int *dim2){
+static char *get_header_info(char *filename, int *dim1, int *dim2){
   
   int i,endpos;
   char *cdfName = NULL;
@@ -648,6 +654,9 @@ char *get_header_info(char *filename, int *dim1, int *dim2){
  ***************************************************************
  ***************************************************************/
 
+#if defined(HAVE_ZLIB)
+
+
 /****************************************************************
  **
  ** void ReadgzFileLine(char *buffer, int buffersize, FILE *currentFile)
@@ -661,7 +670,7 @@ char *get_header_info(char *filename, int *dim1, int *dim2){
  **
  ***************************************************************/
 
-void ReadgzFileLine(char *buffer, int buffersize, gzFile currentFile){
+static void ReadgzFileLine(char *buffer, int buffersize, gzFile currentFile){
   if (gzgets( currentFile,buffer, buffersize) == NULL){
     error("End of file reached unexpectedly. Perhaps this file is truncated.\n");
   }  
@@ -682,7 +691,7 @@ void ReadgzFileLine(char *buffer, int buffersize, gzFile currentFile){
  **
  ***************************************************************/
 
-gzFile open_gz_cel_file(char *filename){
+static gzFile open_gz_cel_file(char *filename){
 
   char mode = 'r';
   gzFile currentFile; 
@@ -722,7 +731,7 @@ gzFile open_gz_cel_file(char *filename){
  *****************************************************************/
 
 
-void  gzfindStartsWith(gzFile my_file,char *starts, char *buffer){
+static void  gzfindStartsWith(gzFile my_file,char *starts, char *buffer){
 
   int starts_len = strlen(starts);
   int match = 1;
@@ -745,7 +754,7 @@ void  gzfindStartsWith(gzFile my_file,char *starts, char *buffer){
  **
  *****************************************************************/
 
-void gzAdvanceToSection(gzFile my_file,char *sectiontitle, char *buffer){
+static void gzAdvanceToSection(gzFile my_file,char *sectiontitle, char *buffer){
   gzfindStartsWith(my_file,sectiontitle,buffer);
 }
 
@@ -771,7 +780,7 @@ void gzAdvanceToSection(gzFile my_file,char *sectiontitle, char *buffer){
  **
  ******************************************************************/
 
-int check_gzcel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim_2){
+static int check_gzcel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim_2){
 
   int i;
   int dim1,dim2;
@@ -833,7 +842,7 @@ int check_gzcel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_d
  **
  ************************************************************************/
 
-int read_gzcel_file_intensities(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows){
+static int read_gzcel_file_intensities(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows){
   
   int i, cur_x,cur_y,cur_index;
   double cur_mean;
@@ -894,7 +903,7 @@ int read_gzcel_file_intensities(char *filename, double *intensity, int chip_num,
  **
  ****************************************************************/
 
-void gz_apply_masks(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows, int rm_mask, int rm_outliers){
+static void gz_apply_masks(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows, int rm_mask, int rm_outliers){
   
   int i;
   int numcells, cur_x, cur_y, cur_index;
@@ -974,7 +983,7 @@ void gz_apply_masks(char *filename, double *intensity, int chip_num, int rows, i
  **
  ************************************************************************/
 
-char *gz_get_header_info(char *filename, int *dim1, int *dim2){
+static char *gz_get_header_info(char *filename, int *dim1, int *dim2){
   
   int i,endpos;
   char *cdfName = NULL;
@@ -1018,6 +1027,89 @@ char *gz_get_header_info(char *filename, int *dim1, int *dim2){
   return(cdfName);
 }
 
+#endif
+
+
+
+/***************************************************************
+ ***************************************************************
+ **
+ ** Code for manipulating the cdfInfo
+ **
+ ***************************************************************
+ ***************************************************************/
+
+/*************************************************************************
+ **
+ ** static int CountCDFProbes(SEXP cdfInfo)
+ **
+ ** SEXP cdfInfo - a list of matrices, each containing matrix of PM/MM probe 
+ **                indicies
+ **
+ ** returns the number of probes (PM)
+ **
+ **
+ **
+ **
+ *************************************************************************/
+
+
+static int CountCDFProbes(SEXP cdfInfo){
+
+  int i;
+  int n_probes = 0;
+  int n_probesets =  GET_LENGTH(cdfInfo);
+
+  for (i =0; i < n_probesets; i++){
+    n_probes +=INTEGER(getAttrib(VECTOR_ELT(cdfInfo,i),R_DimSymbol))[0]; 
+  }
+
+
+  return n_probes;
+}
+
+
+/*************************************************************************
+ **
+ ** static void  storeIntensities(double *CurintensityMatrix,double *pmMatrix,
+ **                               double *mmMatrix, int curcol ,int rows,int cols,
+ **                               int chip_dim_rows,SEXP cdfInfo)
+ **
+ ** double *CurintensityMatrix 
+ **
+ **
+ *************************************************************************/
+
+static void storeIntensities(double *CurintensityMatrix, double *pmMatrix, double *mmMatrix, int curcol, int rows, int cols, int tot_n_probes, SEXP cdfInfo, int which){
+  
+  int i = 0,j=0, currow=0;
+  int n_probes=0;
+  int n_probesets = GET_LENGTH(cdfInfo);
+  double *cur_index;
+
+  SEXP curIndices;
+  
+  for (i=0; i < n_probesets; i++){
+    curIndices = VECTOR_ELT(cdfInfo,i);
+    n_probes = INTEGER(getAttrib(curIndices,R_DimSymbol))[0];
+    cur_index = NUMERIC_POINTER(AS_NUMERIC(curIndices));
+    
+    for (j=0; j < n_probes; j++){
+      if (which >= 0){
+	pmMatrix[curcol*tot_n_probes + currow] =  CurintensityMatrix[(int)cur_index[j] - 1]; 
+      }
+      if (which <= 0){
+	mmMatrix[curcol*tot_n_probes + currow] =  CurintensityMatrix[(int)cur_index[j+n_probes] - 1];
+      }
+      currow++;
+    }
+  }
+}
+
+
+
+
+
 
 /****************************************************************
  ****************************************************************
@@ -1038,7 +1130,9 @@ char *gz_get_header_info(char *filename, int *dim1, int *dim2){
  ** SEXP rm_mask   - if true set MASKS  to NA
  ** SEXP rm_outliers - if true set OUTLIERS to NA
  ** SEXP rm_extra    - if true  overrides rm_mask and rm_outliers settings
- ** SEXP ref_cdfName - the reference CDF name to check each CEL file against
+ ** SEXP ref_cdfName - the reference CDF name to check each CEL file against 
+ ** SEXP ref_dim     - cols/rows of reference chip
+ ** SEXP verbose     - if verbose print out more information to the screen
  **
  ** RETURNS an intensity matrix with cel file intensities from
  ** each chip in columns
@@ -1172,6 +1266,8 @@ SEXP read_abatch(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm_outliers,
  **
  ** RETURNS a List containing CDFName, Rows and Cols dimensions.
  ** 
+ ** This function reads the HEADER of the CEL file, determines the
+ ** CDF name and ROW,COL dimensions
  **
  *************************************************************************/
 
@@ -1214,5 +1310,206 @@ SEXP ReadHeader(SEXP filename,SEXP compress){
   UNPROTECT(3);
 
   return headInfo;
+
+}
+
+
+/*************************************************************************
+ **
+ ** SEXP read_probeintensities(SEXP filenames, SEXP compress,  SEXP rm_mask, 
+ **                            SEXP rm_outliers, SEXP rm_extra, SEXP ref_cdfName, 
+ **                            SEXP ref_dim, SEXP verbose, SEXP cdfInfo)
+ **
+ ** 
+ ** SEXP filenames - an R list of filenames to read
+ ** SEXP compress  - logical flag TRUE means files are *.gz
+ ** SEXP rm_mask   - if true set MASKS  to NA
+ ** SEXP rm_outliers - if true set OUTLIERS to NA
+ ** SEXP rm_extra    - if true  overrides rm_mask and rm_outliers settings
+ ** SEXP ref_cdfName - the reference CDF name to check each CEL file against
+ ** SEXP ref_dim     - cols/rows of reference chip
+ ** SEXP verbose     - if verbose print out more information to the screen
+ ** SEXP cdfInfo     - locations of probes and probesets
+ ** SEXP which       - Indicate whether PM, MM or both are required
+ **
+ ** returns an R list either one or two elements long. each element is a matrix
+ ** either PM or MM elements
+ **
+ **
+ ** This function reads probe intensites into PM and MM matrices. No 
+ ** affybatch style matrix is created, Instead the order of the probes is
+ ** dependent on the the information given in cdfInfo. cdfInfo is a list
+ ** of matrices, each matricies has two columns. The first is assumed to
+ ** be PM indices, the second column is assumed to be MM indices.
+ **
+ **
+ *************************************************************************/
+ 
+
+SEXP read_probeintensities(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm_outliers, SEXP rm_extra, SEXP ref_cdfName, SEXP ref_dim, SEXP verbose, SEXP cdfInfo,SEXP which){
+
+    
+  int i; 
+  
+  int n_files;
+  int ref_dim_1, ref_dim_2;
+  int which_flag;  /* 0 means both, 1 means PM only, -1 means MM only */
+
+  int num_probes;
+
+  char *cur_file_name;
+  char *cdfName;
+  double *CurintensityMatrix, *pmMatrix, *mmMatrix;
+
+  SEXP PM_intensity, MM_intensity, Current_intensity, names, dimnames;
+  SEXP output_list,pmmmnames;
+  
+  if (strcmp(CHAR(STRING_ELT(which,0)),"pm") == 0){
+    which_flag= 1;
+  } else if (strcmp(CHAR(STRING_ELT(which,0)),"mm") == 0){
+    which_flag = -1;
+  } else {
+    which_flag = 0;
+  }
+
+
+
+  ref_dim_1 = INTEGER(ref_dim)[0];
+  ref_dim_2 = INTEGER(ref_dim)[1];
+  
+  n_files = GET_LENGTH(filenames);
+  
+  /* We will read in chip at a time */
+  PROTECT(Current_intensity = allocMatrix(REALSXP, ref_dim_1*ref_dim_2, 1));
+ 
+  cdfName = CHAR(STRING_ELT(ref_cdfName,0));
+  CurintensityMatrix = NUMERIC_POINTER(AS_NUMERIC(Current_intensity));
+  
+  /* First check headers of cel files */
+
+  if (asInteger(compress)){
+#if defined HAVE_ZLIB
+    /* first pass through all the files checking that they are correct cdf file (ie all of the same one) 
+       and have the same x, y dimensions. If they don't then stop else keep going */
+    
+    for (i =0; i < n_files; i++){
+      cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+      
+      if (check_gzcel_file(cur_file_name,cdfName, ref_dim_1, ref_dim_2)){
+	error("File %s does not seem to have correct dimension or is not of %s chip type.", cur_file_name, cdfName);
+      }
+    }
+#else
+     error("Compress option not supported on your platform\n");
+#endif
+  } else {
+    for (i =0; i < n_files; i++){
+      cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+      
+      if (check_cel_file(cur_file_name,cdfName, ref_dim_1, ref_dim_2)){
+	error("File %s does not seem to have correct dimension or is not of %s chip type.", cur_file_name, cdfName);
+      }
+    }
+  }
+
+  /* Lets count how many probes we have */
+  
+  num_probes = CountCDFProbes(cdfInfo);
+
+  if (which_flag >= 0){
+    PROTECT(PM_intensity = allocMatrix(REALSXP,num_probes,n_files));
+    pmMatrix = NUMERIC_POINTER(AS_NUMERIC(PM_intensity));
+  }
+
+  if (which_flag <= 0){
+    PROTECT(MM_intensity = allocMatrix(REALSXP,num_probes,n_files));
+    mmMatrix = NUMERIC_POINTER(AS_NUMERIC(MM_intensity));
+  }
+
+  if (which_flag < 0){
+    pmMatrix = NULL;
+  }
+  
+  if (which_flag > 0){
+    mmMatrix = NULL;
+  }
+  
+
+
+  /* now lets read them in and store them in the PM and MM matrices */
+   if (asInteger(compress)){
+#if defined HAVE_ZLIB
+     for (i=0; i < n_files; i++){ 
+       cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+       if (asInteger(verbose)){
+	 Rprintf("Reading in : %s\n",cur_file_name);
+       }
+       
+       
+       read_gzcel_file_intensities(cur_file_name,CurintensityMatrix, 0, ref_dim_1*ref_dim_2, n_files,ref_dim_1);
+       /* Now move intensities into PM and MM matrices */
+       
+       storeIntensities(CurintensityMatrix,pmMatrix,mmMatrix,i,ref_dim_1*ref_dim_2, n_files,num_probes,cdfInfo,which_flag);
+     }
+#else
+     error("Compress option not supported on your platform\n");
+#endif
+   } else {
+     for (i=0; i < n_files; i++){ 
+       cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+       if (asInteger(verbose)){
+	 Rprintf("Reading in : %s\n",cur_file_name);
+       }
+       
+       
+       read_cel_file_intensities(cur_file_name,CurintensityMatrix, 0, ref_dim_1*ref_dim_2, n_files,ref_dim_1);
+       /* Now move intensities into PM and MM matrices */
+       
+       storeIntensities(CurintensityMatrix,pmMatrix,mmMatrix,i,ref_dim_1*ref_dim_2, n_files,num_probes,cdfInfo,which_flag);
+     }
+   }
+
+  PROTECT(dimnames = allocVector(VECSXP,2));
+  PROTECT(names = allocVector(STRSXP,n_files));
+  for ( i =0; i < n_files; i++){
+    cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+    SET_VECTOR_ELT(names,i,mkChar(cur_file_name));
+  }
+  SET_VECTOR_ELT(dimnames,1,names);
+  if (which_flag >=0){
+    setAttrib(PM_intensity, R_DimNamesSymbol, dimnames);
+  } 
+
+  if (which_flag <=0){
+    setAttrib(MM_intensity, R_DimNamesSymbol, dimnames);
+  }
+  
+  if (which_flag == 0){
+    PROTECT(output_list = allocVector(VECSXP,2));
+    SET_VECTOR_ELT(output_list,0,PM_intensity);
+    SET_VECTOR_ELT(output_list,1,MM_intensity);
+    PROTECT(pmmmnames = allocVector(STRSXP,2));
+    SET_VECTOR_ELT(pmmmnames,0,mkChar("pm"));
+    SET_VECTOR_ELT(pmmmnames,1,mkChar("mm"));
+  } else if (which_flag > 0){
+    PROTECT(output_list = allocVector(VECSXP,1));
+    SET_VECTOR_ELT(output_list,0,PM_intensity);
+    PROTECT(pmmmnames = allocVector(STRSXP,1));
+    SET_VECTOR_ELT(pmmmnames,0,mkChar("pm"));
+  } else {
+    PROTECT(output_list = allocVector(VECSXP,1));
+    SET_VECTOR_ELT(output_list,0,MM_intensity);
+    PROTECT(pmmmnames = allocVector(STRSXP,1));
+    SET_VECTOR_ELT(pmmmnames,0,mkChar("mm"));
+  }
+
+  setAttrib(output_list,R_NamesSymbol,pmmmnames);
+  
+  if (which_flag != 0){
+    UNPROTECT(6);
+  } else {
+    UNPROTECT(7);
+  }
+  return(output_list);
 
 }
