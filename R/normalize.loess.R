@@ -28,7 +28,7 @@ normalize.Cel.loess <- function(listcel, ...) {
 ## the normalize.XYZ.ABC methods only do data structure conversion and call the methods normalize.ABC in turn
 ##            -- Laurent
 
-normalize.Plob.loess <- function(plob, ...) {
+normalize.Plob.loess <- function(plob,...){
 
   x <-  matrix(0, plob@nprobes*2, plob@nchips)
   for (i in 1:plob@nchips) {

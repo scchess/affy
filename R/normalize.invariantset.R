@@ -50,7 +50,8 @@ normalize.Cel.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), 
 
   if (! inherits(container, "Cel.container"))
     stop("container must be a 'Cel.container' obejct")
-  
+
+  if(is.null(f.cdf)) stop("You need to specify a Cdf object")
   ##DEBUG
   ## test refindex
 

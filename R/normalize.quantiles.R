@@ -30,8 +30,16 @@ normalize.Cel.quantiles <- function(listcel) {
 
   return(listcel)
 }
+normalize.Plob.quantiles <- function(object) {
 
 
+  x <- normalize.quantiles(rbind(pm(object),mm(object)))
+  n <- dim(x)[1]/2
+  pm(object) <- x[1:n,]
+  mm(object) <- x[(n+1):(2*n),]
+  return(object)
+
+}
 
 normalize.quantiles <- function(x){
 
@@ -40,6 +48,7 @@ normalize.quantiles <- function(x){
   
   matrix(.C("qnorm_c",as.double(as.vector(x)),as.integer(rows),as.integer(cols))[[1]],rows,cols)
 }
+
 
 
 
