@@ -205,6 +205,10 @@ you can write out the expression values to file using the following command:
 \begin{Sinput}
 R> write.exprs(eset, file="mydata.txt")
 \end{Sinput}
+or if on Windows and interested in reading your data into excel
+\begin{Sinput}
+R> exprs2excel(eset, file="mydata.csv")
+\end{Sinput}
 
 \subsection{Reading CEL file information}
 The function \verb+ReadAffy+ is quite flexible. It
@@ -327,19 +331,30 @@ column will have the {\it affyID}s. The
 \verb+write.exprs+ function is quite flexible on what it writes (see
 the help file).
 
-The function \verb+rma+ computes the RMA expression measure. Because
-it is hard coded in C it is quite fast and efficient. The function
-\verb+express+ lets the user define their own functions and send them
-as arguments.
+For users of Windows, who wish to use Excel, the convenient function \verb+exprs2excel+ will write out a comma delimted file of expression values. You should be able to open this file by double clicking in Windows (use a {\tt .csv} file extension).
 
-The function {\bf \it expresso} performs the steps background correction, normalization,
+\begin{Sinput}
+R> exprs2excel(eset,file="mydata.csv")
+\end{Sinput}
+
+The function \verb+rma+ computes the RMA expression measure. Because
+it is hard coded in C it is quite fast and efficient. 
+
+%%%% Express is depricated
+%The function \verb+express+ lets the user define their own functions and send them as arguments.
+
+
+\subsection{expresso}
+
+The function \verb+expresso+ performs the steps background correction, normalization,
 probe specific correction, and summary value computation.
-This function too has several parameters to facilitate your work. We
-now show this using an \verb+AffyBatch+ included in the package for
+We now show this using an \verb+AffyBatch+ included in the package for
 examples. The \verb+data(affybatch.example)+ is used to load these data.
 
+Important parameters for the expresso function are:
+
 \begin{description}
-\item[background.method]. The background correction method to use.
+\item[bgcorrect.method]. The background correction method to use.
 The available methods are
 <<>>=
 bgcorrect.methods
@@ -347,7 +362,7 @@ bgcorrect.methods
 
 \item[normalize.method]. The normalization method to use. The
    available methods can be queried by using
-{\it normalize.methods}.
+\verb+normalize.methods+.
 <<>>=
 data(affybatch.example) ##data included in the package for examples
 normalize.methods(affybatch.example)
@@ -371,8 +386,7 @@ Affymetrix manual version 5.0.
 Making the \verb+widget+ argument \verb+TRUE+,   will let you select
 missing parameters (like the normalization method, the background correction
 method or the summary method).
-Figure~\ref{fig:widget.normalizechooser} presents the widgets for the
-selection of a different methods.
+Figures \ref{fig:widget.normalizechooser}, \ref{fig:widget.bgcorrectchooser}, \ref{fig:widget.pmcorrectchooser} and \ref{fig:widget.summarychooser} present the widgets for the selection of preprocessing methods for each of the steps.
 
 \begin{Sinput}
 R> expresso(affybatch.example, widget=TRUE)
@@ -413,8 +427,15 @@ probe intensities.}
 
 \end{description}
 
+There is a separate vignette {\bf affy: Built-in Processing Methods} which explains in more detail what each of the preprocessing options does.
+
 \subsection{MAS 5.0}
-To obtain MAS 5.0 use
+To obtain MAS 5.0 use which wraps \verb+expresso+ and \verb+affy.scalevalue.exprSet+
+
+\begin{Sinput}
+eset <- mas5(affybatch.example)
+\end{Sinput}
+
 %<<>>=
 \begin{Sinput}
 R> eset <- expresso(affybatch.example, normalize=FALSE,
