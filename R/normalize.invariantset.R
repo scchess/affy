@@ -87,11 +87,12 @@ normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progre
 }
 
 normalize.Cel.container.invariantset <- function(cel.container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
+  
+  if (! inherits(cel.container, c("Cel.container","Cel.container.hdf5")))
+    stop("cel.container must inherits from 'Cel.container.abstract'")
 
-  if (! inherits(cel.container, "Cel.container"))
-    stop("cel.container must be a 'Cel.container' obejct")
-
-  if(is.null(f.cdf)) stop("You need to specify a Cdf object")
+  if(is.null(f.cdf))
+    stop("You need to specify a Cdf object")
   ##DEBUG
   ## test refindex
 
@@ -99,7 +100,7 @@ normalize.Cel.container.invariantset <- function(cel.container, f.cdf, prd.td=c(
   i.pm[is.na(i.pm)] <- FALSE                          # mark as FALSE the unknown probes too
 
   np <- sum(i.pm)                                     # number of PM probes
-  nc  <-  length(cel.container@name)                  # number of CEL files
+  nc  <-  length(cel.container)                       # number of CEL files
   
   # take as a reference the array having the median overall intensity
   m <- vector("numeric", length=nc)
@@ -109,13 +110,14 @@ normalize.Cel.container.invariantset <- function(cel.container, f.cdf, prd.td=c(
   rm(m)           
 
   if (progress) cat("Data from",cel.container@name[refindex],"used as baseline.\n")
+
+  set.na.spotsd(cel.container)
   
   ## loop over the CEL files and normalize them
   for (i in (1:nc)[-refindex]) {
   
     if (progress) cat("normalizing array", cel.container@name[i], "...")
 
-    spotsd(cel.container) <- array()
     mydim <- dim(intensity(cel.container)[, , i])
     
     ##temporary

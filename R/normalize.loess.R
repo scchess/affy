@@ -12,11 +12,11 @@ normalize.Cel.container.loess <- function(listcel, ...) {
 
   x <- normalize.loess(x, ...)
 
+  set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
   ##cat(cols,rows)
   for (i in 1:cols) {
-    intensity(listcel[[i]])  <- matrix(x[,i],chipdim[1], chipdim[2])
+    intensity(listcel)[, , i]  <- matrix(x[,i],chipdim[1], chipdim[2])
     history(listcel)[[i]] <- list(name="normalized by loess")
-    spotsd(listcel[[i]]) <- matrix() # set 'sd' to nothing (meaningless after normalization)
   }
 
   return(listcel)

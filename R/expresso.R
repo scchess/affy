@@ -14,15 +14,31 @@ expresso <- function(CDFfile = NULL,
                      subset=NULL,
                      summary.stat=medianpolish,
                      normalize=T,
-                     normalize.method="quantiles",
+                     normalize.method=NULL,
                      eset.method=NULL,
                      verbose = T,
                      widget=F,
                      ...) {
 
+  getTmpFileName <- function() {
+    ## --- temp file
+    hdf5FilePath <- c("test",".hd5")
+    tmp.filename <- paste(hdf5FilePath, sep="", collapse=as.character(1))
+    i <- 1
+    ## avoid to delete something mistakingly
+    while(! is.na(file.info(tmp.filename)$size)) {
+      i <- i+1
+      tmp.filename <- paste(hdf5FilePath, sep="", collapse=as.character(i))
+    }
+    return(tmp.filename)
+  }
+  
   require(rhdf5) || stop("library rhdf5 could not be found !")
   
-  hdf5FilePath <- "test.hd5"
+  hdf5FilePath <- getTmpFileName()
+  
+  if (verbose)
+    cat("temporary hdf5 file:",hdf5FilePath,"\n")
   
   if (widget) {
     require(tkWidgets) || stop("library tkWidgets could not be found !")
@@ -79,43 +95,70 @@ expresso <- function(CDFfile = NULL,
 
   ## --- reading CDF
   if (verbose) cat("reading CDF file...")
-  cdf <- read.cdffile(CDFfile, compress = compress.cdf)
+  
+  cdf <- try(read.cdffile(CDFfile, compress = compress.cdf))
+  if (inherits(cdf,"try-error")) {
+    if (verbose) cat("(trying again with/without compression)...")
+    cdf <- try(read.cdffile(CDFfile, compress = !compress.cdf))
+  }
+    
   if (verbose) cat("done.\n")
 
   ## --- reading CELs
   if (verbose) cat("reading ", length(CELfiles), "CEL file(s):\n")
-  listcel <- read.container.celfile(filenames=CELfiles,
-                                    compress=compress.cel,
-                                    rm.mask=rm.mask,
-                                    rm.outliers=rm.outliers,
-                                    rm.extra=rm.extra,
-                                    sd=FALSE,
-                                    hdf5=TRUE,
-                                    hdf5FilePath=hdf5FilePath,
-                                    verbose=verbose)
-
+  
+  on.exit(cat("unlinking temporary file", hdf5FilePath, ".\n"), add=TRUE)
+  on.exit(unlink(hdf5FilePath), add=TRUE)
+  
+  listcel <- try(read.container.celfile(filenames=CELfiles,
+                                        compress=compress.cel,
+                                        rm.mask=rm.mask,
+                                        rm.outliers=rm.outliers,
+                                        rm.extra=rm.extra,
+                                        sd=FALSE,
+                                        hdf5=TRUE,
+                                        hdf5FilePath=hdf5FilePath,
+                                        verbose=verbose)
+                 )
+  if (inherits(listcel,"try-error")) {
+    if (verbose) cat("(trying again with/without compression)...")
+    listcel <- try(read.container.celfile(filenames=CELfiles,
+                                          compress=compress.cel,
+                                          rm.mask=rm.mask,
+                                          rm.outliers=rm.outliers,
+                                          rm.extra=rm.extra,
+                                          sd=FALSE,
+                                          hdf5=TRUE,
+                                          hdf5FilePath=hdf5FilePath,
+                                          verbose=verbose)
+                   )
+  }
+  
   ## -- normalize (if wished)
   if (normalize) {
     
-    if (verbose) cat("normalizing...")
+    hdf5FilePath2 <- getTmpFileName()
+    on.exit(cat("unlinking temporary file", hdf5FilePath2, ".\n"), add=TRUE)
+    on.exit(unlink(hdf5FilePath2), add=TRUE)
+    
+    if (verbose) {
+      cat("temporary hdf5 file:",hdf5FilePath2,"\n")
+      cat("making a copy of the raw values...")
+    }
+    
     ## trick: make a copy of listcel (as it will be modifed by the
     ## normalization routines)
-    listcel.n <- new.Cel.container.hdf5(n,
-                                        hdf5FilePath,
-                                        dim.intensity=dim(intensity(listcel[[1]])),
-                                        hdfile.group="normalized")
-    listcel.n@name <- listcel@name
-    outliers(listcel.n) <- outliers(listcel)
-    masks(listcel.n) <- masks(listcel)
-    history(listcel.n) <- history(listcel)
-    ## DEBUG: copy the contents 
-    intensity(listcel.n)[, , ] <- intensity(listcel)[, , ]
-    if (sd)
-      spotsd(listcel.n)[, , ] <- spotsd(listcel)[, , ]
-    else
-      spotsd(listcel.n)[, ] <- spotsd(listcel)[, ]
+
+    listcel.n <- convert2hdf5.Cel.container(listcel,
+                                            hdf5FilePath2,
+                                            hdfile.group = "normalized")
     
-    listcel.n <- normalize(listcel.n, cdf, method=normalize.methods, hdf5=TRUE)
+    if (verbose) {
+      cat("done.\n")
+      cat("normalizing...")
+    }
+    
+    listcel.n <- normalize(listcel.n, cdf, method=normalize.method)
     
     listcel <- listcel.n
     
@@ -123,6 +166,6 @@ expresso <- function(CDFfile = NULL,
   }
   
   eset <- generateExprSet(listcel, cdf, method=eset.method, bg.correct=bg.method)
-
+  
   return(eset)
 }

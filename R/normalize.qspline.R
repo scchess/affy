@@ -6,8 +6,9 @@ normalize.Cel.container.qspline <- function(listcel, ...) {
   dimcel <- dim(intensity(listcel))[1:2]
   y <- normalize.qspline(t(x), ...)
   
+  set.na.spotsd(listcel)
+  
   for (i in 1:length(listcel)) {
-    spotsd(listcel)[, , i] <- matrix()
     intensity(listcel)[, , i] <- array(y[,i], dimcel)
     history(listcel)[[i]] <- list(name="normalized by qspline")
   }
@@ -20,7 +21,7 @@ normalize.Plob.qspline <- function(plob, ...) {
   x <- normalize.qspline(rbind(pm(plob), mm(plob)))
   n <- dim(x)[1]/2
   pm(plob) <- x[1:n,] 
-  mm(plob) <- x[(n+1):(2*n),]
+  mm(plob) <- x[(n+1):(2*n), ]
   return(plob)
 }
 

@@ -51,6 +51,8 @@
   .initPPSet.container(where)
   if (debug.affy123) cat("-->initPlob\n")
   .initPlob(where)
+  
+  cacheMetaData(as.environment(where))
 
 }
 

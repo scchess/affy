@@ -13,7 +13,7 @@ expresso(
          compress.cdf=FALSE,
          compress.cel=FALSE,
          rm.mask=FALSE,
-         rm.outlier=FALSE,
+         rm.outliers=FALSE,
          rm.extra=FALSE,
     # data processing methods
          normalize=TRUE,
@@ -61,12 +61,11 @@ expresso(
   consequence in terms of speed (slower) but provides an enormous
   advantage in terms of memory usage. Handling hundreds of arrays
   should not be a problem.
-  
 }
 
 \value{An object of class \code{\link[Biobase]{exprsSet}}}
 \examples{
-##example to be done...
+# expresso(widget=TRUE)
 }
 \author{Laurent Gautier (laurent@cbs.dtu.dk}
 \keyword{manip}

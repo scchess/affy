@@ -32,11 +32,12 @@ normalize.Cel.container.contrasts <- function(listcel,span=2/3,choose.subset=T,s
     subset1 <- sample(1:dim(x)[1],subset.size)
 
   x <-   maffy.normalise(x,subset=subset1,verbose=verbose,span=span,family=family)
+
+  set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
   
   for (i in 1:cols) {
-    listcel[[i]]@intensity  <- matrix(x[,i],chipdim[1], chipdim[2])
-    listcel[[i]]@history$name <- "normalized by contrasts"
-    listcel[[i]]@sd <- matrix() # set 'sd' to nothing (meaningless after normalization)
+    intensity(listcel)[, , i]  <- matrix(x[,i],chipdim[1], chipdim[2])
+    history(listcel)[[i]]$name <- "normalized by contrasts"
   }
   return(listcel)
 }

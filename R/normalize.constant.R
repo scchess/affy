@@ -1,12 +1,14 @@
 normalize.Cel.container.constant <- function(container, refindex=1, FUN=mean, na.rm=TRUE) {
-  if (! inherits(container, "Cel.container"))
+  if (! inherits(container, c("Cel.container", "Cel.container.hdf5")))
     stop("container must be a 'Cel.container'")
   
   n <- length( container )
   
   if (! (refindex %in% 1:n)) stop("invalid reference index for normalization")
   refconstant <- FUN(intensity(container[[refindex]]), na.rm=na.rm)
-  spotsd(container) <- array()
+  
+  set.na.spotsd(container)
+                             
   for (i in (1:n)[-refindex]) {
     m <- normalize.constant(intensity(container[[i]]), refconstant, FUN=FUN, na.rm=na.rm)
     myhistory <- list(name="normalized by constant",
@@ -17,6 +19,7 @@ normalize.Cel.container.constant <- function(container, refindex=1, FUN=mean, na
   }
   return(container)
 }       
+
 
 
 normalize.Plob.constant <- function(plob, refindex=1, FUN=mean, na.rm=TRUE) {

@@ -23,7 +23,7 @@ normalize.Cel.container.quantiles <- function(listcel) {
     x[, i] <- c(intensity(listcel)[, , i])
 
   x <- normalize.quantiles(x)
-  spotsd(listcel) <- array() # set 'sd' to nothing (meaningless after normalization)
+  set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
   for (i in 1:cols) {
     intensity(listcel)[, , i]  <- matrix(x[,i],chipdim[1], chipdim[2])
     history(listcel)[[i]]$name <- "normalized by quantiles"
