@@ -1,4 +1,4 @@
-getCDFenv <- function(env, verbose=TRUE) {
+getCDFenv <- function(env, lib=.libPaths()[1], verbose=TRUE) {
     require(reposTools) || stop("Package 'reposTools' is required",
                                 " for this operation.")
 
@@ -21,7 +21,26 @@ getCDFenv <- function(env, verbose=TRUE) {
             print(paste("Checking to see if your internet",
                         "connection works ..."))
         if (testBioCConnection()) {
-            z <- install.packages2(env)
+
+            ## Check for file permissions
+            if (file.access(lib, mode=0) < 0) {
+                if (verbose) {
+                    print(paste("Directory",lib,"does not seem to exist.\n",
+                                "Please check your 'lib' parameter and try again"))
+                    return(invisible(FALSE))
+                }
+            }
+
+            if (file.access(lib,mode=2) < 0) {
+                if (verbose) {
+                    print(paste("You do not have write access to",lib,
+                               "\nPlease check your permissions or provide",
+                               "a different 'lib' parameter"))
+                    return(invisible(FALSE))
+                }
+            }
+
+            z <- install.packages2(env, lib=lib)
             if(! env %in% updatedPkgs(z)) {
                 if (verbose)
                     print(paste("Environment",env,
