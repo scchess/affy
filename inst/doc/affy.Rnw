@@ -273,6 +273,7 @@ back together using union.
 tmp1 <- normalize(Dilution[,1:3])
 tmp2 <- normalize(Dilution[,4:6])
 tmp3 <- normalize(Dilution[,7:9])
+
 nDilution <- union(tmp1,tmp2)
 nDilution <- union(nDilution,tmp3)
 @ 
@@ -427,13 +428,14 @@ The combination of the \verb+Cel+ and the \verb+Cdf+ allows to extract XXXblabla
 The choices in the design might be considered awkward, as the resulting data structure can be perceived as more
  complex. It should not turn away the novice user.
 Objects of class \verb+Plob+ (see~\ref{subsection:Plob}, page~\pageref{subsection:Plob}) have a different
-data structure and can be an alternative. A convenience function to shuttle between the data structure can be
+data structure and can be an alternative. A convenience function to shuttle between the data structures can be
 found in the package (try \verb+help(convert)+ in R). 
 
-\begin{itemize}
-  \item[image]
-  \item[show]
-\end{itemize}
+\begin{description}
+  \item[image] Display an {\it image} of the data in the \verb+Cel+ object. Among the other parameters, \verb+transfo=log+ can be convenient.
+  \item[show] Outputs few general facts about the object on the console.
+\end{description}
+
 
 \subsection{class Cel.container}
 
@@ -442,38 +444,38 @@ together. Typically, a \verb+Cel.container+ will contain \verb+Cel+ instances sh
 % \footnote{We plan to have
 %a link to the \verb+Cdf+ included in \verb+Cel.container+... probably in the next version...}.
 
-\begin{itemize}
+\begin{description}
   \item[generateExprSet] Compute expression values and return them in an \verb+exprSet+ object.
   \item[normalize] A \verb+Cel.container+ can be {\it normalized}, which means its \verb+Cel+ elements will be scaled to be comparable. More details about normalization can be found in the section~\ref{sec:normalize}, page~\pageref{sec:normalize}.
   \item[normalize.methods] Return the known normalization methods for the \verb+Cel+.
   \item[show] Display global information about the object
-\end{itemize}
+\end{description}
 
 \subsection{class PPSet}
 
-\begin{itemize}
+\begin{description}
   \item[probes] a data frame having two column named {\it pm} and {\it mm} respectively. 
   \item[name] the name of the probe pair set
-\end{itemize}
+\end{description}
 
-\begin{itemize}
-  \item[show]
-  \item[barplot]
-  \item[plot]
-\end{itemize}
-
+\begin{description}
+  \item[show] Outputs few general facts about the object on the console.
+  \item[barplot] Display a \verb+barplot+ of the probes informations
+  \item[plot] Plot the probes informations in a lines graph.
+\end{description}
 
 \subsection{class PPSet.container}
 
-\begin{itemize}
-  \item[show]
-\end{itemize}
+\begin{description}
+  \item[show] Outputs few general facts about the object on the console.
+\end{description}
 
+\subsection{class Plob}
 
 
 \subsection{Visual control}
 
-\subsection{image}
+The method \verb+image+ is defined for \verb+Cel+ objects.
 A first example shows how one can observe the physical location of the values contained in a CEL file 
 
 In the absence of {\it CEL} files, example can be used.
@@ -514,6 +516,21 @@ An important issue in microarray data analysis is to adjust the signal obtained
 comparable. The technical particularities of the different approaches will only be outlined here.
 The reader will refer to XXX (ref!) for more details.
 
+The normalization of arrays object is as simple as \verb+normalize(object)+. The lines below present a view of the
+effect of normalization.
+
+<<fig=TRUE>>=
+par(mfrow=c(2,2))
+
+data(Dilution)
+
+boxplot(Dilution)
+boxplot(normalize(Dilution))
+@
+
+Individual help files for the normalization methods can be accessed with \verb+normalize?<method nickname>+.
+For example, if one wants to know more about the {\it quantiles} methods, the command \verb+normalize?quantiles+
+will display the corresponding help file.
 
 Different approaches to normalize array data have been suggested. New methods are very likely be developped too, so
 addition of new normalization methods should be straightforward.
@@ -605,16 +622,17 @@ workflow described by the manufacturer (with GUI XXX)
 Two paths to go from the {\it CEL} and {\it CDF} files to the expression values are suggested. One going through the verb+Plob+ objects and the
 other going through the {Cel.container} objects.
 
-
-
 \begin{verbatim}
 
 ## ------------------
 ## load the data
 ## ------------------ 
 
-CDF <- read.cdffile(XXX)
-cels <- read.Cel.container(XXX)
+## GUI ?
+CDF <- read.cdffile("path/to/my/cdffile.CDF")
+filenames <- dir(path="path/to/my/celfiles/", pattern="*\.CEL", full.names=TRUE)
+
+cels <- read.Cel.container(list=filenames)
 
 
 ## ------------------
@@ -637,15 +655,19 @@ write.table(exprs(eset), file="flatexpr.txt", sep="\t")
 
 \end{verbatim}
 
-As mentionned earlier, the aim is flexibility rather than speed. The
-path going through the Plob objects  
+As mentionned earlier, the aim is flexibility rather than speed. The path going through the Plob objects 
 can sometimes be faster
 % really true ?
-while the path going through PPSet.container is more flexible and can
-integrate easily user defined 
+while the path going through PPSet.container is more flexible and can integrate easily user defined
 functions.
 
 \section{Conclusion - Future developments}
+
+\begin{verbatim}
+apply(matrix(1:100, ncol=1),1,cat,"- We need holydays\n")
+\end{verbatim}
+
+
 
 \bibliographystyle{plainnat} 
 \bibliography{affy} 
