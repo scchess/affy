@@ -30,6 +30,8 @@ medianpolish <- function(x,...){
   c(tmp$overall + tmp$col,rep(sigma,ncol(x)))
 }
 
-
-
+##DEBUG: to be moved to a proper place (eventually renamed)
+generateExprVal.method.medianpolish <- function(matos, ...) {
+  medianpolish(matos, ...)
+}
 

@@ -86,12 +86,10 @@ normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progre
   return(container)
 }
 
+normalize.Cel.container.invariantset <- function(cel.container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
 
-
-normalize.Cel.container.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
-
-  if (! inherits(container, "Cel.container"))
-    stop("container must be a 'Cel.container' obejct")
+  if (! inherits(cel.container, "Cel.container"))
+    stop("cel.container must be a 'Cel.container' obejct")
 
   if(is.null(f.cdf)) stop("You need to specify a Cdf object")
   ##DEBUG
@@ -101,47 +99,46 @@ normalize.Cel.container.invariantset <- function(container, f.cdf, prd.td=c(0.00
   i.pm[is.na(i.pm)] <- FALSE                          # mark as FALSE the unknown probes too
 
   np <- sum(i.pm)                                     # number of PM probes
-  nc  <-  length(container)                             # number of CEL files
+  nc  <-  length(cel.container@name)                  # number of CEL files
   
   # take as a reference the array having the median overall intensity
-  l <- length(container)
-  m <- vector("numeric",length=l)
-  for (i in 1:l)
-    m[i] <- mean(container[[i]]@intensity[i.pm])
+  m <- vector("numeric", length=nc)
+  for (i in 1:nc)
+    m[i] <- mean(cel.container@intensity[i, , ][i.pm])
   refindex <- trunc(median(rank(m)))
-  rm(m,l)           
+  rm(m)           
 
-  if (progress) cat("Data from",attr(container[[refindex]],"name"),"used as baseline.\n")
-  
-  ##r.ref <- rank(container[[refindex]]$intensity[i.pm])                 # order of the PM intensities
+  if (progress) cat("Data from",cel.container@name[refindex],"used as baseline.\n")
   
   ## loop over the CEL files and normalize them
   for (i in (1:nc)[-refindex]) {
+  
+    if (progress) cat("normalizing array", cel.container@name[i], "...")
 
-    if (progress) cat("normalizing array", attr(container[[i]], "name"), "...")
+    cel.container@sd <- array()
+    mydim <- dim(cel.container@intensity[i, , ])
     
-    mydim <- dim(container[[i]]@intensity)
     ##temporary
-    tmp <- normalize.invariantset(c(container[[i]]@intensity[i.pm]),
-                                  c(container[[refindex]]@intensity[i.pm]),
+    tmp <- normalize.invariantset(c(cel.container@intensity[i, , ][i.pm]),
+                                  c(cel.container@intensity[refindex, , ][i.pm]),
                                   prd.td)
-    
-    container[[i]]@intensity <- array(as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                                        xout=container[[i]]@intensity)$y),
-                                      mydim)
     i.set <- which(i.pm)[tmp$i.set]
-    ## storing information about what has been done
-    container[[i]]@history <- list(name="normalized by invariant set",
-                                 invariantset=i.set)
-    attr(container[[i]]@intensity,"invariant.set") <- NULL
-    container[[i]]@sd <- matrix()
+    tmp <- array(as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                                   xout=cel.container@intensity[i, , ])$y),
+                 mydim)
+    attr(tmp,"invariant.set") <- NULL
+    cel.container@intensity[i, , ] <- tmp
 
+    ## storing information about what has been done
+    cel.container@history[[i]] <- list(name="normalized by invariant set",
+                                       invariantset=i.set)
+    
     if (progress) cat("done.\n")
     
   }
-  container[[refindex]]@history$name="reference for the invariant set"
+  cel.container@history[[refindex]] <- list(name="reference for the invariant set")
   
-  return(container)
+  return(cel.container)
 }
 
 ##  The 'common-to-all' part of the algorithm. Operates on two vectors of numeric data

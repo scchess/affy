@@ -65,35 +65,35 @@ par(mfrow=c(2,2))
 
 nat <- pmormm(CDF.example)
 
-plot(listcel[[1]]@intensity, listcel[[2]]@intensity, xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted",type="n")
-points(listcel[[1]]@intensity[nat], listcel[[2]]@intensity[nat], col="red")
-points(listcel[[1]]@intensity[!nat], listcel[[2]]@intensity[!nat], col="blue")
-points(listcel[[1]]@intensity[is.na(nat)], listcel[[2]]@intensity[is.na(nat)], pch="+")
+plot(intensity(listcel[[1]]), intensity(listcel[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted",type="n")
+points(intensity(listcel[[1]])[nat], intensity(listcel[[2]])[nat], col="red")
+points(intensity(listcel[[1]])[!nat], intensity(listcel[[2]])[!nat], col="blue")
+points(intensity(listcel[[1]])[is.na(nat)], intensity(listcel[[2]])[is.na(nat)], pch="+")
 legend(25000, 15000, c("PM","MM","Unknown","identity line"), c("red","blue","black","grey"), bg="white")
 lim <- range(par()$usr)
 points(lim,lim,type="l",col="gray")
 rm(nat)
 
 listcel.n <- normalize(listcel, f.cdf=CDF.example, method="constant", refindex=2)
-plot(listcel.n[[1]]@intensity, listcel.n[[2]]@intensity, xlab="CEL file 1", ylab="CEL file 2",main="normalized by constant",sub="all probes plotted")
+plot(intensity(listcel.n[[1]]), intensity(listcel.n[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="normalized by constant",sub="all probes plotted")
 lim <- range(par()$usr)
 points(lim,lim,type="l",col="gray")
 
 
 listcel.n <- normalize(listcel, f.cdf=CDF.example, method="invariantset")
-i.set <- listcel.n[[2]]@history$invariantset
+i.set <- history(listcel.n[[2]])$invariantset
 
-plot(listcel[[1]]@intensity, listcel[[2]]@intensity, xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted")
-points(listcel[[1]]@intensity[i.set], listcel[[2]]@intensity[i.set], col="orange",pch=16)
+plot(intensity(listcel[[1]]), intensity(listcel[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted")
+points(intensity(listcel[[1]])[i.set], intensity(listcel[[2]])[i.set], col="orange",pch=16)
 lim <- range(par()$usr)
 points(lim,lim,type="l",col="gray")
-points(smooth.spline(listcel[[1]]@intensity[i.set], listcel[[2]]@intensity[i.set]),type="l",col="red")
+points(smooth.spline(intensity(listcel[[1]])[i.set], intensity(listcel[[2]])[i.set]),type="l",col="red")
 lim <- range(par()$usr)
 points(lim,lim,type="l",col="gray")
 legend(25000,15000,c("invariant set","identity line","spline through the invariant set"),c("orange","grey","red"),bg="white")
 
-plot(listcel.n[[1]]@intensity, listcel.n[[2]]@intensity, xlab="CEL file 1", ylab="CEL file 2",main="normalized by invariant set",sub="all probes plotted")
-points(listcel.n[[1]]@intensity[i.set], listcel.n[[2]]@intensity[i.set], col="orange",pch=16)
+plot(intensity(listcel.n[[1]]), intensity(listcel.n[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="normalized by invariant set",sub="all probes plotted")
+points(intensity(listcel.n[[1]])[i.set], intesnity(listcel.n[[2]])[i.set], col="orange",pch=16)
 lim <- range(par()$usr)
 points(lim,lim,type="l",col="gray")
 legend(20000,10000,c("invariant set","identity line"),c("orange","grey"),bg="white")

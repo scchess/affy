@@ -36,7 +36,7 @@
 
   ids <- c("AFFX-BioC-5_at","AFFX-BioC-3_at")
   
-  eset <- generateExprSet(listcel, CDF.example, "avgdiff", ids=ids)
+  eset <- generateExprSet(listcel, CDF.example, method="avgdiff", bg.correct="bg.correct.subtractmm", ids=ids)
 }
 \keyword{manip}
 

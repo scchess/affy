@@ -9,22 +9,22 @@ normalize.Cel.container.quantiles <- function(listcel) {
   ##
   ## Laurent
   
-  cols <- length(listcel)
-  rows <- length(intensity(listcel[[1]])) # assuming all the Cel are of the same size in listcel
-  chipdim <- dim(intensity(listcel[[1]]))
+  cols <- dim(intensity(listcel))[1]
+  rows <- length(intensity(listcel)[1, , ]) # assuming all the Cel are of the same size in listcel
+  chipdim <- dim(intensity(listcel)[1, , ])
   
   ## this is may be too much.. I am taking every intensity in there... something like
   ## taking only the PM (see invariantset) could be what you want (this is only a trial,
   ## know better your own algorithm that I will ever... modify if needed).  
   x <- matrix(0,rows,cols)
-  for (i in 1:cols) x[,i] <- c(intensity(listcel[[i]]))
+  
+  for (i in 1:cols) x[,i] <- c(intensity(listcel)[i, , ])
 
   x <- normalize.quantiles(x)
-
+  spotsd(listcel) <- array() # set 'sd' to nothing (meaningless after normalization)
   for (i in 1:cols) {
-    intensity(listcel[[i]])  <- matrix(x[,i],chipdim[1], chipdim[2])
-    history(listcel[[i]])$name <- "normalized by quantiles"
-    spotsd(listcel[[i]]) <- matrix() # set 'sd' to nothing (meaningless after normalization)
+    intensity(listcel)[i, , ]  <- matrix(x[,i],chipdim[1], chipdim[2])
+    history(listcel)[[i]]$name <- "normalized by quantiles"
   }
 
   return(listcel)

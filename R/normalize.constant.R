@@ -1,5 +1,3 @@
-## (see normalize.invariantset.R to know more....)
-
 normalize.Cel.container.constant <- function(container, refindex=1, FUN=mean, na.rm=TRUE) {
   if (! inherits(container, "Cel.container"))
     stop("container must be a 'Cel.container'")
@@ -7,15 +5,16 @@ normalize.Cel.container.constant <- function(container, refindex=1, FUN=mean, na
   n <- length( container )
   
   if (! (refindex %in% 1:n)) stop("invalid reference index for normalization")
-  
-  refconstant <- FUN(container[[refindex]]@intensity, na.rm=na.rm)
-  
-  for (i in 1:n) {
-    container[[i]]@intensity <- normalize.constant(container[[i]]@intensity, refconstant, FUN=FUN, na.rm=na.rm)
-    container[[i]]@history <- list(name="normalized by constant",
-                                 constant=attr(container[[i]]@intensity,"constant"))
-    container[[i]]@sd <- matrix()
-    attr(container[[i]]@intensity, "constant") <- NULL
+  refconstant <- FUN(intensity(container[[refindex]]), na.rm=na.rm)
+  spotsd(container) <- array()
+  for (i in (1:n)[-refindex]) {
+    cat(i,"\n")
+    m <- normalize.constant(intensity(container[[i]]), refconstant, FUN=FUN, na.rm=na.rm)
+    myhistory <- list(name="normalized by constant",
+                      constant=attr(m,"constant"))
+    attr(m,"constant") <- NULL
+    intensity(container)[i, , ] <- m
+    history(listcel)[[i]] <- myhistory
   }
   return(container)
 }       

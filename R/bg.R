@@ -41,3 +41,24 @@ bgc <- function(object,bg=bg.adjust){
   pm(object) <- apply(rbind(pm(object),mm(object)),2,bg)
   object
 }
+
+##DEBUG: experimental stuff below...
+bg.correct.subtractmm <- function(pm, mm){
+  return(pm-mm)
+}
+
+bg.correct.pmonly <- function(pm, mm) {
+  return(pm)
+}
+
+bg.correct.adjust <- function(pm ,mm, all.param){
+  r <- matrix(NA, nrow(pm), ncol(pm))
+  #cat(str(r))
+  for (i in 1:ncol(r)) {
+    b <- all.param[[i]]$sigma
+    a <- pm[,i] - all.param[[i]]$mu - all.param[[i]]$alpha*b^2
+    #cat(str(a + b*((1./sqrt(2*pi))*exp((-1./2.)*((a/b)^2)))/pnorm(a/b)))
+    r[, i] <- a + b*((1./sqrt(2*pi))*exp((-1./2.)*((a/b)^2)))/pnorm(a/b)
+  }
+  return(r)
+}

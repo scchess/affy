@@ -4,7 +4,7 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
                         large.threshold=3,
                         large.variation=0.8,
                         outlier.fraction=0.14,
-                        delta = 1e-06,maxit=50,outer.maxit=50,verbose=F){
+                        delta = 1e-06,maxit=50,outer.maxit=50,verbose=F,...){
   if(missing(data.matrix)) stop("Argument data.matrix missing, with no default")
   II <- dim(data.matrix)[1] ##II instrad of I cause I is a fuction in R
   J <- dim(data.matrix)[2]

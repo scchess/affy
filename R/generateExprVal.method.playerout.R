@@ -1,15 +1,14 @@
-generateExprVal.method.playerout <- function(probes, weights=F){
-  matos <- as.data.frame(lapply(probes,function(x){x$pm}))
-  ##names(matos) <- mynames
-  matos <- t(as.matrix(matos))
-  n <- length(probes[[1]]$pm)
+generateExprVal.method.playerout <- function(matos, weights=F){
+  
+  matos <- t(matos)
+  nprobes <- ncol(matos)
   
   ## skip if only one probe
-  if (n == 1) return(unlist(lapply(probes, function(x){x$pm})))
+  if (nprobes == 1) return(t(matos))
   
   ## I do not know to which extend the use of optim
   ## is really equivalent to the use of nlminb in S-plus
-  S1 <- optim(runif(n),
+  S1 <- optim(runif(nprobes),
               playerout.costfunction,
               method="L-BFGS-B",
               control=list(maxit=500),
