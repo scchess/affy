@@ -2,7 +2,7 @@
   
 
   ## DEBUG flag
-  assign("debug.affy123", T, envir=.GlobalEnv)
+  ##assign("debug.affy123", T, envir=.GlobalEnv)
 
   library.dynam("affy", pkgname, libname)
   require(methods)
@@ -10,20 +10,20 @@
   require(eda)
   where <- match(paste("package:", pkgname, sep=""), search())
   
-  if (debug.affy123) cat("-->initCdf\n")
+  ##if (debug.affy123) cat("-->initCdf\n")
   .initCdf(where)
-  if (debug.affy123) cat("-->initCel\n")
+  ##if (debug.affy123) cat("-->initCel\n")
   .initCel(where)
-  if (debug.affy123) cat("-->initCel.container\n")
+  ##if (debug.affy123) cat("-->initCel.container\n")
   .initCel.container(where)
-  if (debug.affy123) cat("-->initPPSet\n")
+  ##if (debug.affy123) cat("-->initPPSet\n")
   .initPPSet(where)
-  if (debug.affy123) cat("-->initPPSet.container\n")
+  ##if (debug.affy123) cat("-->initPPSet.container\n")
   .initPPSet.container(where)
-  if (debug.affy123) cat("-->initPlob\n")
+  ##if (debug.affy123) cat("-->initPlob\n")
   .initPlob(where)
 
-  if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
+  ##if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
   ## this could move into the respective methods of Plob and Cel.container later
   assign("normalize.Cel.container.methods", substr(ls(where)[grep("normalize\.Cel\.container\.*", ls(where))],
                                                    25, 100),
@@ -32,7 +32,7 @@
                                           16,100),
          envir=as.environment(where))
 
-  if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
+  ##if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
   assign("generateExprSet.methods", substr(ls(where)[grep("generateExprSet\.method\.*", ls(where))],
                                            23,100),
          
