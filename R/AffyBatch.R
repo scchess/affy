@@ -561,16 +561,14 @@
                 if (ncol(loc) == 2)
                   l.mm <- loc[ ,2]
                 else
-                  l.mm <- NA
+                  l.mm <- integer()
                 
                 np <- length(l.pm)
                 
                 ##names are skipped
 
-                c.pps@pm <- matrix(intensity(x)[l.pm, ],
-                                   np, n, byrow=TRUE)
-                c.pps@mm <- matrix(intensity(x)[l.mm, ],
-                                   np, n, byrow=TRUE)
+                c.pps@pm <- intensity(x)[l.pm, , drop=FALSE]
+                c.pps@mm <- intensity(x)[l.mm, , drop=FALSE]
                 
                 ## generate expression values
                 ## (wrapped in a sort of try/catch)
