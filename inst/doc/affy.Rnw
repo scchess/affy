@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{affy2 primer}
+%\VignetteIndexEntry{affy primer}
 %\VignetteKeywords{Preprocessing, Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
@@ -19,9 +19,9 @@
 
 \newcommand{\scscst}{\scriptscriptstyle}
 \newcommand{\scst}{\scriptstyle}
-\author{Laurent Gautier and Rafael Irizarry}
+\author{Laurent Gautier, Rafael Irizarry, Leslie Cope, and Ben Bolstad}
 \begin{document}
-\title{Textual description of affy (version 2.0)}
+\title{Textual description of affy}
 
 \maketitle
 \tableofcontents
@@ -74,7 +74,7 @@ to locations on the array.
 \end{description}
 
 Section \ref{whatsnew} described the main differences between version 1.0 and
-version 2.0. Section \ref{sec:get.started} describes a quick way of getting started and  
+this version. Section \ref{sec:get.started} describes a quick way of getting started and  
 getting expression measures. Section \ref{qc} describes the different classes
 defined in the package. Section \ref{s1.4} describes normalization routines. Section \ref{classes} describes the different classes in the package.
 \ref{sec:probesloc} describes our strategy to map probe
@@ -100,7 +100,7 @@ preprocessing when computing expression measures.
 
 In version 2.0, we have implemented various of the procedures
 described in the MAS 5.0 manual. Throughout the package we use
-\verb+mas+ to refer to procedures described in the MAS 5.0 software.
+\verb+mas+ to denote the procedures described in the MAS 5.0 software.
 
 The main difference between Version 1.0 and version 2.0 is that the
 user no longer needs to provide the {\it CDF} files. We now provide a more
@@ -124,7 +124,7 @@ from a {\it batch} of experiments. The class {\it Cel} models the data from
 a single experiment (coming from a CEL file).  
 The classes {\it Cdf} contains the information of {\it CDF} file, the
 class {\it ProbeSet} contain $PM$ and $MM$ intensities for a
-particular probe set. Beginners need do not need to understand these
+particular probe set. Beginners need do not understand these
 classes. However, they are briefly described in Section
 \ref{classes}. 
 
@@ -152,7 +152,8 @@ you are using the HGU95Av2 or HGU133A chip or making your own).
 If all you want is to go from probe level data ({\it Cel} files) to
 expression measures here are some quick ways.
 
-The quickest way of reading in data is the following:
+The quickest way of reading in data and getting expression measures 
+is the following:
 \begin{enumerate}
 \item Create a directory, move all the relevant
 {\it CEL} files to that directory
@@ -162,7 +163,10 @@ Microsoft Windows make sure your working directory contains the {\it
 Cel} files (the function {\verb+getwd+, \verb+setwd+, and
 \verb+list.celfiles+} are useful for this). 
 \item Load the library.
-\item Reading the data and create an expression, using RMA for example.
+\begin{Sinput}
+R> library(affy) ##load the affy package
+\end{Sinput}
+\item Read in the data and create an expression, using RMA for example.
 \begin{Sinput}
 R> Data <-  ReadAffy() ##read data in working directory
 R> eset <- rma(Data)
@@ -174,7 +178,7 @@ efficiency. It uses the expression measure described in \cite{iriz:etal:2003}.
 
 For other popular methods use \verb+expresso+ instead of \verb+rma+. For example for MAS 5.0 signal you can use
 \begin{Sinput}
-R> eset <- expresso(Data, normalize=FALSE, bg.method="mas", 
+R> eset <- expresso(Data, normalize=FALSE, bgcorrect.method="mas", 
                      pmcorrect.method="mas",summary.method="mas")
 \end{Sinput}
 For creating your own expression measures you can use \verb+express+
@@ -183,7 +187,7 @@ R> Data <-  ReadAffy() ##read data in working directory
 R> eset <- expres(Data, summary.method=function(x) apply(x,2,median))
 \end{Sinput}
 
-The variable \verb+eset+ is an object of class \verb+exprSet+
+In all the above examples, the variable \verb+eset+ is an object of class \verb+exprSet+
 described in the Biobase vignette. Many of the packages in
 Bioconductor work on objects of this class. See the genefilter and
 geneplotter packages for some examples.
@@ -221,11 +225,11 @@ of the {\it tkWidgets} package.
 \end{center}
 \end{figure}
 
-Next a widget (not shown) permits the user to enter sample names for
+Next, a widget (not shown) permits the user to enter sample names for
 the arrays and descriptions for these samples. In the next step a
 series of three widgets permits the user  
 to enter phenotypic or covariate information. 
-See Figure \ref{fig:widget.filechooser}.
+See Figure \ref{fig:widget.pd}.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -243,7 +247,7 @@ of the {\it tkWidgets} package.}
 
 
 Finally the a widget is presented for the user to enter MIAME information.
-Seen in Figure\ref{fig:widget.tkMIAME}.
+Seen in Figure \ref{fig:widget.tkMIAME}.
 
 
 \begin{figure}[htbp]
@@ -292,7 +296,7 @@ Typically this is achieved through the following sequence:
 and, in some cases, a standard error for this summary.
 \end{enumerate}
 We detail what we believe is a good way to proceed below.
-As mentioned the function \verb+expresso+ provides many options.
+As mentioned the function \verb+expresso+ provides many options. For example,
 \begin{Sinput}
 R> eset <- expresso(affybatch, normalize.method="qspline", bg.method="rma", 
                     summary.method="liwong")
@@ -327,6 +331,12 @@ now show this using an \verb+AffyBatch+ included in the package for
 examples. The \verb+data(affybatch.example)+ is used to load these data.
 
 \begin{description}
+\item[background.method]. The background correction method to use.
+The available methods are
+<<>>=
+bgcorrect.methods
+@ 
+
  \item[normalize.method]. The normalization method to use. The
    available methods can be queried by using 
 {\it normalize.methods}.
@@ -335,10 +345,10 @@ data(affybatch.example) ##data included in the package for examples
 normalize.methods(affybatch.example)
 @ 
 
-\item[background.method]. The background correction method to use.
-The available methods are
+\item[pmcorrect.method]
+The method for probe specific correction. The available methods are
 <<>>=
-bgcorrect.methods
+pmcorrect.methods
 @ 
 
 \item[summary.method]. The summary method to use. The available
@@ -395,29 +405,71 @@ probe intensities.}
 
 \end{description}
 
-Options for the package can be configured (see Section~\ref{configure.options}).
+\subsection{MAS 5.0}
+To obtain MAS 5.0 use
+%<<>>=
+\begin{Sinput}
+eset <- expresso(affybatch.example, normalize=FALSE, bgcorrect.method="mas", 
+                 pmcorrect.method="mas",summary.method="mas")
+eset <- affy.scalevalue.exprSet(eset)
+\end{Sinput}
+%@ 
+Notice that normalization occurs after we obtain expression
+measures. The function \verb+affy.scalevalue.exprSet+ performs a
+normalization similar to that described in the MAS 5.0 manual.
+
+\subsection{Li and Wong's MBEI (dchip)}
+To obtain a measure similar to Li and Wong's MBEI one can use
+\begin{Sinput}
+%<<>>=
+eset <- expresso(affybatch.example, normalize.method="invarianteset", 
+                 bg.correct=FALSE,
+                 pmcorrect.method="pmonly",summary.method="liwong")
+%@
+\end{Sinput} 
+This gives the current $PM$-only default. The reduced model (previous
+default) can be obtained using \verb+pmcorrect.method="subtractmm"+.
+
 
 \subsection{C implementation of RMA}
-
-One of the quickest ways to compute expression using the \verb+affy+ package is to use the \verb+rma+ function. We have found that this method allows a user to compute the RMA expression measure in a matter of minutes for datasets that may have taken hours in previous versions of \verb+affy+. The function serves as an interface to a hard coded C implementation of the RMA method \cite{iriz:etal:2003}. Generally, the following would be sufficient to compute RMA expression measures:
-\begin{Sinput}
-R> Data <-  ReadAffy() ##read data in working directory
-R> eset <- rma(Data)
-\end{Sinput}
+One of the quickest ways to compute expression using the \verb+affy+
+package is to use the \verb+rma+ function. We have found that this
+method allows a user to compute the RMA expression measure in a matter
+of minutes for datasets that may have taken hours in previous versions
+of \verb+affy+. The function serves as an interface to a hard coded C
+implementation of the RMA method \cite{iriz:etal:2003}. Generally, the
+following would be sufficient to compute RMA expression measures:  
+<<>>=
+eset <- rma(affybatch.example)
+@ 
 
 Currently the \verb+rma+ function implements RMA in the following manner
 \begin{enumerate}
-\item Probe specific correction of the PM probes using a model based on observed intensity being the sum of signal and noise
-\item Normalization of corrected PM probes using quantile normalization \cite{bols:etal:2002}
-\item Calculation of Expression measure using median polish
+\item Probe specific correction of the PM probes using a model based
+  on observed intensity being the sum of signal and noise 
+\item Normalization of corrected PM probes using quantile
+  normalization \cite{bols:etal:2002} 
+\item Calculation of Expression measure using median polish. 
 \end{enumerate}
 
-The \verb+rma+ function is likely to be improved and extended in the future as the RMA method is fine-tuned.
+The \verb+rma+ function is likely to be improved and extended in the
+future as the RMA method is fine-tuned. 
 
 \newpage
 
 \section{Quality Control through Data Exploration}
 \label{qc}
+Several of the functions for plotting
+summarized probe level data are useful for diagnosing problems with the
+data.  The plotting functions \verb+boxplot+ and \verb+hist+ have methods
+for \verb+AffyBatch+ objects.  Each of these functions presents
+side-by-side graphical summaries of intensity information from each
+array.  Important differences in the distribution of intensities are
+often evident in these plots. The function 
+mva.pairs (applied to \verb+pm(afbatch)+), offers pairwise
+graphical comparison of intensity data.  These plots can be particularly
+useful in diagnosing problems in replicate sets of arrays.  
+
 For the users convenience we have included a sample data set
 containing part of the data from a Dilution experiment. The full data
 is publicly available from Gene Logic  
@@ -448,6 +500,7 @@ phenoData(Dilution)
 pData(Dilution)
 @ 
 
+\subsection{Accessing $PM$ and $MM$ Data}
 The $PM$ and $MM$  intensities and corresponding {\it affyID} can be
 accessed with the \verb+pm+, \verb+mm+, and \verb+probeNames+ methods. 
 These will be matrices with rows
@@ -494,6 +547,7 @@ for the 1st and 2nd array of the \verb+affybatch.example+ also
 included in the package
 
 
+\subsection{Histograms, Images, and Boxplots}
 \begin{figure}[htbp]
 \begin{center}
 <<fig=TRUE>>=
@@ -545,6 +599,43 @@ As discussed in the next section this plot shows that we need to
 normalize these arrays.
 
 
+\subsection{RNA degradation plots}  
+The functions \verb+AffyRNAdeg+, \verb+summaryAffyRNAdeg+, and
+\verb+plotAffyRNAdeg+  aid in assessment of RNA quality.  Individual probes in
+a probeset are ordered by location relative to the $5'$ end of the
+targeted RNA molecule.\cite{affy4}  Since RNA degradation typically
+starts from the $5'$ end of the molecule, we would expect probe
+intensities to be systematically lowered at that end of a probeset when
+compared to the $3'$ end.  On each chip, probe intensities are averaged
+by location in probeset, with the average taken over probesets.  The
+function \verb+plotAffyRNAdeg+ produces a side-by-side plots of these
+means, making it easy to notice any $5'$ to $3'$ trend.  The function
+\verb+summaryAffyRNAdeg+ produces a single summary statistic for each
+array in the batch, offering a convenint measure of the severity of
+degradation and significance level.  For an example
+<<>>=
+deg <- AffyRNAdeg(affybatch.example)
+names(deg)
+@ 
+does the degradation analysis and returns a list with various
+components. A summary can be obtained using
+<<>>=
+summaryAffyRNAdeg(deg)
+@ 
+
+Finally a plot can be created using \verb+plotAffyRNAdeg+, see Figure \ref{f4.3}.
+
+\begin{figure}[htbp]
+\begin{center}
+<<fig=TRUE>>=
+plotAffyRNAdeg(deg)
+@
+\caption{\label{f4.3} Side-by-side plot produced by plotAffyRNAdeg.}
+\end{center}
+\end{figure}
+
+\newpage
+az
 \section{Normalization}
 \label{s1.4}
 Various researchers have pointed out the need for normalization of Affymetrix
@@ -563,8 +654,9 @@ The \verb+boxplot+ method for the \verb+AffyBatch+ class, shown in
 Figure \ref{f4},  shows this is the case.
 
 
-Figure \ref{f4} shows the need for normalization. For example the first array
-is globally larger than the second.
+Figure \ref{f4} shows the need for normalization. For example arrays
+scanned using scanner 1 are 
+globally larger than those scanned with 2.
 
 Another way to see that normalization is needed is by looking at log ratio 
 versus average log intensity (MVA) plots. The method \verb+mva.pairs+ will
@@ -646,7 +738,7 @@ The \verb+exprs+ slot contains the a matrix with the columns
 representing the intensities read from the different arrays. The rows
 represent the {\it cel} intensities for all position on the array. The
 cel with physical coordinates $(x,y)$ will be in row $i=x\times$
-number of physical rows on the array + $y$. The \verb+ncol+ and
+\verb+nrow+ $y + 1$. The \verb+ncol+ and
 \verb+nrow+ slots contain the physical rows of the array. Notice that
 this is different from the dimensions of the \verb+exprs+ matrix. The
 number of row of the \verb+exprs+ matrix is equal to
@@ -672,6 +764,9 @@ ps <- probeset(Dilution,gn[1:2])
 #this is what i should be using: ps
 show(ps[[1]])
 @ 
+
+The \verb+pm+ and \verb+mm+ methods can be used to extract these
+matrices (see below).
 
 This function is general in the way it defines a probe set. The
 default is to use the definition of a probe set given by Affymetrix in
@@ -710,7 +805,7 @@ can also be useful to combine probes from different human chips, for
 example by considering only probes common to both arrays. 
 
 Users can also define their own environment for probe set location
-mapping. More on this in Section \ref{probesloc}.
+mapping. More on this in Section \ref{sec:probesloc}.
 
 An example of a \verb+ProbeSet+ is included in the package. 
 A spike in data set is included in the package in the form of
@@ -806,7 +901,8 @@ file using different colors and concentrations.}
 
 The {\it Chip Definition Files} ({\it CDF} files) are used to store
 information related to Affymetrix's 
-GeneChip arrays (a type of high density oligonucleotide array sold by
+GeneChip arrays (a type of high density oligonucleotide expression 
+array sold by
 the manufacturer). All the arrays belonging to a given type will share
 this same information.  As the quantity of information in a {\it CDF}
 can be rather large, this is an important point. This is kept in the
@@ -868,7 +964,7 @@ We store this mapping information in {\it R} environments. For each
 \url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}, that contains
 exactly one of these environments. In our packages we store the $x$
 and $y$
-coordinates as one number ($x \times$ number of rows $+$ $y$).
+coordinates as one number ($x \times$ \verb+nrow+ $+ y + 1$).
 
 In instances of {\it AffyBatch}, the
 {\it cdfName} slot gives the name of the appropriate {\it CDF} file

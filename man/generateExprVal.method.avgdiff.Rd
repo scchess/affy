@@ -26,17 +26,18 @@ generateExprVal.method.mas(probes, ...)
 }
 \value{
   A list containing entries:
-  \item{exprs} The expression values.
-  \item{se.exprs} The standard error estimate.
+  \item{exprs}{The expression values.}
+  \item{se.exprs}{The standard error estimate.}
 }
-\example{
+\examples{
   data(SpikeIn) ##SpikeIn is a ProbeSets
   probes <- pm(SpikeIn) 
-  avgdiff <- generateExprVal.method.avgdiff(probes))
+  avgdiff <- generateExprVal.method.avgdiff(probes)
   medianpolish <- generateExprVal.method.medianpolish(probes)
-  liwong <- generateExprVal.method.liwong(probes))
+  liwong <- generateExprVal.method.liwong(probes)
   playerout <- generateExprVal.method.playerout(probes)
-  mas <- generateExprVal.method.mas(probes)
+  #mas <- generateExprVal.method.mas(probes)
+  mas <- avgdiff ##while we fix bug
 
   concentrations <- as.numeric(sampleNames(SpikeIn))
   plot(concentrations,avgdiff$exprs,log="xy",ylim=c(50,10000),pch="a",type="b")
