@@ -125,7 +125,7 @@
                     
                     if (how[[i]]$autoload) {
                       cat(paste("Environment",cdfname,"is not available.\n"))
-                      cat("This environment contains needed probe location information.\n\n")
+                      cat("This environment contains needed probe location information.\n")
                       
                       cat(paste("We will try to download and install the",
                                 cdfname,"package.\n\n"))
@@ -147,7 +147,7 @@
                       if (length(statusList(status.install)) == 0) {
                         warning(paste("Data package", cdfname, "does not seem to exist", 
                                       "in the repository\n",
-                                      how[[i]]$repository, "\n"))
+                                      how[[i]]$repository, "\n\n"))
                       } else {
                         ## rewind the iterator i and try again
                         i <- i-1
@@ -201,17 +201,17 @@
                             "           See the dealing_with_cdfenvs vignette for more details\n\n",
                             "NOTE: Once you install ",cleancdfname(object@cdfName)," you should not have this problem again.\n",
                             sep=""))
-              warning(paste("To let you proceed for now, a dummy cdfenv", cleancdfname(object@cdfName),
-                            "will be created..."))
+              warning(paste("To let you proceed for now, the dummy cdfenv:", object@cdfName,
+                            "will be created...\n"))
               if (exists(object@cdfName, envir=.GlobalEnv)) {
                 stop("Could not create dummy environment. Giving up.")
               }
               assign(object@cdfName,
                      new.env(parent=.GlobalEnv),
                      envir=.GlobalEnv)
-              warning(paste("IMPORTANT: Depending on your settings, you might have to delete the object",
-                            object@cdfName, " after you install right the package !\n(command 'rm(",
-                            object@cdfName,")' )\n"))
+              warning(paste("IMPORTANT: Once you install the correct package you may need to delete the object: ", 
+                            object@cdfName, ". We highly recommend you do. The command is:\n(command 'rm(",
+                            object@cdfName,")' )\n",sep=""))
               return(get(object@cdfName, envir=.GlobalEnv))
             }
             ,
