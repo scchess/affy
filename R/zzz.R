@@ -147,13 +147,6 @@
   
 }
 
-.Last.lib <- function(libpath) {
-  options("BioC")$affy <- NULL
-  dyn.unload(file.path(libpath, "libs",
-                       paste("affy", .Platform$"dynlib.ext", sep="")))
-  .Dyn.libs <- .Dyn.libs[- which(.Dyn.libs == "affy")]
-}
-
 
 
 
