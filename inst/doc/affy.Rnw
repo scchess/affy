@@ -335,8 +335,8 @@ Two sources of cRNA A (human liver tissue) and B (Central Nervous
 System cell line) have been hybridized to human array (HGU95A) in
 a range of proportions and dilutions. The Diltion data provided with 
 this package is taken from arrays hybridized to source A starting with
- 2.5 $mu$g cRNA, and
-rising through 5.0, 10.0 $mu$g. We have three replicate arrays for
+ 2.5 $\mu$g cRNA, and
+rising through 5.0, 10.0 $\mu$g. We have three replicate arrays for
 each generated cRNA. Three scanners have been used in this study.
 Each array replicate was  processed in a different scanner.
 
@@ -346,7 +346,7 @@ that measures of expression for genes that are expressed showed grow
 directly proportional to the amount of RNA hybridized (which is known) and
 that replicates should be like each other.
 
-As seen in Secion ???, this data needs normaliztion. However, in this
+As seen in Section ???, this data needs normalization. However, in this
 case we can only normalize with replicates. Normalizing across replicates
 is not recommended because the assumption needed for most normalization 
 procedures (most genes, or at least a large group of genes, don't change much).
@@ -438,8 +438,240 @@ assess(Avdiff2)
 
 Notice the default measure has the smallest IQR between replicates. See \cite{iriz:etal:2002} for assessments such as the one presented in this Section.
 
-\section{Cdf/Cel Classes}
+\section{Cdf/Cel Classes (and other classes)}
+
+%This part of the documentation probably concerns more advanced users.
+
+%Objects can be used to model actors of a process, and let one interact with it an reasonably intuitive way.
+%The package benefited from important efforts in this sense. We hope we made it quickly usable and extendable.
+
+%The relatively new system of classes in R (called the {\it S4 system}) was widely used in the package. The next few lines
+%will introduce a limited number of elements relative to it. It should be able to enable users to whom the S4 system is not
+%known to proceed through this document. More advanced knowledge of the system will probably needed for an advanced use.
+%An instance of a class is a object materializing the description contained in the class definition.
+%In other terms, the class defintion describes a model, and an instance of a class is an XXX. 
+%For an instance \verb+a+ of a class \verb+MyClass+ having a attribute called \verb+myAttribute+, one can access the
+%attribute simply by writing \verb+a@myAttribute+.
+%In the R terminology 
+%For the most common attributes, accessor methods are built in the class. Using the previous example, we would have an accessor
+%function \verb+myAttribute+ applied to the instance \verb+a+: \verb+myAttribute(a)+ .
+
+%Different classes have been implemented in the package to ease the manipulation of the data. The main ones are described below,
+%with a note for their main \verb+slots+ and \verb+methods+.
+%Users who are already familiar with the different categories of files involved in the analysis will not be surprised to find
+%classes corresponding to the \verb+Cdf+ and \verb+Cel+ files.
+
+The classes \verb+Cdf+ and \verb+Cel+ model the physical files in which data are stored. This can be useful for particular
+operations. As stated in the introduction there is an alternative way of manipulating the data, which allows manipulation
+of the data at a lower level.
+The complete processing of the data presented in the previous section could be done using these objects.
+It means more freedom, but it also means more complexity, and the need to
+know the steps of the analysis leading from the probes data on different arrays and in different files to the expression values,
+in an \verb+exprSet+.
+However, this section should not be considered for advanced users only\footnote{Advanced users will not find enough details in the following this section and are recommended to read the help files}. While you may want to rely on the steps and methods
+carefully crafted in the function \verb+express+, we also encourage you to observe the raw data contained in the {\it CEL} files.
+It might be informative about problems that occured during the experimental steps leading to the data. 
+
+For several attributes of the \verb+Cdf+ and \verb+Cel+ objects, it was decided to use matrices to store the data.
+The lookup of values at particular positions on the chip becomes extremely easy (see figure~\ref{fig:gridcel}). 
+\begin{figure}[h]
+   \label{fig:gridcel}
+   \begin{center}
+     \includegraphics[scale=.6,angle=0]{gridcel}
+   \end{center}
+   \caption{The data matrix used to store the data can be thought of as a grid. Knowing the position of probes on the grid, finding the values
+for them is done by indexing the corresponding elements.}
+\end{figure}
+
+The information is extracted from the combination of the \verb+Cel+ and the corresponding \verb+Cdf+.
+Objects of class \verb+Plob+ (see~\ref{subsection:Plob}, page~\pageref{subsection:Plob}) have a different
+data structure but also take their informations from a \verb+Cdf+ and \verb+Cel+ objects. A convenience function to shuttle between the data structures is included in the package (try \verb+help(convert)+ in R). 
+
+While focusing on \verb+Cdf+ and \verb+Cel+, the section presents briefly other classes defined in the package. 
+
+  \subsection{Cdf-class}
+
+The {\it Chip Definition Files} ({\it CDF} files) are used to store informations related to
+a type of oligonucleotide array sold by the manufacturer. All the arrays belonging to a given type will share this same information.
+As the quantity of informations in a {\it CDF} can be rather large, this is an important point. This is kept in the design of the package,
+as there will be only one \verb+Cdf+ object in memory, to which will refer the corresponding \verb+Cel+ files.
+
+For instance when during an experiment a total of 30 arrays of type {\it Hu6800} are used, the information relative the array type is
+common to all the chips. Knowing that a {\it CDF} files weights 20 Megabytes, will help to realize the interest of avoiding to repeat this information.
+
+
+\begin{description}
+ \item[name] Each {\it probe} (or {\it feature}) on an array is an oligonucleotide from a larger sequence of nucleic acids 
+(generally a gene or a fraction of a gene), we refer to as a probe pairs set (XXX see PPSet).
+ All these {\it large sequences} were given a unique name by the chip manufacturer. By design of the arrays severals probes correspond to different
+parts of the same larger sequence, hence have the same name. Names are stored as factors, and the corresponding factors labels (or levels) are found in the
+attribute \verb+name.levels+.
+ \item[name.level]
+ \item[pbase] In the {\it CDF} files, the column called {\it PBASE} holds one of the nucleic acid letters. From trials and errors
+\footnote{Comparing the letter between {\it PBASE} and {\it TBASE}, it appeared that two cases could appear. }
+, the {\it p} was guessed
+ to stand for {\it probe}.
+ \item[pbase.levels] The four levels for \verb+pbase+ are the four letters used to designatee nucleic acids.
+ \item[tbase] In the {\it CDF} files, the column called {\it TBASE} holds also a nucleic acid letter. From trials and errors where the {\it t}
+ was assumed to stand for {\it tbase}.
+ \item[tbase.levels] The four same letters than for \verb+pbase.levels+ are found here.
+ \item[atoms] Each {\it probe pair} in a {\it probe pair set} is given a unique integer as an indentifier.
+This number is refered as the {\it atom} number. The corresponding {\it perfect matches} and {\it mismatches} are found by using this number.
+\end{description}
+
+In the following example, we look for the locations where a particular {\it affyID} is found on the chip.
+Then we plot them over over a grid.
+<<fig=TRUE>>=
+data(CDF.example)
+cdf <- CDF.example # to make the expression below clearer
+
+affyid <- "D13640_at"
+
+l.pm <- locate.name(affyid, cdf, type="pm")
+l.mm <- locate.name(affyid, cdf, type="mm")
+
+## plot a grid corresponding to CDF.example
+n.y <- ncol(probeNames(cdf))
+n.x <- nrow(probeNames(cdf))
+plot(c(1,n.x), c(1,n.y), xlab="rows", ylab="columns", type="n")
+grid(n.x, n.y)
+
+## plot the locations
+points(l.pm, col="red")
+points(l.mm, col="blue")
+@ 
+
+%>>>LG: removed from the previous R statements
+%Example:
+%\vignette{Cdf-class}
+%<<R.hide, echo=FALSE>>=
+%  library(affy)
+%@
+%<<>>=
+%  data(CDF.example)
+%
+%  affyid <- "D13640_at"
+%  ## look for the position of the factor label "D13640_at"
+%
+%  i <- match(affyid, CDF.example@name.levels)
+%  ## (it holds the integer value 43)
+%  ## look for the corresponding name(s)
+%  genepos <- which(CDF.example@name == i, arr.ind=TRUE)
+%  ## genepos holds the x,y's corresponding to "D13640_at"
+%  ## the function locate.name() is working this way.
+%\end{verbatim}
+
+%Example:
+%\vignette{Cdf-class}
+%<<>>= 
+%  data(CDF.example)
+%
+%  ## store in x the size of the probe pair sets
+%  ## (there are two atoms per pair, so we divide per 2)
+%  x <- tapply(CDF.example@atom, CDF.example@name, FUN=length) / 2
+%  dimnames(x) <- list(CDF.example@name.levels[as.integer(names(x))])
+%  
+%  ## select the probe pairs with less than 5 probe pairs
+%  s <- which(x < 5)
+%  
+%  x[s]
+%  
+%  ## note: these probe pair sets mostly exist because example.CDF
+%  ## is an artificial data set.
+%  ## (which is a corner of a Hu6800 chip).
+%@
+%\end{verbatim}
+
+\subsection{class Cel}
+
+Objects of class \verb+Cel+ contain the informations held in {\it CEL} files.
+
+\begin{description}
+  \item[image] Display an {\it image} of the data in the \verb+Cel+ object. Among the other parameters, \verb+transfo=log+ can be convenient.
+  \item[show] Outputs few general facts about the object on the console.
+\end{description}
+
+\subsection{class Cel.container}
+
+The class \verb+Cel.container+ extends the class \verb+container+ of the package {\it Biobase}. It allows to bundle a collection of \verb+Cel+ instances
+together. Typically, a \verb+Cel.container+ will contain \verb+Cel+ instances sharing the same \verb+Cdf+
+% \footnote{We plan to have
+%a link to the \verb+Cdf+ included in \verb+Cel.container+... probably in the next version...}.
+
+\begin{description}
+  \item[generateExprSet] Compute expression values and return them in an \verb+exprSet+ object.
+  \item[normalize] A \verb+Cel.container+ can be {\it normalized}, which means its \verb+Cel+ elements will be scaled to be comparable. More details about normalization can be found in the section~\ref{sec:normalize}, page~\pageref{sec:normalize}.
+  \item[normalize.methods] Return the known normalization methods for the \verb+Cel+.
+  \item[show] Display global information about the object
+\end{description}
+
+\subsection{class PPSet}
+
+\begin{description}
+  \item[probes] a data frame having two column named {\it pm} and {\it mm} respectively. 
+  \item[name] the name of the probe pair set
+\end{description}
+
+\begin{description}
+  \item[show] Outputs few general facts about the object on the console.
+  \item[barplot] Display a \verb+barplot+ of the probes informations
+  \item[plot] Plot the probes informations in a lines graph.
+\end{description}
+
+
+\subsection{class PPSet.container}
+
+\begin{description}
+  \item[show] Outputs few general facts about the object on the console.
+\end{description}
+
+\subsection{class Plob}
+
+The class \verb+Plob+ has been introduced in the previous section. One could think of it as related to the class \verb+Cel.container+
+as it contains most of the information contained in it. It also contains informations from the corresponding CDF file. The data
+are organised in a different structure. We think of it as an another view on the data.
+
+%>>>LG: RAFA: HELP for below!!!
+
+\begin{description}
+  \item[normalize] A \verb+Plob+ can be {\it normalized}, which means the data coming from different the arrays
+ will be scaled to be comparable. More details about normalization can be found in the section~\ref{sec:normalize}, page~\pageref{sec:normalize}.
+  \item[normalize.methods] Return the known normalization methods for the \verb+Cel+.
+  \item[plot] Displays plots.
+  \item[show] Display global information about the object.
+\end{description}
+
 \section{Extending the package}
+ \subsection{Normalization}
+
+Different approaches to normalize array data have already been suggested, but new methods are very likely be developped too.
+ We tried to make the addition of new normalization methods straightforward.
+It should be the case if the following indications are carefully observed.
+Brave people may want to add new normalization methods without taking these rules into considerations. It should be possible, but they are on their own.
+\begin{itemize}
+ \item[-] Normalization method must obey a naming convention. The name of the function should be like \verb+normalize.XYZ.abc+,
+where \verb+abc+ is the {\it nickname} of the method and \verb+XYZ+ is the name of the object the normalization methods works on.
+Currently XYZ can only be \verb+Cel.container+ or \verb+Plob+\footnote{A general scheme for normalization of arrays, whether
+{\it Affymetrix} or cDNA (or even others in the future (?)) is currently evaluated.}. You are free to implement a normalization
+ method working on one object without having to implement it for the others.
+ \item[-] The first argument passed to the function must be of class \verb+XYZ+. Optional parameter can be appended as long
+as they have default values./
+ \item[-] The {\it nickname} of the new normalization method must be registered in the variable \verb+normalize.XYZ.methods+
+ (a vector of mode {\it character}).
+\end{itemize}
+
+The following example shows how to create a normalization methods for \verb+Cel.container+
+that does... absolutely nothing:
+
+%\begin{vignette}
+<<>>=
+normalize.Cel.container.nothing <- function(object) return(object)
+normalize.Cel.container.methods <- c(normalize.Cel.container.methods, "nothing")
+
+data(listcel)
+
+listcel.n <- normalize(listcel, method="nothing")
+@
 
 \bibliographystyle{plainnat} 
 \bibliography{affy} 
