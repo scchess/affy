@@ -68,7 +68,8 @@
  **                as first file.
  ** Jun 19, 2003 - Naming of columns of intensity matrix done in
  **                C code 
- **
+ ** Jun 29, 2003 - remove some unnecessary cruft from tokenize
+ **                routine
  **
  **
  *************************************************************/
@@ -149,7 +150,6 @@ FILE *open_cel_file(char *filename){
      error("Could not open file %s", filename);
   } else {
     /** check to see if first line is [CEL] so looks like a CEL file**/
-    //fgets(buffer, BUF_SIZE, currentFile);
     ReadFileLine(buffer, BUF_SIZE, currentFile);
     if (strncmp("[CEL]", buffer, 4) == 0) {
       rewind(currentFile);
@@ -183,7 +183,6 @@ void  findStartsWith(FILE *my_file,char *starts, char *buffer){
   int match = 1;
 
   do {
-    //fgets(buffer, BUF_SIZE,  my_file);
     ReadFileLine(buffer, BUF_SIZE, my_file);
     match = strncmp(starts, buffer, starts_len);
   } while (match != 0);
@@ -222,36 +221,23 @@ void AdvanceToSection(FILE *my_file,char *sectiontitle, char *buffer){
 tokenset *tokenize(char *str, char *delimiters){
 
   int i=0;
-  char *original_str;
+
   char *current_token;
   tokenset *my_tokenset = Calloc(1,tokenset);
   my_tokenset->n=0;
   
+  my_tokenset->tokens = NULL;
 
-  original_str = Calloc(strlen(str) +1 ,char);
-
-  strcpy(original_str,str);
-  
   current_token = strtok(str,delimiters);
-  
   while (current_token != NULL){
     my_tokenset->n++;
-    current_token = strtok(NULL,delimiters);
-  }
-
-  my_tokenset->tokens = Calloc(my_tokenset->n,char*);
-  current_token = strtok(original_str,delimiters);
-  i =0;
-  while (current_token != NULL){
-        
+    my_tokenset->tokens = Realloc(my_tokenset->tokens,my_tokenset->n,char*);
     my_tokenset->tokens[i] = Calloc(strlen(current_token)+1,char);
     strcpy(my_tokenset->tokens[i],current_token);
     i++;
     current_token = strtok(NULL,delimiters);
   }
 
-  Free(original_str);
-  
   return my_tokenset; 
 }
 
@@ -456,7 +442,6 @@ int read_cel_file_intensities(char *filename, double *intensity, int chip_num, i
   findStartsWith(currentFile,"CellHeader=",buffer);  
   
   for (i=0; i < rows; i++){
-    //fgets(buffer, BUF_SIZE,  currentFile);
     ReadFileLine(buffer, BUF_SIZE,  currentFile);
     cur_tokenset = tokenize(buffer," \t");
     cur_x = atoi(get_token(cur_tokenset,0));
