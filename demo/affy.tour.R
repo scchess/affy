@@ -112,7 +112,7 @@ boxplot(normalize(Dilution))
 # generates pseudo repeated measurments
 # by adding noise to two differents measurements
 ##
-p <- new("PPSet.container", x=vector("list", length=4), content="PPSet")
+p <- new("PPSet.container", x=vector("list", length=4), content="PPSet", locked=FALSE)
 p[[1]] <- get.PPSet("A28102_at",CDF.example,listcel[[1]])
 p[[2]] <- get.PPSet("A28102_at",CDF.example,listcel[[2]])
 p[[3]] <- p[[1]]
