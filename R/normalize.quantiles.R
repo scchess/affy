@@ -71,10 +71,10 @@ normalize.quantiles <- function(x,copy=TRUE){
     x <- matrix(as.double(x),rows,cols)
     copy <- FALSE
   }
-  
+
   #matrix(.C("qnorm_c", as.double(as.vector(x)), as.integer(rows), as.integer(cols))[[1]], rows, cols)
 
-  .Call("R_qnorm_c",x,copy);
+  .Call("R_qnorm_c",x,copy, PACKAGE="affy");
 }
 
 
@@ -173,9 +173,11 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
   }
   cat("Chip weights are ",weights,"\n")
   if (approx.meth == FALSE){
-    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2))[[1]],rows,cols)
+    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2),
+    PACKAGE="affy")[[1]],rows,cols)
   } else {
     cat("Approximation currently not implemented \nFalling back to standard Quantile method\n")
-    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2))[[1]],rows,cols)
+    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2),
+    PACKAGE="affy")[[1]],rows,cols)
   }
 }

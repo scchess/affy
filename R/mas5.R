@@ -1,32 +1,32 @@
 mas5 <- function(object,normalize=TRUE,sc = 500, analysis = "absolute",...){
-  res <- expresso(object,bgcorrect.method="mas",pmcorrect.method="mas",normalize=FALSE,summary.method="mas",...) 
-  if(normalize) 
+  res <- expresso(object,bgcorrect.method="mas",pmcorrect.method="mas",normalize=FALSE,summary.method="mas",...)
+  if(normalize)
     res <- affy.scalevalue.exprSet(res,sc=sc,analysis=analysis)
   return(res)
 }
 
-mas5calls.ProbeSet <- function(object, 
+mas5calls.ProbeSet <- function(object,
                                tau=0.015, alpha1=0.04, alpha2=0.06,
                                ignore.saturated=TRUE){
 
   if(alpha1 < 0)      {stop("alpha1 must be  > 0 "); }
   if(alpha1 > alpha2) {stop("alpha2 must be  > alpha1 "); }
   if(alpha2 > 1)      {stop("alpha2 must be  <1 "); }
-  
+
   ## Saturation:
   ## shouldn't be a problem with new scanners
   ##or those that have had an engineer visit
   if(ignore.saturated) { sat <- 46000; }
   else { sat <- -1; }
-  
+
   pms <- pm(object)
   mms <- mm(object)
   pns <- rep(object@id,nrow(pms))
   unique.pns <- unique(pns)
-  
-  pvals<-sapply(1:length(pms[1,]),function(x) { 
+
+  pvals<-sapply(1:length(pms[1,]),function(x) {
     .C("DetectionPValue",as.double(pms[,x]),as.double(mms[,x]),as.character(pns),as.integer(length(mms[,x])),
-       as.double(tau),as.double(sat),dpval=double(length(unique.pns)),length(unique.pns))$dpval;
+       as.double(tau),as.double(sat),dpval=double(length(unique.pns)),length(unique.pns), PACKAGE="affy")$dpval;
   });
   calls <- sapply(pvals,function(y) { if(y < alpha1) { return("P") } else { if(y < alpha2) { return("M") } else { return("A") }}});
 
@@ -50,18 +50,18 @@ mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
   ##or those that have had an engineer visit
   if(ignore.saturated) { sat <- 46000; }
   else { sat <- -1; }
-  
+
   pns <- probeNames(object);
   unique.pns <- unique(pns)
-  
+
   if(verbose) cat("Computing p-values\n");
-  p<-sapply(1:length(pms[1,]),function(x) { 
+  p<-sapply(1:length(pms[1,]),function(x) {
     .C("DetectionPValue",as.double(pms[,x]),as.double(mms[,x]),as.character(pns),as.integer(length(mms[,x])),
-       as.double(tau),as.double(sat),dpval=double(length(unique.pns)),length(unique.pns))$dpval;
+       as.double(tau),as.double(sat),dpval=double(length(unique.pns)),length(unique.pns), PACKAGE="affy")$dpval;
   });
   rownames(p) <- unique.pns;
   colnames(p) <- sampleNames(object)
- 
+
   if(verbose) cat("Making P/M/A Calls\n");
   calls <- sapply(p,function(y) { if(y < alpha1) { return("P") } else { if(y < alpha2) { return("M") } else { return("A") }}});
   calls <- matrix(calls,nrow=nrow(p),ncol=ncol(p));
@@ -72,7 +72,7 @@ mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
     calls <- calls[ids,,drop=FALSE]
     p <- p[ids,,drop=FALSE]
   }
-  
+
   eset <- new("exprSet",
               exprs=calls,
               se.exprs=p,
@@ -85,9 +85,9 @@ mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
 
 
 mas5.detection <- function(mat, tau=0.015, alpha1=0.04, alpha2=0.06,
-                           exact.pvals=FALSE, cont.correct=FALSE) { 
+                           exact.pvals=FALSE, cont.correct=FALSE) {
   ## CONSTANTS
-  
+
   saturation.point <- 46000			# not a user parameter
   mat.r <- (mat[,1]-mat[,2])/(mat[,1]+mat[,2])
   ## SANITY CHECKING
@@ -103,7 +103,7 @@ mas5.detection <- function(mat, tau=0.015, alpha1=0.04, alpha2=0.06,
     stop("Invalid exact.pvals.")
   if ( !is.logical(cont.correct) )
         stop("Invalid cont.correct.")
-  
+
   ## DEALING WITH SATURATION; COMPUTING THE P-VALUE
   ## According to the Bioinformatics paper:
   ## * If all MM's are saturated, then call present
@@ -132,7 +132,7 @@ mas5.detection <- function(mat, tau=0.015, alpha1=0.04, alpha2=0.06,
                         exact=exact.pvals, correct=cont.correct,
                         conf.int=FALSE)$p.value
   }
-  
+
   ## DETECTION CALL
   if ( pval < 0 || pval > 1 )
     warning("Computed an unusual p-value outside the range [0,1].")
@@ -142,7 +142,7 @@ mas5.detection <- function(mat, tau=0.015, alpha1=0.04, alpha2=0.06,
         call <- "M"
   else
         call <- "A"
-  
+
   ## DONE
   return(list(pval=pval, call=call))
 }

@@ -24,7 +24,7 @@ cleancdfname <- function(cdfname, addcdf=TRUE) {
 
 ##this function gets the cdf from a celfile
 whatcdf <- function(filename, compress=getOption("BioC")$affy$compress.cel)
-  return(.Call("ReadHeader",filename,compress)[[1]])
- 
+  return(.Call("ReadHeader",filename,compress, PACKAGE="affy")[[1]])
 
-  
+
+

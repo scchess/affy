@@ -11,7 +11,7 @@
 # Background correction code has been added.
 #
 # note this function does not leave the supplied
-# AffyBatch unchanged if you select DESTRUCTIVE=TRUE. this is 
+# AffyBatch unchanged if you select DESTRUCTIVE=TRUE. this is
 # for memory purposes but can be quite
 # dangerous if you are not careful. Use destructive=FALSE if this is
 # deemed likely to be a problem.
@@ -42,23 +42,29 @@ rma <- function(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=T
   } else {
     ngenes <- length(subset)
   }
-  
+
   #background correction
   bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
 
   if (destructive){
-  	exprs <- .Call("rma_c_complete",pm(object,subset),mm(object,subset),probeNames(object,subset),ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
+  	exprs <-
+  	.Call("rma_c_complete",pm(object,subset),mm(object,subset),probeNames(object,subset),ngenes,body(bg.dens),new.env(),normalize,background,bgversion,
+  	PACKAGE="affy")
   } else {
-	exprs <- .Call("rma_c_complete_copy",pm(object,subset),mm(object,subset),probeNames(object,subset),ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
+	exprs <-
+  	.Call("rma_c_complete_copy", pm(object,subset),
+  	mm(object,subset), probeNames(object,subset), ngenes,
+  	body(bg.dens), new.env(), normalize, background, Cbgversion,
+  	PACKAGE="affy")
   }
   colnames(exprs) <- sampleNames(object)
   se.exprs <- array(NA, dim(exprs)) # to be fixed later, besides which don't believe much in nominal se's with medianpolish
-  
+
   phenodata <- phenoData(object)
   annotation <- annotation(object)
-  description <- description(object) 
+  description <- description(object)
   notes <- notes(object)
-  
-  new("exprSet", exprs = exprs, se.exprs = se.exprs, phenoData = phenodata, 
+
+  new("exprSet", exprs = exprs, se.exprs = se.exprs, phenoData = phenodata,
        annotation = annotation, description = description, notes = notes)
 }
