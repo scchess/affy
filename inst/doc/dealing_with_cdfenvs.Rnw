@@ -54,8 +54,8 @@ library(affy)
 \section*{Why and how}
 
 The {\it cdfenvs} are associative data structures to map efficiently a
-{\it probeset id} with indexes for the corresponding probes. These
-indexes are used to subset a matrix storing probe level
+{\it probeset id} with indices for the corresponding probes. These
+indices are used to subset a matrix storing probe level
 intensities. Technically, a {\it cdfenv} is a {\bf R} \Robject{environment}.
 The functions \Rfunction{get} and \Rfunction{multiget} (in \Rpackage{Biobase})
 are a convenient way to access what is in an environment.
@@ -65,7 +65,7 @@ In the case of {\it Affymetrix} data, the {\it cdfenvs} are built from
 the {\it .CDF} files. The package \Rpackage{makecdfenvs} is dedicated
 to the building of packages with {\it cdfenvs}. The simplest way
 to proceed is to have the package needed for the analysis installed.
-A number of {\it cdfenv} package for {\it Affymetrix} chips are
+A number of {\it cdfenv} packages for {\it Affymetrix} chips are
 available for download on the {\it Bioconductor} data packages repository. 
 This release (1.2.x) of the \Rpackage{affy} package has an option to
 allow automatic downloading and install of a {\it cdfenv} that would
@@ -77,21 +77,8 @@ be found missing during an analysis. However, if you are using an {\it
 {\it cdfenv} package you need. For Microsoft Windows binaries you need
 to do more, see \url{http://www.stats.ox.ac.uk/pub/R/rw-FAQ.html}. If
 you contribute the package to {\it Bioconductor} a windows binary
-will be made for you (and everybody else).  
-
-If you do not care about mapping {\it probeset id}s with indexes 
-and only want to deal with intensities, you can
-use the following work around:
-
-\begin{Sinput}
-R> x <- ReadAffy() ##read-in your cel-file info
-R> assign(x@cdfName, new.env() )
-\end{Sinput}
-
-The affy package will then find the empty environment defined by
-\verb+x@cdfName+ and will not try to find a package. But beware: if
-you do this and then install the appropriate package, you will
-continue to use the empty environment until it is removed.
+will be made for you (and everybody else). The last section outlines
+briefly how to change the associated {\it cdfenv}.
 
 
 The complete structure of the options for the package is not
@@ -163,6 +150,7 @@ affy.opt.noauto <- deactivate.autoload(affy.opt)
 @
 
 
+
 \section*{Security}
 
 The autoload mecanism can be perceived as a security breach. It is the
@@ -202,4 +190,28 @@ Note that a given {\it cdfenv} package is searched as specified in the
 argument {\it where}. Depending on your settings, you might prefer updating
 the \Rfunction{.libPaths()} of your {\bf R} session, or the field {\it
 where} for the probelocs).
+
+\section*{Changing the associated {\it cdfenv}}
+
+If you do not care about mapping {\it probeset id}s with indices 
+and only want to deal with probe intensities, or if you would like
+to make a custom {\it cdfenv} from scratch, you will have to modify
+the association between your \Robject{AffyBatch} object(s) and {\it cdfenvs}.
+
+If you want to experiment with this feature of the package, we would
+recommend to create a dummy {\it cdfenv} and associate your \Robject{AffyBatch}
+to it:
+
+<<>>=
+data(affybatch.example)
+dummymap.name <- "dummymap"
+assign(dummymap.name, new.env())
+affybatch.example@cdfName <- paste(dummymap.name, "cdf", sep="")
+@ 
+
+As explained in the first part, the \Rpackage{affy} package will then find a matching
+environment in the current environment (\Robject{.GlobaEnv})and will not try to find a
+package. Note: the environment should still be in the section {\it
+probelocs} of the package options.
+
 \end{document}

@@ -108,7 +108,9 @@ locations to probe set membership. Section \ref{configure.options} describes how
 \item New functions 'xy2indices' and 'indices2xy' to shuttle from
   x/y pos to indices (like the ones in cdfenvs) (and reverse).
 \item The documentation for normalization has been improved.
-\item Due to some new protocols \verb+?AffyBatch+ no longer will give you the help file. One needs to type \verb+help("AffyBatch-class")+. Same is true for other classes.
+\item Due to some new protocols \verb+?AffyBatch+ no longer will give you the help file. One needs to
+to type \verb+class?AffyBatch+, \verb+help("AffyBatch-class")+ or \verb+?"AffyBatch-class"+.
+ Same is true for other classes.
 \item The function \verb+justRMA+ added for those who want to use \verb+rma+ and are having memory problems.
 \end{itemize}
 
@@ -141,13 +143,15 @@ be observed (see Ben Bolstad's webpage). Precise comments on how these differenc
 affecting you or on how you think our code could be improved are welcome} .
 Throughout the package we use \Rfunction{mas} to denote the procedures described in the MAS 5.0 software. 
 
-The main difference between Version 1.1 and this version (1.2) is that in most cases the user no longer needs to manually download and install the appropriate CDF environment package. If the appropriate \verb+cdfenv+ is not installed it will, by default, be downloaded and installed automatically for the user. If a prepacked CDF environment for your particular chip type is not currently available you can create your own CDF environment. You may do this using the \verb+makecdfenv+ package which is available from the Bioconductor web site \url{www.bioconductor.org}. If you are using the {\bf HGU95Av2} or {\bf HGU133A} chip the
-information is included in the affydata package and you can load this package instead of downloading further packages. See Section \ref{sec:probesloc} for information on how the environments work. 
+The main difference between Version 1.1 and this version (1.2) is that in most cases the user no longer needs to manually download and install the appropriate CDF environment package. If the appropriate \verb+cdfenv+ is not installed it will, by default, be downloaded and installed automatically for the user. If a prepacked CDF environment for your particular chip type is not currently available you can create your own CDF environment. You may do this using the \Rpackage{makecdfenv} package which is available from the Bioconductor web site \url{www.bioconductor.org}. If you are using {\bf HGU95Av2} or {\bf HGU133A} chips, the
+information is included in the \Rpackage{affydata} package. You can load this package instead of downloading further packages. See Section \ref{sec:probesloc} for information on how the environments work. 
 
 There are some minor differences in what you can do but little
 functionality has disappeared. Much has been added!
 
 %%% RI: raw is DAT file. so i changed raw to probe level.
+%% LG: Depends on point of view. It is the case for people doing image
+%% analysis, not for us so far... 
 \section{Getting Started: From probe level data to expression values}
 \label{sec:get.started}
 
@@ -184,12 +188,19 @@ R> eset <- rma(Data)
 \end{Sinput}
 \end{enumerate}
 
-If your data set is too large and this gives you memory problem try the following instead
+Depending on the size of your dataset and on the memory available to your
+system, you might experience errors like `Cannot allocate vector \ldots'.
+An obvious option is to increase the memory available to your R process
+(by adding memory and/or closing external applications\footnote{UNIX-like
+systems users might also want to check {\it ulimit} and/or compile
+{\bf R} and the package for 64 bits when possible.}.
+An another option is to use the function \Rfunction{justRMA}.
 \begin{Sinput}
 R> eset <- justRMA(Data)
 \end{Sinput}
-Notice one does not need to call \verb+ReadAffy+ and thus probe level
-data is never stored. However, \verb+rma+ continues to be the
+This reads the data and performs the `RMA' way to preprocess them at the {\it C} level.
+One does not need to call \verb+ReadAffy+, probe level
+data is never stored in an AffyBatch. \verb+rma+ continues to be the
 recommended function for computing RMA.
 
 
