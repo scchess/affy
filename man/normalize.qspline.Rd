@@ -21,7 +21,7 @@ normalize.qspline(x, target = NULL, samples = NULL,
   \item{abatch}{an \code{AffyBatch}}
 %  \item{plob}{a \code{Plob}}
   \item{target}{numerical vector of intensity values to normalize to.
-                (could be the name for one of the celfiles in 'listcel')}
+                (could be the name for one of the celfiles in 'abatch')}
   \item{samples}{numerical, the number of quantiles to be used for spline.
                  if (0,1], then it is a sampling rate}
   \item{fit.iters}{number of spline interpolations to average}
@@ -48,7 +48,20 @@ normalize.qspline(x, target = NULL, samples = NULL,
   This normalization method uses the quantiles from each array and the 
   target to fit a system of cubic splines to normalize the data. The 
   target should be the mean (geometric) or median of each probe but could 
-  be another celfile.
+  also be the name of a particular chip in the \code{abatch} object.
+
+  Parameters setting can be of much importance when using this method.
+  The parameter \code{fit.iter} is used as a starting point to find a
+  more appropriate value. Unfortunately the algorithm used do not
+  converge in some cases. If this happens, the \code{fit.iter} value is
+  used and a warning is thrown. Use of different settings for the
+  parameter \code{samples} was reported to give good results. More
+  specifically, for about 200   data points use
+  \code{samples = 0.33}, for about 2000  data points use
+  \code{samples = 0.05}, for about 10000 data points use
+  \code{samples = 0.02}
+  (thanks to Paul Boutros).
+  
 }
 \author{
   Laurent and Workman C.
