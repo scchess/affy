@@ -36,7 +36,7 @@ from studying the individual probe intensities, or as we call them,
 the {\it probe level data}. This is why we developed this package.
 
 We assume that the reader is already familiar with oligonucleotide 
-arrays and with the design of the Affymetrix GeneChip arrays. If your not, we recommend the Appendix of the Affymetrix MAS manual \cite{affy}. The 
+arrays and with the design of the Affymetrix GeneChip arrays. If you're not, we recommend the Appendix of the Affymetrix MAS manual \cite{affy}. The 
 following terms are used throughout this document with a specific meaning.
 \begin{description}
 \item[probe] oligonucleotides with length of 25 base pairs used to
@@ -86,12 +86,14 @@ However, if you are going to be doing much probe
 level analyses we recommend using the Cel/Cdf classes described in 
 Section \ref{s2}.
 
-The Section 2.1 describes three lines of code that can get you started if all
+Section \ref{s1.1} describes three lines of code that can get you started
+if all 
 you want is expression values. The rest of the Section demonstrate the
 utility of the package via an example using the dilution experiment data set
 described in \cite{iriz:etal:2002}.
 
 \subsection{If you only want expression values}
+\label{s1.1}
 If all you want is to convert probe level data into expression measures
 a quick way of doing it is like this: Create a directory, move all your
 {\it CEL} files and the appropriate {\it CDF} file to that directory. Start
@@ -101,7 +103,7 @@ R in that directory. Load the library and then type:
 R> Data <-  ReadAffy() ##read data in working directory
 R> e <- express(Data)
 \end{Sinput}
-Note there must be exactly one CDF file for this to work.
+Note there must be exactly one {\it CDF} file for this to work.
 
 This will store expression values, in the object \verb+e+, as an 
 object of class \verb+exprSet+ (see the Biobase package). You can
@@ -141,9 +143,9 @@ Note there must be exactly one CDF file for this to work.
 Alternatively the user can choose what files to be read using a
 graphical display such as those shown in Figures \ref{f1} and
 \ref{f2}. In order to 
-do this, the \verb+widget+ argument must be true like this:
+do this, the \verb+widget+ argument must be \verb+TRUE+ like this:
 \begin{Sinput}
-R> Dilution <- ReadAffy(widget=T) 
+R> Dilution <- ReadAffy(widget=TRUE) 
 \end{Sinput}
 
 \begin{figure}[htbp]
@@ -179,7 +181,7 @@ data(Dilution)
 print(Dilution) ##this shows some important info
 @ 
 This will create the \verb+Dilution+ object of class \verb+Plob+. 
-\verb+print+ (or \verb+show+) will show some relevant information
+\verb+print+ (or \verb+show+) will show some relevant information.
 These objects 
 are meant to represent data from one 
 experiment. The \verb+Plob+ class combines the
@@ -204,7 +206,7 @@ pm}, {\tt mm}, and {\tt probeNames} methods.
 The slots {\tt pm} and {\tt mm} are matrices with rows
 representing probe pairs and columns representing arrays. The gene
 name associated with the probe pair in row $i$ can be found in the
-$i$th entry of the name \verb+name+ slot (accessed with {\tt probeName}).
+$i$th entry of the \verb+name+ slot (accessed with {\tt probeNames}).
 
 <<>>=
 pm(Dilution)[1:5,]
@@ -232,7 +234,7 @@ hist(Dilution[,3]) ##histogram of $PM$ and $MM$ for 3rd array
 
 It is important to note that \verb+Dilution[i,j]+ gives back another
 \verb+Plob+ object representing the \verb+i+th probe set (as opposed to
-the \verb+i+ probe) and the
+the \verb+i+th probe) and the
 \verb+j+th sample. Look at what happens when you show the $PM$s and
 probe names for this with \verb+i=2+ and \verb+j=3+:
 <<>>=
@@ -270,8 +272,6 @@ show all MVA plots of each pairwise comparison on the top right half and
 the interquartile range (IQR) of the log ratios on the bottom left half. 
 For replicates and cases where most genes are not differentially expressed, 
 we want the cloud of points to be around 0 and the IQR to be small.
-
-
 \begin{figure}[htbp]
 \begin{center}
 <<echo=F>>=
@@ -280,10 +280,9 @@ options(warn=-1)
 <<fig=TRUE>>=
 mva.pairs(Dilution[,1:3])
 @     
-\caption{\label{f5}MVA pairs for first three arrays in dilution Data}
+\caption{\label{f5}MVA pairs for first three arrays in dilution data}
   \end{center}
 \end{figure}
-
 The method \verb+normalize+ lets one normalize the data. 
 <<>>=
 normalized.Dilution <- normalize(Dilution[,1:3])
@@ -312,7 +311,7 @@ dilution data.}
 mva.pairs(normalized.Dilution[,1:3])
 @     
 \caption{\label{f5.2}MVA pairs for first three arrays in normalized 
-dilution Data}
+dilution data}
   \end{center}
 \end{figure}
 
@@ -324,13 +323,14 @@ approaches on how to do this have been proposed, see for example
 \cite{affy}, \cite{li:wong:2001a}, and \cite{iriz:etal:2002}. Our
 package permits the user to construct expression measures using any of
 the approaches mentioned. The function \verb+express+ 
-<<echo=FALSE>>=
+<<echo=FALSE,results=hide>>=
 e <- express(Dilution)
 @
 returns expression measures in an object of class ExprSet 
 (defined in the Biobase package). The {\tt exprs} slot of this class is
 a matrix with rows  representing genes and columns representing
-arrays. Standard error estimates are also provided in the \verb+se+ slot.
+arrays. Standard error estimates are also provided in the \verb+se.exprs+ 
+slot.
 Various bioconductor packages can be used to explore and analyze expression 
 data. The \verb+write.exprs+ method is available to write expression
 tables to a file  
@@ -340,27 +340,27 @@ An expression measure for a gene can be considered a summary of the
 background corrected and normalized 
 $PM$s of the probe set representing that gene.
 The default for \verb+express+ is to use the approach presented
-in \cite{iriz:etal:2002} (which is a log scale measure).
+in \cite{iriz:etal:2002}.
 However, the function is quite flexible. The normalization method can
 be change through the  
 \verb+normalize.method+ argument. Arbitrary functions 
 can be passed along via the \verb+bg+ and \verb+summary.stat+ arguments 
-for background correction and to summarize the 20 $PM$s into one number. 
+for background correction and to summarize the 20 $PM$s into one number 
+respectively.  
 Some background correction and summary functions are provided with the 
 package but the user can add their own. 
 More details are given in
-section Section \ref{s3.2} and reading the 
+Section \ref{s3.2} and reading the 
 help file. The next section presents a case study related to comparing 
 expression measures.
 
 \subsection{Case Study}
 \label{s1.6}
-Two sources of cRNA A (human liver tissue) and B (Central Nervous
-System cell line) have been hybridized to human arrays (HGU95A) in
+Two sources of cRNA, A (human liver tissue) and B (Central Nervous
+System cell line), have been hybridized to human arrays (HGU95A) in
 a range of proportions and dilutions. The Dilution data provided with 
-this package is taken from arrays hybridized to source A starting with
- 2.5 $\mu$g cRNA, and
-rising through 5.0, 10.0 $\mu$g. We have three replicate arrays for
+this package is taken from arrays hybridized to source A at concentrations of
+ 2.5, 5.0, and 10.0 $\mu$g. We have three replicate arrays for
 each generated cRNA. Three scanners have been used in this study.
 Each array replicate was  processed in a different scanner.
 
@@ -395,7 +395,7 @@ e <- express(normalized.Dilution,normalize=F)
 f <- express(Dilution,normalize=F)
 @
 
-To see if normalizing makes a difference, let's look at to 
+To see if normalizing makes a difference, let's look at  
 expression for two randomly selected genes for the 9 arrays plotted against
 known concentration. If the gene is expressed these values should be growing
 with concentration but the replicates should be close if not equal. Figure
@@ -410,7 +410,7 @@ par(mfrow=c(2,2)) ##plot expressions for 2 random genes
 for(j in 1:2){
   i <- sample(ngenes(Dilution),1)
   
-  expr.with.norm<- 2^exprs(e)[i,]##measure is in the log scale
+  expr.with.norm<- 2^exprs(e)[i,]##e is a log scale measure
   expr.without.norm <- 2^exprs(f)[i,] 
  
   YLIM <- range(c(expr.with.norm,expr.without.norm))
@@ -504,7 +504,7 @@ However, this section should not be considered
 for advanced users only\footnote{Advanced users will not find enough
 details in the following this section and are recommended to read the
 help files}. While you may want to rely on the steps and methods 
-carefully crafted in the function \verb+express+, we also encourage
+in the function \verb+express+, we also encourage
 you to explore the raw data contained in the {\it CEL} files. 
 It might be informative about problems that occurred during the
 experimental steps leading to the data.  
@@ -560,7 +560,7 @@ CDF} file. The slots are:
  All these {\it large sequences} were given a unique name by the chip manufacturer. We call this name {\it affyID}. By design of the arrays several probes correspond to different
 parts of the same larger sequence, hence have the same name. Names are stored as factors, and the corresponding factors labels (or levels) are found in the
 attribute \verb+name.levels+.
- \item[name.level]
+ \item[name.level] See previous item.
  \item[pbase] In the {\it CDF} files, the column called {\it PBASE} holds one of the nucleic acid letters. From trials and errors
 \footnote{Comparing the letter between {\it PBASE} and {\it TBASE}, it appeared that two cases could appear. }
 , the {\it p} was guessed
@@ -583,7 +583,7 @@ argument permits you to specify if the file you are reading is
 compressed. See the help file 
 for more details.
 
-In the following example, we look for the physical locations on a chip
+In Figure \ref{f9} we look for the physical locations on a chip
 of a particular {\it affyID}. We then plot them over over a grid.
 
 \begin{figure}[htbp]
@@ -693,7 +693,7 @@ about \verb+Cel.containers+ and Biobase to learn about containers in general)
 is available. For an example of a \verb+Cel+ object use
 <<>>=
 data(listcel)
-mycelfile <- listcel[[1]]
+mycelfile <- listcel[[1]] ##extract first component of container
 @
 
 The following useful methods are available for this class:
@@ -721,11 +721,7 @@ file using different colors and concentrations.}
 \end{figure}
 These images are quite useful for quality control. We recommend
 looking at these images as a first step 
-in data exploration.  The top panels show the effect of an air
-bubble. In the bottom panels we see ``cloudy'' areas which were
-caused by a leak in an assembly joint around the devices for injecting
-solutions onto the chip. Both are shown with raw (left panels) and
-log-transformed values (right panels). In our experience, the log
+in data exploration. In our experience, the log
 scale is more useful for detecting biases. This seems to be the case
 in Figure 1. 
 
@@ -833,7 +829,8 @@ averagediff <- mean(difference)
 A class of \verb+PPSet+ containers is also available. For the users
 convenience we include an example containing intensities read from 12
 arrays where the concentration of the control cRNA BioB-5 was added at
-known concentrations. The concentrations (pM) are also available
+known concentrations. The concentrations were varied from chip to chip. 
+These are also available
 thought the example data set:
 
 <<>>=
@@ -858,7 +855,8 @@ for(i in 1:12)
   points(rep(concentrations[i],20),mm(SpikeIn[[i]]),col=rainbow(20),pch=1:20)
 @ 
 \caption{\label{f11}$PM$ and $MM$ intensities read from 12 different arrays
-plotted against known concentrations of BioB-5 added to each array.} 
+plotted against known concentrations of BioB-5 added to each array. 
+Different symbols/colors are used for the 20 different probe pairs.} 
   \end{center}
 \end{figure}
 \section{Extending the package}
@@ -872,7 +870,8 @@ It should be the case if the following indications are carefully observed.
 Brave people may want to add new normalization methods without taking these rules into considerations. It should be possible, but they are on their own.
 \begin{itemize}
  \item[-] Normalization method must obey a naming convention. The name of the function should be like \verb+normalize.XYZ.abc+,
-where \verb+abc+ is the {\it nickname} of the method and \verb+XYZ+ is the name of the object the normalization methods works on.
+where \verb+abc+ is the {\it nickname} of the method and \verb+XYZ+ is the 
+class of the object the normalization methods works on.
 Currently XYZ can only be \verb+Cel.container+ or \verb+Plob+\footnote{A general scheme for normalization of arrays, whether
 {\it Affymetrix} or cDNA (or even others in the future (?)) is currently evaluated.}. You are free to implement a normalization
  method working on one object without having to implement it for the others.
