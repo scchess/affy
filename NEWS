@@ -1,0 +1,24 @@
+This documents tries to list the changes (especially the ones with
+consequencces for existing code using the package in an earlier
+version)
+
+
+version 1.2.1:
+
+ - 'image(cel)' scales to the size (# rows and # cols) of a chip.
+locations can be plotted over directly ('plotLocations' was fixed
+accordiginly).
+
+version 1.2.0:
+
+ - use of hdf5 possible to store 'Cel.container' objects
+
+ - extensive set of tests in the directory 'tests/'
+
+version 1.1.0:
+
+- 'generateExprSet(cel)' and 'generateExprVal(ppset.container)'
+need the name of a function for background correction.
+
+ - 'Cel.container' is no longer made of a list of 'Cel' objects.
+It is now a 3-ways array.
