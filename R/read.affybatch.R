@@ -136,7 +136,7 @@ list.celfiles <-   function(...){
 
 AllButCelsForReadAffy <- function(..., filenames=character(0),
                                   widget=getOption("BioC")$affy$use.widgets,
-                                  celfile.path=getwd(),
+                                  celfile.path=NULL,
                                   sampleNames=NULL,
                                   phenoData=NULL,
                                   description=NULL){
@@ -153,13 +153,17 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
     widgetfiles <- character(0)
   }
 
-  auxnames <- file.path(celfile.path, auxnames)
-  filenames <- file.path(celfile.path, filenames)
-  
+  if(!is.null(celfile.path)){
+    auxnames <- file.path(celfile.path, auxnames)
+    filenames <- file.path(celfile.path, filenames)
+  }
+
   filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
 
-  if(length(filenames)==0) filenames <- list.celfiles(celfile.path,full.names=TRUE)
-
+  if(length(filenames)==0){
+    if(is.null(celfile.path)) celfile.path <- getwd()
+    filenames <- list.celfiles(celfile.path,full.names=TRUE)
+  }
   if(length(filenames)==0) stop("No cel filennames specified and no cel files in specified directory:",celfile.path,"\n")
 
   if(is.null(sampleNames)){
@@ -214,7 +218,7 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
 ReadAffy <- function(..., filenames=character(0),
                      widget=getOption("BioC")$affy$use.widgets,
                      compress=getOption("BioC")$affy$compress.cel,
-                     celfile.path=getwd(),
+                     celfile.path=NULL,
                      sampleNames=NULL,
                      phenoData=NULL,
                      description=NULL,
