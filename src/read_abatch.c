@@ -1,4 +1,16 @@
 /*************************************************************
+ ** 
+ ** It should be noted that Laurent Gautier provided the 
+ ** initial CEL file parsing code as part of the file
+ ** read_cdf.c.  This code served us well for the 1.0-1.2
+ ** releases of Bioconductor. He should be commended for his 
+ ** fine code.
+ **
+ ** The following code became the default parsing code
+ ** at the BioC 1.3 release
+ **
+ ************************************************************/
+/*************************************************************
  **
  ** file: read_abatch.c
  **
