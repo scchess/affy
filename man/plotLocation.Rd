@@ -20,7 +20,7 @@ plotLocation(x, col="green", pch=22, ...)
   }
 }
 \seealso{
-  \code{\link{AffyBatch}}
+  \code{\link[affy:AffyBatch-class]{AffyBatch}}
 }
 \examples{
   ## loading data

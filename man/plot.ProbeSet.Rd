@@ -23,7 +23,7 @@ plot.ProbeSet(x, which=c("pm", "mm"), xlab = "probes", type = "l", ylim = NULL, 
   This function is only used for its (graphical) side-effect.
 }
 
-\seealso{\code{\link{ProbeSet}}}
+\seealso{\code{\link[affy:ProbeSet-class]{ProbeSet}}}
 
 \examples{
 data(SpikeIn)

@@ -3,11 +3,11 @@
 \alias{concentrations}
 \title{SpikeIn Experiment Data: ProbeSet Example}
 \description{
-This \code{\link{ProbeSet}} represents part of SpikeIn experiment
+This \code{\link[affy:ProbeSet-class]{ProbeSet}} represents part of SpikeIn experiment
 data set. 
 }
 \usage{data(SpikeIn)}
-\format{\code{SpikeIn} is \code{\link{ProbeSet}} containing the
+\format{\code{SpikeIn} is \code{\link[affy:ProbeSet-class]{ProbeSet}} containing the
   $PM$ and $MM$ intensities for a gene spiked in at different
   concentrations (given in the vector \code{colnames(pm(SpikeIn))}) in 12
   different arrays.}

@@ -20,7 +20,7 @@
   arrays of the same \code{CDF} type. In extends \code{\link[Biobase]{exprSet-class}}.}
 \section{Objects from the Class}{
   Objects can be created using the function \code{\link{read.affybatch}}
-  or the wrapper \code{\link{AffyBatch}}.}
+  or the wrapper \code{\link{ReadAffy}}.}
 \section{Slots}{
   \describe{
     \item{\code{cdfName}:}{Object of class \code{"character"} representing the name of
@@ -68,7 +68,7 @@ Class \code{"exprSet"}, directly.
     \item{[<-}{\code{signature(x = "AffyBatch")}: replaces subsets. }
     \item{[}{\code{signature(x = "AffyBatch")}: subsets by array.}
     \item{[[}{\code{signature(x = "AffyBatch")}: extracts each array as
-      an \code{\link{Cel}} instance.}
+      an \code{\link[affy:Cel-class]{Cel}} instance.}
     \item{boxplot}{\code{signature(x = "AffyBatch")}:  creates a
       \code{\link{boxplot}s of log base 2 intensities. }
       \item{hist}{\code{signature(x = "AffyBatch")}:  creates a
@@ -115,7 +115,7 @@ Class \code{"exprSet"}, directly.
     \item{probeNames}{\code{signature(object = "AffyBatch")}: returns
       the probe set associated with each row of the intensity matrix. }
     \item{probeset}{\code{signature(object = "AffyBatch",genenames=NULL,
-	locations=NULL)}: Extracts \code{\link{ProbeSet}} objects related to
+	locations=NULL)}: Extracts \code{\link[affy:ProbeSet-class]{ProbeSet}} objects related to
       the probe sets given in genenames. If an alternative set of
       locations defining pms and mms a list with those locations should
       be passed via the \code{locations} argument.}
@@ -126,8 +126,8 @@ Class \code{"exprSet"}, directly.
 }
 \note{This class is better described in the vignette.}
 \seealso{  related methods \code{\link{merge.AffyBatch}},
-  \code{\link{split.AffyBatch}} and \code{\link{pairs.AffyBatch}}, and related classes \code{\link{Cel}},
-  \code{\link{Cdf}} and 
+  \code{\link{split.AffyBatch}} and \code{\link{pairs.AffyBatch}}, and related classes \code{\link[affy:Cel-class]{Cel}},
+  \code{\link[affy:Cdf-class]{Cdf}} and 
   \code{\link[Biobase]{exprSet-class}}} 
 
 \examples{

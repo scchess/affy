@@ -3,7 +3,7 @@
 \alias{normalize.AffyBatch.constant}
 \title{Scale probe intensities}
 \description{
-  Scale array intensities in a \code{\link{AffyBatch}}.
+  Scale array intensities in a \code{\link[affy:AffyBatch-class]{AffyBatch}}.
 }
 \usage{
 normalize.AffyBatch.constant(abatch, refindex=1, FUN=mean, na.rm=TRUE)
@@ -20,14 +20,14 @@ normalize.constant(x, refconstant, FUN=mean, na.rm=TRUE)
 }
 \value{
   %A \code{\link[Biobase]{container-class}} of normalized objects.
-  An \code{\link{AffyBatch}} with an attribute "constant"
+  An \code{\link[affy:AffyBatch-class]{AffyBatch}} with an attribute "constant"
   holding the value of the factor used for scaling.
 }
 \author{
   L. Gautier <laurent@cbs.dtu.dk>
 }
 \seealso{
-  \code{\link{AffyBatch}}
+  \code{\link[affy:AffyBatch-class]{AffyBatch}}
 }
 %\examples{
 %  

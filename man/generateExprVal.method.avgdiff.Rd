@@ -21,7 +21,7 @@ generateExprVal.method.mas(probes, ...)
   \item{probes}{a matrix of probe intesities with rows representing
     probes and columns representing
     samples. Usually \code{pm(probeset)} where \code{probeset} is a
-    of class \code{\link{ProbeSet}}}
+    of class \code{\link[affy:ProbeSet-class]{ProbeSet}}}
   \item{...}{extra arguments to pass to the respective function}
 }
 \value{

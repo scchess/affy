@@ -13,7 +13,7 @@
 \arguments{
   \item{x}{A matrix of intensities where each column corresponds to a
     chip and each row is a probe.}
-  \item{abatch}{An \code{\link{AffyBatch}}}
+  \item{abatch}{An \code{\link[affy:AffyBatch-class]{AffyBatch}}}
   \item{pmonly}{logical value. If \code{TRUE} only PMs are used.}
 }
 \details{This method is based upon the concept of a quantile-quantile

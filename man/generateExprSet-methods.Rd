@@ -15,7 +15,7 @@
   generateExprSet.methods
 }
 \arguments{
-  \item{x}{a \code{\link{AffyBatch}} holding the probe level
+  \item{x}{a \code{\link[affy:AffyBatch-class]{AffyBatch}} holding the probe level
     informations to generate the expression values.}
   \item{pmcorrect.method}{the method used to correct PM values (see
     section 'details').}
@@ -48,7 +48,7 @@
 }
 \seealso{
   method \code{generateExprSet} of the class
-  \code{\link{AffyBatch}}\cr
+  \code{\link[affy:AffyBatch-class]{AffyBatch}}\cr
   \code{\link{express}} 
 }
 \examples{

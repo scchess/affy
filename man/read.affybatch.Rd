@@ -84,7 +84,7 @@ passed along to the function \code{\link{read.celfile}}.
   An \code{AffyBatch} object.
 }
 
-\seealso{\code{\link{AffyBatch}}}
+\seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}
 
 \examples{
 

@@ -12,7 +12,7 @@
 \title{Background Correction}
 \description{
 Background corrects the probe values in an object of class
-\code{\link{AffyBatch}}.
+\code{\link[affy:AffyBatch-class]{AffyBatch}}.
 }
 \usage{
 bg.correct(object, method, ...)
@@ -24,7 +24,7 @@ bg.correct.mas(object, griddim)
 bg.correct.none(object, ...)}
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{object}{An object of class \code{\link{AffyBatch}}.}
+  \item{object}{An object of class \code{\link[affy:AffyBatch-class]{AffyBatch}}.}
   \item{method}{An element of mode \code{character} defining one of the
     methods defined in \code{bg.correct.methods}. }
   \item{griddim}{grid dimension used for background estimate. The array
@@ -58,7 +58,7 @@ bg.correct.none(object, ...)}
   
 }  
 \value{
-  A \code{\link{AffyBatch}} for which the background has been
+  A \code{\link[affy:AffyBatch-class]{AffyBatch}} for which the background has been
   corrected. For some methods(*), only PMs are corrected and the MMs remain
   the same.
   (*) rma.

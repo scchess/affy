@@ -3,7 +3,7 @@
 \alias{normalize.AffyBatch.invariantset}
 \title{InvarianteSet normalization}
 \description{
-Normalize arrays in an  \code{\link{AffyBatch}} using an invariant set.
+Normalize arrays in an  \code{\link[affy:AffyBatch-class]{AffyBatch}} using an invariant set.
 }
 \usage{
 normalize.AffyBatch.invariantset(abatch,
@@ -12,7 +12,7 @@ normalize.AffyBatch.invariantset(abatch,
 normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 }
 \arguments{
-  \item{abatch}{an \code{\link{AffyBatch}}}
+  \item{abatch}{an \code{\link[affy:AffyBatch-class]{AffyBatch}}}
   \item{data}{a vector of intensities on a chip (to normalize to the reference).}
   \item{f.cdf}{a \code{Cdf} object.}
   \item{ref}{a vector of reference intensities.}
@@ -20,7 +20,7 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
   \item{progress}{A flag to have a dumps throughout the normalization}
 }
 \value{
-  Respectively a \code{\link{AffyBatch}} of normalized objects, or
+  Respectively a \code{\link[affy:AffyBatch-class]{AffyBatch}} of normalized objects, or
   a vector of normalized intensities, with an attribute "invariant.set"
   holding the indexes of the 'invariant' intensities.
 }
@@ -41,7 +41,7 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
   standard error application. Genome Biology 2001, 2(8):research0032.1-0032.11
 }
 \seealso{
-  \code{\link{normalize}} to normalize \code{\link{AffyBatch}} objects.
+  \code{\link{normalize}} to normalize \code{\link[affy:AffyBatch-class]{AffyBatch}} objects.
 }
 
 }

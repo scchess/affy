@@ -2,7 +2,7 @@
 \alias{rma}
 \title{Robust Multi-Array Average expression measure}
 \description{
-  This function converts an \code{\link{AffyBatch}} into an
+  This function converts an \code{\link[affy:AffyBatch-class]{AffyBatch}} into an
   \code{\link[Biobase]{exprSet}} using
 the robust multi-array average (RMA) expression measure.
 }
@@ -11,7 +11,7 @@ rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,backgro
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{object}{an \code{\link{AffyBatch}}}
+  \item{object}{an \code{\link[affy:AffyBatch-class]{AffyBatch}}}
   \item{subset}{an indexing vector with the the probe sets do to be
     converted to expression. (not currently implemented)}
   \item{verbose}{logical value. If \code{TRUE} it writes out some messages. (Curently ignored)}
@@ -35,7 +35,7 @@ to the bioconductor 1.2 release. This means that this function and
 
 }
 \value{
-An \code{\link{exprSet}}
+An \code{\link[affy:exprSet-class]{exprSet}}
 }
 
 \author{Ben Bolstad \email{bolstad@stat.berkeley.edu}}

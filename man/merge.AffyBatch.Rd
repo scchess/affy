@@ -21,7 +21,7 @@ merge.AffyBatch(x, y, annotation = paste(x@annotation, y@annotation), descriptio
   To be done.
 }
 \value{
-  A object if class \code{\link{AffyBatch}}.
+  A object if class \code{\link[affy:AffyBatch-class]{AffyBatch}}.
 }
 
 \seealso{ \code{\link{AffyBatch-class}} }

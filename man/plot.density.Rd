@@ -17,7 +17,7 @@ which=c("pm","mm","both"), ylab = "density", xlab = NULL, ...)
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{mat}{A matrix containing the values to make densities in the columns.}
-  \item{x}{A object of clase \code{\link{AffyBatch}}}
+  \item{x}{A object of clase \code{\link[affy:AffyBatch-class]{AffyBatch}}}
   \item{log}{logical value. If \code{TRUE} the log of the intensities in
     the \code{AffyBatch} are plotted.}
   \item{which}{should a histogram of the PMs, MMs, or both be made?}

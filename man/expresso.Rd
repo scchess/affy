@@ -31,7 +31,7 @@ expresso(
 }
 
 \arguments{
-  \item{afbatch}{ An \code{\link{AffyBatch}} object }
+  \item{afbatch}{ An \code{\link[affy:AffyBatch-class]{AffyBatch}} object }
   \item{bg.correct}{a boolean to express whether background correction
     is wanted or not.}
   \item{bgcorrect.method}{the name of the background adjustment method}
@@ -66,7 +66,7 @@ expresso(
   An object of class \code{\link[Biobase]{exprsSet}}, with an attribute
   \code{pps.warnings} as returned by the method \code{\link{computeExprSet}}.
 }
-\seealso{\code{\link{AffyBatch}}}
+\seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}
 \examples{
 data(affybatch.example)
 

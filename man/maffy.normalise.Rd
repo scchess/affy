@@ -4,7 +4,7 @@
 \alias{normalize.contrast}
 \title{Normalise Itensities}
 \description{Normalises feauture intensities from
-  \code{\link{probe.level.object}}s}
+  \code{\link[affy:AffyBatch-class]{AffyBatch}}s}
 \usage{
 maffy.normalise(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE)}
 %- maybe also `usage' for other objects documented here.

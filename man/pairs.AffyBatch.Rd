@@ -12,7 +12,7 @@
                   font.labels = 1, row1attop = TRUE, gap = 1)
 }
 \arguments{
-  \item{x}{ an \code{\link{AffyBatch}} object }
+  \item{x}{ an \code{\link[affy:AffyBatch-class]{AffyBatch}} object }
   \item{panel}{ a function to produce a plot (see \code{\link{pairs}}) }
   \item{...}{ extra parameters for the 'panel' function}
   \item{transfo}{ a function to transform the intensity values before

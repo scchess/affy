@@ -14,7 +14,7 @@ normalize.AffyBatch.loess(abatch, ...)
 \arguments{
   \item{mat}{a matrix with columns containing the values of the chips
     to normalize.}
-  \item{abatch}{an \code{\link{AffyBatch}} object.}
+  \item{abatch}{an \code{\link[affy:AffyBatch-class]{AffyBatch}} object.}
   \item{subset}{a subset of the data to fit a loess to.}
   \item{epsilon}{a tolerance value (supposed to be a small value - used
     as a stopping criterium).}

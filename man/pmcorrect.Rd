@@ -7,7 +7,7 @@
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{PM Correction}
 \description{
-  Corrects the PM intensities in a \code{\link{ProbeSet}}
+  Corrects the PM intensities in a \code{\link[affy:ProbeSet-class]{ProbeSet}}
     for nonspecific binding.
   }
 \usage{
@@ -18,7 +18,7 @@ pmcorrect.subtractmm(object)
 pmcorrect.mas(object, contrast.tau=0.03, scale.tau=10, delta=2.0e-20)
 }
 \arguments{
-  \item{object}{An object of class \code{\link{ProbeSet}}.}
+  \item{object}{An object of class \code{\link[affy:ProbeSet-class]{ProbeSet}}.}
   \item{contrast.tau}{a number denoting the contrast tau parameter in
     the MAS 5.0 
     pm correction algorithm.}
@@ -35,7 +35,7 @@ These are the pm correction methods perfromed by Affymetrix MAS 4.0
   
 pmonly does what you think: does not change the PM values.}  
 \value{
-  A \code{\link{ProbeSet}} for which the \code{pm} slot contains the
+  A \code{\link[affy:ProbeSet-class]{ProbeSet}} for which the \code{pm} slot contains the
   corrected
   PM values.
 }

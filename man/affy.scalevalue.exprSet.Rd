@@ -12,7 +12,7 @@ affy.scalevalue.exprSet(eset, sc = 500, analysis="absolute")
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{eset}{An \code{\link{exprSet}} object.}
+  \item{eset}{An \code{\link[affy:exprSet-class]{exprSet}} object.}
   \item{sc}{Value at which all arrays will be scaled to.}
   \item{analysis}{should we do absolute or comparison analysis, although
   "comparison" is still not implemented.}

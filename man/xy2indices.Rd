@@ -15,8 +15,8 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL)
   \item{i}{ indices in the \code{AffyBatch} for the probes }
   \item{nc}{ total number of \code{Ys} on the chip }
   \item{nr}{ total number of \code{Xs} on the chip }
-  \item{cel}{ a corresponding object of class \code{\link{Cel}} }
-  \item{abatch}{ a corresponding object of class \code{\link{AffyBatch}} }
+  \item{cel}{ a corresponding object of class \code{\link[affy:Cel-class]{Cel}} }
+  \item{abatch}{ a corresponding object of class \code{\link[affy:AffyBatch-class]{AffyBatch}} }
 }
 \details{
   The probes intensities for given probe set ids are extracted from an
