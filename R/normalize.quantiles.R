@@ -17,6 +17,8 @@
 ##                changed pmonly parameters on functions
 ##                so that it is now a string argument "type"
 ##                the options are pmonly, mmonly, together, separate
+## Jan 31, 2004 - put a check for an integer matrix and force coercision to
+##                doubles if required in normalize.quantiles
 ##
 ##
 ##################################################################
@@ -65,6 +67,11 @@ normalize.quantiles <- function(x,copy=TRUE){
     stop("Matrix expected in normalize.quantiles")
   }
 
+  if (is.integer(x)){
+    x <- matrix(as.double(x),rows,cols)
+    copy <- FALSE
+  }
+  
   #matrix(.C("qnorm_c", as.double(as.vector(x)), as.integer(rows), as.integer(cols))[[1]], rows, cols)
 
   .Call("R_qnorm_c",x,copy);
