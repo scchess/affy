@@ -1,5 +1,5 @@
 Package: affy
-Version: 1.1.4
+Version: 1.1.5
 Date: 2002-01-08
 Title: Methods for Affymetrix Oligonucleotide Arrays 
 Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier <laurent@cbs.dtu.dk>, Leslie M. Cope <cope@mts.jhu.edu>, and  Benjamin Milo Bolstad <bolstad@stat.Berkeley.EDU>
@@ -7,6 +7,6 @@ Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier <laurent@cbs.dtu.dk>,
 	 Magnus Åstrand <Magnus.Astrand@astrazeneca.com>,
 	 Christopher Workman <workman@cbs.dtu.dk>
 Maintainer: Rafael A. Irizarry <rafa@jhu.edu>
-Depends: R (>= 1.6.0), modreg, Biobase (>= 1.1.0), eda, tkWidgets(>= 1.1.0)
+Depends: R (>= 1.6.0), modreg, Biobase (>= 1.1.0), eda, tkWidgets(>= 1.0.1)
 Description: The package contains functions for exploratory oligonucleotide array analysis. The dependance to tkWidgets only concerns few convenience functions. 'affy' is fully functional without it.
 License: GPL version 2 or newer
