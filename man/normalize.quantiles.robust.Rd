@@ -1,5 +1,6 @@
 \name{normalize.quantiles.robust}
 \alias{normalize.quantiles.robust}
+\alias{normalize.AffyBatch.quantiles.robust}
 \title{Robust Quantile Normalization}
 \description{Using a normalization based upon quantiles, this function
   normalizes a matrix of probe level intensities. Allows weighting of chips}

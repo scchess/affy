@@ -21,7 +21,6 @@ mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="symmetric",
   \item{line.col}{color of the loess line.}
   \item{main}{an overall title for the plot.}
   \item{\dots}{graphical parameters can be given as arguments to \code{mva.plot}}}
-\author{Rafael A. Irizarry}
 \examples{
     
     x <- matrix(rnorm(4000),1000,4)
@@ -30,5 +29,7 @@ mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="symmetric",
     mva.pairs(x,log=FALSE,main="example")
 }
 
-\seealso{\code{\link{Plob}}}
+\seealso{\code{\link{pairs}}}
 \keyword{hplot}
+
+

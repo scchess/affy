@@ -21,26 +21,33 @@
   ###we need a show
   
   ##DEBUG: what to do with that ?
+
   if( !isGeneric("colnames") )
     #setGeneric("colnames", function(x, do.NULL, prefix)
     setGeneric("colnames", where=where)
   
+  ##for consistency also use sampleNames
+  if( !isGeneric("sampleNames") )
+    setGeneric("sampleNames", function(object)
+               standardGeneric("sampleNames"), where=where)
+  setMethod("sampleNames", "ProbeSet",
+            function(object) colnames(object), where=where)
+            
   setMethod("colnames", signature(x="ProbeSet"),
-            function(x ,do.NULL=F, prefix="row") {
+            function(x ,do.NULL=FALSE, prefix="row") {
               
-              cnames=dimnames(x@pm)
+              cnames<-colnames(pm(x))
               
               if (is.null(cnames)) {
                 
                 if (do.NULL) {
                   warning("No column names for ProbeSet")
-                } else {
+                }
+                else {
                   cnames <- paste(prefix, 1:ncols(x@pm))
                 }
                 
-              } else {
-                cnames <- cnames[2]
-              }
+              } 
               return(cnames)
             },
             where=where)
@@ -77,14 +84,15 @@
                    })
 
   ## method express.summary.stat
-  if( !isGeneric("express.summary.stat") )
-    setGeneric("express.summary.stat", function(x, method, bg.correct, ...)
+  if( !isGeneric("express.summary.stat"))
+    setGeneric("express.summary.stat", function(x,method, ...)#bg.correct, ...)
                standardGeneric("express.summary.stat"), where=where)
   
-  setMethod("express.summary.stat", signature(x="ProbeSet", method="character",
-                                              bg.correct="character"),
-            function(x, method, bg.correct, param.bg.correct=list(), param.method=list()) {
-
+  setMethod("express.summary.stat",signature(x="ProbeSet", method="character"),
+                                              #bg.correct="character"),
+            function(x, method, #bg.correct, param.bg.correct=list(),
+                     param.method=list()) {
+            
               ## simple for system to let one add background correction methods
               ## relies on naming convention
               methodname <- paste("generateExprVal.method.", method, sep="")
@@ -93,37 +101,40 @@
                 stop(paste("Unknown method (cannot find function", methodname, ")"))
               
               ## NOTE: this could change...
-              m <- do.call(bg.correct, c(alist(x@pm, x@mm), param.bg.correct))
-              r <- do.call(methodname, c(alist(m), param.method))
-
+              #m <- do.call(bg.correct, c(alist(x@pm, x@mm), param.bg.correct))
+              r <- do.call(methodname, c(alist(x@pm), param.method))
+              
               ##DEBUG: name stuff to sort
               #names(r) <- names(allprobes)
               
               return(r)
             },
             where=where)
-  
-  ## method bg.correct 
-  if( !isGeneric("bg.correct") )
-    setGeneric("bg.correct", function(x, method, ...)
-               standardGeneric("bg.correct"), where=where)
-  
-  setMethod("bg.correct", signature(x="ProbeSet", method="character"),
-            function(x, method, ...) {
+} 
 
-              ## simple for system to let one add background correction methods
-              ## relies on naming convention
+###this is now in AffyBatch.R cause background must be performed on array
+### method bg.correct 
+#  if( !isGeneric("bg.correct") )
+#    setGeneric("bg.correct", function(x, method, ...)
+#               standardGeneric("bg.correct"), where=where)
+  
+##we no longer use bg correction on probe set. rather we do it on whole array
+#   setMethod("bg.correct", signature(x="ProbeSet", method="character"),
+#             function(x, method, ...) {
+
+#               ## simple for system to let one add background correction methods
+#               ## relies on naming convention
               
-              methodname <- paste("bg.correct.", method, sep="")
+#               methodname <- paste("bg.correct.", method, sep="")
               
-              if (! exists(methodname))
-                stop(paste("Unknown method (cannot find function", methodname, ")"))
+#               if (! exists(methodname))
+#                 stop(paste("Unknown method (cannot find function", methodname, ")"))
               
-              r <- do.call(methodname, alist(x@pm, x@mm, ...))
+#               r <- do.call(methodname, alist(x@pm, x@mm, ...))
               
-              return(r)
-            }, where=where)
-}
+#               return(r)
+#             }, where=where)
+# }
 
 ######no need for the commented out below since its no longer container
 #   ## extract/set a PPSet in the container
@@ -150,6 +161,8 @@
   
 
 ## while there is no generic for this one...
-names.ProbeSet <- function(x) {
-  return(as.character(lapply(x@x, function(y) y@name)))
-}
+#names.ProbeSet <- function(x) {
+#  return(as.character(lapply(x@x, function(y) y@name)))
+#}
+
+

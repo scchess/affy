@@ -102,7 +102,7 @@
   BioC$affy <- affy
   options("BioC"=BioC)
   ## ---
-  
+
   cacheMetaData(as.environment(where))
 
 }

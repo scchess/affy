@@ -8,6 +8,8 @@
   The affy package options are contained in the Bioconductor options.
   The options are:
   \begin{itemize}
+  \item \code{use.widgets}: a logical used to decide on the default of
+  widget use.
   \item \code{compress.cel}: a logical
   \item \code{compress.cdf}: a logical
   \item \code{probes.loc}: a list. Each element of the list is it self a

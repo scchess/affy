@@ -17,7 +17,7 @@ generateExprVal.method.playerout <- function(probes, weights=FALSE, optim.method
   r <- c(probes %*% S1$par / sum(S1$par))
   if (weights)
     attr(r,"weights") <- S1$par
-  return(r)
+  return(list(exprs=r,se.exprs=rep(NA,length(r))))
 }
 
 

@@ -11,7 +11,6 @@
   Generate an expression from the from the probes
 }
 \usage{
-generateExprVal.PPSet.container(pps.container, method, ...)
 generateExprVal.methods # vector of names of methods
 
 express.summary.stat(pps.container, method, ...)

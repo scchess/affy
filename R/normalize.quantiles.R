@@ -1,9 +1,14 @@
 normalize.AffyBatch.quantiles <- function(abatch,pmonly=FALSE) {
 
   pms <- unlist(pmindex(abatch))
+  noNA <- apply(intensity(abatch)[pms,],1,function(x) all(!is.na(x)))
+  pms <- pms[noNA]
   intensity(abatch)[pms,] <- normalize.quantiles(intensity(abatch)[pms, ])
   if(!pmonly){ 
     mms <- unlist(mmindex(abatch))
+    noNA <- apply(intensity(abatch)[mms,],1,function(x) all(!is.na(x)))
+    mms <- mms[noNA]
+
     intensity(abatch)[mms,] <- normalize.quantiles(intensity(abatch)[mms, ])
   }
   
@@ -12,9 +17,9 @@ normalize.AffyBatch.quantiles <- function(abatch,pmonly=FALSE) {
   ##  history(abatch)[[i]]$name <- "normalized by quantiles"
   ##}
 
-  return(abatch)
+                return(abatch)
 }
-
+  
 normalize.quantiles <- function(x){
 
   rows <- dim(x)[1]

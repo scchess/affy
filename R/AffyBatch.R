@@ -165,7 +165,7 @@
               cat("cdf=", object@cdfName,
                   " (", num.ids, " affyids)\n",
                   sep="")
-              cat("number of experiments=",length(object),"\n",sep="")
+              cat("number of samples=",length(object),"\n",sep="")
               cat("number of genes=", length(geneNames(object)), "\n",sep="")
               cat("annotation=",object@annotation,"\n",sep="")
               cat("notes=",object@notes,"\n",sep="")
@@ -275,17 +275,17 @@
   
   setMethod("probes", signature("AffyBatch"),
             function(object, which=c("pm", "mm"),
-                     genenames=NULL, LISTRUE=FALSE){
+                     genenames=NULL, LISTRUE=FALSE, drop=FALSE){
               
               which <- match.arg(which)
               
               index <- indexProbes(object, which, genenames)
               
               if(LISTRUE)
-                ans <- lapply(index, function(i) object@exprs[i, ])
+                ans <- lapply(index, function(i) object@exprs[i, ,drop=drop])
               else{
                 index <- unlist(index)
-                ans <- object@exprs[index, ]
+                ans <- object@exprs[index, ,drop=drop]
                 colnames(ans) <- sampleNames(object)
                 rownames(ans) <- names(index)
               }
@@ -306,6 +306,18 @@
             where=where
             )
   
+  if( !isGeneric("pm<-") )
+    setGeneric("pm<-", function(object, value)
+               standardGeneric("pm<-"), where=where)
+  setReplaceMethod("pm", "AffyBatch", function(object, value){
+    Dimnames <- dimnames(intensity(object))
+    pmIndex <- unlist(pmindex(object))
+    intensity(object)[pmIndex,] <- value
+    dimnames(intensity(object)) <- Dimnames
+    object
+  }, where=where)
+  
+
 
   ##mm method
   if( !isGeneric("mm") )
@@ -317,14 +329,25 @@
             where=where
             )
 
+  if( !isGeneric("mm<-") )
+    setGeneric("mm<-", function(object, value)
+               standardGeneric("mm<-"), where=where)
+  setReplaceMethod("mm", "AffyBatch", function(object, value){
+    Dimnames <- dimnames(intensity(object))
+    mmIndex <- unlist(mmindex(object))
+    intensity(object)[mmIndex,] <- value
+    dimnames(intensity(object)) <- Dimnames
+    object
+  }, where=where)
+
+  ###probeset
+  if (debug.affy123) cat("--->probeset\n")
   
-  if (debug.affy123) cat("--->pp\n")
+  if( !isGeneric("probeset") )
+    setGeneric("probeset", function(object, ...)
+               standardGeneric("probeset"), where=where)
   
-  if( !isGeneric("pp") )
-    setGeneric("pp", function(object, ...)
-               standardGeneric("pp"), where=where)
-  
-  setMethod("pp", "AffyBatch", function(object, genenames=NULL,
+  setMethod("probeset", "AffyBatch", function(object, genenames=NULL,
                                         locations=NULL){
     oldoptions <- getOption("BioC")
     if(is.null(locations)) ##use info in cdf
@@ -351,13 +374,13 @@
       if (is.na(i.pm))
         intensity.pm <- NA
       else
-        intensity.pm <- intensity(object)[i.pm, ]
+        intensity.pm <- intensity(object)[i.pm, ,drop=FALSE]
       
       i.mm <- indexProbes(object, "mm", genenames[i])[[1]]
       if (is.na(i.mm))
         intensity.mm <- NA
       else
-        intensity.mm <- intensity(object)[i.mm, ]
+        intensity.mm <- intensity(object)[i.mm, ,drop=FALSE]
       
       p.pps[[i]] <- new("ProbeSet", pm = intensity.pm, mm = intensity.mm)
     }
@@ -403,6 +426,31 @@
                standardGeneric("normalize.methods"),
                where=where)
   
+
+  ## ---bg.correct
+  ## method bg.correct 
+  if( !isGeneric("bg.correct") )
+    setGeneric("bg.correct", function(x, method, ...)
+               standardGeneric("bg.correct"), where=where)
+  
+  setMethod("bg.correct", signature(x="AffyBatch", method="character"),
+            function(x, method, ...) {
+
+              ## simple for system to let one add background correction methods
+              ## relies on naming convention
+              
+              methodname <- paste("bg.correct.", method, sep="")
+              
+              if (! exists(methodname))
+                 stop(paste("Unknown method (cannot find function", methodname, ")"))
+              
+              r <- do.call(methodname, alist(x, ...))
+              
+              return(r)
+            }, where=where)
+
+
+  ## ---normalize
   setMethod("normalize.methods", signature(object="AffyBatch"),
             function(object) {
               normalize.AffyBatch.methods
@@ -426,17 +474,24 @@
             where=where)
 
   
-  ## expression value computation
+  ## ---expression value computation
   if (debug.affy123) cat("--->computeExprSet\n")
   if( !isGeneric("computeExprSet") )
-    setGeneric("computeExprSet", function(x, bg.method, summary.method, ...)
+    setGeneric("computeExprSet", function(x, summary.method, ...)
                standardGeneric("computeExprSet"),
                where=where)
   
-  setMethod("computeExprSet", signature(x="AffyBatch", bg.method="character", summary.method="character"),
-            function(x, bg.method, summary.method, ids=NULL, verbose=TRUE, bg.param=list(), summary.param=list(), warnings=TRUE) {
-              
-              bg.method <- match.arg(bg.method, bg.correct.methods)
+  setMethod("computeExprSet", signature(x="AffyBatch", #bg.method="character",
+                                        summary.method="character"),
+            function(x, ##bg.method,
+                     summary.method, ids=NULL, verbose=TRUE,
+                                        #bg.param=list(),
+                     summary.param=list(), warnings=TRUE) {
+
+              ##this is now done in expresso cause it needs to come before
+              ##normalization
+              ##bg.method <- match.arg(bg.method, bg.correct.methods)
+              ##see below for why this is commented out
               summary.method <- match.arg(summary.method, express.summary.stat.methods)
               
               n <- length(x)
@@ -446,8 +501,9 @@
                 ids <- geneNames(x)
               
               m <- length(ids)
-              
-              idsi <- match(ids, geneNames(x))
+
+              ##why is this defined
+              ##idsi <- match(ids, geneNames(x))
               
               ## cheap trick to (try to) save time
               c.pps <- new("ProbeSet",
@@ -456,32 +512,40 @@
               
               ## matrix to hold expression values
               exp.mat <- matrix(NA, m, n)
-              
+              se.mat <- matrix(NA, m, n)
               ##DEBUG: hackish (put global adjsutment names below
-              if (bg.method %in% c("bg.correct.rma")) {
-                if (verbose) cat("computing parameters for global background adjustement.....")
-                all.l.pm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,1]))
-                all.l.mm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,2]))
-                all.param <- lapply(seq(1:n), function(i) {
-                  notNA <- !(is.na(intensity(x)[, i][all.l.pm.mat]) | is.na(intensity(x)[, i][all.l.mm.mat]))
-                  bg.parameters(intensity(x)[, i][notNA], intensity(x)[, i][notNA])
-                })
-                bg.param$all.param <- all.param
-                if (verbose) cat(".....done.\n")
-              }
+              ##Because this must go before normalization it must be
+              ##done to the entire array.. so its either moved to
+              ##expresso.AffyBatch or normalization is added here.
+              ##for modularization purposes it seems expresso is a better
+              ##place
+              ## if (bg.method %in% c("bg.correct.rma")) {
+##                 if (verbose) cat("computing parameters for global background adjustement.....")
+###                 all.l.pm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,1]))
+#                 all.l.mm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,2]))
+#                 all.param <- lapply(seq(1:n), function(i) {
+#                   notNA <- !(is.na(intensity(x)[, i][all.l.pm.mat]) | is.na(intensity(x)[, i][all.l.mm.mat]))
+#                   bg.parameters(intensity(x)[, i][notNA], intensity(x)[, i][notNA]
+#                 })
+#                 bg.param$all.param <- all.param
+#                 if (verbose) cat(".....done.\n")
+#               }
               
-             if (verbose) {
+
+              if (verbose) {
                 cat(m, "ids to be processed\n")
                 countprogress <- 0
               }
               
               ## loop over the ids
-              mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character","character")),
-                                  list(c.pps, method=summary.method, bg.correct=bg.method, param.bg.correct=bg.param, param.method=summary.param)))
+              mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character")), list(c.pps, method=summary.method,param.method=summary.param)))
+##only one character cause no more bg correct
+###bg.correct=bg.method, param.bg.correct=bg.param,
 
               options(show.error.messages = FALSE)
               on.exit(options(show.error.messages = TRUE))
               
+              CDFINFO <- getCdfInfo(x) ##do it once!
               for (i in seq(along=ids)) {
                 
                 id <- ids[i]
@@ -499,7 +563,7 @@
                 ## locations for an id
                 ##l.pm <- locate.name(ids[id], cdf, type="pm")
                 ##l.mm <- locate.name(ids[id], cdf, type="mm")
-                loc <- get(id ,envir=getCdfInfo(x))
+                loc <- get(id ,envir=CDFINFO)
                 l.pm <- loc[, 1]
                 if (ncol(loc) == 2)
                   l.mm <- loc[ ,2]
@@ -532,7 +596,8 @@
                 ev <- try(eval(mycall))
                 
                 if (! inherits(ev,"try-error")) {
-                  exp.mat[i, ] <- ev
+                  exp.mat[i, ] <- ev$exprs
+                  se.mat[i,] <- ev$se.exprs
                 } else if (warnings) {
                   warning(paste("Error with affyid:", name.levels(cdf)[id]))
                 }
@@ -548,9 +613,10 @@
               ## instance exprSet
               ##if (verbose) cat("instancianting an exprSet.....")
               dimnames(exp.mat) <- list(ids, sampleNames(x))
+              dimnames(se.mat) <- list(ids, sampleNames(x))
               eset <- new("exprSet",
                           exprs=exp.mat,
-                          se.exprs=matrix(), ##these needs to change
+                          se.exprs=se.mat, ##this changed
                           phenoData=phenoData(x),
                           description=description(x),
                           annotation=annotation(x),
@@ -560,29 +626,43 @@
               return(eset)
             },
             where=where)
-}
+
 
   ## use [[ and image instead !
+
+  ##some methods i was asked to add
+
+  if( !isGeneric("image") )
+    setGeneric("image",where=where)
+  setMethod("image",signature(x="AffyBatch"),
+            function(x, transfo=log, ...){
+              scn <- prod(par("mfrow"))
+              ask <- dev.interactive()
+              which.plot <- 0
+              for(i in 1:length(sampleNames(x))){
+                which.plot <- which.plot+1;
+                if(trunc((which.plot-1)/scn)==(which.plot-1)/scn && which.plot>1 && ask)  par(ask=TRUE)
+                 image(x[[i]], transfo=transfo, ...)
+                 par(ask=FALSE)}
+            },where=where)
   
- #  if( !isGeneric("image") )
-#     setGeneric("image",where=where)
-#   setMethod("image",signature(x="AffyBatch"),
-#             function(x, transfo=log, ...){
-#               scn <- prod(par("mfrow"))
-#               ask <- dev.interactive()
-#               which.plot <- 0
-#               for(i in 1:length(sampleNames(x))){
-#                 which.plot <- which.plot+1;
-#                 if(trunc((which.plot-1)/scn)==(which.plot-1)/scn && which.plot>1 && ask)  par(ask=TRUE)
-#                 image(AffyBatch[[i]], ...)
-#                 par(ask=FALSE)}
-#             },where=where)
+
+  ###boxplot
+  if( !isGeneric("boxplot") )
+    setGeneric("boxplot",where=where)
+  setMethod("boxplot",signature(x="AffyBatch"),
+            function(x,which="both",...){
+              tmp <- description(x)
+              if(class(tmp)=="MIAME") main <- tmp@title
+
+              boxplot(data.frame(log2(intensity(x)[unlist(indexProbes(x,which)),])),main=main,range=0, ...)
+            },where=where)
+ 
+
   
 
 
-
-
-
+}
 
 
           

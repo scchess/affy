@@ -9,19 +9,17 @@
   information. The set of expression is returned as an exprSet object.
 }
 \usage{
-  generateExprSet(x, cdf, method, bg.correct, ...)
+  generateExprSet(x, method, ...)
 
   generateExprSet.methods
 }
 \arguments{
-  \item{x}{a \code{\link{Cel.container}} holding the probe level
+  \item{x}{a \code{\link{AffyBatch}} holding the probe level
     informations to generate the expression values.}
   \item{cdf}{a \code{\link{Cdf}} object.}
   \item{method}{the method used to generate the expression value (see
     section 'details').}
-  \item{bg.correct}{the method used for background correction (see
-    section 'deatils').}
-  \item{...}{any of the options of normalize.loess you would like to modify}
+  \item{...}{any of the options of the normalization you would like to modify}
 }
 \details{
   An extra argument \code{ids=} can be passed. It must be a vector of
@@ -46,21 +44,17 @@
   \code{Plob} object. This method and the fucntion \code{express} will
   be unified.
 }
-\author{
-  Laurent
-}
 \seealso{
   method \code{generateExprSet} of the class
-  \code{\link{Cel.container}}\cr
+  \code{\link{AffyBatch}}\cr
   \code{\link{express}} 
 }
 \examples{
-  #data(CDF.example)
-  #data(listcel)
+ data(affybatch.example)
 
-  #ids <- c("AFFX-BioC-5_at","AFFX-BioC-3_at")
+ ids <- c( "A28102_at","AB000114_at")
   
-  #eset <- generateExprSet(listcel, CDF.example, method="avgdiff", bg.correct="bg.correct.subtractmm", ids=ids)
+  eset <- computeExprSet(affybatch.example, summary.method="avgdiff", ids=ids)
 }
 \keyword{manip}
 

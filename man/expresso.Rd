@@ -1,0 +1,57 @@
+\name{expresso}
+\alias{expresso}
+%- Also NEED an `\alias' for EACH other topic documented here.
+\title{ From raw probe intensities to expression values }
+\description{
+  Goes from raw probe intensities to expression values
+}
+\usage{
+expresso(
+        afbatch,
+    # normalize
+        normalize = TRUE,
+        normalize.method = NULL,
+        normalize.param = list(),
+    # background correction
+        bg.method = NULL,
+    # expression values
+        summary.method = NULL,
+        summary.param = list(),
+        summary.subset = NULL,
+    # misc.
+        verbose = TRUE,
+        widget = FALSE)
+}
+
+\arguments{
+  \item{afbatch}{ An \code{\link{AffyBatch}} object }
+  \item{normalize}{ normalization step wished or not.}
+  \item{normalize.method}{the normalization method to use}
+  \item{normalize.param}{a list of parameters to be passed to the
+    normalization method (if wanted).}
+  \item{bg.method}{a background adjustment function}
+  \item{summary.method}{the method used for the computation of expression values}
+  \item{summary.param}{ a list of parameters to be passed to the
+    \code{summary.method} (if wanted).}
+  \item{summary.subset}{a list of 'affyids'. If \code{NULL}, a
+    expression summary value is computed for everything on the chip.}
+  \item{verbose}{logical value. If \code{TRUE} it writes out some messages.}
+  \item{widget}{a boolean to specify the use of widgets (the package
+    tkWidget is required).}
+}
+\details{
+    Some arguments can be left to \code{NULL} if the \code{widget=TRUE}.
+  In this case, a widget pops up and let the user choose with the mouse.
+  The arguments are: \code{AffyBatch},
+  \code{normalize.method}, \code{bg.method} and \code{summary.method}.
+}
+\value{
+  An object of class \code{\link[Biobase]{exprsSet}}
+}
+\examples{
+data(affybatch.example)
+
+eset <- expresso(affybatch.example, normalize.method="constant",
+                 bg.method="bg.correct.subtractmm", summary.method="avgdiff")
+}
+\keyword{ manip }

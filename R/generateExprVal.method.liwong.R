@@ -4,6 +4,7 @@ generateExprVal.method.liwong <- function(probes, ...) {
     warning("method liwong unsuitable when only one probe pair")
     probes
   } else {
-    fit.li.wong(probes, ...)$theta
+    tmp <- fit.li.wong(probes, ...)
+    list(exprs=tmp$theta,se.exprs=tmp$sigma.theta)
   }
 }
