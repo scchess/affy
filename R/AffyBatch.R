@@ -1,3 +1,12 @@
+## computeExprSet:
+##   - better reporting of errors
+##   - better handling of ids (does not crash any longer when unknown id)
+##   - use of the progress bar in Biobase 1.4.4
+##   - cleanup of the comments in the code
+## indexProbes:
+##   - deprecated flag 'xy' removed for good
+
+
 if (debug.affy123) cat("-->initAffyBatch\n")
 
 ## Inherits from Affybatch
@@ -118,10 +127,10 @@ setMethod("show", "AffyBatch",
           })
 
 
-if (is.null(getGeneric("index2xy"))) {
-  setGeneric("indexProbes", function(object, which, ...)
-             standardGeneric("indexProbes"))
-}
+# if (is.null(getGeneric("index2xy"))) {
+#   setGeneric("indexProbes", function(object, which, ...)
+#              standardGeneric("indexProbes"))
+# }
 
 
 ## indexProbes
@@ -131,7 +140,7 @@ if( is.null(getGeneric("indexProbes")))
 
 setMethod("indexProbes", signature("AffyBatch", which="character"),
           function(object, which=c("pm", "mm","both"),
-                   genenames=NULL, xy=FALSE) {
+                   genenames=NULL) {
 
             which <- match.arg(which)
 
@@ -145,13 +154,12 @@ setMethod("indexProbes", signature("AffyBatch", which="character"),
             if(is.null(genenames))
               genenames <- ls(envir )
 
-            ## shorter code, using the features of multiget
-            ## (eventually more readable too)
-            ## note: genenames could be confusing (the same gene can be
+            ## note: the variable name genenames could be confusing (the same gene can be
             ## found in several affyid (ex: the 3' and 5' controls)
-            ans <- mget(genenames, envir, ifnotfound=NA)
 
-            ## this kind of thing could be included in 'multiget' as
+            ans <-  multiget(genenames, pos, envir, iffail=NA)
+
+            ## this kind of thing could be included in 'mget' as
             ## an extra feature. A function could be specified to
             ## process what is 'multi'-get on the fly
             for (i in seq(along=ans)) {
@@ -161,15 +169,6 @@ setMethod("indexProbes", signature("AffyBatch", which="character"),
 
               ##as.vector cause it might be a matrix if both
               tmp <- as.vector(ans[[i]][, i.probes])
-
-
-              if (xy) {
-                warning("flag 'xy' is deprecated (because confusing)")
-                x <- tmp %% nrow(object)
-                x[x == 0] <- nrow(object)
-                y <- tmp %/% nrow(object) + 1
-                tmp <- cbind(x, y)
-              }
 
               ans[[i]] <- tmp
             }
@@ -185,8 +184,8 @@ if( is.null(getGeneric("pmindex")))
 
 ##wrapper
 setMethod("pmindex", "AffyBatch",
-            function(object, genenames=NULL, xy=FALSE)
-            indexProbes(object, "pm", genenames=genenames, xy=xy))
+            function(object, genenames=NULL)
+            indexProbes(object, "pm", genenames=genenames))
 
   ##mmindex method
 if( is.null(getGeneric("mmindex")))
@@ -195,8 +194,8 @@ if( is.null(getGeneric("mmindex")))
 
 ##wrapper
 setMethod("mmindex", "AffyBatch",
-          function(object,genenames=NULL, xy=FALSE)
-          indexProbes(object, "mm", genenames=genenames, xy=xy))
+          function(object,genenames=NULL)
+          indexProbes(object, "mm", genenames=genenames))
 
 
 ##probeNames method
@@ -438,7 +437,7 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
 
             n <- length(x)
 
-            ## if NULL compute for all
+            ## if 'ids' is NULL compute for all ids
             if (is.null(ids))
               ids <- geneNames(x)
 
@@ -468,63 +467,57 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
             ##only one character cause no more bg correct
             ##bg.correct=bg.method, param.bg.correct=bg.param,
 
-            ##WHy not show error? took it out cause sometimes we
-            ##get errors and couldnt see them.
-            ##options(show.error.messages = FALSE)
-            ##on.exit(options(show.error.messages = TRUE))
-
             CDFINFO <- getCdfInfo(x) ##do it once!
 
+            if (verbose) {
+              pbt <- new("ProgressBarText", length(ids), barsteps = as.integer(20))
+              open(pbt)
+            }
+            
             for (i in seq(along=ids)) {
 
+              if (verbose) {
+                update(pbt)
+              }
+              
               id <- ids[i]
 
-              if (verbose) {
-                if ( round(m/10) == countprogress) {
-                  cat(".")
-                  countprogress <- 0
-                }
+              if (! exists(id, envir=CDFINFO)) {
+                pps.warnings[[i]] <- paste("Unknown id", id)
+              } else {
+                ## locations for an id
+                loc <- get(id, envir=CDFINFO)
+                l.pm <- loc[, 1]
+                if (ncol(loc) == 2)
+                  l.mm <- loc[ ,2]
                 else
-                  countprogress <- countprogress + 1
+                  l.mm <- integer()
+                
+                np <- length(l.pm)
+                
+                ##names are skipped
+                
+                c.pps@pm <- intensity(x)[l.pm, , drop=FALSE]
+                c.pps@mm <- intensity(x)[l.mm, , drop=FALSE]
+                
+                ## generate expression values
+                ## (wrapped in a sort of try/catch)
+                mycall[[2]] <- c.pps
+                ev <- try(eval(mycall), silent = TRUE)
               }
-              ## locations for an id
-              loc <- get(id, envir=CDFINFO)
-              l.pm <- loc[, 1]
-              if (ncol(loc) == 2)
-                l.mm <- loc[ ,2]
-              else
-                l.mm <- integer()
-
-              np <- length(l.pm)
-
-              ##names are skipped
-
-              c.pps@pm <- intensity(x)[l.pm, , drop=FALSE]
-              c.pps@mm <- intensity(x)[l.mm, , drop=FALSE]
-
-              ## generate expression values
-              ## (wrapped in a sort of try/catch)
-              mycall[[2]] <- c.pps
-              ev <- try(eval(mycall))
-
               if (! inherits(ev, "try-error")) {
                 exp.mat[i, ] <- ev$exprs
                 se.mat[i,] <- ev$se.exprs
-                ##
               } else {
-                pps.warnings[[i]] <- "Error"
-                ##warning(paste("Error with affyid:", id))
+                pps.warnings[[i]] <- ev[1]
               }
-
+              
             }
 
-            ##options(show.error.messages = TRUE)
-            ## on.exit(NULL)
-
-            if (verbose) cat("\n")
-
-            ## instance exprSet
-            ##if (verbose) cat("instancianting an exprSet.....")
+            if (verbose) {
+              close(pbt)
+            }
+            
             dimnames(exp.mat) <- list(ids, sampleNames(x))
             dimnames(se.mat) <- list(ids, sampleNames(x))
             eset <- new("exprSet",
@@ -553,8 +546,8 @@ setMethod("image",signature(x="AffyBatch"),
             ask <- dev.interactive()
             which.plot <- 0
 
-            NCOL <- ncol(x)
-            NROW <- nrow(x)
+            x.pos <- (1:nrow(x)) - (1 + getOption("BioC")$affy$xy.offset)
+            y.pos <- (1:ncol(x)) - (1 + getOption("BioC")$affy$xy.offset)
 
             for(i in 1:length(sampleNames(x))){
               which.plot <- which.plot+1;
@@ -564,10 +557,11 @@ setMethod("image",signature(x="AffyBatch"),
                 m <- transfo(m)
               }
 
-              image(1:NROW, 1:NCOL, matrix(m,nrow=NROW,ncol=NCOL),
+              image(x.pos, y.pos, matrix(m, nrow=length(x.pos), ncol=length(y.pos)),
                     col=col, main=sampleNames(x)[i],
                     xlab=xlab, ylab=ylab, ...)
-              par(ask=FALSE)}
+              par(ask=FALSE)
+            }
           })
 
 
