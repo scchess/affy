@@ -11,7 +11,6 @@ expresso <- function(afbatch,
                      summary.param = list(),
                      summary.subset = NULL,
                      ## ---
-                     ##phenodata = NULL,##assume it comes with AffyBatch, samee for MIAME
                      verbose = TRUE,
                      widget = FALSE
                      ) {
@@ -89,19 +88,7 @@ expresso <- function(afbatch,
     cat("PM/MM correction :", pmcorrect.method, "\n")
     cat("expression values:", summary.method, "\n")
   }
-
-  ##this can be chagnes through sampleNames <-
-#   ## --- chip.names
-#   if (is.null(chip.names)) {
-#     chip.names <- as.character(sapply(as.list(1:nchips), function(x) strsplit(x,"\\.")[[1]][1]))
-#   } else {
-#     if (length(chip.names) != nchips) {
-#       warning("Not the same number of chips than chip names. Assigning names from file.\n")
-#       chip.names <- as.character(sapply(as.list(1:nchips), function(x) strsplit(x,"\\.")[[1]][1])) 
-#     }
-#   }
   
-  ## --- reading CDF (if needed)
 
   ## -- background correct (if needed)
   if (bg.correct) {
@@ -128,12 +115,10 @@ expresso <- function(afbatch,
       cat("done.\n")
   }  
   
-  eset <- computeExprSet(afbatch, #bg.method=bg.method,
+  eset <- computeExprSet(afbatch,
                          summary.method=summary.method, pmcorrect.method= pmcorrect.method,
                          ids=summary.subset,
                          summary.param=summary.param, pmcorrect.param=pmcorrect.param)
-  
-  ##  if (! is.null(phenodata)), ##must assume we get it 
   
   return(eset)
 }

@@ -62,9 +62,7 @@
     cat(rep("*",13),"\n",sep="")
     cat("affy: development version\n")
     cat(rep("*",13),"\n",sep="")
-    cat("The package is under major changes.\n")
-    cat("unpack the package and read the file NEWS to know more....\n")
-    cat("The draft for the new vignette (called 'affy2') is distributed with the pacakge\n")
+    ##cat("The package is under major changes.\n")
     cat(rep("*",13),"\n",sep="")
     cat("demo(affy.tour) will eventually work and give an overview...\n")
     cat(rep("*",13),"\n",sep="")
@@ -90,7 +88,7 @@
   .initCel(match(paste("package:", pkgname, sep=""), search()))
   .initAffyBatch(match(paste("package:", pkgname, sep=""), search()))
   .initProbeSet(match(paste("package:", pkgname, sep=""), search()))
-
+  .initAffyBatchUnique(match(paste("package:", pkgname, sep=""), search()))
 
   ## add affy specific options
   ## (not unlike what is done in 'Biobase')

@@ -23,22 +23,22 @@
   
   ##intensity
   setMethod("intensity", signature(object="AffyBatch"),
-            function(object) object@exprs,
+            function(object) exprs(object),
             where=where)
   
   
   setReplaceMethod("intensity", signature(object="AffyBatch"),
                    function(object, value){
-                     object@exprs <- value
-                     colnames(object@exprs) <- sampleNames(object)
-                     object
+                     exprs(object) <- value
+                     colnames(exprs(object)) <- sampleNames(object)
+                     return(object)
                    }, where=where)
 
   ##for now, there is no accessor for se.exprs. we could use this to store
   ##sd, but if no one uses it... why do it
   
   setMethod("length",signature(x="AffyBatch"),
-            function(x) ncol(x@exprs), ##RI: assumes matrices
+            function(x) ncol(exprs(x)), ##RI: assumes matrices
             where=where)
   if( !isGeneric("ncol") )
     setGeneric("ncol",where=where)
@@ -161,7 +161,7 @@
             function(object) {
               
               cat("AffyBatch object\n")
-              cat("size of arrays=", object@nrow, "x", object@ncol,
+              cat("size of arrays=", nrow(object), "x", ncol(object),
                   " features (", object.size(object) %/% 1024, " kb)\n", sep="")
               
               ## Location from cdf env
@@ -223,7 +223,8 @@
               ## an extra feature. A function could be specified to
               ## process what is 'multi'-get on the fly
               for (i in seq(along=ans)) {
-                if (is.na(ans[[i]][1]))
+                
+                if ( is.na(ans[[i]][1]) )
                   next
                 
                 ##as.vector cause it might be a matrix if both
@@ -301,10 +302,10 @@
               index <- indexProbes(object, which, genenames)
               
               if(LISTRUE)
-                ans <- lapply(index, function(i) object@exprs[i, ,drop=drop])
+                ans <- lapply(index, function(i) exprs(object)[i, ,drop=drop])
               else{
                 index <- unlist(index)
-                ans <- object@exprs[index, ,drop=drop]
+                ans <- exprs(object)[index, ,drop=drop]
                 colnames(ans) <- sampleNames(object)
                 rownames(ans) <- names(index)
               }
@@ -416,10 +417,10 @@
   setMethod("[[", "AffyBatch",
             function(x, i, j, ...) { ##no need for j
               return(new("Cel",
-                         intensity=matrix(intensity(x)[, i], x@ncol, x@nrow),
-                         name=sampleNames(x)[i],
-                         cdfName=x@cdfName))
-              ##later we can get history from MIAME
+                         intensity = matrix(intensity(x)[, i], ncol(x), nrow(x)),
+                         name = sampleNames(x)[i],
+                         cdfName = x@cdfName,
+                         history = description(x)@preprocessing))
             },where=where)
   
   ##[[ we need replacement that takes an entry by the Cel in value
@@ -439,13 +440,6 @@
     return(x)
   },where=where)
 
-  ## --- normalize.methods
-  if (debug.affy123) cat("--->normalize.methods\n")
-  if( !isGeneric("normalize.methods") )
-    setGeneric("normalize.methods", function(object)
-               standardGeneric("normalize.methods"),
-               where=where)
-  
 
   ## --- bg.correct
 
@@ -474,20 +468,26 @@
             }, where=where)
 
 
-  ## ---normalize
+  ## --- normalize.methods
+  if( !isGeneric("normalize.methods") )
+    setGeneric("normalize.methods", function(object)
+               standardGeneric("normalize.methods"),
+               where=where)
+  
+
   setMethod("normalize.methods", signature(object="AffyBatch"),
             function(object) {
               normalize.AffyBatch.methods
             },
             where=where)
   
-  
+  ## ---normalize  
   if (! isGeneric("normalize"))
-    setGeneric("normalize", function(object, ...) standardGeneric("normalize"),
+    setGeneric("normalize", function(object, method, ...) standardGeneric("normalize"),
                where=where)
   
-  setMethod("normalize", signature(object="AffyBatch"),
-            function(object, method="quantiles", ...) {
+  setMethod("normalize", signature(object="AffyBatch", method="character"),
+            function(object, method, ...) { # no default. up to higher level functions.
               method <- match.arg(method, normalize.AffyBatch.methods)
               if (is.na(method))
                 stop("unknown method")
@@ -663,83 +663,4 @@
   setMethod("hist",signature(x="AffyBatch"),function(x,...) plotDensity.AffyBatch(x,...),where=where)
   
 }
-
-
-
-##this used to be in [[ and [[<-
-##if we ever want to add other slots to this could
-##be used in the "[[" method
-##mysd <- sd(x)
-##mymasks <- masks(x)
-##myoutliers <- outliers(x)
-##if statement make sure sd is actually somethings..
-##same for other slots
-##if(dim(mysd)[1]==ncols*nrows & dim(mysd)>=i)
-##  mysd <- matrix(mysd[,i],ncols,nrows)
-##if(dim(mymasks)[1]==ncols*nrows & dim(mymasks)>=i)
-##  mymasks <- matrix(mymasks[,i],ncols,nrows)
-##if(dim(myoutliers)[1]==ncols*nrows & dim(myoutliers)>=i)
-##  myoutliers <- matrix(myoutliers[,i],ncols,nrows)
-
-##cel <- new("Cel",
-##           intensity=matrix(intensity(x)[i],ncols,nrows),
-##           sd=mysd,
-##           masks=mymaks,
-##          outliers=myoutliers,
-##           name=sampleNames(x)[i],
-##           cdfName=x@cdfName,
-##           history=history(x)[[i]])
-##},
-##where=where)
-
-##this used to be part of "[[ 
-##DEBUG: NA ?! watch this in next versions of R
-## spotsd stuff to be really removed ?
-##if (is.na.spotsd(x)) {
-                                        #mysd <- matrix()
-##} else {
-##  mysd <- spotsd(x)[, , i]
-##}
-##oldim <- dim(intensity(x))
-##dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
-##new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=sampleNames(x)[i], cdfName=x@cdfName, outliers=outliers(x)[[i]], masks=masks(x)[[i]], history=history(x)[[i]]) ## commented out becuase no 'outliers' or 'masks'.
-                                        #cel <- new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=sampleNames(x)[i], cdfName=x@cdfName, outliers=matrix(), masks=matrix(), history=history(x)[[i]])
-                                        #dim(intensity(x)) <- oldim
-                                        #return(cel)
-                                        #},
-                                        #where=where)
-
-##if we ever want to add sd, masks, etc.. slots we can use this
-## in the [[<- replacement method
-##mysd <- sd(x)
-##mymasks <- masks(x)
-##myoutliers <- outliers(x)
-##if statement make sure sd is actually somethings..
-##if it is we put what should be put same for other slots
-##if(dim(mysd)[1]==ncols*nrows & dim(mysd)>=i)
-##  sd(x)[,i] <- as.vector(sd(value))
-##if(dim(mymasks)[1]==ncols*nrows & dim(mymasks)>=i)
-##  masks(x)[,i] <- as.vector(masks(value))
-##if(dim(myoutliers)[1]==ncols*nrows & dim(myoutliers)>=i)
-##  outliers(x)[,i] <- as.vector(outliers(value))
-##},where=where)
-
-##oldim <- dim(intensity(x))
-##dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
-##intensity(x)[,i] <- intensity(value)
-#### spotsd ?
-####if ((! is.na.spotsd(x)) & (spotsd(value) != c(NA)))
-####  spotsd(x)[, , i] <- spotsd(value)
-##x@name[i] <- sampleNames(value)
-##
-##if (x@cdfName != value@cdfName)
-## warning("cdfName mismatch !")
-
-##outliers(x)[[i]] <- outliers(value)
-##masks(x)[[i]] <- masks(value)
-##history(x)[[i]] <- history(value)
-##dim(intensity(x)) <- oldim
-##return(x)
-##},
-##where=where)
 

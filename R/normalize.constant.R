@@ -6,15 +6,21 @@ normalize.AffyBatch.constant <- function(abatch, refindex=1, FUN=mean, na.rm=TRU
   refconstant <- FUN(intensity(abatch[[refindex]]), na.rm=na.rm)
   
   #set.na.spotsd(abatch)
-                             
+
+  normhisto <- vector("list", length=n)
   for (i in (1:n)[-refindex]) {
     m <- normalize.constant(intensity(abatch[[i]]), refconstant, FUN=FUN, na.rm=na.rm)
     myhistory <- list(name="normalized by constant",
                       constant=attr(m,"constant"))
     attr(m,"constant") <- NULL
     intensity(abatch)[, i] <- m
-    ##history(abatch)[[i]] <- myhistory
+    normhisto[[i]] <- myhistory
   }
+  preproc <- c(description(abatch)@preprocessing,
+               list(normalization = normhisto))
+  MIAME <- description(abatch)
+  MIAME@preprocessing <- preproc
+  description(abatch) <- MIAME
   return(abatch)
 }       
 

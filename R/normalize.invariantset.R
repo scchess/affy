@@ -1,30 +1,3 @@
-## Laurent 2002
-
-## The idea would be to have the function related to one particular normalization
-## technique into one single file (to avoid to run after many different files).
-##
-## Strongly suggested naming convention:
-## (This is not that particular naming convention that matters but that there is A naming
-## convention... reasons upon requests for the skeptics...).
-## All the functions in such a 'scaling function' file must be like
-## 'normalize.xxx.yyy' or 'normalize.yyy'. 'xxx' has to be whether 'Cel' for Affymetrix worshipers,
-## whether 'cdna' cDNA arrays devotees (other names will come if other popular formats show up).
-
-## As you probably already suspect it from above, there is one single function 'normalize.yyy'
-## per file. This last function is the data-format-independant algorithm.
-## The 'normalize.xxx.yyy' function will communicate with the
-## 'normalize.yyy' function according the nature of their data. Of course it may exist functions
-## that are not suitable for a particular format 'xxx'. The corresponding function will just
-## be absent.
-## note: In the case of only one format 'xxx' is by a particular 'yyy' method,
-## it may still be wise to have a 'normalize.yyy' function (1- for the future possible formats to
-## come, 2- for the re-usability of the code).
-##
-## The attribute 'history' of the 'Cel' object is used to store informations about the
-## procedure (note: they come from the 'scale.yyy' as an attribute). This is probably
-## a temporary (but decent) solution.
-##
-
 normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), progress=FALSE) {
 
   require(modreg, quietly=TRUE)
@@ -48,6 +21,9 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), prog
   
   ##set.na.spotsd(cel.container)
   
+  normhisto <- vector("list", length=nc)
+  normhisto[[refindex]] <- list(name="reference for the invariant set")
+  
   ## loop over the CEL files and normalize them
   for (i in (1:nc)[-refindex]) {
   
@@ -64,13 +40,17 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), prog
     intensity(abatch)[, i] <- tmp
 
     ## storing information about what has been done
-    ##history(abatch)[[i]] <- list(name="normalized by invariant set",
-    ##                                   invariantset=i.set)
+    normhisto[[i]] <- list(name="normalized by invariant set",
+                           invariantset=i.set)
     
     if (progress) cat("done.\n")
     
   }
-  ##history(abatch)[[refindex]] <- list(name="reference for the invariant set")
+  preproc <- c(description(abatch)@preprocessing,
+               list(normalization = normhisto))
+  MIAME <- description(abatch)
+  MIAME@preprocessing <- preproc
+  description(abatch) <- MIAME
   
   return(abatch)
 }
