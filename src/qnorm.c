@@ -4,6 +4,8 @@
  **
  ** aim: A c implementation of the quantile normalization method 
  **
+ ** Copyright (C) 2002-2003    Ben Bolstad
+ **
  ** written by: B. M. Bolstad  <bolstad@stat.berkeley.edu>
  **
  ** written: Feb 2, 2002
@@ -13,8 +15,10 @@
  ** for normalizing high density oligonucleotide data as discussed
  ** in
  **
- ** Bolstad et al (2003) A comparison of Normalization Algorithms for High
- ** Density Oligonucleotide data. Bioinformatics
+ ** Bolstad, B. M., Irizarry R. A., Astrand, M, and Speed, T. P. (2003)(2003) 
+ ** A Comparison of Normalization Methods for High 
+ ** Density Oligonucleotide Array Data Based on Bias and Variance.
+ ** Bioinformatics 19,2,pp 185-193
  **
  ** History
  ** Feb 2, 2002 - Intial c code version from original R code
@@ -22,6 +26,7 @@
  ** Jan 2, 2003 - Documentation/Commenting updates reformating
  ** Feb 17, 2003 - add in a free(datvec) to qnorm(). clean up freeing of dimat
  ** Feb 25, 2003 - try to reduce or eliminate compiler warnings (with gcc -Wall)
+ ** Feb 28, 2003 - update reference to normalization paper in comments
  **
  ***********************************************************/
 

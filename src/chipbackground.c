@@ -5,6 +5,9 @@
  ** aim: an implementation of the affymetrix background/noise correction
  **      as documented in Affymetrix Statistical Algorithm whitesheet
  **
+ ** This implementation is
+ ** Copyright (C) 2002-2003   Ben Bolstad
+ **
  ** written by: B. M. Bolstad   <bolstad@stat.berkeley.edu>
  ** 
  ** created: Oct 3, 2002
@@ -23,7 +26,9 @@
  ** 
  ** Feb 5, 2003 - add in I(x,y) = max(I(x,y),0.5) but commented out for now.
  ** Feb 25, 2003 - fix up some compiler warnings by adding some includes
- **                and remove a declared but unused variable. (gcc -Wall)                
+ **                and remove a declared but unused variable. (gcc -Wall)    
+ ** Feb 28, 2003 - Change background to be average of lowest 2% rather than
+ **                2% quantile following suggestion by Helene Boucher <bouchel01@borabora.crchul.ulaval.ca>             
  **
  ***********************************************************************/
 
@@ -388,10 +393,12 @@ void static compute_background_quadrant(double *probeintensity, int nprobes, int
     qsort(data_by_sector[j],cur_n[j],sizeof(double),(int(*)(const void*, const void*))sort_double);
   }
   
+ 
+  /********* This section was commented out to change from quantile to average (Feb 28, 2003) ************     
   for (j=0; j < grid_dim; j++){
-    bg_q[j] = data_by_sector[j][(int)(0.02* nprobes_in_sec[j])];
+  bg_q[j] = data_by_sector[j][(int)(0.02* nprobes_in_sec[j])];
   }
-  
+  ******************************************************************************************************/
   for (j=0; j < grid_dim; j++){
     sumx = 0.0;
     sumx2 = 0.0;
@@ -407,6 +414,8 @@ void static compute_background_quadrant(double *probeintensity, int nprobes, int
       sumx2 += (data_by_sector[j][i] - sumx)*(data_by_sector[j][i]-sumx);
       i++;
     }
+    /* the 1 line following changes the b_k to average of lowest2pc */
+    bg_q[j] = sumx;
     noise_q[j] = sqrt(sumx2/(lower2pc -1));
   }
 
