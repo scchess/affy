@@ -108,6 +108,8 @@
  **               on w32 machines with text files.
  ** May 7, 2004 - make strncmp strncasecmp. No more problems
  **               with cdf name capitalization. 
+ ** May 11, 2004 - fix error message in case when zlib not available
+ **                and a gzipped file has been supplied.
  **
  *************************************************************/
  
@@ -1831,7 +1833,11 @@ SEXP read_abatch(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm_outliers,
 	 error("File %s does not seem to have correct dimension or is not of %s chip type.", cur_file_name, cdfName);
        }
      } else {
+#if defined HAVE_ZLIB
        error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#else
+       error("Is %s really a CEL file? tried reading as text and binary. The gzipped text format is not supported on your platform.\n",cur_file_name);
+#endif
      }
   }
 
@@ -1855,7 +1861,11 @@ SEXP read_abatch(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm_outliers,
     } else if (isBinaryCelFile(cur_file_name)){
       read_binarycel_file_intensities(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1);
     } else {
-      error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#if defined HAVE_ZLIB
+       error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#else
+       error("Is %s really a CEL file? tried reading as text and binary. The gzipped text format is not supported on your platform.\n",cur_file_name);
+#endif
     }
 
   }
@@ -1890,7 +1900,11 @@ SEXP read_abatch(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm_outliers,
 	  binary_apply_masks(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1,asInteger(rm_mask),asInteger(rm_outliers));
 	}
       } else {
-	error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#if defined HAVE_ZLIB
+       error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#else
+       error("Is %s really a CEL file? tried reading as text and binary. The gzipped text format is not supported on your platform.\n",cur_file_name);
+#endif
       }
       
 
@@ -1958,7 +1972,11 @@ SEXP ReadHeader(SEXP filename,SEXP compress){
   } else if (isBinaryCelFile(cur_file_name)){
     cdfName = binary_get_header_info(cur_file_name, &ref_dim_1,&ref_dim_2);
   } else {
-    error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#if defined HAVE_ZLIB
+       error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#else
+       error("Is %s really a CEL file? tried reading as text and binary. The gzipped text format is not supported on your platform.\n",cur_file_name);
+#endif
   }
   
   PROTECT(name = allocVector(STRSXP,1));
@@ -2072,8 +2090,12 @@ SEXP read_probeintensities(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm
        if (check_binary_cel_file(cur_file_name,cdfName, ref_dim_1, ref_dim_2)){
 	 error("File %s does not seem to have correct dimension or is not of %s chip type.", cur_file_name, cdfName);
        }
-     } else {
+     } else {  
+#if defined HAVE_ZLIB
        error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#else
+       error("Is %s really a CEL file? tried reading as text and binary. The gzipped text format is not supported on your platform.\n",cur_file_name);
+#endif
      }
   }
   
@@ -2123,7 +2145,11 @@ SEXP read_probeintensities(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm
       read_binarycel_file_intensities(cur_file_name,CurintensityMatrix, 0, ref_dim_1*ref_dim_2, n_files,ref_dim_1);
       storeIntensities(CurintensityMatrix,pmMatrix,mmMatrix,i,ref_dim_1*ref_dim_2, n_files,num_probes,cdfInfo,which_flag);
     } else {
-      error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#if defined HAVE_ZLIB
+       error("Is %s really a CEL file? tried reading as text, gzipped text and binary\n",cur_file_name);
+#else
+       error("Is %s really a CEL file? tried reading as text and binary. The gzipped text format is not supported on your platform.\n",cur_file_name);
+#endif
     }
     
   }
