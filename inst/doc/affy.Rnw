@@ -1,0 +1,198 @@
+
+\documentclass{article}
+
+\usepackage{hyperref}
+
+
+%copied blindly from Biobase.Rnw -- LG
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\classdef}[1]{%
+  {\em #1}
+}
+ 
+\begin{document}
+\title{Textual Description of \it{affy}} 
+
+\maketitle
+
+
+\section{Classes}
+
+Objects can be used to model actors of a process, and let one interact with it an intuitive way.
+The package benefited from important efforts to make it quickly usable and extendable.
+
+For an instance \verb+a+ of a class \verb+MyClass+ having a attribute called \verb+myAttribute+, one can access the
+attribute simply by writing \verb+a@myAttribute+. (XXX point to other chapter where the mecanism more described)
+{\bf (move 'cdf' to 'Cdf' !!! create class 'Cdf' !!!)}
+
+Different classes have been implemented in the package to ease the manipulation of the data.XXX
+As users may already be familiar with the different categories of files involved in the analysis, classes
+corresponding to the {\code Cdf} and {\code CeL} files were XXX(not too good.. heavy style)XXX
+The main classes are described in details below. Other minor convenience classes might be found, but in-depht
+knowledge of their structure does not appear relevant for an introduction. Help files embeded in the package
+will provide more informations.
+
+\subsection{Cdf-class}
+
+The {\it Chip Definition Files} ({\bf XXX right ???}) ({\it CDF} files) are used to store informations related to
+a type of oligonucleotide array sold by the manufacturer. All the arrays belonging to a given type will share this same information.
+As the quantity of informations in a {\it CDF} can be rather large, this is an important point. This is kept in the design of the package,
+as there will be only one \verb+Cdf+ object in memory, to which will refer the corresponding \verb+Cel+ files.
+
+For instance when during an experiment a total of 30 arrays of type {\it Hu6800} are used, the information relative the array type is
+common to all the chips. Knowing that a {\it CDF} files weights 20 Megabytes, will help to realize the interest of the approach.
+A summary of the slots can be found in the table~\ref{table:Cdf}.
+
+Efforts were invested in the design to have a very flexible research tool. Some of the examples below show particularities of the data that are not known to have been studied. Starting points for further investigation can created in few lines of {\it R} command...
+
+\begin{description}
+ \item[name] Each {\it probe} (or {\it feature}) on an array is an oligonucleotide from a larger sequence of nucleic acids 
+(generally a gene or a fraction of a gene), we refer to as a probe pairs set (XXX see PPSet).
+ All these {\it large sequences} were given a unique name by the chip manufacturer. By design of the arrays severals probes correspond to different
+parts of the same larger sequence, hence have the same name. Names are stored as factors, and the corresponding factors labels (or levels) are found in the
+attribute \verb+name.levels+.
+
+Example:
+\begin{verbatim}
+  ## 
+  data(CDF.example)
+
+  geneid <- "D13640_at"
+  ## look for the position of the factor label "D13640_at"
+  i <- match(geneid, CDF.example@name.levels)
+  ## (i holds the integer value 43)
+
+  ## look for the corresponding name(s)
+  genepos <- which(CDF.example@name == i, arr.ind=TRUE)
+  ## genepos holds the x,y's corresponding to "D13640_at"
+  ## the function locate.name() is working this way.
+
+\end{verbatim}
+
+ \item[name.level]
+ \item[pbase] In the {\it CDF} files, the column called {\it PBASE} holds one of the nucleic acid letters. From trials and errors
+\footnote{Comparing the letter between {\it PBASE} and {\it TBASE}, it appeared that two cases could appear. }
+, the {\it p} was guessed
+ to stand for {\it probe}.
+ \item[pbase.levels] The four levels for \verb+pbase+ are the four letters used to designatee nucleic acids.
+ \item[tbase] In the {\it CDF} files, the column called {\it TBASE} holds also a nucleic acid letter. From trials and errors where the {\it t}
+ was assumed to stand for {\it tbase}.
+ \item[tbase.levels] The four same letters than for \vreb+pbase.levels+ are found here.
+ \item[atoms] Each {\it probe pair} (XXX make sure this term has been defined earlier) in a probe pair set is given a unique integer as an indentifier.
+This number is refered as the {\it atom} number. The corresponding {\it perfect matches} and {\it mismatches} are found by using this number.
+
+Example:
+\begin{verbatim}
+  ## 
+  data(CDF.example)
+
+  ## store in x the size of the probe pair sets
+  ## (there are two atoms per pair, so we divide per 2)
+  x <- tapply(CDF.example@atom, CDF.example@name, FUN=length) / 2
+  dimnames(x) <- list(CDF.example@name.levels[as.integer(names(x))])
+  
+  ## select the probe pairs with less than 5 probe pairs
+  s <- which(x < 5)
+  
+  x[s]
+  
+  ## note: these probe pair sets mostly exist because of the example CDF
+  ## (which is a corner of a Hu6800 chip).
+\end{verbatim}
+\end{description}
+
+\begin{tabular}{|p{2.5cm}|p{8cm}|}
+%\label{table:Cdf}
+\hline
+\multicolumn{2}{|c|}{\textbf{Class Cdf - slots}}\\
+\hline
+name & matrix of 'factors' for the gene names corresponding to the probes.\\
+name.levels & the levels corresponding to the `name'. \\
+pbase & matrix of 'factors' of pbases.\\
+pbase.levels & the corresponding levels.\\
+tbase & matrix of 'factors' of tbases.\\
+tbase.levels & the corresponding levels.\\
+atom & matrix of atom numbers.\\
+\hline
+\end{tabular} 
+
+\subsection{class Cel}
+
+Objects of class \verb+Cel+ contain the informations held in {\it CEL} files.
+
+It was decided to use matrices to store the data in order to spare memory. The position of the 
+In {\it R} version 1.4.1, the storage of 2 vectors of integers each {\it feature} on an {\it Affymetrix}
+Hu6800 array represents around 5 Megabytes, and the use of them would multiply the size of \verb+Cel+ objects by
+2 or 3. Data from 50 {\it CEL} files were loaded into memory, having {\it R} consuming less than 300 Megabytes.
+
+The combination of the \verb+Cel+ and the \verb+Cdf+ allows to extract XXXblabla any kind of informations XXX.
+The choices in the desing might be considered awkward, as the resulting data structure can be perceived as more
+ complex. It should not turn away the novice user.
+Objects of class \verb+Plob+ (see~\ref{subsection:Plob}, page~\pageref{subsection:Plob}) have a different
+data structure and can be an alternative. A convenience function to shuttle between the data structure can be
+found in the package (XXX ref). 
+
+\begin{tabular}{|p{2.5cm}|p{8cm}|}
+%\label{table:Cel}
+\hline
+\multicolumn{2}{|c|}{\textbf{Class Cel - slots}}\\
+\hline
+name & the name given to this CEL file data... the file name by default.\\
+intensity & intensity values in a matrix of dimension (nrow,ncol)\\
+sd & standard deviation for the intensity values (as they are
+    included in the CEL files there might be a use for them).\\
+masks & \\
+outliers & \\
+history & a list. Informations about the nature of the data.\\
+\hline
+\end{tabular} 
+
+\begin{description}
+  \item[show]
+  \item[image]
+\end{description}
+
+\begin{tabular}{|p{2.5cm}|p{8cm}|}
+%\label{table:Cdf}
+\hline
+\multicolumn{2}{|c|}{\textbf{Class Cel - methods}}\\
+\hline
+show & \\
+image & Display the intensities in the \verb+Cel+ according to their spatial locations.\\
+\hline
+\end{tabular} 
+
+\subsection{class Cel.container}
+
+The class \verb+Cel.container+ extends the class \verb+container+ of the package {\it Biobase}. It allows to bundle a collection of \verb+Cel+ instances
+together. Typically, a \verb+Cel.container+ will contain \verb+Cel+ intances sharing the same \verb+Cdf+.
+A \verb+Cel.container+ can be {\it normalized}, which means its \verb+Cel+ elements will be scaled to be comparable. More details about
+normalizing can be found in the section~\ref{XXXnormalize}, page~\pageref{XXXnormalize}
+
+\subsection{class PPSet}
+
+\begin{description}
+  \item[show]
+  \item[barplot]
+  \item[plot]
+\end{description}
+
+\begin{tabular}{|p{2.5cm}|p{8cm}|}
+%\label{table:Cdf}
+\hline
+\multicolumn{2}{|c|}{\textbf{Class PPSet - methods}}\\
+\hline
+show & \\
+barplot & \\
+plot & \\
+\hline
+\end{tabular} 
+
+
+\end{document}
