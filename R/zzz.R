@@ -1,3 +1,5 @@
+
+
 .First.lib <- function(libname, pkgname, where) {
   
 
@@ -16,9 +18,10 @@
   
   library.dynam("affy", pkgname, libname)
   
-  require(methods)
-  require(modreg)
-  require(eda)
+  require(methods, quiet=TRUE)
+  require(modreg, quiet=TRUE)
+  require(eda, quiet=TRUE)
+  
   where <- match(paste("package:", pkgname, sep=""), search())
 
   if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
@@ -60,12 +63,32 @@
   .initPPSet.container(where)
   ##if (debug.affy123) cat("-->initPlob\n")
   .initPlob(where)
+
+
+  ## add affy specific options
+  ## (not unlike what is done in 'Biobase')
+  if (is.null(getOption("BioC"))) {
+    BioC <- list()
+    class(BioC) <- "BioCOptions"
+    options("BioC"=BioC)
+  }
+  
+  ##affy$urls <- list( bioc = "http://www.bioconductor.org")
+  affy <- list(compress.cdf=FALSE, compress.cel=FALSE,
+               probesloc.what="package", probesloc.where=NULL, probesloc.autoload=TRUE)
+  class(affy) <- "BioCPkg"
+  
+  BioC <- getOption("BioC")
+  BioC$affy <- affy
+  options("BioC"=BioC)
+  ## ---
   
   cacheMetaData(as.environment(where))
 
 }
 
 .Last.lib <- function(libpath) {
+  options(BioC)$affy <- NULL
   dyn.unload(file.path(libpath, "libs",
                        paste("affy", .Platform$"dynlib.ext", sep="")))
   .Dyn.libs <- .Dyn.libs[- which(.Dyn.libs == "affy")]

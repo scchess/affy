@@ -1,4 +1,5 @@
-whatcdf <- function(filename,compress=FALSE){
+whatcdf <- function(filename, compress=getOptions("BioC")$affy$compress.cel){
+  
   ##finds what cdf environment to use with cdf file
   tmp <- getInfoInAffyFile(filename,"CEL","HEADER","DatHeader",compress=compress) ##find appropriate line
   tmp <- strsplit(tmp," ")[[1]] #split by space
