@@ -73,7 +73,7 @@
                 cdf <- read.cdffile(file.path(path.expand(where), object@cdfName))
                 ## ---> extra paranoia <---
                 if (cdf@cdfName != object@cdfName)
-                  warning(paste("The CDF file identifies as", cdf@cdfName,
+                  warning(paste("The CDFALSE file identifies as", cdf@cdfName,
                                 "while you probably want", object@cdfName))
                 ## ---> end <---
                 return(getLocations.Cdf(cdf))
@@ -224,7 +224,7 @@
                standardGeneric("probeNames"), where=where)
   
   setMethod("probeNames","AffyBatch",
-  function(object,genenames=NULL,mm=F){
+  function(object,genenames=NULL,mm=FALSE){
     if(mm) Index <- mmindex(object,genenames)
     else Index <- pmindex(object,genenames)
     reps <- unlist(lapply(Index,length))
@@ -238,13 +238,13 @@
                standardGeneric("probes"), where=where)
   
   setMethod("probes", signature("AffyBatch"),
-            function(object, which=c("pm", "mm"), genenames=NULL, LIST=F){
+            function(object, which=c("pm", "mm"), genenames=NULL, LISTRUE=FALSE){
 
               which <- match.arg(which)
               
               index <- indexProbes(object, which, genenames)
               
-              if(LIST)
+              if(LISTRUE)
                 ans <- lapply(index, function(i) object@intensity[i, ])
               else{
                 index <- unlist(index)
@@ -264,7 +264,7 @@
                standardGeneric("pm"), where=where)
   
   setMethod("pm","AffyBatch",
-            function(object, genenames=NULL, LIST=FALSE) probes(object, "pm", genenames, LIST=LIST),
+            function(object, genenames=NULL, LISTRUE=FALSE) probes(object, "pm", genenames, LISTRUE=LISTRUE),
             where=where
             )
   
@@ -275,7 +275,7 @@
                standardGeneric("mm"), where=where)
   
   setMethod("mm",signature("AffyBatch"),
-            function(object, genenames=NULL, LIST=FALSE) probes(object, "mm", genenames, LIST=LIST),
+            function(object, genenames=NULL, LISTRUE=FALSE) probes(object, "mm", genenames, LISTRUE=LISTRUE),
             where=where
             )
 
@@ -379,7 +379,7 @@
               method <- match.arg(method, normalize.AffyBatch.methods)
               if (is.na(method))
                 stop("unknown method")
-              method <- paste("normalize.Cel.container", method, sep=".")
+              method <- paste("normalize.AffyBatch", method, sep=".")
               ## change dimension to re-use Celc.container related code
               oldim <- dim(intensity(object))
               dim(intensity(object)) <- c(object@nrow, object@ncol, object@nexp)
@@ -425,10 +425,10 @@
               ##if (verbose) cat("getting the locations for all affyIDs.....")
               ##all.l.pm <- .Call("getallLocations", as.integer(cdf@name), as.integer(dim(cdf@name)),
               ##                  as.integer(atom(cdf)), as.integer(pmormm(cdf)),
-              ##                  as.integer(max(cdf@name, na.rm=T)+1) )
+              ##                  as.integer(max(cdf@name, na.rm=TRUE)+1) )
               ##all.l.mm <- .Call("getallLocations", as.integer(cdf@name), as.integer(dim(cdf@name)),
               ##                  as.integer(atom(cdf)), as.integer(! pmormm(cdf)),
-              ##                  as.integer(max(cdf@name, na.rm=T)+1) )
+              ##                  as.integer(max(cdf@name, na.rm=TRUE)+1) )
 
               if (verobse) cat(".....done.\n")
               
@@ -495,16 +495,16 @@
 
                 warning("indexing of probes not yet checked (possibly wrong)")
                 c.pps@pmProbes <- matrix(intensity(x)[l.pm, ],
-                                         np, n, byrow=T)
+                                         np, n, byrow=TRUE)
                 c.pps@mmProbes <- matrix(intensity(x)[l.mm, ],
-                                         np, n, byrow=T)
+                                         np, n, byrow=TRUE)
                 
-                ##c.pps@pmProbes <- matrix(intensity(x)[cbind(matrix(rep(l.pm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=F),
+                ##c.pps@pmProbes <- matrix(intensity(x)[cbind(matrix(rep(l.pm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=FALSE),
                 ##                                            rep(1:n, np))],
-                ##                         np, n, byrow=T)
-                ##c.pps@mmProbes <- matrix(intensity(x)[cbind(matrix(rep(l.mm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=F),
+                ##                         np, n, byrow=TRUE)
+                ##c.pps@mmProbes <- matrix(intensity(x)[cbind(matrix(rep(l.mm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=FALSE),
                 ##                                            rep(1:n, np))],
-                ##                         np, n, byrow=T)
+                ##                         np, n, byrow=TRUE)
                 
                 ## generate expression values
                 ## (wrapped in a sort of try/catch)
@@ -546,9 +546,9 @@
 #               which.plot <- 0
 #               for(i in 1:length(sampleNames(x))){
 #                 which.plot <- which.plot+1;
-#                 if(trunc((which.plot-1)/scn)==(which.plot-1)/scn && which.plot>1 && ask)  par(ask=T)
+#                 if(trunc((which.plot-1)/scn)==(which.plot-1)/scn && which.plot>1 && ask)  par(ask=TRUE)
 #                 image(AffyBatch[[i]], ...)
-#                 par(ask=F)}
+#                 par(ask=FALSE)}
 #             },where=where)
   
 
@@ -636,7 +636,7 @@
   
 #  setMethod("pm","AffyBatch",function(object, genenames=NULL){
 #    Index <- pmindex(object,genenames)
-#    if(LIST)
+#    if(LISTRUE)
 #      ans <- lapply(Index,function(i) object@intensity[i,])
 #    else{
 #      Index2 <- unlist(Index)
@@ -647,9 +647,9 @@
 #    return(ans)
 #  },where=where)
 
-#  setMethod("mm","AffyBatch",function(object,genenames=NULL,LIST=F){
+#  setMethod("mm","AffyBatch",function(object,genenames=NULL,LISTRUE=FALSE){
 #    Index <- mmindex(object,genenames)
-#    if(LIST)
+#    if(LISTRUE)
 #      ans <- lapply(Index,function(i) object@intensity[i,])
 #    else{
 #      Index2 <- unlist(Index)

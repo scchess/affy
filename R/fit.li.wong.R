@@ -19,7 +19,7 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
   flag1 <- NA ##these will be false if convergence not reacher,
   flag2 <- NA ## this will be false if outliers respectively cuase iter to stop
   if(remove.outliers){
-    flag1 <- T;flag2<-TRUE
+    flag1 <- TRUE; flag2<-TRUE
     original.data.matrix <- data.matrix ##so we can get it back after outlier removal
     change.theta <- 1 #start with 1 
     change.phi <- 1

@@ -39,7 +39,7 @@
   "bg.correct.subtractmm", "bg.correct.pmonly" and "bg.correct.adjust"
   (see documentation for the method \code{express}).
 
-  IMPORTANT NOTE: This a 'development version'. Names used for methods,
+  IMPORTANTRUE NOTE: This a 'development version'. Names used for methods,
   including the name of this method
   itself are likely to change in the near future. The aim is to merge
   more completely the \code{Cel.container} and \code{Cdf}, and the

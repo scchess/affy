@@ -6,7 +6,7 @@
 \description{Normalises feauture intensities from
   \code{\link{probe.level.object}}s}
 \usage{
-maffy.normalise(data,subset,verbose=F,span=0.25,family="symmetric",log.it=T)}
+maffy.normalise(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE)}
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{data}{an matrix of intensities.}

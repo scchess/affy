@@ -1,9 +1,9 @@
 \name{whatcdf}
 \alias{whatcdf}
 
-\title{Find which CDF corresponds}
+\title{Find which CDFALSE corresponds}
 \description{
-  Find which kind of CDF corresponds to a CEL file.
+  Find which kind of CDFALSE corresponds to a CEL file.
 }
 \usage{
 whatcdf(filename, compress = FALSE)
@@ -13,8 +13,8 @@ whatcdf(filename, compress = FALSE)
   \item{compress}{boolean (file compressed or not}
 }
 \details{
-  Information concerning the corresponding CDF file seems to be found in
-  CEL files. This allows us to try to link CDF information automatically.
+  Information concerning the corresponding CDFALSE file seems to be found in
+  CEL files. This allows us to try to link CDFALSE information automatically.
 }
 \value{
   a \code{character} with the name of the CDF

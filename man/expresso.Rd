@@ -33,9 +33,9 @@ expresso(
          ...)
 }
 \arguments{
-  \item{cdf}{a \code{\link{Cdf}} object or the path to the CDF file.}
+  \item{cdf}{a \code{\link{Cdf}} object or the path to the CDFALSE file.}
   \item{CELfiles}{a list of path(s) to the CEL file(s)}
-  \item{compress.cdf}{a boolean to specify if the CDF file is
+  \item{compress.cdf}{a boolean to specify if the CDFALSE file is
     compressed}
   \item{compress.cel}{a boolean to specify if the CEL files are
     compressed}
@@ -54,7 +54,7 @@ expresso(
     expression summary value is computed for everything on the chip.}
   \item{summary.param}{a list of parameters to be passed to the
     \code{summary.method} (if wanted).}
-  \item{chipNames}{CURRENTLY NOT IMPLEMENTED}
+  \item{chipNames}{CURRENTLY NOTRUE IMPLEMENTED}
   \item{phenodata}{\code{phenoData} object}
   \item{verbose}{logical value. If \code{TRUE} it writes out some messages.}
   \item{widget}{a boolean to specify the use of widgets (the package

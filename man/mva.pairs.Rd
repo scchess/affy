@@ -7,7 +7,7 @@
  triangle and the variance of the Ms are displayed in the lower triangle}
 }
 \usage{
-mva.pairs(x, labels=colnames(x), log.it=T,span=2/3,family.loess="symmetric",
+mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="symmetric",
           digits=3,line.col=2,main="MVA plot",...)
 }
 %- maybe also `usage' for other objects documented here.
@@ -27,7 +27,7 @@ mva.pairs(x, labels=colnames(x), log.it=T,span=2/3,family.loess="symmetric",
     x <- matrix(rnorm(4000),1000,4)
     x[,1] <- x[,1]^2
     dimnames(x) <- list(NULL,c("chip 1","chip 2","chip 3","chip 4"))
-    mva.pairs(x,log=F,main="example")
+    mva.pairs(x,log=FALSE,main="example")
 }
 
 \seealso{\code{\link{Plob}}}

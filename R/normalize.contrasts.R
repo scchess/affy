@@ -1,4 +1,4 @@
-normalize.Plob.contrasts <- function(object,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric") {
+normalize.Plob.contrasts <- function(object,span=2/3,choose.subset=TRUE,subset.size=5000,verbose=TRUE,family="symmetric") {
   ##we need default argumetns becuase they are used in this transitional file
   alldata <- rbind(object@pm,object@mm)
   n <-  dim(alldata)[1]/2
@@ -16,7 +16,7 @@ normalize.Plob.contrasts <- function(object,span=2/3,choose.subset=T,subset.size
   return(object)
 }
 
-normalize.Cel.container.contrasts <- function(listcel,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric") { 
+normalize.Cel.container.contrasts <- function(listcel,span=2/3,choose.subset=TRUE,subset.size=5000,verbose=TRUE,family="symmetric") { 
   
   cols <- length(listcel)
   rows <- length(intensity(listcel[[1]]))

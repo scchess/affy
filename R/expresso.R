@@ -41,10 +41,10 @@ expresso <- function(cdf = NULL,
   ## --- CDF
   if (is.null(cdf)) {
     if (widget) {
-      cdf <- fileBrowser(textToShow="Choose one CDF file",nSelect=1,
+      cdf <- fileBrowser(textToShow="Choose one CDFALSE file",nSelect=1,
                          testFun=hasSuffix("[cC][dD][fF]"))
     } else {
-      stop("CDF file missing")
+      stop("CDFALSE file missing")
     }
   }
 
@@ -116,9 +116,9 @@ expresso <- function(cdf = NULL,
     }
   }
 
-  ## --- reading CDF (if needed)
+  ## --- reading CDFALSE (if needed)
   if (class(cdf) != "Cdf") {
-    if (verbose) cat("reading CDF file...")
+    if (verbose) cat("reading CDFALSE file...")
     
     ##cdf <- try(read.cdffile(CDFfile, compress = compress.cdf))
     ##if (inherits(cdf,"try-error")) {

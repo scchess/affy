@@ -1,4 +1,4 @@
-avdiff <- function(x,verbose=F){
+avdiff <- function(x,verbose=FALSE){
   if(missing(x)) stop("Argument x missing, with no default\n")
   cat("Computing average difference for",dim(x$pm)[2],"columns")
   avdiff <- apply(x$pm-x$mm,2,function(y){

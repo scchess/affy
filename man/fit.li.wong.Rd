@@ -7,15 +7,15 @@
   set with I chips and J probes.}
 }
 \usage{
-fit.li.wong(data.matrix, remove.outliers=T, normal.array.quantile=0.5,
+fit.li.wong(data.matrix, remove.outliers=TRUE, normal.array.quantile=0.5,
             normal.resid.quantile=0.9, large.threshold=3, large.variation=0.8,
             outlier.fraction=0.14, delta=1e-06, maxit=50,
-            outer.maxit=50,verbose=F)
+            outer.maxit=50,verbose=FALSE)
 
-li.wong(data.matrix,remove.outliers=T, normal.array.quantile=0.5,
+li.wong(data.matrix,remove.outliers=TRUE, normal.array.quantile=0.5,
             normal.resid.quantile=0.9, large.threshold=3, large.variation=0.8,
             outlier.fraction=0.14, delta=1e-06, maxit=50,
-            outer.maxit=50,verbose=F)
+            outer.maxit=50,verbose=FALSE)
 
 }
 \arguments{

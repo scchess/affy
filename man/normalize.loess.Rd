@@ -8,7 +8,7 @@
 }
 \usage{
 normalize.loess(mat, subset=sample(1:(dim(mat)[2]),5000),
-                epsilon=10^-2,maxit=1,log.it=T,verbose=T,span=2/3,
+                epsilon=10^-2,maxit=1,log.it=TRUE,verbose=TRUE,span=2/3,
                 family.loess="symmetric")
 normalize.Cel.container.loess(listcel, ...)
 normalize.Plob.loess(plob, ...)

@@ -8,8 +8,8 @@
 }
 \usage{
 %normalize.contrast() ## currenlt maffy.normalize
-normalize.Cel.container.contrasts(listcel,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric")
-normalize.Plob.contrasts(object,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric")
+normalize.Cel.container.contrasts(listcel,span=2/3,choose.subset=TRUE,subset.size=5000,verbose=TRUE,family="symmetric")
+normalize.Plob.contrasts(object,span=2/3,choose.subset=TRUE,subset.size=5000,verbose=TRUE,family="symmetric")
 }
 \arguments{
   \item{listcel}{a \code{\link{Cel.container}}. }

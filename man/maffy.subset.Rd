@@ -4,7 +4,7 @@
 \description{Select a subset of rows with small rank-range over columns.}
 \usage{
 maffy.subset(data,subset.size=5000,maxit=100,
-             subset.delta=max(round(subset.size/100),25),verbose=F)}
+             subset.delta=max(round(subset.size/100),25),verbose=FALSE)}
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{data}{a matrix}

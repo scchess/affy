@@ -9,7 +9,7 @@ normalize the chips with respect to each other by forcing log ratios to
 be scattered around the same constant.}
 \usage{
 loess.normalize(mat, subset=sample(1:dim(mat)[2], 5000), epsilon=10^-2,
-          maxit=1,log.it=T, verbose=T, span=2/3, family.loess="symmetric")
+          maxit=1,log.it=TRUE, verbose=TRUE, span=2/3, family.loess="symmetric")
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

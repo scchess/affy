@@ -1,7 +1,7 @@
 library(modreg)
 ##*******************************************************************************************
 #**********  maffy.normalise     *****
-maffy.normalise <- function(data,subset,verbose=F,span=0.25,family="symmetric",log.it=T){
+maffy.normalise <- function(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE){
 
 k <- dim(data)[2]   ### Number of chips
 
@@ -68,7 +68,7 @@ data.scaled
 ##*******************************************************************************************
 #**********  Select A subset with small rank-range over arrays  *****
 
-maffy.subset <- function(data,subset.size=5000,maxit=100,subset.delta=max(round(subset.size/100),25),verbose=F){
+maffy.subset <- function(data,subset.size=5000,maxit=100,subset.delta=max(round(subset.size/100),25),verbose=FALSE){
 
 
 k     <- dim(data)[2]   ### Number of chips
@@ -84,7 +84,7 @@ index0 <- order(means)
 data.sorted <- data[index0,]
 
 ## Init
-set <- rep(T,n,n)      ## Set-indicator
+set <- rep(TRUE,n,n)      ## Set-indicator
 index.set <- 1:n       ## Indexes for subset 
 nprev <- n+1           
 iter  <- 1
@@ -98,8 +98,8 @@ while(nprev>n & n>(subset.size+subset.delta) & iter <maxit){
     ranks.range <- apply(ranks,1,function(r) max(r)-min(r) )   ## Range of ranks over chips
 
     q <-min((n*part.of.n+subset.size)/((1+part.of.n)*n),1)     ## Select quantiles
-    low <- quantile(ranks.range[1:(n*0.2)+n*0.0],probs=q,names=F)/n  
-    high <-quantile(ranks.range[n+1-(1:(n*0.2))],probs=q,names=F)/n
+    low <- quantile(ranks.range[1:(n*0.2)+n*0.0],probs=q,names=FALSE)/n  
+    high <-quantile(ranks.range[n+1-(1:(n*0.2))],probs=q,names=FALSE)/n
     
     newset <-  ranks.range < (low*n+(0:n-1)*(high-low))        ## Set-indicator of new set
 

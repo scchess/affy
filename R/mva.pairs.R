@@ -1,5 +1,5 @@
 library(modreg)
-mva.pairs <- function(x,labels=colnames(x),log.it=T,span=2/3,family.loess="symmetric",digits=3,line.col=2,main="MVA plot",...){
+mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="symmetric",digits=3,line.col=2,main="MVA plot",...){
   if(log.it) x <-log2(x)
   J <- dim(x)[2]
   frame()
@@ -27,8 +27,8 @@ par(mfrow=c(J,J),mgp=c(0,.2,0),mar=c(1,1,1,1),oma=c(1,1.4,2,1))
   }
   par(mfg=c(J,J));plot(1,1,type="n",xaxt="n",yaxt="n",xlab="",ylab="");
   text(1,1,labels[J],cex=2)
-  mtext("A",1,outer=T,cex=1.5)
-  mtext("M",2,outer=T,cex=1.5,las=1)
-  mtext(main,3,outer=T,cex=1.5)
+  mtext("A",1,outer=TRUE,cex=1.5)
+  mtext("M",2,outer=TRUE,cex=1.5,las=1)
+  mtext(main,3,outer=TRUE,cex=1.5)
   invisible()
 }
