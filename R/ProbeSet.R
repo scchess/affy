@@ -16,12 +16,19 @@
   if (debug.affy123) cat("-->initProbeSet\n")
   
   setClass("ProbeSet",
-           representation(pm="matrix", mm="matrix"),
+           representation(id="character", pm="matrix", mm="matrix"),
            prototype=list(pm=matrix(), mm=matrix()),
            where=where)
   
   ###we need a show
   ## --> not only... barplot and plot for PPSet should have been ported too...
+
+  setMethod("show", "ProbeSet",
+            function(object) {
+              cat("ProbeSet object:\n")
+              cat("  id=", object@id, "\n", sep="")
+              cat("  pm=", nrow(object@pm), "probes\n")
+            }, where=where)
   
   ##DEBUG: what to do with that ?
   ## --> with what ?
