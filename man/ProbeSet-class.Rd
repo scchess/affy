@@ -20,8 +20,8 @@ instances of AffyBatch.}
   \describe{
     \item{colnames}{\code{signature(x = "ProbeSet")}: the column names
       of the \code{pm} matrices which  are the sample names}
-    \item{express.summary.stat}{\code{signature(x = "ProbeSet", method =
-	"character")}: applies a summary statistic to the probe set.}
+    \item{express.summary.stat}{\code{signature(x = "ProbeSet",
+	pmcorrect = "character", summary = "character")}: applies a summary statistic to the probe set.}
     \item{sampleNames}{\code{signature(object = "ProbeSet")}: the column names
       of the \code{pm} matrices which  are the sample names}
   }

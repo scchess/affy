@@ -96,24 +96,26 @@
 
   ## method express.summary.stat
   if( !isGeneric("express.summary.stat"))
-    setGeneric("express.summary.stat", function(x, pmcorrect, method, ...)
+    setGeneric("express.summary.stat", function(x, pmcorrect, summary, ...)
                standardGeneric("express.summary.stat"), where=where)
   
-  setMethod("express.summary.stat",signature(x="ProbeSet",  pmcorrect="character", method="character"),
-            function(x, method, pmcorrect, pmcorrect.param=list(),
-                     param.method=list()) {
+  setMethod("express.summary.stat",signature(x="ProbeSet",  pmcorrect="character", summary="character"),
+            function(x, pmcorrect, summary, summary.param=list(), pmcorrect.param=list()) {
             
               ## simple for system to let one add background correction methods
               ## relies on naming convention
-              methodname <- paste("generateExprVal.method.", method, sep="")
+              pmcorrect.methodname <- paste("pmcorrect.", pmcorrect, sep="")
+              summary.methodname <- paste("generateExprVal.method.", summary, sep="")
               
-              if (! exists(methodname))
-                stop(paste("Unknown method (cannot find function", methodname, ")"))
+              if (! exists(summary.methodname))
+                stop(paste("Unknown method (cannot find function", summary.methodname, ")"))
+              if (! exists(pmcorrect.methodname))
+                stop(paste("Unknown method (cannot find function", pmcorrect.methodname, ")"))
               
               ## NOTE: this could change...
               #m <- do.call(bg.correct, c(alist(x@pm, x@mm), param.bg.correct))
-              pm.corrected <- do.call(pmcorrect, c(alist(x@pm, x@mm), param.bg.correct))
-              r <- do.call(methodname, c(alist(pm.corrected), param.method))
+              pm.corrected <- do.call(pmcorrect.methodname, c(alist(x), pmcorrect.param))
+              r <- do.call(summary.methodname, c(alist(pm.corrected), summary.param))
               
               ##DEBUG: name stuff to sort
               #names(r) <- names(allprobes)
@@ -130,57 +132,5 @@
  
 } 
 
-###this is now in AffyBatch.R cause background must be performed on array
-### method bg.correct 
-#  if( !isGeneric("bg.correct") )
-#    setGeneric("bg.correct", function(x, method, ...)
-#               standardGeneric("bg.correct"), where=where)
-  
-##we no longer use bg correction on probe set. rather we do it on whole array
-#   setMethod("bg.correct", signature(x="ProbeSet", method="character"),
-#             function(x, method, ...) {
-
-#               ## simple for system to let one add background correction methods
-#               ## relies on naming convention
-              
-#               methodname <- paste("bg.correct.", method, sep="")
-              
-#               if (! exists(methodname))
-#                 stop(paste("Unknown method (cannot find function", methodname, ")"))
-              
-#               r <- do.call(methodname, alist(x@pm, x@mm, ...))
-              
-#               return(r)
-#             }, where=where)
-# }
-
-######no need for the commented out below since its no longer container
-#   ## extract/set a PPSet in the container
-#   setMethod("[[", "ProbeSet",
-#             function(x, i, j) {
-#               new("ProbeSet", probes=data.frame(pm=x@pm[, i], mm=x@mm[, i]),
-#                   name=as.character(dimnames(x@pm)[[2]][i]))
-#             },
-#             where=where)
-  
-#   setReplaceMethod("[[", "ProbeSet",
-#                    function(x, i, j, ..., value) {
-#                      x@pm[, i] <- probes(value)$pm
-#                      x@mm[, i] <- probes(value)$mm
-#                      if (is.null(dimnames(x@pm))) {
-#                        dimnames(x@pm) <- vector("list", 2)
-#                        dimnames(x@pm)[[1]] <- vector("character", nrow(x@pm))
-#                        dimnames(x@pm)[[2]] <- vector("character", ncol(x@pm))
-#                      }
-#                      dimnames(x@pm)[[2]][i] <- probeName(value)
-#                      return(x)
-#                    },
-#                    where=where)
-  
-
-## while there is no generic for this one...
-#names.ProbeSet <- function(x) {
-#  return(as.character(lapply(x@x, function(y) y@name)))
-#}
 
 
