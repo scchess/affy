@@ -37,7 +37,7 @@ plotDensity.AffyBatch <- function(x, col=rainbow(length(x)), log=TRUE,
   
   Index <- unlist(indexProbes(x, which=which))
   
-  x <- intensity(x)[Index, ]
+  x <- intensity(x)[Index, ,drop=FALSE]
   
   if(log){
     x <- log2(x)
