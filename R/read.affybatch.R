@@ -145,7 +145,8 @@ ReadAffy <- function(..., filenames=character(0),
                      description=NULL,
                      notes="",
                      rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-                     hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE){
+                     verbose=FALSE) {
+  
   ##first figure out filenames
   auxnames <- unlist(as.list(substitute(list(...)))[-1])
 
@@ -229,8 +230,6 @@ ReadAffy <- function(..., filenames=character(0),
                         rm.mask=rm.mask,
                         rm.outliers=rm.outliers,
                         rm.extra=rm.extra,
-                        hdf5=hdf5,
-                        hdf5FilePath=hdf5FilePath,
                         verbose=verbose))
 }
 
