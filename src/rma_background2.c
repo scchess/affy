@@ -13,6 +13,7 @@
  ** Last changed: Nov 4, 2002 
  **
  ** Nov 4, 2002 - make changes for Affy2.
+ ** Dec 26, 2002 - fixed non-ANSI C way of commenting out lines (Laurent)
  **
  *****************************************************************************/
 
@@ -48,7 +49,7 @@ double find_max(double *x,int length){
 
   max = buffer[length-1];
   
-  //printf("max is %f \n", max);
+  /* printf("max is %f \n", max); */
   free(buffer);
   return max;
 }
@@ -162,14 +163,14 @@ double max_density(double *z,int rows,int cols,int column, SEXP fn,SEXP rho){
   max_x = dens_x[i];
   
 
-  //  PROTECT(names = getAttrib(results,R_NamesSymbol));
+  /*  PROTECT(names = getAttrib(results,R_NamesSymbol)); */
   
 
-  //for (i = 0; i < length(results); i++)
+  /* for (i = 0; i < length(results); i++)
   //  printf("%S \n",CHAR(STRING_ELT(names,i)));
 
   //printf("max_x: %f\n",max_x);
-
+  */
 
   UNPROTECT(2);
 

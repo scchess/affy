@@ -4,8 +4,8 @@
  **
  ** created by: B. M. Bolstad
  ** created on: June 26, 2002
- **
- ** last modified: Nov 4, 2002
+ ** 
+ ** last modified: Dec 26, 2002 (Laurent)
  **
  ** License: GPL V2 or later (same as the rest of the Affy package)
  **
@@ -41,19 +41,22 @@
  ** Input to the function should be process from within R
  **
  ** Note that the qnorm code here will not be the development tree
+ ** LG: what do you mean ?
  **
  ** Nov 2, 2002 - modify so that it will work efficently with affy2
  ** Nov 3, 2002 - More modifications, remove cruft from old version
  ** Nov 4, 2002 - testing, check docs etc
  ** Nov 10,2002 - remove pesky debug printf()
  **
+ ** Dec 26, 2002 - '//' is not a valid way to comment out (and some C compilers complain about it)
+ **                (Laurent)
  ************************************************************************/
 
 
-//#include "rma_structures.h"
+/* #include "rma_structures.h" */
 #include "rma_common.h"
 #include "rma_background2.h"
-//#include "qnorm.h"
+/* #include "qnorm.h" */
 
 #include <R.h> 
 #include <Rdefines.h>
@@ -463,7 +466,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
   char *first;
   int first_ind;
 
-  // buffers of size 200 should be enough.
+  /* buffers of size 200 should be enough. */
 
   char *curname=Calloc(200,char);
   int *cur_rows=Calloc(200,int);
@@ -483,15 +486,15 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
 	nprobes++;
        	for (k = 0; k < nprobes; k++){
 	  cur_rows[k] = (j+1 - nprobes)+k; 
-	  //printf("%d ", (j+1 - nprobes)+k);
+	  /* printf("%d ", (j+1 - nprobes)+k); */
 	}
       } else {
 	for (k = 0; k < nprobes; k++){
 	  cur_rows[k] = (j - nprobes)+k; 
-	  //printf("%d ", (j - nprobes)+k);
+	  /* printf("%d ", (j - nprobes)+k); */
 	}
       }
-      //printf("%d \n", nprobes);
+      /* printf("%d \n", nprobes); */
       median_polish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes);
       for (k =0; k < *cols; k++){
 	results[k*nps + i] = cur_exprs[k];
@@ -528,7 +531,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
  **
  **
  *************************************************************************/
-SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag){ //, SEXP outvec, SEXP outnamesvec){
+SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag){ /*, SEXP outvec, SEXP outnamesvec){ */
   
   int rows, cols;
   double *outexpr;
@@ -552,8 +555,8 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   
   nprobesets=INTEGER(N_probes)[0];
   
-  //  printf("%i\n",nprobesets);
-  //printf("%d ",INTEGER(norm_flag)[0]);
+  /*  printf("%i\n",nprobesets); */
+  /* printf("%d ",INTEGER(norm_flag)[0]); */
   if (INTEGER(norm_flag)[0]){
   /* normalize PM using quantile normalization */
     printf("Normalizing\n");
@@ -567,7 +570,7 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   
   outnames = malloc(nprobesets*sizeof(char *));
 
-  //PROTECT(outvec = NEW_NUMERIC(nprobesets*cols));
+  /* PROTECT(outvec = NEW_NUMERIC(nprobesets*cols)); */
   
   PROTECT(outvec = allocMatrix(REALSXP, nprobesets, cols));
 
@@ -579,7 +582,7 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
 
   UNPROTECT(2);
 
-  // now lets put names on the matrix
+  /* now lets put names on the matrix */
 
   PROTECT(dimnames = allocVector(VECSXP,2));
   PROTECT(names = allocVector(STRSXP,nprobesets));

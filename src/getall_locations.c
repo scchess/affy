@@ -104,7 +104,7 @@ SEXP getallLocations(SEXP namesR, SEXP dimR, SEXP atomsR, SEXP selectR, SEXP nb_
 	
       INTEGER_POINTER(VECTOR_ELT(loc_list, x-1))[nAtom + nbElements[x-1] * 0] = ii+1;
       INTEGER_POINTER(VECTOR_ELT(loc_list, x-1))[nAtom + nbElements[x-1] * 1] = jj+1;
-      //iLastElement[x-1]++;
+      /* iLastElement[x-1]++; */
     }
   }
   UNPROTECT(2);
