@@ -1,6 +1,7 @@
 \name{ProbeSet-class}
 \docType{class}
 \alias{ProbeSet-class}
+\alias{ProbeSet}
 \title{Class ProbeSet}
 \description{A simple class that contains the PM and MM data for a probe
   set from one or more samples} }

@@ -1,6 +1,7 @@
 \name{AffyBatch-class}
 \docType{class}
 \alias{AffyBatch-class}
+\alias{AffyBatch}
 \alias{probes}
 \alias{geneNames}
 \alias{getCdfInfo}
