@@ -28,13 +28,17 @@ normalize.AffyBatch.quantiles <- function(abatch,type=c("separate","pmonly","mmo
 
   if ((type == "pmonly")|(type == "separate")){
     pms <- unlist(pmindex(abatch))
-    noNA <- apply(intensity(abatch)[pms,,drop=FALSE],1,function(x) all(!is.na(x)))
+    ## Change to faster computation of noNA - SDR 11/06/2003
+    ##noNA <- apply(intensity(abatch)[pms,,drop=FALSE],1,function(x) all(!is.na(x)))
+    noNA <- rowSums(is.na(intensity(abatch)[pms,,drop=FALSE])) == 0
     pms <- pms[noNA]
     intensity(abatch)[pms,] <- normalize.quantiles(intensity(abatch)[pms,,drop=FALSE ],copy=FALSE)
   }
   if((type == "mmonly") | (type == "separate")){ 
     mms <- unlist(mmindex(abatch))
-    noNA <- apply(intensity(abatch)[mms,,drop=FALSE],1,function(x) all(!is.na(x)))
+    ## Change to faster computation of noNA - SDR 11/06/2003
+    ##noNA <- apply(intensity(abatch)[mms,,drop=FALSE],1,function(x) all(!is.na(x)))
+    noNA <- rowSums(is.na(intensity(abatch)[mms,,drop=FALSE])) == 0
     mms <- mms[noNA]
 
     intensity(abatch)[mms,] <- normalize.quantiles(intensity(abatch)[mms,,drop=FALSE ],copy=FALSE)
