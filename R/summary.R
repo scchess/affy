@@ -9,7 +9,10 @@ avdiff <- function(x,constant=3){
   e <- apply(x,2,function(y){
     o <- order(y)
     yy <- y[-c(o[1],o[length(y)])] #take out biggest and smallest
-    mean(y[abs(y-mean(yy))<constant*sd(yy)])
+    if(length(yy)<2)  # SK, some genes have only one probe
+      mean(y)
+    else
+      mean(y[abs(y-mean(yy))<constant*sd(yy)])
   })
   c(e,rep(NA,length(e)))
   
