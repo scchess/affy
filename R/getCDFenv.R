@@ -44,9 +44,7 @@ cdfFromData <- function(cdfname, pkg, verbose=TRUE) {
         ## of the package (where.env)
         if(!exists(cdfname, where = where.env, inherits = FALSE)) {
             path <- .path.package(pkg)
-            filename <- paste(cdfname, ".rda", sep="")
-            load(file.path(path, "data", filename) ,
-                 envir = where.env)
+            data(list=cdfname, envir=where.env)
         }
         cdfenv <- get(cdfname, envir=where.env)
         return(cdfenv)
@@ -158,10 +156,10 @@ cdfFromLibPath <- function(cdfname, lib = NULL, verbose=TRUE) {
   if (verbose)
     print(paste("Checking to see if package",cdfname,
                 "is already installed"))
-  
+
   if (length(.find.package(cdfname, lib.loc=lib, quiet=TRUE)) == 0)
     return(list(paste("Library - package",cdfname,"not installed")))
-  
+
   ## See if package is already loaded
   if (cdfname %in% .packages()) {
     if (verbose)
@@ -172,7 +170,7 @@ cdfFromLibPath <- function(cdfname, lib = NULL, verbose=TRUE) {
       print(paste("Attempting to load package", cdfname))
     ## Attempt to load the library requested
     do.call("library", list(cdfname, lib.loc=lib))
-    
+
     ## Check to see if it got loaded
     if (! cdfname %in% .packages()) {
       ## package didn't get loaded
@@ -181,6 +179,6 @@ cdfFromLibPath <- function(cdfname, lib = NULL, verbose=TRUE) {
       return(list(paste("Library - package",cdfname,"is not loadable")))
     }
   }
-  
+
     return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
 }
