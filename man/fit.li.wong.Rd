@@ -1,6 +1,8 @@
 \name{fit.li.wong}
 \alias{fit.li.wong}
-\title{Fit Li and Wong Model to Probe Set}
+\alias{li.wong}
+
+\title{Fit Li and Wong Model to a Probe Set}
 \description{Fits the model described in Li and Wong (2001) to a probe
   set with I chips and J probes.}
 }
@@ -9,6 +11,12 @@ fit.li.wong(data.matrix, remove.outliers=T, normal.array.quantile=0.5,
             normal.resid.quantile=0.9, large.threshold=3, large.variation=0.8,
             outlier.fraction=0.14, delta=1e-06, maxit=50,
             outer.maxit=50,verbose=F)
+
+li.wong(data.matrix,remove.outliers=T, normal.array.quantile=0.5,
+            normal.resid.quantile=0.9, large.threshold=3, large.variation=0.8,
+            outlier.fraction=0.14, delta=1e-06, maxit=50,
+            outer.maxit=50,verbose=F)
+
 }
 \arguments{
   \item{data.matrix}{an I x J matrix containing the probe set
@@ -37,7 +45,12 @@ fit.li.wong(data.matrix, remove.outliers=T, normal.array.quantile=0.5,
     the status of the algorithm.}
 }
 \details{Please refer to references.}
-\value{A list containing the fitted parameters and relevant information.
+\value{\code{li.wong} returns a vector of expression measures (or column
+  effects) followed by their respective standard error estimates. It is
+  designed to work with \code{\link{express}}.
+
+  \code{fit.li.wong} reutnes much more. Namely, a list containing the
+  fitted parameters and relevant information. 
   \item{theta}{fitted thetas.}
   \item{phi}{fitted phis.}
   \item{sigma.eps}{estimated standard deviation of the error term.}

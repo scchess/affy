@@ -10,7 +10,7 @@ avdiff <- function(x,constant=3){
   
 }
 
-li.wong <- function(x,remove.outliers=T,
+li.wong <- function(data.matrix,remove.outliers=T,
                     normal.array.quantile=0.5,
                     normal.resid.quantile=0.9,
                     large.threshold=3,
@@ -18,25 +18,16 @@ li.wong <- function(x,remove.outliers=T,
                     outlier.fraction=0.14,
                     delta = 1e-06,maxit=50,outer.maxit=50,verbose=F){
 
-  e <-  fit.li.wong(t(x),remove.outliers,normal.array.quantile,normal.resid.quantile,large.threshold,large.variation,outlier.fraction,delta,maxit,outer.maxit,verbose)
+  e <-  fit.li.wong(t(data.matrix),remove.outliers,normal.array.quantile,normal.resid.quantile,large.threshold,large.variation,outlier.fraction,delta,maxit,outer.maxit,verbose)
   c(e$theta,e$sigma.theta)
 }
 
+
 medianpolish <- function(x,...){
   tmp <- medpolish(log2(x),trace.iter=F,...)
-  c(tmp$overall + tmp$col) ##add SEs later
-}
-
-
-biweight <- function(x,...){
-  Nprobes <- dim(x)[1]
-  Nchips <- dim(x)[2]
-  probes <- as.factor(rep(1:Nprobes,Nchips))
-  samps <- as.factor(rep(1:Nchips,rep(Nprobes,Nchips)))
-  
-  z  <- rlm(as.vector(log2(x))~samps+probes,psi=psi.bisquare,maxit=50,...)
-##add se's later
-  c(z$coef[1],z$coef[1]+z$coef[2:Nchips],rep(NA,Nchips))
+  ##rough estimate
+  sigma_sqrt(1.483*median(abs(as.vector(tmp$residuals)))/nrow(x))
+  c(tmp$overall + tmp$col,rep(sigma,ncol(x)))
 }
 
 
