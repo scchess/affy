@@ -9,13 +9,13 @@
   
 #   if (plot)
 #     matplot(all.x, all.y, ylab=ylab, xlab=xlab, ...)
-
+ 
 #   invisible(list(all.x=all.x, all.y=all.y))                     
                        
 # }
 
 plotDensity <- function(mat,
-                        ylab="density", xlab="x", type="l",
+                        ylab="density", xlab="x", type="l", col=1:6,
                         ...) {
   
   x.density <- apply(mat, 2, density)
@@ -44,7 +44,6 @@ plotDensity.AffyBatch <- function(x, col=rainbow(length(x)), log=TRUE,
     if(is.null(xlab)) xlab <- "log intensity"
   }
   else  if(is.null(xlab)) xlab <- "intensity"
-  
   
   rv <- plotDensity(x, ylab=ylab, xlab=xlab, col=col, ...)
 
