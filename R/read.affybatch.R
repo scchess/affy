@@ -60,7 +60,7 @@ read.affybatch <- function(..., filenames=character(0),
 
 
   conty <- new("AffyBatch",
-               exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
+               exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, filenames)),
                ##se.exprs = array(NaN, dim=dim.sd),
                cdfName    = cel@cdfName,
                phenoData  = phenoData,
@@ -74,13 +74,15 @@ read.affybatch <- function(..., filenames=character(0),
   if (verbose)
     cat("done.\n")
 
-  intensity(conty)[, 1] <- c(intensity(cel))
+  # intensity(conty)[, 1] <- c(intensity(cel))
   ##if (sd)
   ##  spotsd(conty)[, , 1] <- spotsd(cel)
   
   ##outliers(conty)[[1]] <- outliers(cel)
   ##masks(conty)[[1]] <- masks(cel)
   ##history(conty)[[1]] <- history(cel) ###this must be done through MIAME
+  ival <- intensity(conty)
+  ival[, 1] <- c(intensity(cel))
   
   for (i in (1:n)[-1]) {
     
@@ -99,7 +101,7 @@ read.affybatch <- function(..., filenames=character(0),
                     ", expected ", ref.cdfName, "\nin file number ", i, " (", filenames[[i]], ")\n",
                     "Please make sure all cel files belong to the same chip type!\n***\n", sep=""))
     
-    intensity(conty)[, i] <- c(intensity(cel))
+    #intensity(conty)[, i] <- c(intensity(cel))
     
     ##if (sd)
     ##  spotsd(conty)[, , i] <- spotsd(cel)
@@ -107,8 +109,11 @@ read.affybatch <- function(..., filenames=character(0),
     ##outliers(conty)[[i]] <- outliers(cel)
     ##masks(conty)[[i]] <- masks(cel)
     ##history(conty)[[i]] <- history(cel) now through MIAME
+
+    ival[, i] <- c(intensity(cel))
   }
-  colnames(intensity(conty)) = filenames
+  intensity(conty) <- ival
+  #colnames(intensity(conty)) = filenames
   return(conty)
 }
 
