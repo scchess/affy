@@ -193,6 +193,7 @@ justRMA <- function(..., filenames=character(0),
 ###########################################################################################
 #
 # this function uses a different parsing routine
+# It was added Jul 7, 2003 by B. M. Bolstad
 #
 ###########################################################################################
 
@@ -258,11 +259,11 @@ just.rma2 <- function(..., filenames=character(0),
   ##background correction
   bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
   
-  if(destructive){
+  #if(destructive){
     exprs <- .Call("rma_c_complete",probeintensities$pm,probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
-  }else{
-    exprs <- .Call("rma_c_complete_copy",probeintensities$pm,probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
-  }
+  #}else{
+  #  exprs <- .Call("rma_c_complete_copy",probeintensities$pm,probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
+  #}
   colnames(exprs) <- samplenames
   se.exprs <- array(NA, dim(exprs))
   
