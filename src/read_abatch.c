@@ -686,14 +686,12 @@ static int isTextCelFile(char *filename){
   } else {
     /** check to see if first line is [CEL] so looks like a CEL file**/
     ReadFileLine(buffer, BUF_SIZE, currentFile);
-    if (strncmp("[CEL]", buffer, 4) != 0) {
-      return 0;
+    fclose(currentFile);
+    if (strncmp("[CEL]", buffer, 4) == 0) {
+      return 1;
     }
   }
-
-  fclose(currentFile);
-  return 1;
-
+  return 0;
 }
 
 
@@ -1106,20 +1104,14 @@ static int isgzTextCelFile(char *filename){
  } else {
    /** check to see if first line is [CEL] so looks like a CEL file**/
    ReadgzFileLine(buffer, BUF_SIZE, currentFile);
-   if (strncmp("[CEL]", buffer, 4) != 0) {
-     return 0;
+   gzclose(currentFile);    /* fixed by WH 28 Dec 2003 */
+   if (strncmp("[CEL]", buffer, 4) == 0) {
+     return 1;
    }
  }
- 
- fclose(currentFile);
- return 1;
-#else
+#endif 
  return 0;
-#endif
 }
-
-
-
 
 
 /***************************************************************
