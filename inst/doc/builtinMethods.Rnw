@@ -68,18 +68,43 @@ You can see the background correction methods that are built into the package by
 normalize.AffyBatch.methods
 @
 
+The Quantile, Contrast and Loess normalizations have been discussed and compared in \cite{bols:etal:2003}.
+
 \subsection{quantiles/quantiles.robust}
 
-\subsection{contrasts}
+The quantile method was introduced by \cite{bols:etal:2003}. The goal is to give each chip the same empirical distribution. To do this we use the following algorithm where $X$ is a matrix of probe intensities (probes by arrays): 
+
+\begin{enumerate}
+\item Given $n$ array of length $p$, form $X$  of dimension $p \times n$  where
+each array is a column
+\item Sort each column of $X$ to give $X_{\mbox{sort}}$
+\item Take the means across rows of $X_{\mbox{sort}}$ and assign this mean to each element in the row to get $X'_{\mbox{sort}}$
+\item Get $X_{\mbox{normalized}}$ by rearranging each column of $X'_{\mbox{sort}}$ to have the same ordering as original $X$
+\end{enumerate}
+ 
+The quantile normalization method is a specific case of the transformation $x'_{i} = F^{-1}\left(G\left(x_{i}\right)\right)$, where we estimate $G$ by the empirical distribution of each array and $F$ using the empirical distribution of the averaged sample quantiles.  Quantile normalization is pretty fast.
+
+The {\tt quantiles} function performs the algorithm as above. The {\tt quantile.robust} function allows you to exclude or down-weight arrays in the computation of $\hat G$ above. In most cases we have found that the {\tt quantiles} method is sufficient for use and {\tt quantiles.robust} not required.  
 
 \subsection{loess}
 
+There is a discussion of this method in \cite{bols:etal:2003}. It generalizes the $M$ vs $A$ methodology proposed in \cite{Dudoit:2002} to multiple arrays. It works in a pairwise manner and is thus slow when used with a large number of arrays.
+
+\subsection{contrasts}
+
+This method was proposed by \cite{astr:2003}. It is also a variation on the  $M$ vs $A$ methodology, but the normalization is done by transforming the data to a set of contrasts, then normalizing.
+
 \subsection{constant}
+
+A scaling normalization
 
 \subsection{invariantset}
 
+A normalization similar to that used in the dChip software \cite{li:wong:2001a}
+
 \subsection{qspline}
 
+This method is documented in \cite{workman:etal:2002}
 
 \section{PM correct methods}
 
@@ -88,9 +113,17 @@ pmcorrect.methods
 @
 \subsection{mas}
 
+The ideal mismatch documented by \cite{affy:tech:2002}
+
 \subsection{pmonly}
 
+Make no adjustment to the pm values.
+
+
 \subsection{subtractmm}
+
+Subtract MM from PM
+
 
 \section{Summarization methods}
 
@@ -98,19 +131,30 @@ pmcorrect.methods
 express.summary.stat.methods
 @
 
-
 \subsection{avgdiff}
+
 
 \subsection{liwong}
 
+
+ \cite{li:wong:2001a} and \cite{li:wong:2001b}
+
 \subsection{mas}
+
+\cite{affy:tech:2002}
+
 
 \subsection{medianpolish}
 
+
 \subsection{playerout}
+
+\cite{Lazardis:etal:2002}
 
 
 \section{Putting it altogether using {\tt expresso}}
+
+The function that you should use is {\tt expresso}
 
 
 \bibliographystyle{plainnat}
