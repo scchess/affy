@@ -532,8 +532,10 @@
               ##only one character cause no more bg correct
 ###bg.correct=bg.method, param.bg.correct=bg.param,
 
-              options(show.error.messages = FALSE)
-              on.exit(options(show.error.messages = TRUE))
+              ##WHy not show error? took it out cause sometimes we
+              ##get errors and couldnt see them.
+              ##options(show.error.messages = FALSE)
+              ##on.exit(options(show.error.messages = TRUE))
               
               CDFINFO <- getCdfInfo(x) ##do it once!
               
