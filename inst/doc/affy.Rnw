@@ -92,33 +92,9 @@ describes how to change the package's default options. Section
 {\bf Note:} If you use this package please cite
 \cite{gaut:cope:bols:iriz:2003} and/or \cite{iriz:gaut:cope:2003}.
 
-\section{Changes in Version 1.3.x}
+\section{Changes in versions 1.4.x}
 \label{whatsnew}
-{\bf What's new?}
-\begin{itemize}
-\item \verb+mas5calls+ method added to get Affymetrix's P/M/A calls.
-
-\item \verb+Cel+ and \verb+Cdf+ classes no longer supported. Function,
-  \verb+read.celfile+ and other \verb+Cel+ related methods and
-  functions removed. Most \verb+Cdf+ related functions have moved to
-  the \Rpackage{makecdfenv} package.
-
-\item Big speed and memory improvement of
-  \verb+ReadAffy+, \verb+read.affybatch+, and \verb+justRMA+.
-
-\item Function \verb+read.probematrix+ added. It reads CEL files and
-  returns a matrix of PM, MM, or both. This function is more memory
-  efficient than \verb+read.affybatch+.
-
-\item Package no longer depends on \verb+affydata+ package. For this
-  reason some examples have been moved from this vignette to the
-  \verb+affydata+ vignette. 
-
-\item The previously deprecated \verb+express+ function has been completely removed.
-
-\item Most normalization routines for AffyBatches can now be called with the parameter \verb+type+ which specifies whether the normalization should be applied as a PM-only, MM-only, both PM and MM together or PM and MM separately.
-
-\end{itemize}
+To be done (check the file NEWS of the package in the meanwhile\ldots)
 
 There are some minor differences in what you can do but little
 functionality has disappeared. Memory efficiency and speed have improved.
@@ -970,6 +946,34 @@ There are several other vignettes addressing more specialised topics related to 
 \appendix
 
 \section{Previous Release Notes}
+
+\section{Changes in Version 1.3.x}
+
+{\bf What's new?}
+\begin{itemize}
+\item \verb+mas5calls+ method added to get Affymetrix's P/M/A calls.
+
+\item \verb+Cel+ and \verb+Cdf+ classes no longer supported. Function,
+  \verb+read.celfile+ and other \verb+Cel+ related methods and
+  functions removed. Most \verb+Cdf+ related functions have moved to
+  the \Rpackage{makecdfenv} package.
+
+\item Big speed and memory improvement of
+  \verb+ReadAffy+, \verb+read.affybatch+, and \verb+justRMA+.
+
+\item Function \verb+read.probematrix+ added. It reads CEL files and
+  returns a matrix of PM, MM, or both. This function is more memory
+  efficient than \verb+read.affybatch+.
+
+\item Package no longer depends on \verb+affydata+ package. For this
+  reason some examples have been moved from this vignette to the
+  \verb+affydata+ vignette. 
+
+\item The previously deprecated \verb+express+ function has been completely removed.
+
+\item Most normalization routines for AffyBatches can now be called with the parameter \verb+type+ which specifies whether the normalization should be applied as a PM-only, MM-only, both PM and MM together or PM and MM separately.
+
+\end{itemize}
 
 \section{Changes in Version 1.2.x}
 {\bf What's new?}
