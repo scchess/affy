@@ -124,7 +124,7 @@ expresso <- function(cdf = NULL,
     ##  if (verbose) cat("(trying again with/without compression)...")
     ##  cdf <- try(read.cdffile(CDFfile, compress = !compress.cdf))
     ##}
-    cdf <- read.cdffile(CDFfile, compress = compress.cdf)
+    cdf <- read.cdffile(cdf, compress = compress.cdf)
     
     if (verbose) cat("done.\n")
   }
