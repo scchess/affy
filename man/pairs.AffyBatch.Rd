@@ -39,6 +39,6 @@ try to split of the plots, or to plot them in a device like 'png' or
 }
 \examples{
 }
-\keyword{manip}
+\keyword{hplot}
 
 
