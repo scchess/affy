@@ -127,7 +127,7 @@ mas5.detection <- function(mat, tau=0.015, alpha1=0.04, alpha2=0.06,
     pval <- 0
   else {
     retained <- apply(mat, 1, is.retained, saturation.point, tau)
-    pval <- wilcox.test(mat.r,
+    pval <- wilcox.test(mat.r[retained],
                         alternative="greater", mu=tau, paired=FALSE,
                         exact=exact.pvals, correct=cont.correct,
                         conf.int=FALSE)$p.value
