@@ -223,8 +223,7 @@
               ## an extra feature. A function could be specified to
               ## process what is 'multi'-get on the fly
               for (i in seq(along=ans)) {
-                
-                if ( is.na(ans[[i]]) )
+                if (is.na(ans[[i]][1]))
                   next
                 
                 ##as.vector cause it might be a matrix if both

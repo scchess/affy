@@ -95,7 +95,7 @@ read.affybatch <- function(..., filenames=character(0),
                         compress=compress, rm.mask=rm.mask,
                         rm.outliers=rm.outliers, rm.extra=rm.extra)
     
-    if (all(dim(intensity(cel)) != dim.intensity))
+    if (any(dim(intensity(cel)) != dim.intensity))
       stop(paste("CEL file dimension mismatch !\n(file",filenames[[i]],")"))
     if (verbose) cat("done.\n")
     
