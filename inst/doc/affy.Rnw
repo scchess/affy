@@ -96,7 +96,10 @@ locations to probe set membership. Section \ref{configure.options} describes how
 \item method \verb+plot.ProbeSet+, an alternative to barplot, to plot probe
   level information.
 \item parameter 'scale' in the method barplot for ProbeSet. All the
-  barplots are scaled to eachothers.
+  barplots are scaled to eachothers. 
+\item New functions \verb+xy2indices+ and \verb+indices2xy+ to shuttle from
+  x/y pos to indices (like the ones in cdfenvs) (and reverse).
+                                                                                                                                         
 \end{itemize}
 
 \noindent{\bf What's different?}

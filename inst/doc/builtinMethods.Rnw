@@ -49,7 +49,7 @@ Calling this method actually does nothing. It returns the object unchanged. May 
 
 \subsection{rma/rma2}
 
-These are background adjustment implementations for the rma method \cite{iriz:etal:2003}. They differ only in how they estimate a set of parameters. In both cases PM probe intensities are corrected by using a global model for the distribution of probe intensities. The model is suggested by looking at plots of the empirical distribution of probe intensities.  In particular the observed PM probes are modeled as the sum of a normal noise component N (Normal with mean $\mu$ and variance $\sigma^2$) and a exponential signal component S (exponential with mean $\alpha$). To avoid any possibilty of negatives, the normal is trucated at zero. Given we have O the observed intensity, this leads to an adjustment.
+These are background adjustment implementations for the rma method \cite{iriz:etal:2003}. They differ only in how they estimate a set of parameters (generally you should use \verb+rma+ in preference to \verb+rma2+. In both cases PM probe intensities are corrected by using a global model for the distribution of probe intensities. The model is suggested by looking at plots of the empirical distribution of probe intensities.  In particular the observed PM probes are modeled as the sum of a normal noise component N (Normal with mean $\mu$ and variance $\sigma^2$) and a exponential signal component S (exponential with mean $\alpha$). To avoid any possibilty of negatives, the normal is trucated at zero. Given we have O the observed intensity, this leads to an adjustment.
 \begin{equation*}
 E\left(s \lvert O=o\right) = a + b \frac{\phi\left(\frac{a}{b}\right) - \phi\left(\frac{o-a}{b}\right)}{\Phi\left(\frac{a}{b}\right) + \Phi\left(\frac{o-a}{b}\right) - 1 }
 \end{equation*}
@@ -96,15 +96,15 @@ This method was proposed by \cite{astr:2003}. It is also a variation on the  $M$
 
 \subsection{constant}
 
-A scaling normalization
+A scaling normalization. This means that all the arrays are scaled so that they have the same mean value. This would be typical of the approach taken by Affymetrix. However, the Affymetrix normalization is usually done after summarization (you can investigate \verb+affy.scalevalue.exprSet+ if you are interested) and this normalization is carried out before summarization.
 
 \subsection{invariantset}
 
-A normalization similar to that used in the dChip software \cite{li:wong:2001a}
+A normalization similar to that used in the dChip software \cite{li:wong:2001a}. Using a baseline array, arrays are normalized by selecting invariant sets of genes (or probes) then using them to fit a non-linear relationship between the ``treatment'' and ``baseline'' arrays. The non-linear relationship is used to carry out the normalization.
 
 \subsection{qspline}
 
-This method is documented in \cite{workman:etal:2002}
+This method is documented in \cite{workman:etal:2002}. Using a target array (either one of the arrays or a synthetic target), arrays are normalized by fitting splines to the quantiles, then using the splines to perform the normalization.
 
 \section{PM correct methods}
 
@@ -121,7 +121,7 @@ Make no adjustment to the pm values.
 
 \subsection{subtractmm}
 
-Subtract MM from PM. This would be the approach taken in MAS 4 \cite{affy4}. It could also be used in conjustion with the Li-Wong model.
+Subtract MM from PM. This would be the approach taken in MAS 4 \cite{affy4}. It could also be used in conjuntion with the Li-Wong model.
 
 \section{Summarization methods}
 
@@ -135,7 +135,12 @@ Compute the average. This is the approach that was taken in \cite{affy4}.
 
 \subsection{liwong}
 
-This is an implementation of the methods proposed in \cite{li:wong:2001a} and \cite{li:wong:2001b}. A multichip model is fit.
+This is an implementation of the methods proposed in \cite{li:wong:2001a} and \cite{li:wong:2001b}. The Li-Wong MBEI is based upon fitting the following multi-chip model to each probeset
+\begin{equation}
+y_{ij} = \phi_i \theta_j + \epsilon_{ij}
+\end{equation}
+where $y_{ij}$ is $PM_{ij}$ or the difference between $PM_{ij}-MM_{ij}$. The $\phi_i$ parameter is a probe response parameter and $\theta_j$ is the expression on array $j$.
+
 
 \subsection{mas}
 
@@ -153,10 +158,39 @@ where $\alpha_i$ is a probe effect and $\beta_j$ is the $\log_2$ expression valu
 
 This method is detailed in \cite{Lazardis:etal:2002}. A non parameteric method is used to determine weights. The expression value is then the weighted average.
 
-
 \section{Putting it altogether using {\tt expresso}}
 
-The function that you should use is {\tt expresso}
+The function that you should use is {\tt expresso}. It is important to note that not every preprocessing method can be combined together. In particular the \verb+rma+ backgrounds adjust only PM probe intensities and so they should only be used in conjunction with the \verb+pmonly+ PM correction. Also remember that the \verb+mas+ and \verb+medianpolish+ summarization methods $\log_2$ transform the data, thus they should not be used in conjunction with any preprocessing steps that are likely to yield negatives like the \verb+subtractmm+ pm correction method. The following is a typical call to \verb+expresso+.
+
+%\begin{Sinput}
+%R> data(affybatch.example)
+%R> eset <- expresso(affybatch.example,bgcorrect.method=''rma'',normalize.method=''quantiles'',pmcorrect.method=''pmonly'',summary.method=''medianpolish'')
+%\end{Sinput}
+%<<<>>=
+
+\begin{Sinput}
+ data(affybatch.example)
+ eset <- expresso(affybatch.example,bgcorrect.method="rma",
+                  normalize.method="quantiles",
+                  pmcorrect.method="pmonly",
+                  summary.method="medianpolish")
+\end{Sinput}
+%@ 
+
+This would give you the RMA expression measure, but of course there are other ways of computing RMA (chiefly \verb+rma+). The true power of \verb+expresso+ becomes apparent when you start combining different methods. By choosing a method for each of the four steps ({\tt bgcorrect.method}, {\tt normalize.method}, {\tt pmcorrect.method}, {\tt summary.method}) you can create quite a variety of expression measures. For instance
+
+\begin{Sinput}
+eset <- expresso(affybatch.example,bgcorrect.method="mas",
+                  normalize.method="qspline",
+                  pmcorrect.method="subtractmm",
+                  summary.method="playerout")
+\end{Sinput}
+
+would be a valid way of computing an expression measure (it is up to the user to decide whether such a concoction is sensible or not).
+
+
+
+
 
 
 \bibliographystyle{plainnat}
