@@ -5,12 +5,15 @@
 #include "R.h"
 #include "R_ext/Boolean.h"
 
-//taken from simpleaffy2.c in the simpleaffy package
-//Copyright (C) 2004 Crispin Miller
+/*
+taken from simpleaffy2.c in the simpleaffy package
+Copyright (C) 2004 Crispin Miller
 
-// This is a numerical approximation to the normal distribution as described in   
-// Abramowitz and Stegun: Handbook of Mathematical functions
-// see page 931: 26.2.1, 932:26.2.17
+ This is a numerical approximation to the normal distribution as described in   
+ Abramowitz and Stegun: Handbook of Mathematical functions
+ see page 931: 26.2.1, 932:26.2.17
+*/
+
 double pnorm_approx(double z) {
     double b1 =  0.31938153; 
     double b2 = -0.356563782; 
@@ -30,7 +33,7 @@ double pnorm_approx(double z) {
     return n; 
 }
 
-// Given a double array length nx, rank it, and put the results in 'r'
+/* Given a double array length nx, rank it, and put the results in 'r' */
 void rank(double *x, int nx, double *r) {
   int i       = 0;
   int rank    = 1;
@@ -60,7 +63,8 @@ void rank(double *x, int nx, double *r) {
   }
 }
 
-// a straight translation of relevant bits of the wilcox.test method in the R base library
+/* a straight translation of relevant bits of the wilcox.test method
+   in the R base library */
 double wilcox(double *x, int nx, double mu) {
   int i = 0;
   int j = 0;
@@ -76,7 +80,7 @@ double wilcox(double *x, int nx, double mu) {
   double PVAL      = 0; 
   for(i = 0; i < nx; i++) {
     x[j] = x[i] - mu;
-    if(x[j] != 0) j++; // eliminate zeros
+    if(x[j] != 0) j++; /* eliminate zeros */
   }
 
   nx = j;
@@ -120,10 +124,11 @@ double wilcox(double *x, int nx, double mu) {
 }    
 
 
-// compute the detection p-value for a particular probe using the algorithm described in 
-// Liu et al. Bioinformatics(2002) 1593-1599
-// pms is a list of probe perfect matches, mms is a list of mismatches n, the number of probe-pairs.
-// tao and sat are parameters, as desccribed in the Liu et al. paper 
+/* compute the detection p-value for a particular probe using the algorithm described in 
+ Liu et al. Bioinformatics(2002) 1593-1599
+ pms is a list of probe perfect matches, mms is a list of mismatches n, the number of probe-pairs.
+ tao and sat are parameters, as desccribed in the Liu et al. paper 
+*/
 double pma(double *pms, double*mms, int n, double tao,double sat) {
   int i = 0;
   int *ignore  = 0; 
@@ -133,7 +138,7 @@ double pma(double *pms, double*mms, int n, double tao,double sat) {
   double p     = 0;
   if(sat >= 0) {
     ignore = (int *) R_alloc(n, sizeof(int));
-    //dodgy saturation correction from the paper
+    /*dodgy saturation correction from the paper*/
     totalSat = 0;
     for(i = 0; i < n; i++) {
       if(mms[i] > sat) {
@@ -143,7 +148,9 @@ double pma(double *pms, double*mms, int n, double tao,double sat) {
       else ignore[i] = 0;
     }
     last = 0;
-    if((totalSat > 0) & (totalSat < n)) { // ignore probes with saturated mms unless they're all saturated
+    if((totalSat > 0) & (totalSat < n)) { /* ignore probes with
+					     saturated mms unless
+					     they're all saturated */
       for(i = 0; i < n; i++) {
 	if(!ignore[i]) {
 	  pms[last] = pms[i];
@@ -162,11 +169,12 @@ double pma(double *pms, double*mms, int n, double tao,double sat) {
   return(p); 
 }
 
-
-// compute for all probes
-// assumes that pm mm pairs line up in the arrays and that the names do to. Also assumes that probes within a set are contiguous in each array.
-// pm, mm and names are all length n long, and are, effectively, three columns from a matrix
-// returns with 'dpval' containing the detection p values for each probeset.  
+/*
+ compute for all probes
+ assumes that pm mm pairs line up in the arrays and that the names do to. Also assumes that probes within a set are contiguous in each array.
+ pm, mm and names are all length n long, and are, effectively, three columns from a matrix
+ returns with 'dpval' containing the detection p values for each probeset.  
+*/
 void DetectionPValue (double *pm, double *mm, char **names, int *nprobes, double *tao, double *sat, double *dpval, int *nprobesets) {
   int start = 0;
   int i = 0;
