@@ -6,6 +6,11 @@ version 1.4.x [under development]
 
   o rma - the subset parameter now works properly.
 
+  o mva.pairs - now uses a subset to fit the loess curve (much more efficient).
+    also the summary statistics displayed are different. In particular the 
+    median and IQR of the M's are shown in the lower triangle. Previously,
+    an IQR of loess curve values was shown.
+	 
 
 version 1.3.x 
 

@@ -11,18 +11,23 @@ mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="ga
       par(mfg=c(j,k))
       yy <- x[,j]-x[,k]
       xx <-(x[,j]+x[,k])/2
-      aux <- loess(yy~xx,degree=1,span=span,family=family.loess)$fitted
+      sigma <- IQR(yy)
+      mean <- median(yy)
+      subset <- sample(1:(dim(x)[1]),min(c(10000, nrow(x))))
+      
+      aux <- loess(yy[subset]~xx[subset],degree=1,span=span,family=family.loess)$fitted
       plot(xx,yy,pch=".",xlab="",ylab="",tck=0,...)
-      o <- order(xx)
-      xx <- xx[o]
+      o <- order(xx[subset])
+      xx <- xx[subset][o]
       yy <- aux[o]
       o <-which(!duplicated(xx))
       lines(approx(xx[o],yy[o]),col=line.col)
       par(mfg=c(k,j))
-      sigma <- IQR(yy)
-      txt <- format(c(sigma,0.123456789),digits=digits)
+      #sigma <- IQR(yy)
+      txt <- format(sigma,digits=digits)
+      txt2 <- format(mean,digits=digits)
       plot(c(0,1),c(0,1),type="n",ylab="",xlab="",xaxt="n",yaxt="n")
-      text(0.5,0.5,txt,cex=2)
+      text(0.5,0.5,paste(paste("Median:",txt2),paste("IQR:",txt),sep="\n"),cex=2)
     }
   }
   par(mfg=c(J,J));plot(1,1,type="n",xaxt="n",yaxt="n",xlab="",ylab="");
