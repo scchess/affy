@@ -3,7 +3,7 @@ generateExprVal.method.mas <- function(probes, ...)
   
   probes <- log2(probes)
   
-  rep(NA, ncol(probes))
+  slg <- rep(NA, ncol(probes))
   
   for (i in 1:ncol(probes)) {
     
