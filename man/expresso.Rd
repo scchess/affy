@@ -69,9 +69,9 @@ expresso(
 \examples{
 data(affybatch.example)
 
-#eset <- expresso(affybatch.example, bgcorrect.method="rma",
-#                 normalize.method="constant",pmcorrect.method="pmonly",
-#                 summary.method="avgdiff", warnings=FALSE)
+eset <- expresso(affybatch.example, bgcorrect.method="rma",
+                 normalize.method="constant",pmcorrect.method="pmonly",
+                 summary.method="avgdiff", warnings=FALSE)
 }
 \keyword{ manip }
 

@@ -109,7 +109,9 @@ expresso <- function(afbatch,
     
     if (verbose)
       cat("background correcting...")
-    afbatch <- bg.correct(afbatch, method=bgcorrect.method, bgcorrect.param)
+    
+    afbatch <- do.call("bg.correct", c(alist(afbatch, method=bgcorrect.method), bgcorrect.param))
+    
     if (verbose)
       cat("done.\n")
   }
@@ -119,7 +121,10 @@ expresso <- function(afbatch,
     
     if (verbose)
       cat("normalizing...")
-    afbatch <- normalize(afbatch, normalize.method, normalize.param)
+    
+    afbatch <- do.call("normalize",
+                       c(alist(afbatch, normalize.method), normalize.param))
+    
     if (verbose)
       cat("done.\n")
   }  
