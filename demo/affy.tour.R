@@ -87,10 +87,10 @@ legend(20000,10000,c("invariant set","identity line"),c("orange","grey"),bg="whi
 ## Normalization and its effects can be observed in a couple of commands
 ##
 
-par(mfrow=c(2,2))
-data(Dilution)
-boxplot(Dilution)
-boxplot(normalize(Dilution))
+#par(mfrow=c(2,2))
+#data(Dilution)
+#boxplot(Dilution)
+#boxplot(normalize(Dilution))
 
 
 p <- probeset(affybatch.example, "A28102_at")
