@@ -351,12 +351,13 @@
   setMethod("probeset", "AffyBatch", function(object, genenames=NULL,
                                               locations=NULL){
     oldoptions <- getOption("BioC")
+    
     if(is.null(locations)) ##use info in cdf
       envir <- getCdfInfo(object)
     else{
       ##if the user gives a list of locations let them use that as enviromnet
       envir <- new.env()
-      multiassign(names(locations),locations,envir)
+      multiassign(names(locations), locations, envir)
       object@cdfName <- "envir"
       newoptions <- oldoptions
       newoptions$affy$probesloc[[1]]$what <- "environment" 
@@ -373,15 +374,15 @@
       
       i.pm <- indexProbes(object, "pm", genenames[i])[[1]]
       if (is.na(i.pm))
-        intensity.pm <- NA
+        intensity.pm <- matrix()
       else
-        intensity.pm <- intensity(object)[i.pm, ,drop=FALSE]
+        intensity.pm <- intensity(object)[i.pm, , drop=FALSE]
       
       i.mm <- indexProbes(object, "mm", genenames[i])[[1]]
       if (is.na(i.mm))
-        intensity.mm <- NA
+        intensity.mm <- matrix()
       else
-        intensity.mm <- intensity(object)[i.mm, ,drop=FALSE]
+        intensity.mm <- intensity(object)[i.mm, , drop=FALSE]
       
       p.pps[[i]] <- new("ProbeSet", id = genenames[i], pm = intensity.pm, mm = intensity.mm)
     }

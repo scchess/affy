@@ -40,23 +40,14 @@ rm(l.pm, l.mm)
 ## The at or st ending means the sequence relates to the complementary
 ## sequence of the gene or not respectively.
 
-namesspot <- c("AFFX-BioC-5_at","AFFX-BioC-3_at")
+namesspot <- c("AFFX-BioB-5_at","AFFX-BioB-M_at", "AFFX-BioB-3_at")
 
-p <- lapply(namesspot, get.PPSet, CDF.example, cel)
+p <- probeset(affybatch.example, genenames=namesspot)
 
-ylimi <- range(unlist(lapply(p, function(x) x@probes)), 0)
+par(mfrow=c(3,3))
 
-plot.new()
-par(mfrow=c(2,2))
-
-for(i in 1:length(namesspot)) barplot(p[[i]],ylim=ylimi)
-
-rm(ylimi,p)
-
-plot(1:10,1:10,type="n", yaxt="n", xlab="", xaxt="n",ylab="")
-legend(3,8,c("PM","MM"),fill=c("red","blue"))
-text(3,c(4,3,2),
-     c("Probe pair sets for","the 5' and 3' ends","of a control gene."))
+for (pps in p)
+  barplot(pps)
 
 
 ## normalize
@@ -102,41 +93,24 @@ boxplot(Dilution)
 boxplot(normalize(Dilution))
 
 
-##
-# generates pseudo repeated measurments
-# by adding noise to two differents measurements
-##
-p <- new("PPSet.container",
-         pmProbes=matrix(NA, 20, 4),
-         mmProbes=matrix(NA, 20, 4))
-         
-p[[1]] <- get.PPSet("A28102_at", CDF.example, listcel[[1]])
-p[[2]] <- get.PPSet("A28102_at", CDF.example, listcel[[2]])
-p[[3]] <- p[[1]]
-p[[4]] <- p[[2]]
-
-pm(p[[3]])[c(13,7)] <- pm(p[[3]])[c(13,7)] + c(500,-400)
-pm(p[[4]])[c(3,7)] <- pm(p[[4]])[c(3,7)] + runif(2,10,2000)
-
-ylimi <- range(pmProbes(p), mmProbes(p))
-ylimi[1] <- 0
+p <- probeset(affybatch.example, "A28102_at")
 
 #par(mfcol=c(4,2))
-mymethods <- c("avgdiff", "playerout", "liwong")
-nmet <- length(mymethods)
+#mymethods <- c("avgdiff", "playerout", "liwong")
+#nmet <- length(mymethods)
 
-layout(matrix(c(1:4, rep(5:(5+nmet-1), times=rep(4, nmet))), 4, 1+nmet),
-       width=c(4, rep(1, nmet)))
+#layout(matrix(c(1:4, rep(5:(5+nmet-1), times=rep(4, nmet))), 4, 1+nmet),
+#       width=c(4, rep(1, nmet)))
 
-for (i in 1:4) barplot(p[[i]], ylim=ylimi, main=paste(p[[i]]@name, " - hybridization ", i))
+#for (i in 1:4) barplot(p[[i]], ylim=ylimi, main=paste(p[[i]]@name, " - hybridization ", i))
 
-for (i in 1:nmet) {
-  ev <- express.summary.stat(p, method=mymethods[i], bg.correct="bg.correct.pmonly")
-  barplot(rev(c(ev)),main=paste("expression values using\n",mymethods[i], sep=""),
-          names.arg=rev(paste("hybrid. ",1:4)), horiz=TRUE)
-}
-par(opar)
-rm(opar)
+#for (i in 1:nmet) {
+#  ev <- express.summary.stat(p, method=mymethods[i], bg.correct="bg.correct.pmonly")
+#  barplot(rev(c(ev)),main=paste("expression values using\n",mymethods[i], sep=""),
+#          names.arg=rev(paste("hybrid. ",1:4)), horiz=TRUE)
+#}
+#par(opar)
+#rm(opar)
   
 
 
