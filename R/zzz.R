@@ -13,6 +13,7 @@
   }
   
   library.dynam("affy", pkgname, libname)
+  
   require(methods)
   require(modreg)
   require(eda)
@@ -62,9 +63,11 @@
 
 }
 
-#.Last.lib <- function() {
-#  dyn.unload()
-#}
+.Last.lib <- function(libpath) {
+  dyn.unload(file.path(libpath, "libs",
+                       paste("affy", .Platform$"dynlib.ext", sep="")))
+  .Dyn.libs <- .Dyn.libs[- which(.Dyn.libs == "affy")]
+}
 
 
 
