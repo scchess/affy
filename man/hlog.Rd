@@ -12,6 +12,10 @@ one has negative numbers, for example for PM-MM.}
 hlog(x, constant=1)
 }
 %- maybe also `usage' for other objects documented here.
+\arguments{
+  \item{x}{a number.}
+  \item{constant}{the constant c (see description).}
+  }
 \details{
 If \code{constant} is less than or equal to 0 \code{log(x)} is
 returned for all \code{x}. If \code{constant} is infinity \code{x} is
