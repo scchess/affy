@@ -1087,24 +1087,38 @@ followed by the $MM$s.
 
 \section{Configuring the package options}
 \label{configure.options}
-Package-wide options can be configured. We will show how to configure
-the options with a first example:
-the compression of files. If you are always compressing your CEL
-files, you might find annoying to specify
-it each you read them. I can be specified once for all in the
-options.
+Package-wide options can be configured, as shown below through examples.
+
+\begin{itemize}
+ \item Getting the names for the options:
 <<>>=
 opt <- getOption("BioC")
 affy.opt <- opt$affy
 print(names(affy.opt))
-affy.opt$compress.cel <- TRUE
 @
-
-The second example explains how the finding locations of probes
-environment works.
+%$
+ \item Default processing methods: 
 <<>>=
-print(affy.opt$probesloc)
+opt <- getOption("BioC")
+affy.opt <- opt$affy
+affy.opt$normalize.method <- "constant"
+opt$affy <- affy.opt
+options(BioC=opt)
 @
+%$
+ \item Compression of files: if you are always compressing your CEL
+files, you might find annoying to specify
+it each time you call a reading function. It can be specified once for all in the
+options.
+<<>>=
+opt <- getOption("BioC")
+affy.opt <- opt$affy
+affy.opt$compress.cel <- TRUE
+opt$affy <- affy.opt
+options(BioC=opt)
+@
+%$
+\item Priority rule for the use of a cdf environment:
 The option {\it probesloc} is a list. Each element of the list is it
 self a list with two elements {\it what}
 and {\it where}. When looking for the information related to the locations
@@ -1113,6 +1127,7 @@ in the list will be looked at sequentially. The first one leading to
 the information is used (an error
 message is returned if none permits to find the information). The
 element {\it what} can be one of {\it package}, {\it environment}.
+\end{itemize}
 
 
 \bibliographystyle{plainnat}
