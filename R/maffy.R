@@ -100,7 +100,7 @@ while(nprev>n & n>(subset.size+subset.delta) & iter <maxit){
     low <- quantile(ranks.range[1:(n*0.2)+n*0.0],probs=q,names=FALSE)/n
     high <-quantile(ranks.range[n+1-(1:(n*0.2))],probs=q,names=FALSE)/n
 
-    newset <-  ranks.range < (low*n+(0:n-1)*(high-low))        ## Set-indicator of new set
+    newset <-  ranks.range < (low*n+(0:(n-1))*(high-low))        ## Set-indicator of new set
 
     if(sum(newset)<subset.size-subset.delta){                  ## To small?
        part.of.n <- 1+part.of.n
