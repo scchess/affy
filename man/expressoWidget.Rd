@@ -34,7 +34,8 @@ normDefault, PMDefault, expDefault)
 \details{
   The widget will be invoked when expresso is called with argument
   "widget" set to TRUE. Default values can be changed using the drop
-  down list boxes. The first element of the list for available methods
+  down list boxes. Double clicking on an option from the dropdown list
+  makes an selection. The first element of the list for available methods
   will be the default method if no default is provided.
 }
 \value{
@@ -49,9 +50,10 @@ normDefault, PMDefault, expDefault)
 \note{The functions are part of the Bioconductor project at Dana-Farber
   Cancer Institute to provide Bioinformatic functionalities through R}
 
-\seealso{\code{\link{tkphenoData}}, \code{link{tkSampleNames}}}
+\seealso{\code{\link{expresso}}}
 \examples{
 if(interactive()){
+  require(widgetTools)
   expressoWidget(c("mas", "none", "rma"), c("constant", "quantiles"),
 c("mas", "pmonly"), c("liwong", "playerout"))
 }
