@@ -1,9 +1,9 @@
 xy2indices <- function(x, y, nr=NULL, cel=NULL, abatch=NULL) {
   if (any(x <= 0) || any(y <= 0))
     stop("Xs and Ys must start at 1 (please refer to the help file) !")
-  ct <- sum(c(is.null(nc), is.null(cel), is.null(abatch)))
+  ct <- sum(c(is.null(nr), is.null(cel), is.null(abatch)))
   if (ct != 2)
-    stop("One and only one of 'nc', 'cel', 'abatch' should be specified.")
+    stop("One and only one of 'nr', 'cel', 'abatch' should be specified.")
   if (! is.null(cel))
     nr <- nrow(intensity(cel))
   if (! is.null((abatch)))
