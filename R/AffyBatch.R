@@ -67,38 +67,41 @@ setMethod("getCdfInfo", signature("AffyBatch"),
             ## tagged "what" and an element tagged "where"
             ## "what" can be "data", "package", "file" or "environment"
             ## "where" is where it can be found
-            
+
             cdfname <- cleancdfname(object@cdfName)
+            if( !is.name(cdfname) )
+                stop(paste("getCdfInfo, this: ", object@cdfName,
+                           ", is not a valid CDF name", sep=""))
             second.try <- FALSE
-            
+
             if (debug.affy123)
               cat("Trying to get cdfenv for", cdfname, "\n")
-            
-            
+
+
             i <- 0
             while(i < length(how)) {
               i <- i+1
-              
+
               if (debug.affy123)
                 cat(i, ":")
-              
+
               what <- how[[i]]$what
               where <- how[[i]]$where
-              
+
               if (debug.affy123) {
                 cat("what=", what, "where=")
                 print(where)
               }
-              
+
               if (what == "data") {
                 ##if we can get it from data dir. otherwise load package
-                
+
                 if(cdfname %in% do.call("data", list(package=where))$results[, 3]) {
                   where.env <- pos.to.env(match(paste("package:", where, sep = ""), search()))
-                  
+
                   ## check if the cdfenv is already loaded. If not load it *in* the environment
                   ## of the package (where.env)
-                  if( ! exists(cdfname, where = where.env, inherits = FALSE)) {
+                  if(!exists(cdfname, where = where.env, inherits = FALSE)) {
                     path <- .path.package(where)
                     filename <- paste(cdfname, ".rda", sep="")
                     load(file.path(path, "data", filename) ,
@@ -109,35 +112,35 @@ setMethod("getCdfInfo", signature("AffyBatch"),
                 }
                 next
               }
-              
+
               if (what == "package") {
                 loc <- .find.package(cdfname, lib.loc=where, quiet=TRUE)
-                
+
                 if (!second.try && identical(loc, character(0))) {
                   ## before jumping to the next option, check the possibility to
                   ## download the missing cdfenv pack
-                  
+
                   if (how[[i]]$autoload) {
                     cat(paste("Environment",cdfname,"is not available.\n"))
                     cat("This environment contains needed probe location information.\n")
-                    
+
                     cat(paste("We will try to download and install the",
                               cdfname,"package.\n\n"))
                     if (! "package:reposTools" %in% search()) {
                       on.exit(detach("package:reposTools"))
                     }
-                    
+
                     if (! require(reposTools))
                       stop(paste("The package reposTools is required to download environments.",
                                  "Please download and install it.\n", sep="\n"))
-                    
+
                     reposEntry <- getReposEntry(how[[i]]$repository)
-                    
+
                     if (is.null(how[[i]]$installdir))
                       status.install <- install.packages2(cdfname, reposEntry)
                     else
                       status.install <- install.packages2(cdfname, reposEntry, how[[i]]$installdir)
-                    
+
                     if (length(statusList(status.install)) == 0) {
                       warning(paste("Data package", cdfname, "does not seem to exist",
                                     "in the repository\n",
@@ -153,17 +156,17 @@ setMethod("getCdfInfo", signature("AffyBatch"),
                 }
                 if (length(loc) > 1)
                   warning(paste("several packages with a matching name. Using the one at", loc[1]))
-                
+
                 existsnow<- .find.package(cdfname, lib.loc=where, quiet=TRUE)
-                
+
                 if(!identical(loc, character(0))){
                   do.call("library", list(cdfname, lib.loc=dirname(loc[1])))
-                  
+
                   return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
                 }
                 next
               }
-              
+
               if (what == "file") {
                 ##now this is an actual Affymetrix filename
                 cdfname <- paste(object@cdfName,".CDF",sep="")
@@ -175,14 +178,14 @@ setMethod("getCdfInfo", signature("AffyBatch"),
                 ## ---> end of paranoia <---
                 return(getLocations.Cdf(cdf))
               }
-              
+
               if (what == "environment") {
                 if(exists(object@cdfName,inherits=FALSE,where=where))
                   return(as.environment(get(object@cdfName,inherits=FALSE,envir=where)))
                 next
               }
             }
-            
+
             stop(paste("\nWe could not find and/or install the necessary probe location information.\n",
                        "Here is a list of common problems and possible solutions:\n\n",
                        "Problem 1: You are not connected to the Internet.\n",
@@ -215,16 +218,16 @@ if (debug.affy123) cat("--->show\n")
 
 setMethod("show", "AffyBatch",
           function(object) {
-            
+
             ## Location from cdf env
-            try( cdf.env <- getCdfInfo(object) )
+            cdf.env <- try( getCdfInfo(object) )
             if (! inherits(cdf.env, "try-error")) {
               num.ids <- length(ls(env=cdf.env))
             } else {
               warning("missing cdf environment !")
               num.ids <- "???"
             }
-            
+
             cat("AffyBatch object\n")
             cat("size of arrays=", nrow(object), "x", ncol(object),
                 " features (", object.size(object) %/% 1024, " kb)\n", sep="")
@@ -254,38 +257,38 @@ if( is.null(getGeneric("indexProbes")))
 setMethod("indexProbes", signature("AffyBatch", which="character"),
           function(object, which=c("pm", "mm","both"),
                    genenames=NULL, xy=FALSE) {
-            
+
             which <- match.arg(which)
-            
+
             i.probes <- match(which, c("pm", "mm", "both"))
             ## i.probes will know if "[,1]" or "[,2]"
             ## if both then [,c(1,2)]
             if(i.probes==3) i.probes=c(1,2)
-            
+
             envir <- getCdfInfo(object)
-            
+
             if(is.null(genenames))
               genenames <- ls(envir )
-            
+
             ## shorter code, using the features of multiget
             ## (eventually more readable too)
             ## note: genenames could be confusing (the same gene can be
             ## found in several affyid (ex: the 3' and 5' controls)
-            
+
             ans <-  multiget(genenames, pos, envir, iffail=NA)
-            
+
             ## this kind of thing could be included in 'multiget' as
             ## an extra feature. A function could be specified to
             ## process what is 'multi'-get on the fly
             for (i in seq(along=ans)) {
-              
+
               if ( is.na(ans[[i]][1]) )
                 next
-              
+
               ##as.vector cause it might be a matrix if both
               tmp <- as.vector(ans[[i]][, i.probes])
-              
-              
+
+
               if (xy) {
                 warning("flag 'xy' is deprecated (because confusing)")
                 x <- tmp %% nrow(object)
@@ -293,10 +296,10 @@ setMethod("indexProbes", signature("AffyBatch", which="character"),
                 y <- tmp %/% nrow(object) + 1
                 tmp <- cbind(x, y)
               }
-              
+
               ans[[i]] <- tmp
             }
-            
+
             return(ans)
           })
 
@@ -343,11 +346,11 @@ if( is.null(getGeneric("probes")) )
 setMethod("probes", signature("AffyBatch"),
           function(object, which=c("pm", "mm"),
                    genenames=NULL, LISTRUE=FALSE, drop=FALSE){
-            
+
             which <- match.arg(which)
-            
+
             index <- indexProbes(object, which, genenames)
-            
+
             if(LISTRUE)
               ans <- lapply(index, function(i) exprs(object)[i, ,drop=drop])
             else{
@@ -356,7 +359,7 @@ setMethod("probes", signature("AffyBatch"),
               colnames(ans) <- sampleNames(object)
               rownames(ans) <- names(index)
             }
-            
+
             return(ans)
           })
 
@@ -410,7 +413,7 @@ if( is.null(getGeneric("probeset") ))
 setMethod("probeset", "AffyBatch", function(object, genenames=NULL,
                                             locations=NULL){
   oldoptions <- getOption("BioC")
-  
+
   if(is.null(locations)) ##use info in cdf
     envir <- getCdfInfo(object)
   else{
@@ -425,27 +428,27 @@ setMethod("probeset", "AffyBatch", function(object, genenames=NULL,
   }
   if(is.null(genenames))
     genenames <- ls(envir)
-  
+
   p.pps <- vector("list", length(genenames))
   names(p.pps) <- genenames
-  
+
   for (i in seq(along=genenames)) {
-    
+
     i.pm <- indexProbes(object, "pm", genenames[i])[[1]]
     if (is.na(i.pm)[1])
       intensity.pm <- matrix()
     else
       intensity.pm <- intensity(object)[i.pm, , drop=FALSE]
-    
+
     i.mm <- indexProbes(object, "mm", genenames[i])[[1]]
     if (is.na(i.mm)[1])
       intensity.mm <- matrix()
     else
       intensity.mm <- intensity(object)[i.mm, , drop=FALSE]
-    
+
     p.pps[[i]] <- new("ProbeSet", id = genenames[i], pm = intensity.pm, mm = intensity.mm)
   }
-  
+
   options("BioC"=oldoptions)
   return(p.pps)
 })
@@ -491,19 +494,19 @@ if( is.null(getGeneric("bg.correct") ))
 
 setMethod("bg.correct", signature(object="AffyBatch", method="character"),
           function(object, method=getOption("BioC")$affy$bgcorrect.method, ...) {
-            
+
             ## simple for system to let one add background correction methods
             ## relies on naming convention
-            
+
             method <- match.arg(method, bgcorrect.methods)
-            
+
             methodname <- paste("bg.correct.", method, sep="")
-            
+
             if (! exists(methodname))
               stop(paste("Unknown method (cannot find function", methodname, ")"))
-            
+
             r <- do.call(methodname, alist(object, ...))
-            
+
             return(r)
           })
 
@@ -555,33 +558,33 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                    verbose=TRUE, summary.param=list(),
                    pmcorrect.param=list())
           {
-            
+
             pmcorrect.method<- match.arg(pmcorrect.method, pmcorrect.methods)
             summary.method <- match.arg(summary.method, express.summary.stat.methods)
-            
+
             n <- length(x)
-            
+
             ## if NULL compute for all
             if (is.null(ids))
               ids <- geneNames(x)
-            
+
             m <- length(ids)
             pps.warnings <- vector("list", length=m)
-            
+
             ## cheap trick to (try to) save time
             c.pps <- new("ProbeSet",
                          pm=matrix(),
                          mm=matrix())
-            
+
             ## matrix to hold expression values
             exp.mat <- matrix(NA, m, n)
             se.mat <- matrix(NA, m, n)
-            
+
             if (verbose) {
               cat(m, "ids to be processed\n")
               countprogress <- 0
             }
-            
+
             ## loop over the ids
             mycall <- as.call(c(getMethod("express.summary.stat",
                                           signature=c("ProbeSet","character", "character")),
@@ -590,18 +593,18 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                               )
             ##only one character cause no more bg correct
             ##bg.correct=bg.method, param.bg.correct=bg.param,
-            
+
             ##WHy not show error? took it out cause sometimes we
             ##get errors and couldnt see them.
             ##options(show.error.messages = FALSE)
             ##on.exit(options(show.error.messages = TRUE))
-            
+
             CDFINFO <- getCdfInfo(x) ##do it once!
-            
+
             for (i in seq(along=ids)) {
-              
+
               id <- ids[i]
-              
+
               if (verbose) {
                 if ( round(m/10) == countprogress) {
                   cat(".")
@@ -617,14 +620,14 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                 l.mm <- loc[ ,2]
               else
                 l.mm <- integer()
-              
+
               np <- length(l.pm)
-              
+
               ##names are skipped
-              
+
               c.pps@pm <- intensity(x)[l.pm, , drop=FALSE]
               c.pps@mm <- intensity(x)[l.mm, , drop=FALSE]
-              
+
               ## generate expression values
               ## (wrapped in a sort of try/catch)
               mycall[[2]] <- c.pps
@@ -638,14 +641,14 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                 pps.warnings[[i]] <- "Error"
                 ##warning(paste("Error with affyid:", id))
               }
-              
+
             }
 
             ##options(show.error.messages = TRUE)
             ## on.exit(NULL)
 
             if (verbose) cat("\n")
-            
+
             ## instance exprSet
             ##if (verbose) cat("instancianting an exprSet.....")
             dimnames(exp.mat) <- list(ids, sampleNames(x))
@@ -658,7 +661,7 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                         annotation=annotation(x),
                         notes=c(notes(x)))
             ##if (verbose) cat(".....done.\n")
-            
+
             attr(eset, "pps.warnings") <- pps.warnings
             return(eset)
             ##return(list(exprSet=eset, pps.warnings=pps.warnings))
@@ -691,10 +694,10 @@ setMethod("boxplot",signature(x="AffyBatch"),
           function(x,which="both",range=0,...){
             tmp <- description(x)
             if(class(tmp)=="MIAME") main <- tmp@title
-            
+
             tmp <- unlist(indexProbes(x,which))
             tmp <- tmp[seq(1,length(tmp),len=5000)]
-            
+
             boxplot(data.frame(log2(intensity(x)[tmp,])),main=main,range=range, ...)
           })
 
