@@ -38,8 +38,8 @@
 \section*{Introduction}
 This document describes briefly how the package gets (or tries to get)
 the needed cdfenvs. Various issues like security and configuring the
-options for the package \Rpackage{affy} are outlined. To some extend,
-what is developped here could\footnote{Currently this would require
+options for the package \Rpackage{affy} are outlined. To some extent,
+what is developed here could\footnote{Currently this would require
 a bit of effort, but it should become very easy very soon}
  be applied to the package \Rpackage{oligochips}.
 
@@ -61,7 +61,7 @@ The functions \Rfunction{get} and \Rfunction{multiget} (in \Rpackage{Biobase})
 are a convenient way to access what is in an environment.
 Expert users only will consider modifying what is those environment.
 
-In the case of {\it Affynetrix} data, the {\it cdfenvs} are built from
+In the case of {\it Affymetrix} data, the {\it cdfenvs} are built from
 the {\it .CDF} files. The package \Rpackage{makecdfenvs} is dedicated
 to the building of packages with {\it cdfenvs}. The simpliest way
 to proceed is to have the package needed for the analysis installed.
@@ -128,7 +128,7 @@ deactivate.autoload <- function(affy.opt) {
     return(affy.opt)
   }	      
 @ 
-It can be used to desactivate any automatic download:
+It can be used to deactivate any automatic download:
 <<>>=
 affy.opt <- getOption("BioC")$affy
 
@@ -141,7 +141,7 @@ affy.opt.noauto <- deactivate.autoload(affy.opt)
 
 \section*{Security}
 
-The autoload mecanism can be perceived as a security breach. It is the
+The autoload mechanism can be perceived as a security breach. It is the
 case, but not more than any {\bf R} package you might install (unless you
 inspect carefully the source of every single package you install).
 
@@ -178,3 +178,5 @@ Note that you will have to update{\it where} to look for the packages
 (like by putting it in your \Rfunction{.libPaths()}, or the field {\it
 where} for the probelocs).
 \end{document}
+
+% LocalWords:  Affynetrix
