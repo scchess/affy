@@ -15,6 +15,29 @@
   require(modreg)
   require(eda)
   where <- match(paste("package:", pkgname, sep=""), search())
+
+  if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
+  ## this could move into the respective methods of Plob and Cel.container later
+  assign("normalize.Cel.container.methods",
+         substr(ls(where)[grep("normalize\.Cel\.container\.*", ls(where))], 25, 100),
+         envir=as.environment(where))
+  assign("normalize.Plob.methods",
+         substr(ls(where)[grep("normalize\.Plob\.*", ls(where))], 16,100),
+         envir=as.environment(where))
+
+  if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
+  ## the first one is deprecated
+  assign("generateExprSet.methods",
+         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))], 23,100),
+         envir=as.environment(where))
+  assign("express.summary.stat.methods",
+         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))], 23,100),
+         envir=as.environment(where))
+
+  if (debug.affy123) cat("-->detecting background correction methods from naming convention\n")
+  assign("bg.correct.methods",
+         substr(ls(where)[grep("bg.correct\.*", ls(where))], 12,100),
+         envir=as.environment(where))
   
   if (debug.affy123) cat("-->initCdf\n")
   .initCdf(where)
@@ -28,33 +51,6 @@
   .initPPSet.container(where)
   if (debug.affy123) cat("-->initPlob\n")
   .initPlob(where)
-  
-  if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
-  ## this could move into the respective methods of Plob and Cel.container later
-  assign("normalize.Cel.container.methods", substr(ls(where)[grep("normalize\.Cel\.container\.*", ls(where))],
-                                                   25, 100),
-         envir=as.environment(where))
-  assign("normalize.Plob.methods", substr(ls(where)[grep("normalize\.Plob\.*", ls(where))],
-                                          16,100),
-         envir=as.environment(where))
-
-  if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
-  ## the first one is deprecated
-  assign("generateExprSet.methods",
-         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))],
-                23,100),
-         envir=as.environment(where))
-  assign("express.summary.stat.methods",
-         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))],
-                23,100),
-         envir=as.environment(where))
-  if (debug.affy123) cat("-->detecting background correction methods from naming convention\n")
-  assign("bg.correct.methods",
-         substr(ls(where)[grep("bg.correct\.*", ls(where))],
-                12,100),
-         envir=as.environment(where))
-  
-  cacheMetaData(as.environment(where))
 
 }
 
