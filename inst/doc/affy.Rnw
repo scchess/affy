@@ -124,6 +124,8 @@ attribute \verb+name.levels+.
 Example:
 %\vignette{Cdf-class}
 <<>>= 
+  library(affy)
+
   data(CDF.example)
 
   geneid <- "D13640_at"
