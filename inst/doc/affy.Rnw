@@ -187,7 +187,7 @@ of the {\it tkWidgets} package (function written by Jianhua (John) Zhang).}
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics{widgettkMIAME}
+\includegraphics[width=0.5\textwidth]{widgettkMIAME}
 \caption{\label{fig:widget.tkMIAME}Graphical display for entering {\it MIAME} informations. This widget is part
 of the {\it tkWidgets} package (function written by Majnu John).}
 \end{center}
@@ -282,7 +282,7 @@ The widget will let you select missing parameters (like the
 normalization method, the background correction 
 method or the summary method) with the mouse.
 The figure~\ref{fig:widget.normalizechooser} presents the widget for the
-selection of a normalization method.
+selection of a different methods.
 
 \begin{Sinput}
 R> expresso.AffyBatch(affybatch.example, widget=T)
@@ -290,8 +290,34 @@ R> expresso.AffyBatch(affybatch.example, widget=T)
 
 \begin{figure}[htbp]
 \begin{center}
-\includegraphics[scale=0.5]{widgetnormalizechooser}
-\caption{\label{fig:widget.normalizechooser}Graphical display for selecting a normalization method.}
+\includegraphics[width=0.5\textwidth]{widgetnormalizechooser}
+\caption{\label{fig:widget.normalizechooser}Graphical display for
+selecting a normalization method.}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{widgetbgcorrectchooser}
+\caption{\label{fig:widget.bgcorrectchooser}Graphical display for
+selecting a background correction method.}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{widgetpmcorrectchooser}
+\caption{\label{fig:widget.pmcorrectchooser}Graphical display for
+selecting a method for PM value adjustement.}
+\end{center}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.5\textwidth]{widgetsummarychooser}
+\caption{\label{fig:widget.summarychooser}Graphical display for
+selecting a method for computing an summary expression value from the
+probe intensities.}
 \end{center}
 \end{figure}
 
