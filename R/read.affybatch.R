@@ -153,6 +153,9 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
     widgetfiles <- character(0)
   }
 
+  auxnames <- file.path(celfile.path, auxnames)
+  filenames <- file.path(celfile.path, filenames)
+  
   filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
 
   if(length(filenames)==0) filenames <- list.celfiles(celfile.path,full.names=TRUE)
