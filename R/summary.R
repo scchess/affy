@@ -1,5 +1,10 @@
 ###these are summary functions they take matrices of probes x chips
 ###and return expression and se (when applicable)
+
+##DEBUG: appending the se to the expression values in a same vector
+##       is too much hackish (I think)... we need to think about something
+##       better
+
 avdiff <- function(x,constant=3){
   e <- apply(x,2,function(y){
     o <- order(y)
@@ -23,15 +28,16 @@ li.wong <- function(data.matrix,remove.outliers=T,
 }
 
 
-medianpolish <- function(x,...){
-  tmp <- medpolish(log2(x),trace.iter=F,...)
+medianpolish <- function(x, ...){
+  tmp <- medpolish(log2(x), trace.iter=F, ...)
   ##rough estimate
   sigma_1.483*median(abs(as.vector(tmp$residuals)))/sqrt(nrow(x))
-  c(tmp$overall + tmp$col,rep(sigma,ncol(x)))
+  c(tmp$overall + tmp$col,rep(sigma, ncol(x)))
 }
+
 
 ##DEBUG: to be moved to a proper place (eventually renamed)
 generateExprVal.method.medianpolish <- function(matos, ...) {
-  medianpolish(matos, ...)
+  medianpolish(matos, ...)[1:ncol(matos)]
 }
 

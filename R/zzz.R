@@ -26,18 +26,22 @@
          envir=as.environment(where))
 
   if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
-  ## the first one is deprecated
+  ## the first one is deprecated (well... "should be"...)
   assign("generateExprSet.methods",
-         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))], 23,100),
+         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))], 24,100),
          envir=as.environment(where))
   assign("express.summary.stat.methods",
-         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))], 23,100),
+         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))], 24,100),
          envir=as.environment(where))
 
   if (debug.affy123) cat("-->detecting background correction methods from naming convention\n")
+  ##assign("bg.correct.methods",
+  ##       substr(ls(where)[grep("bg.correct\.*", ls(where))], 12,100),
+  ##       envir=as.environment(where))
   assign("bg.correct.methods",
-         substr(ls(where)[grep("bg.correct\.*", ls(where))], 12,100),
+         ls(where)[grep("bg.correct\.*", ls(where))],
          envir=as.environment(where))
+         
   
   if (debug.affy123) cat("-->initCdf\n")
   .initCdf(where)

@@ -5,19 +5,14 @@ expresso <- function(CDFfile = NULL,
                      rm.mask = FALSE,
                      rm.outliers = FALSE,
                      rm.extra = FALSE,
-                     bg.method=NULL,
+                     normalize = TRUE,
+                     normalize.method = NULL,
+                     summary.method = NULL,
+                     summary.subset = NULL,
+                     bg.method = NULL,
                      chip.names = NULL,
-                     phenodata=NULL,
-                     annotation=NULL,
-                     notes=NULL,
-                     description=NULL,
-                     subset=NULL,
-                     summary.stat=medianpolish,
-                     normalize=T,
-                     normalize.method=NULL,
-                     eset.method=NULL,
                      verbose = T,
-                     widget=F,
+                     widget = F,
                      ...) {
 
   getTmpFileName <- function() {
@@ -68,19 +63,48 @@ expresso <- function(CDFfile = NULL,
   ## -- normalize.method
   if ((normalize) & (is.null(normalize.method))) {
     if (widget) {
-      normalize.method <- pwidget.normalize(new("Cel.container"))
+      ##DEBUG: move what's below to 'pwidget.selector'
+      n.methods <- normalize.methods(new("Cel.container"))
+      normalize.method <- pwidget.selector(n.methods,
+                                           title = "Method for normalization",
+                                           choices.help = paste("normalize", n.methods, sep="."))
+      rm(n.methods)
     } else {
       stop("normalization method missing")
     }
   }
 
+  ## -- background correction method
+  if (is.null(bg.method)) {
+    if (widget) {
+      bg.method <- pwidget.selector(bg.correct.methods,
+                                    title = "Method for background correction",
+                                    choices.help = NULL)
+      bg.method <- paste("bg.correct", bg.method, sep=".")
+    } else {
+      stop("bg.method missing")
+    }
+  }
+  
+  ## -- expression method
+  if (is.null(summary.method)) {
+    if (widget) {
+      helpnames <- paste("generateExprVal.method", generateExprSet.methods, sep="")
+      summary.method <- pwidget.selector(generateExprSet.methods,
+                                         title = "Method for expression",
+                                         choices.help = helpnames)
+    } else {
+      stop("summary.method method missing")
+    }
+    
+  }
   ## -- summary of what will be done
   if (verbose) {
     if (normalize) {
       cat("normalization:", normalize.method, "\n")
     }
     cat("background correction:", bg.method, "\n")
-    cat("expression values:", eset.method, "\n")
+    cat("expression values:", summary.method, "\n")
   }
   
   ## --- chip.names
@@ -96,12 +120,13 @@ expresso <- function(CDFfile = NULL,
   ## --- reading CDF
   if (verbose) cat("reading CDF file...")
   
-  cdf <- try(read.cdffile(CDFfile, compress = compress.cdf))
-  if (inherits(cdf,"try-error")) {
-    if (verbose) cat("(trying again with/without compression)...")
-    cdf <- try(read.cdffile(CDFfile, compress = !compress.cdf))
-  }
-    
+  ##cdf <- try(read.cdffile(CDFfile, compress = compress.cdf))
+  ##if (inherits(cdf,"try-error")) {
+  ##  if (verbose) cat("(trying again with/without compression)...")
+  ##  cdf <- try(read.cdffile(CDFfile, compress = !compress.cdf))
+  ##}
+  cdf <- read.cdffile(CDFfile, compress = compress.cdf)
+  
   if (verbose) cat("done.\n")
 
   ## --- reading CELs
@@ -110,29 +135,39 @@ expresso <- function(CDFfile = NULL,
   on.exit(cat("unlinking temporary file", hdf5FilePath, ".\n"), add=TRUE)
   on.exit(unlink(hdf5FilePath), add=TRUE)
   
-  listcel <- try(read.container.celfile(filenames=CELfiles,
-                                        compress=compress.cel,
-                                        rm.mask=rm.mask,
-                                        rm.outliers=rm.outliers,
-                                        rm.extra=rm.extra,
-                                        sd=FALSE,
-                                        hdf5=TRUE,
-                                        hdf5FilePath=hdf5FilePath,
-                                        verbose=verbose)
-                 )
-  if (inherits(listcel,"try-error")) {
-    if (verbose) cat("(trying again with/without compression)...")
-    listcel <- try(read.container.celfile(filenames=CELfiles,
-                                          compress=compress.cel,
-                                          rm.mask=rm.mask,
-                                          rm.outliers=rm.outliers,
-                                          rm.extra=rm.extra,
-                                          sd=FALSE,
-                                          hdf5=TRUE,
-                                          hdf5FilePath=hdf5FilePath,
-                                          verbose=verbose)
-                   )
-  }
+#   listcel <- try(read.container.celfile(filenames=CELfiles,
+#                                         compress=compress.cel,
+#                                         rm.mask=rm.mask,
+#                                         rm.outliers=rm.outliers,
+#                                         rm.extra=rm.extra,
+#                                         sd=FALSE,
+#                                         hdf5=TRUE,
+#                                         hdf5FilePath=hdf5FilePath,
+#                                         verbose=verbose)
+#                  )
+#   if (inherits(listcel,"try-error")) {
+#     if (verbose) cat("(trying again with/without compression)...")
+#     listcel <- try(read.container.celfile(filenames=CELfiles,
+#                                           compress=compress.cel,
+#                                           rm.mask=rm.mask,
+#                                           rm.outliers=rm.outliers,
+#                                           rm.extra=rm.extra,
+#                                           sd=FALSE,
+#                                           hdf5=TRUE,
+#                                           hdf5FilePath=hdf5FilePath,
+#                                           verbose=verbose)
+#                    )
+#   }
+  listcel <- read.container.celfile(filenames=CELfiles,
+                                    compress=compress.cel,
+                                    rm.mask=rm.mask,
+                                    rm.outliers=rm.outliers,
+                                    rm.extra=rm.extra,
+                                    sd=FALSE,
+                                    hdf5=TRUE,
+                                    hdf5FilePath=hdf5FilePath,
+                                    verbose=verbose)
+
   
   ## -- normalize (if wished)
   if (normalize) {
@@ -158,14 +193,14 @@ expresso <- function(CDFfile = NULL,
       cat("normalizing...")
     }
     
-    listcel.n <- normalize(listcel.n, cdf, method=normalize.method)
+    listcel.n <- normalize(listcel.n, cdf, method=normalize.method, ...)
     
     listcel <- listcel.n
     
     if (verbose) cat("done.\n")
   }
   
-  eset <- generateExprSet(listcel, cdf, method=eset.method, bg.correct=bg.method)
+  eset <- generateExprSet(listcel, cdf, method=summary.method, bg.correct=bg.method)
   
   return(eset)
 }
