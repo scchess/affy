@@ -46,10 +46,10 @@ library(modreg)
 ## needed ?
 
 
-normalize.Cel.invariantset <- function(listcel, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
+normalize.Cel.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
 
-  if (! inherits(listcel, "Cel.container"))
-    stop("listcel must be a 'Cel.container' obejct")
+  if (! inherits(container, "Cel.container"))
+    stop("container must be a 'Cel.container' obejct")
   
   ##DEBUG
   ## test refindex
@@ -58,50 +58,50 @@ normalize.Cel.invariantset <- function(listcel, f.cdf, prd.td=c(0.003,0.007), pr
   i.pm[is.na(i.pm)] <- FALSE                          # mark as FALSE the unknown probes too
 
   np <- sum(i.pm)                                     # number of PM probes
-  nc  <-  length(listcel)                             # number of CEL files
+  nc  <-  length(container)                             # number of CEL files
   
   # take as a reference the array having the median overall intensity
-  l <- length(listcel)
+  l <- length(container)
   m <- vector("numeric",length=l)
   for (i in 1:l)
-    m[i] <- mean(listcel[[i]]@intensity)
+    m[i] <- mean(container[[i]]@intensity)
   refindex <- trunc(median(rank(m)))
   rm(m,l)           
 
-  if (progress) cat("Data from",attr(listcel[[refindex]],"name"),"used as baseline.\n")
+  if (progress) cat("Data from",attr(container[[refindex]],"name"),"used as baseline.\n")
   
-  ##r.ref <- rank(listcel[[refindex]]$intensity[i.pm])                 # order of the PM intensities
+  ##r.ref <- rank(container[[refindex]]$intensity[i.pm])                 # order of the PM intensities
   
   ## loop over the CEL files and normalize them
   for (i in (1:nc)[-refindex]) {
 
-    if (progress) cat("normalizing array", attr(listcel[[i]], "name"), "...")
+    if (progress) cat("normalizing array", attr(container[[i]], "name"), "...")
     
-    mydim <- dim(listcel[[i]]@intensity)
+    mydim <- dim(container[[i]]@intensity)
     ##temporary
-    i.set <- which(i.pm)[attr(normalize.invariantset(c(listcel[[i]]@intensity[i.pm]),
-                                                     c(listcel[[refindex]]@intensity[i.pm]),
+    i.set <- which(i.pm)[attr(normalize.invariantset(c(container[[i]]@intensity[i.pm]),
+                                                     c(container[[refindex]]@intensity[i.pm]),
                                                      prd.td),
                               "invariant.set")
                          ]
 
-    listcel[[i]]@intensity <- as.numeric(approx(c(listcel[[i]]@intensity)[i.set],
-                                                c(listcel[[refindex]]@intensity)[i.set],
-                                                xout=listcel[[i]]@intensity)$y)
-    dim(listcel[[i]]@intensity) <- mydim
+    container[[i]]@intensity <- as.numeric(approx(c(container[[i]]@intensity)[i.set],
+                                                c(container[[refindex]]@intensity)[i.set],
+                                                xout=container[[i]]@intensity)$y)
+    dim(container[[i]]@intensity) <- mydim
         
     ## storing information about what has been done
-    listcel[[i]]@history <- list(name="normalized by invariant set",
+    container[[i]]@history <- list(name="normalized by invariant set",
                                  invariantset=i.set)
-    attr(listcel[[i]]@intensity,"invariant.set") <- NULL
-    listcel[[i]]@sd <- NULL
+    attr(container[[i]]@intensity,"invariant.set") <- NULL
+    container[[i]]@sd <- NULL
 
     if (progress) cat("done.\n")
     
   }
-  listcel[[refindex]]@history$name="reference for the invariant set"
+  container[[refindex]]@history$name="reference for the invariant set"
   
-  return(listcel)
+  return(container)
 }
 
 

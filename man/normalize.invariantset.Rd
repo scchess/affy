@@ -1,5 +1,6 @@
 \name{normalize.invariantset}
 \alias{normalize.invariantset}
+\alias{normalize.Cel.invariantset}
 \title{Scale microarray data}
 \description{
   normalizes two microarray data to each others.
@@ -40,6 +41,6 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 %
 %  ## TO DO...
 %}
-\keyword{}
+\keyword{manip}
 
 

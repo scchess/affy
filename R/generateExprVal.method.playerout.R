@@ -1,11 +1,11 @@
-generateExprVal.method.playerout <- function(pps.val.list, weights=T){
-  matos <- as.data.frame(lapply(pps.val.list,function(x){x$pm}))
+generateExprVal.method.playerout <- function(probes, weights=F){
+  matos <- as.data.frame(lapply(probes,function(x){x$pm}))
   ##names(matos) <- mynames
   matos <- t(as.matrix(matos))
-  n <- length(pps.val.list[[1]]$pm)
+  n <- length(probes[[1]]$pm)
   
   ## skip if only one probe
-  if (n == 1) return(unlist(lapply(pps.val.list, function(x){x$pm})))
+  if (n == 1) return(unlist(lapply(probes, function(x){x$pm})))
   
   ## I do not know to which extend the use of optim
   ## is really equivalent to the use of nlminb in S-plus

@@ -26,6 +26,6 @@ normalize.constant(data, refmean)
 %
 %  ## TO DO...
 %}
-\keyword{}
+\keyword{manip}
 
 
