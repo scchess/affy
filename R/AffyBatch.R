@@ -93,7 +93,7 @@
                   if (identical(loc, character(0)))
                     next
                   ##stop(paste("AffyBatch: Looked for probes information in the package ", cdfname, "but could not find it.\n"))
-                    
+                  
                   ##may be an option to try to autoload the package from
                   ##the bioconductor website woud be nice here
                   ## there is already a "how[[i]]$autoload" available
@@ -105,7 +105,7 @@
                   return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
                   ##object@cdfInfo <<- get(name, envir=as.environment(paste("package:",name, sep="")))
                 }
-              
+                
                 
                 if (what == "file") {
                   ##now this is an actual Affymetrix filename
@@ -113,8 +113,8 @@
                   cdf <- read.cdffile(file.path(path.expand(where), cdfname))
                   ## ---> extra paranoia <---
                   if (cdf@cdfName != object@cdfName)
-                  warning(paste("The CDF file identifies as", cdf@cdfName,
-                                "while you probably want", object@cdfName))
+                    warning(paste("The CDF file identifies as", cdf@cdfName,
+                                  "while you probably want", object@cdfName))
                   ## ---> end <---
                   return(getLocations.Cdf(cdf))
                   ##object@cdfInfo <<- getLocations.Cdf(cdf)
@@ -125,7 +125,7 @@
                 if (what == "environment") {
                   if(exists(object@cdfName,inherits=FALSE,where=where))
                     return(as.environment(get(object@cdfName,inherits=FALSE,envir=where)))
-                ##object@cdfInfo <<- as.environment(get(name, where))
+                  ##object@cdfInfo <<- as.environment(get(name, where))
                 }
               }
               stop(paste("AffyBatch: information about probe locations for ", object@cdfName, " could not be found"))
@@ -188,7 +188,7 @@
               ## i.probes will know if "[,1]" or "[,2]"
               ## if both then [,c(1,2)]
               if(i.probes==3) i.probes=c(1,2)
-               
+              
               envir <- getCdfInfo(object)
               
               if(is.null(genenames)) 
@@ -340,7 +340,7 @@
     object
   }, where=where)
 
-  ###probeset
+###probeset
   if (debug.affy123) cat("--->probeset\n")
   
   if( !isGeneric("probeset") )
@@ -348,7 +348,7 @@
                standardGeneric("probeset"), where=where)
   
   setMethod("probeset", "AffyBatch", function(object, genenames=NULL,
-                                        locations=NULL){
+                                              locations=NULL){
     oldoptions <- getOption("BioC")
     if(is.null(locations)) ##use info in cdf
       envir <- getCdfInfo(object)
@@ -403,8 +403,8 @@
             },where=where)
   
   ##[[ we need replacement that takes an entry by the Cel in value
-    
-  ##[ subseting. get it from exprSet
+  
+  ##[ subseting. can only happen by sample. for now not by gene
   setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
     if( !missing(i) ) {
       phenoData(x) <- phenoData(x)[i, , ..., drop=FALSE]
@@ -427,24 +427,28 @@
                where=where)
   
 
-  ## ---bg.correct
-  ## method bg.correct 
+  ## --- bg.correct
+
+  if (debug.affy123) cat("--->bg.correct\n")
+
   if( !isGeneric("bg.correct") )
-    setGeneric("bg.correct", function(object, method, ...)
+    setGeneric("bg.correct", function(x, method, ...)
                standardGeneric("bg.correct"), where=where)
   
-  setMethod("bg.correct", signature(object="AffyBatch", method="character"),
-            function(object, method, ...) {
+  setMethod("bg.correct", signature(x="AffyBatch", method="character"),
+            function(x, method, ...) {
 
               ## simple for system to let one add background correction methods
               ## relies on naming convention
               
+              method <- match.arg(method, bgcorrect.methods)
+              
               methodname <- paste("bg.correct.", method, sep="")
               
               if (! exists(methodname))
-                 stop(paste("Unknown method (cannot find function", methodname, ")"))
+                stop(paste("Unknown method (cannot find function", methodname, ")"))
               
-              r <- do.call(methodname, alist(object, ...))
+              r <- do.call(methodname, alist(x, ...))
               
               return(r)
             }, where=where)
@@ -473,57 +477,23 @@
             },
             where=where)
 
-  ## --- 
-  if (debug.affy123) cat("--->bg.correct\n")
-  if( !isGeneric("bg.correct") )
-    setGeneric("bg.correct", function(x, bg.method, ...)
-               standardGeneric("bg.correct"),
-               where=where)
   
-  setMethod("bg.correct", signature(x="AffyBatch", #bg.method="character",
-                                        bg.method="character"),
-            function(x, bg.method, bg.param=list()) {
-              
-              bg.method <- match.arg(bg.method, bg.correct.methods)
-              ##DEBUG: hackish (put global adjsutment names below
-              ##Because this must go before normalization it must be
-              ##done to the entire array.. so its either moved to
-              ##expresso.AffyBatch or normalization is added here.
-              ##for modularization purposes it seems expresso is a better
-              ##place
-              ## if (bg.method %in% c("bg.correct.rma")) {
-##                 if (verbose) cat("computing parameters for global background adjustement.....")
-###                 all.l.pm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,1]))
-#                 all.l.mm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,2]))
-#                 all.param <- lapply(seq(1:n), function(i) {
-#                   notNA <- !(is.na(intensity(x)[, i][all.l.pm.mat]) | is.na(intensity(x)[, i][all.l.mm.mat]))
-#                   bg.parameters(intensity(x)[, i][notNA], intensity(x)[, i][notNA]
-#                 })
-#                 bg.param$all.param <- all.param
-#                 if (verbose) cat(".....done.\n")
-#               }
-              
-            },
-            where = where)
-            
-            
   ## --- expression value computation
   if (debug.affy123) cat("--->computeExprSet\n")
   if( !isGeneric("computeExprSet") )
-    setGeneric("computeExprSet", function(x, summary.method, ...)
+    setGeneric("computeExprSet", function(x, pmcorrect.method, summary.method, ...)
                standardGeneric("computeExprSet"),
                where=where)
   
-  setMethod("computeExprSet", signature(x="AffyBatch", pm.correct.method="character",
+  setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character",
                                         summary.method="character"),
-            function(x, pm.method,
-                     summary.method, ids=NULL, verbose=TRUE,
+            function(x,
+                     pmcorrect.method, summary.method, ids=NULL, verbose=TRUE,
                                         #bg.param=list(),
-                     summary.param=list(), warnings=TRUE) {
-
+                     summary.param=list(), pmcorrect.param=list(), warnings=TRUE) {
               
-              pm.correct.method <- match.arg(pm.correct.method, pm.correct.methods)
               
+              pmcorrect.method <- match.arg(pmcorrect.method, pmcorrect.methods)
               summary.method <- match.arg(summary.method, express.summary.stat.methods)
               
               n <- length(x)
@@ -553,7 +523,8 @@
               }
               
               ## loop over the ids
-              mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character")), list(c.pps, method=summary.method,param.method=summary.param)))
+              mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character")),
+                                  list(c.pps, method=summary.method, pmcorrect=pmcorrect.method, pmcorrect.param=pmcorrect.param, param.method=summary.param)))
               ##only one character cause no more bg correct
 ###bg.correct=bg.method, param.bg.correct=bg.param,
 
@@ -568,7 +539,7 @@
 
                 ##cat(i,"--")
                 if (verbose) {
-                  #cat(id, "\n")
+                                        #cat(id, "\n")
                   if ( round(m/10) == countprogress) {
                     cat(".")
                     countprogress <- 0
@@ -586,25 +557,14 @@
                 else
                   l.mm <- NA
                 
-                ## fill the PPSet.container
-                ##c.pps@pm <- matrix(NA, nrow=length(l.pm), ncol=n)
-                ##c.pps@mm <- matrix(NA, nrow=length(l.pm), ncol=n)
-
                 np <- length(l.pm)
                 
                 ##names are skipped
 
                 c.pps@pm <- matrix(intensity(x)[l.pm, ],
-                                         np, n, byrow=TRUE)
+                                   np, n, byrow=TRUE)
                 c.pps@mm <- matrix(intensity(x)[l.mm, ],
-                                         np, n, byrow=TRUE)
-                
-                ##c.pps@pm <- matrix(intensity(x)[cbind(matrix(rep(l.pm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=FALSE),
-                ##                                            rep(1:n, np))],
-                ##                         np, n, byrow=TRUE)
-                ##c.pps@mm <- matrix(intensity(x)[cbind(matrix(rep(l.mm, rep(n, np*2)), nrow=np*n, ncol=2, byrow=FALSE),
-                ##                                            rep(1:n, np))],
-                ##                         np, n, byrow=TRUE)
+                                   np, n, byrow=TRUE)
                 
                 ## generate expression values
                 ## (wrapped in a sort of try/catch)
@@ -644,12 +604,11 @@
             where=where)
 
 
-  ## use [[ and image instead !
-
   ##some methods i was asked to add
 
   if( !isGeneric("image") )
     setGeneric("image",where=where)
+  
   setMethod("image",signature(x="AffyBatch"),
             function(x, transfo=log, ...){
               scn <- prod(par("mfrow"))
@@ -658,12 +617,12 @@
               for(i in 1:length(sampleNames(x))){
                 which.plot <- which.plot+1;
                 if(trunc((which.plot-1)/scn)==(which.plot-1)/scn && which.plot>1 && ask)  par(ask=TRUE)
-                 image(x[[i]], transfo=transfo, ...)
-                 par(ask=FALSE)}
+                image(x[[i]], transfo=transfo, ...)
+                par(ask=FALSE)}
             },where=where)
   
 
-  ###boxplot
+###boxplot
   if( !isGeneric("boxplot") )
     setGeneric("boxplot",where=where)
   setMethod("boxplot",signature(x="AffyBatch"),
@@ -673,90 +632,86 @@
 
               boxplot(data.frame(log2(intensity(x)[unlist(indexProbes(x,which)),])),main=main,range=0, ...)
             },where=where)
- 
-
-  
-
 
 }
 
 
-          
+
 
 ##this used to be in [[ and [[<-
 ##if we ever want to add other slots to this could
-  ##be used in the "[[" method
-  ##mysd <- sd(x)
-  ##mymasks <- masks(x)
-  ##myoutliers <- outliers(x)
-  ##if statement make sure sd is actually somethings..
-  ##same for other slots
-  ##if(dim(mysd)[1]==ncols*nrows & dim(mysd)>=i)
-  ##  mysd <- matrix(mysd[,i],ncols,nrows)
-  ##if(dim(mymasks)[1]==ncols*nrows & dim(mymasks)>=i)
-  ##  mymasks <- matrix(mymasks[,i],ncols,nrows)
-  ##if(dim(myoutliers)[1]==ncols*nrows & dim(myoutliers)>=i)
-  ##  myoutliers <- matrix(myoutliers[,i],ncols,nrows)
-  
-  ##cel <- new("Cel",
-  ##           intensity=matrix(intensity(x)[i],ncols,nrows),
-  ##           sd=mysd,
-  ##           masks=mymaks,
-  ##          outliers=myoutliers,
-  ##           name=sampleNames(x)[i],
-  ##           cdfName=x@cdfName,
-  ##           history=history(x)[[i]])
-  ##},
-  ##where=where)
-  
-  ##this used to be part of "[[ 
-  ##DEBUG: NA ?! watch this in next versions of R
-              ## spotsd stuff to be really removed ?
-              ##if (is.na.spotsd(x)) {
-              #mysd <- matrix()
-              ##} else {
-              ##  mysd <- spotsd(x)[, , i]
-              ##}
-              ##oldim <- dim(intensity(x))
-              ##dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
-              ##new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=sampleNames(x)[i], cdfName=x@cdfName, outliers=outliers(x)[[i]], masks=masks(x)[[i]], history=history(x)[[i]]) ## commented out becuase no 'outliers' or 'masks'.
-              #cel <- new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=sampleNames(x)[i], cdfName=x@cdfName, outliers=matrix(), masks=matrix(), history=history(x)[[i]])
-              #dim(intensity(x)) <- oldim
-              #return(cel)
-            #},
-            #where=where)
+##be used in the "[[" method
+##mysd <- sd(x)
+##mymasks <- masks(x)
+##myoutliers <- outliers(x)
+##if statement make sure sd is actually somethings..
+##same for other slots
+##if(dim(mysd)[1]==ncols*nrows & dim(mysd)>=i)
+##  mysd <- matrix(mysd[,i],ncols,nrows)
+##if(dim(mymasks)[1]==ncols*nrows & dim(mymasks)>=i)
+##  mymasks <- matrix(mymasks[,i],ncols,nrows)
+##if(dim(myoutliers)[1]==ncols*nrows & dim(myoutliers)>=i)
+##  myoutliers <- matrix(myoutliers[,i],ncols,nrows)
 
-  ##if we ever want to add sd, masks, etc.. slots we can use this
-  ## in the [[<- replacement method
-  ##mysd <- sd(x)
-  ##mymasks <- masks(x)
-  ##myoutliers <- outliers(x)
-  ##if statement make sure sd is actually somethings..
-  ##if it is we put what should be put same for other slots
-  ##if(dim(mysd)[1]==ncols*nrows & dim(mysd)>=i)
-  ##  sd(x)[,i] <- as.vector(sd(value))
-  ##if(dim(mymasks)[1]==ncols*nrows & dim(mymasks)>=i)
-  ##  masks(x)[,i] <- as.vector(masks(value))
-  ##if(dim(myoutliers)[1]==ncols*nrows & dim(myoutliers)>=i)
-  ##  outliers(x)[,i] <- as.vector(outliers(value))
-  ##},where=where)
-  
-  ##oldim <- dim(intensity(x))
-  ##dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
-  ##intensity(x)[,i] <- intensity(value)
+##cel <- new("Cel",
+##           intensity=matrix(intensity(x)[i],ncols,nrows),
+##           sd=mysd,
+##           masks=mymaks,
+##          outliers=myoutliers,
+##           name=sampleNames(x)[i],
+##           cdfName=x@cdfName,
+##           history=history(x)[[i]])
+##},
+##where=where)
+
+##this used to be part of "[[ 
+##DEBUG: NA ?! watch this in next versions of R
+## spotsd stuff to be really removed ?
+##if (is.na.spotsd(x)) {
+                                        #mysd <- matrix()
+##} else {
+##  mysd <- spotsd(x)[, , i]
+##}
+##oldim <- dim(intensity(x))
+##dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
+##new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=sampleNames(x)[i], cdfName=x@cdfName, outliers=outliers(x)[[i]], masks=masks(x)[[i]], history=history(x)[[i]]) ## commented out becuase no 'outliers' or 'masks'.
+                                        #cel <- new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=sampleNames(x)[i], cdfName=x@cdfName, outliers=matrix(), masks=matrix(), history=history(x)[[i]])
+                                        #dim(intensity(x)) <- oldim
+                                        #return(cel)
+                                        #},
+                                        #where=where)
+
+##if we ever want to add sd, masks, etc.. slots we can use this
+## in the [[<- replacement method
+##mysd <- sd(x)
+##mymasks <- masks(x)
+##myoutliers <- outliers(x)
+##if statement make sure sd is actually somethings..
+##if it is we put what should be put same for other slots
+##if(dim(mysd)[1]==ncols*nrows & dim(mysd)>=i)
+##  sd(x)[,i] <- as.vector(sd(value))
+##if(dim(mymasks)[1]==ncols*nrows & dim(mymasks)>=i)
+##  masks(x)[,i] <- as.vector(masks(value))
+##if(dim(myoutliers)[1]==ncols*nrows & dim(myoutliers)>=i)
+##  outliers(x)[,i] <- as.vector(outliers(value))
+##},where=where)
+
+##oldim <- dim(intensity(x))
+##dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
+##intensity(x)[,i] <- intensity(value)
 #### spotsd ?
 ####if ((! is.na.spotsd(x)) & (spotsd(value) != c(NA)))
 ####  spotsd(x)[, , i] <- spotsd(value)
-  ##x@name[i] <- sampleNames(value)
-  ##
-  ##if (x@cdfName != value@cdfName)
-  ## warning("cdfName mismatch !")
-  
-  ##outliers(x)[[i]] <- outliers(value)
-  ##masks(x)[[i]] <- masks(value)
-  ##history(x)[[i]] <- history(value)
-  ##dim(intensity(x)) <- oldim
-  ##return(x)
-  ##},
-  ##where=where)
-  
+##x@name[i] <- sampleNames(value)
+##
+##if (x@cdfName != value@cdfName)
+## warning("cdfName mismatch !")
+
+##outliers(x)[[i]] <- outliers(value)
+##masks(x)[[i]] <- masks(value)
+##history(x)[[i]] <- history(value)
+##dim(intensity(x)) <- oldim
+##return(x)
+##},
+##where=where)
+

@@ -11,7 +11,9 @@
   ## (*) : a probe pair set is the set of probes pairs(**) related to an affyid. Generally a
   ##       a probe pair set has 20 elements.
   ## (**): a probe pair (or atom) is a pair of PM/MM values
-  ##      
+  ##
+  
+  if (debug.affy123) cat("-->initProbeSet\n")
   
   setClass("ProbeSet",
            representation(pm="matrix", mm="matrix"),
@@ -87,11 +89,11 @@
 
   ## method express.summary.stat
   if( !isGeneric("express.summary.stat"))
-    setGeneric("express.summary.stat", function(x,method, ...)#bg.correct, ...)
+    setGeneric("express.summary.stat", function(x, pmcorrect, method, ...)
                standardGeneric("express.summary.stat"), where=where)
   
-  setMethod("express.summary.stat",signature(x="ProbeSet", method="character", pm.correct="character"),
-            function(x, method, pm.correct, param.pm.correct=list(),
+  setMethod("express.summary.stat",signature(x="ProbeSet",  pmcorrect="character", method="character"),
+            function(x, method, pmcorrect, pmcorrect.param=list(),
                      param.method=list()) {
             
               ## simple for system to let one add background correction methods
@@ -103,7 +105,8 @@
               
               ## NOTE: this could change...
               #m <- do.call(bg.correct, c(alist(x@pm, x@mm), param.bg.correct))
-              r <- do.call(methodname, c(alist(x@pm), param.method))
+              pm.corrected <- do.call(pmcorrect, c(alist(x@pm, x@mm), param.bg.correct))
+              r <- do.call(methodname, c(alist(pm.corrected), param.method))
               
               ##DEBUG: name stuff to sort
               #names(r) <- names(allprobes)

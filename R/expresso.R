@@ -3,8 +3,10 @@ expresso <- function(afbatch,
                      normalize.method = NULL,
                      normalize.param=list(),
                      bg.correct=TRUE,
-                     bg.method = NULL,
-                     ##bg.param = list(),
+                     bgcorrect.method = NULL,
+                     bgcorrect.param = list(),
+                     pmcorrect.method = NULL,
+                     pmcorrect.param = list(),
                      summary.method = NULL,
                      summary.param = list(),
                      summary.subset = NULL,
@@ -25,9 +27,9 @@ expresso <- function(afbatch,
   ###background stuff must be added before normalization!
   
   ## -- background correction method
-  if (is.null(bg.method)) {
+  if (is.null(bgcorrect.method)) {
     if (widget) {
-      bg.method <- pwidget.selector(bg.correct.methods,
+      bgcorrect.method <- pwidget.selector(bgcorrect.methods,
                                     title = "Method for background correction")
                                     ##,choices.help = NULL)
       #bg.method <- paste("bg.correct", bg.method, sep=".")
@@ -43,15 +45,27 @@ expresso <- function(afbatch,
       n.methods <- normalize.methods(afbatch)
       normalize.method <- pwidget.selector(n.methods,
                                            title = "Method for normalization")
-                                           ###choices.help = paste("normalize", n.methods,  sep="."))##took this out cause netscape popping up was annoying me
-                                          
-    rm(n.methods)
+      ##choices.help = paste("normalize", n.methods,  sep="."))##took this out cause netscape popping up was annoying me
+      
+      rm(n.methods)
     } else {
       stop(paste("normalization method missing. Try one of:",
                  normalize.methods(afbatch), sep="\n"))
     }
   }
 
+  ## -- background correction method
+  if (is.null(pmcorrect.method)) {
+    if (widget) {
+      pmcorrect.method <- pwidget.selector(pmcorrect.methods,
+                                    title = "Method for PM correction")
+      ##,choices.help = NULL)
+      #bg.method <- paste("bg.correct", bg.method, sep=".")
+    } else {
+      stop("pmcorrect.method missing")
+    }
+  }
+  
   ## -- expression method
   if (is.null(summary.method)) {
     if (widget) {
@@ -62,16 +76,17 @@ expresso <- function(afbatch,
     } else {
       stop("summary.method method missing")
     }
-    
   }
+  
   ## -- summary of what will be done
   if (verbose) {
     if (bg.correct){
-      cat("background correction:", bg.method, "\n")
+      cat("background correction:", bgcorrect.method, "\n")
     }
     if (normalize) {
       cat("normalization:", normalize.method, "\n")
     }
+    cat("PM/MM correction :", pmcorrect.method, "\n")
     cat("expression values:", summary.method, "\n")
   }
 
@@ -88,12 +103,12 @@ expresso <- function(afbatch,
   
   ## --- reading CDF (if needed)
 
-  ## -- background correcet (if needed)
+  ## -- background correct (if needed)
   if (bg.correct) {
     
     if (verbose)
       cat("background correcting...")
-    afbatch <- do.call(bg.method, c(list(afbatch)))
+    afbatch <- bg.correct(afbatch, method=bgcorrect.method, bgcorrect.param)
     if (verbose)
       cat("done.\n")
   }
@@ -103,17 +118,16 @@ expresso <- function(afbatch,
     
     if (verbose)
       cat("normalizing...")
-    afbatch <- do.call("normalize", c(list(afbatch, normalize.method), normalize.param))
+    afbatch <- normalize(afbatch, normalize.method, normalize.param)
     if (verbose)
       cat("done.\n")
-  }
-  
+  }  
   
   eset <- computeExprSet(afbatch, #bg.method=bg.method,
-                         summary.method=summary.method, ids=summary.subset)
+                         summary.method=summary.method, pmcorrect.method= pmcorrect.method, ids=summary.subset,
+                         summary.param=summary.param, pmcorrect.param=pmcorrect.param)
   
   ##  if (! is.null(phenodata)), ##must assume we get it 
-
   
   return(eset)
 }

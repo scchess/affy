@@ -1,11 +1,11 @@
 .initNormalize <- function(where, all.affy) {
   if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
-
-  #all.affy <- ls(where)
   
   ## this could move into the respective methods of AffyBatch later
+
+  start <- nchar("normalize.AffyBatch.")
   assign("normalize.AffyBatch.methods",
-         substr(all.affy[grep("normalize\.AffyBatch\.*", all.affy)], 21, 100),
+         substr(all.affy[grep("normalize\.AffyBatch\.*", all.affy)], start+1, 100),
          envir=as.environment(where)) 
 }
 
@@ -26,15 +26,17 @@
   ##assign("bg.correct.methods",
   ##       substr(ls(where)[grep("bg.correct\.*", ls(where))], 12,100),
   ##       envir=as.environment(where))
-  assign("bg.correct.methods",
-         all.affy[grep("bg.correct\.*", all.affy)],
+  start <- nchar("bg.correct.")
+  assign("bgcorrect.methods",
+         substr(all.affy[grep("bg\.correct\.*", all.affy)], start+1, 100),
          envir=as.environment(where))
        }
 
 .initPmCorrect <- function(where, all.affy) {
   if (debug.affy123) cat("-->detecting pm correction methods from naming convention\n")
-  assign("pm.correct.methods",
-         all.affy[grep("pm.correct\.*", all.affy)],
+  start <- nchar("pmcorrect.")
+  assign("pmcorrect.methods",
+         substr(all.affy[grep("pmcorrect\.*", all.affy)], start+1, 100),
          envir=as.environment(where))
 }
 
@@ -51,7 +53,8 @@
   all.affy <- ls(where)
   
   ## DEBUG flag
-  assign("debug.affy123", FALSE, envir=as.environment(where))
+  assign("debug.affy123", TRUE, envir=as.environment(where))
+  ##assign("debug.affy123", FALSE, envir=as.environment(where))
   
   message <- TRUE
   

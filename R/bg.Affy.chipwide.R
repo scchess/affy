@@ -1,9 +1,9 @@
-bg.Affy.chipwide <- function(object, griddim=16)
+bg.correct.Affy.chipwide <- function(object, griddim=16)
 {
    nchips <- length(object)
 
-   pm.index <- indexProbes(object, "pm")
-   mm.index <- indexProbes(object, "mm")
+   pm.index <- unique(unlist(indexProbes(object, "pm")))
+   mm.index <- unique(unlist(indexProbes(object, "mm")))
    
    rows <- object@nrow
    cols <- object@ncol

@@ -35,16 +35,27 @@ bg.adjust <- function(pm,n.pts=2^14){
 
 bg.correct.none <- function(object) object
 
-bg.correct.subtractmm <- function(object){
-  pm(object) <- pm(object) - mm(object)
-  return(object)
-}
+##bg.correct.subtractmm <- function(object){
+##  pm(object) <- pm(object) - mm(object)
+##  return(object)
+##}
 
 bg.correct.rma <- function(object){
   pm(object) <- apply(pm(object),2,bg.adjust)
   return(object)
 }
 
+
+## --- pmcorrect things
+
+pmcorrect.subtractmm <- function(object){
+  pm.corrected <- pm(object) - mm(object)
+  return(pm.corrected)
+}
+
+pmcorrect.pmonly <- function(object) {
+  return(pm(object))
+}
 
 
 
