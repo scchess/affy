@@ -54,7 +54,7 @@ rma <- function(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=T
 	exprs <-
   	.Call("rma_c_complete_copy", pm(object,subset),
   	mm(object,subset), probeNames(object,subset), ngenes,
-  	body(bg.dens), new.env(), normalize, background, Cbgversion,
+  	body(bg.dens), new.env(), normalize, background, bgversion,
   	PACKAGE="affy")
   }
   colnames(exprs) <- sampleNames(object)
