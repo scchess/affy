@@ -89,8 +89,10 @@
   }
   
   ##affy$urls <- list( bioc = "http://www.bioconductor.org")
+  probesloc.first <- list(what="package", where=NULL, probesloc.autoload=TRUE)
+  probesloc.second <- list(what="environment", where=as.environment(-1))
   affy <- list(compress.cdf=FALSE, compress.cel=FALSE,
-               probesloc.what="package", probesloc.where=NULL, probesloc.autoload=TRUE)
+               probesloc = list(probesloc.first, probesloc.second))
   class(affy) <- "BioCPkg"
   
   BioC <- getOption("BioC")

@@ -1,15 +1,28 @@
 read.affybatch <- function(..., filenames=character(0),
                            ##sd=FALSE,
                            phenoData=new("phenoData"),
-                           description=new("miame"),
+                           description=NULL,
                            notes="",
                            compress=getOption("BioC")$affy$compress.cel,
                            rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                            hdf5=FALSE, hdf5FilePath=NULL,
+                           widget = FALSE,
                            verbose=FALSE) {
   
   auxnames <- as.list(substitute(list(...)))[-1]
-  filenames <- .Primitive("c")(filenames, auxnames)
+  widgetfiles <- character(0)
+  if (widget) {
+    widgetfiles <- fileBrowser(textToShow="Choose CEL files",
+                               testFun=hasSuffix("[cC][eE][lL]"))
+  }
+  filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
+
+  if (widget && is.null(description)) {
+    description <- tkMIAME()
+  }
+  if (is.null(description))
+    description <- new("miame")
+  
   n <- length(filenames)
   
   ## error if no file name !

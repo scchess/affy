@@ -48,45 +48,52 @@
                standardGeneric("getCdfInfo"), where=where)
 
   setMethod("getCdfInfo", signature("AffyBatch"),
-            function (object, what=getOption("BioC")$affy$probesloc.what,
-                      where=getOption("BioC")$affy$probesloc.where) {
+            function (object, how=getOption("BioC")$affy$probesloc) {
+              ## "how" is a list. each element of the list must have an element
+              ## tagged "what" and an element tagged "where"
               ## "what" can be "package", "file" or "environment"
               ## "where" is where it can be found
               
-              if (what == "package") {
-                loc <- .find.package(object@cdfName, lib.loc=where, quiet=TRUE)
+              for (i in length(how)) {
+                what <- how[[i]]$what
+                where <- how[[i]]$where
                 
-                if (identical(loc, character(0)))
-                  stop(paste("AffyBatch: Looked for probes information in the package ", object@cdfName, "but could not find it.\n"))
-                ##may be an option to try to autoload the package from
-                ##the bioconductor website woud be nice here
+                if (what == "package") {
+                  loc <- .find.package(object@cdfName, lib.loc=where, quiet=TRUE)
+                  
+                  if (identical(loc, character(0)))
+                    stop(paste("AffyBatch: Looked for probes information in the package ", object@cdfName, "but could not find it.\n"))
+                  ##may be an option to try to autoload the package from
+                  ##the bioconductor website woud be nice here
+                  ## there is already a "how[[i]]$autoload" available
+                  
+                  if (length(loc) > 1)
+                    warning(paste("several packages with a matching name. Using the one at", loc[1]))
+                  
+                  do.call("library", list(object@cdfName, lib.loc=dirname(loc[1])))
+                  return(get(name, envir=as.environment(paste("package:", object@cdfName, sep=""))))
+                  ##object@cdfInfo <<- get(name, envir=as.environment(paste("package:",name, sep="")))
+                }
+              
+                if (what == "file") {
+                  cdf <- read.cdffile(file.path(path.expand(where), object@cdfName))
+                  ## ---> extra paranoia <---
+                  if (cdf@cdfName != object@cdfName)
+                    warning(paste("The CDFALSE file identifies as", cdf@cdfName,
+                                  "while you probably want", object@cdfName))
+                  ## ---> end <---
+                  return(getLocations.Cdf(cdf))
+                  ##object@cdfInfo <<- getLocations.Cdf(cdf)
+                  rm(cdf)
+                  gc() # since cdf can be rather large
+                }
                 
-                if (length(loc) > 1)
-                  warning(paste("several packages with a matching name. Using the one at", loc[1]))
-
-                do.call("library", list(object@cdfName, lib.loc=dirname(loc[1])))
-                return(get(name, envir=as.environment(paste("package:", object@cdfName, sep=""))))
-                ##object@cdfInfo <<- get(name, envir=as.environment(paste("package:",name, sep="")))
+                if (what == "environment") {
+                  return(as.environment(get(object@cdfName, where)))
+                  ##object@cdfInfo <<- as.environment(get(name, where))
+                }
               }
-              
-              if (what == "file") {
-                cdf <- read.cdffile(file.path(path.expand(where), object@cdfName))
-                ## ---> extra paranoia <---
-                if (cdf@cdfName != object@cdfName)
-                  warning(paste("The CDFALSE file identifies as", cdf@cdfName,
-                                "while you probably want", object@cdfName))
-                ## ---> end <---
-                return(getLocations.Cdf(cdf))
-                ##object@cdfInfo <<- getLocations.Cdf(cdf)
-                rm(cdf)
-                gc() # since cdf can be rather large
-              }
-
-              if (what == "environment") {
-                return(as.environment(get(object@cdfName, where)))
-                ##object@cdfInfo <<- as.environment(get(name, where))
-              }
-              
+              stop(paste("Informations about probes locations for ", object@cdfName, " could not be found"))
             },
             where=where)
 
@@ -384,24 +391,25 @@
               ## change dimension to re-use Celc.container related code
               oldim <- dim(intensity(object))
               dim(intensity(object)) <- c(object@nrow, object@ncol, object@nexp)
-              do.call(method, alist(object, ...))
+              object <- do.call(method, alist(object, ...))
               dim(intensity(object)) <- oldim
+              return(object)
             },
             where=where)
 
   
   ## expression value computation
-  if (debug.affy123) cat("--->normalize\n")
-  if( !isGeneric("generatExprSet") )
-    setGeneric("generateExprSet", function(x, cdf, method, bg.correct, ...)
-               standardGeneric("generateExprSet"),
+  if (debug.affy123) cat("--->computeExprSet\n")
+  if( !isGeneric("computeExprSet") )
+    setGeneric("computeExprSet", function(x, bg.method, summary.method, ...)
+               standardGeneric("computeExprSet"),
                where=where)
   
-  setMethod("generateExprSet", signature(x="AffyBatch", cdf="missing", method="character", bg.correct="character"),
-            function(x, method, bg.correct, ids=NULL, verbose=TRUE, param.bg.correct=list(), param.summary=list()) {
+  setMethod("computeExprSet", signature(x="AffyBatch", bg.method="character", summary.method="character"),
+            function(x, bg.method, summary.method, ids=NULL, verbose=TRUE, bg.param=list(), summary.param=list()) {
               
               
-              ##DEBUG: check the existence of method and bg.correct HERE !
+              ##DEBUG: check the existence of bg.method and summary.method HERE !
               n <- length(x)
 
               ## if NULL compute for all
@@ -431,10 +439,10 @@
               ##                  as.integer(atom(cdf)), as.integer(! pmormm(cdf)),
               ##                  as.integer(max(cdf@name, na.rm=TRUE)+1) )
 
-              if (verobse) cat(".....done.\n")
+              if (verbose) cat(".....done.\n")
               
               ##DEBUG: hackish (put global adjsutment names below
-              if (bg.correct %in% c("bg.correct.rma")) {
+              if (bg.method %in% c("bg.correct.rma")) {
                 if (verbose) cat("computing parameters for global background adjustement.....")
                 all.l.pm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,1]))
                 all.l.mm.mat <- unlist(lapply(multiget(ids, env=getCdfInfo(x)),  function(x) if (ncol(x) == 2) x[,2]))
@@ -446,7 +454,7 @@
                   notNA <- !(is.na(intensity(x)[, i][all.l.pm.mat]) | is.na(intensity(x)[, i][all.l.mm.mat]))
                   bg.parameters(intensity(x)[, i][notNA], intensity(x)[, i][notNA])
                 })
-                param.bg.correct$all.param <- all.param
+                bg.param$all.param <- all.param
                 if (verbose) cat(".....done.\n")
               }
               
@@ -457,7 +465,7 @@
               
               ## loop over the ids
               mycall <- as.call(c(getMethod("express.summary.stat", signature=c("PPSet.container","character","character")),
-                                  list(c.pps, method=method, bg.correct=bg.correct, param.bg.correct=param.bg.correct, param.method=param.summary)))
+                                  list(c.pps, method=summary.method, bg.correct=bg.method, param.bg.correct=bg.param, param.method=summary.param)))
 
               options(show.error.messages = FALSE)
               on.exit(options(show.error.messages = TRUE))

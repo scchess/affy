@@ -12,6 +12,7 @@ read.affybatch(..., filenames = character(0),
                compress = getOption("BioC")$affy$compress.cel,
                rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE,
                hdf5 = FALSE, hdf5FilePath = NULL,
+               widget=TRUE,
                verbose = FALSE)
 }
 \arguments{
@@ -26,6 +27,7 @@ read.affybatch(..., filenames = character(0),
   \item{rm.extra}{ if \code{TRUE}, overrides what is in \code{rm.mask} and \code{rm.oultiers} }
   \item{hdf5}{ use of hdf5 ? }
   \item{hdf5FilePath}{ a filename to use with hdf5 }
+  \item{widget}{a logical}
   \item{verbose}{ verbosity flag }
 }
 \details{
