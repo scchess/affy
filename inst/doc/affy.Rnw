@@ -510,7 +510,6 @@ Currently the \Rfunction{rma} function implements RMA in the following manner
 
 The \Rfunction{rma} function is likely to be improved and extended in the
 future as the RMA method is fine-tuned.
-}.
 
 \newpage
 
@@ -539,6 +538,7 @@ describes the data set.
 library(affydata)
 data(Dilution)
 @
+
 <<>>=
 Dilution
 @
