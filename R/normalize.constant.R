@@ -27,7 +27,7 @@ normalize.Plob.constant <- function(plob, refindex=1, FUN=mean, na.rm=TRUE) {
   refconstant <- FUN(c(plob@pm[, refindex], plob@mm[, refindex]), na.rm=na.rm)
 
   ## loop over the arrays (excluding the reference)
-  for (i in (1:plob@nchips)[-refindex]) {
+  for (i in (1:nchips(plob))[-refindex]) {
     ## only using the PM -- this is an example
     
     plob@pm[,i] <- normalize.constant(plob@pm[,i], refconstant, FUN=FUN, na.rm=na.rm)
