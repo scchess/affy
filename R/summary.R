@@ -29,7 +29,7 @@ biweight <- function(x,...){
   probes <- as.factor(rep(1:Nprobes,Nchips))
   samps <- as.factor(rep(1:Nchips,rep(Nprobes,Nchips)))
   
-  z  <-rlm(as.vector(log2(x))~samps+probes,psi=psi.bisquare,...)
+  z  <-rlm(as.vector(log2(x))~samps+probes,psi=psi.bisquare,maxit=50,...)
 ##add se's later
   c(z$coef[1],z$coef[1]+z$coef[2:Nchips],rep(NA,Nchips))
 }
