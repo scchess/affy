@@ -257,7 +257,7 @@ setMethod("pm","AffyBatch",
               return(probes(object, "pm", genenames, LISTRUE=LISTRUE))
             }
           })
-          
+
 if( is.null(getGeneric("pm<-") ))
   setGeneric("pm<-", function(object, value)
              standardGeneric("pm<-"))
@@ -268,7 +268,7 @@ setReplaceMethod("pm", "AffyBatch", function(object, value){
   psets<- as.list(cdfname)
   psets<- psets[order(names(psets))]
   pmIndex <-unlist(sapply(psets, function(x) x[,1]),use.names=FALSE)
-  
+
   exprs(object)[pmIndex,] <- value
   dimnames(exprs(object)) <- Dimnames
   object
@@ -294,7 +294,7 @@ setMethod("mm",signature("AffyBatch"),
               probes(object, "mm", genenames, LISTRUE=LISTRUE)
             }
           })
-          
+
 
 if( is.null(getGeneric("mm<-") ))
   setGeneric("mm<-", function(object, value)
@@ -513,13 +513,13 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
               pbt <- new("ProgressBarText", length(ids), barsteps = as.integer(20))
               open(pbt)
             }
-            
+
             for (i in seq(along=ids)) {
 
               if (verbose) {
                 update(pbt)
               }
-              
+
               id <- ids[i]
 
               if (! exists(id, envir=CDFINFO)) {
@@ -532,14 +532,14 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                   l.mm <- loc[ ,2]
                 else
                   l.mm <- integer()
-                
+
                 np <- length(l.pm)
-                
+
                 ##names are skipped
-                
+
                 c.pps@pm <- intensity(x)[l.pm, , drop=FALSE]
                 c.pps@mm <- intensity(x)[l.mm, , drop=FALSE]
-                
+
                 ## generate expression values
                 ## (wrapped in a sort of try/catch)
                 mycall[[2]] <- c.pps
@@ -551,13 +551,13 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
               } else {
                 pps.warnings[[i]] <- ev[1]
               }
-              
+
             }
 
             if (verbose) {
               close(pbt)
             }
-            
+
             dimnames(exp.mat) <- list(ids, sampleNames(x))
             dimnames(se.mat) <- list(ids, sampleNames(x))
             eset <- new("exprSet",
@@ -612,7 +612,7 @@ if( is.null(getGeneric("boxplot")))
 setMethod("boxplot",signature(x="AffyBatch"),
           function(x,which="both",range=0,...){
             tmp <- description(x)
-            if(class(tmp)=="MIAME") main <- tmp@title
+            if (is(tmp, "MIAME") main <- tmp@title
 
             tmp <- unlist(indexProbes(x,which))
             tmp <- tmp[seq(1,length(tmp),len=5000)]

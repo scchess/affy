@@ -122,7 +122,7 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
   cdfInfo<- as.list(getCdfInfo(Data))
   cdfInfo <- cdfInfo[order(names(cdfInfo))]
 
-  
+
   .Call("read_probeintensities", filenames,
         compress, rm.mask, rm.outliers, rm.extra, ref.cdfName,
         dim.intensity, verbose, cdfInfo,which, PACKAGE="affy")
@@ -143,7 +143,7 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
 
     ##first figure out filenames
   auxnames <- unlist(as.list(substitute(list(...)))[-1])
-  
+
   if (widget){
     require(tkWidgets)
     widgetfiles <- fileBrowser(textToShow="Choose CEL files",
@@ -168,37 +168,37 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
       sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
     }
   }
-  
+
   if(is.character(phenoData)) ##if character read file
     phenoData <- read.phenoData(filename=phenoData)
   else{
-    if(class(phenoData)!="phenoData"){
-      if(widget){
-        require(tkWidgets)
-        phenoData <- read.phenoData(sampleNames=sampleNames,widget=TRUE)
+      if (! is(phenoData, "phenoData")) {
+          if(widget){
+              require(tkWidgets)
+              phenoData <- read.phenoData(sampleNames=sampleNames,widget=TRUE)
+          }
+          else
+              phenoData <- read.phenoData(sampleNames=sampleNames,widget=FALSE)
       }
-      else
-        phenoData <- read.phenoData(sampleNames=sampleNames,widget=FALSE)
-    }
   }
 
   sampleNames <- rownames(pData(phenoData))
-  
+
   ##get MIAME information
   if(is.character(description)){
     description <- read.MIAME(filename=description,widget=FALSE)
   }
   else{
-    if(class(description)!="MIAME"){
-      if(widget){
-        require(tkWidgets)
-        description <- read.MIAME(widget=TRUE)
+      if (! is(description, "MIAME")) {
+          if(widget){
+              require(tkWidgets)
+              description <- read.MIAME(widget=TRUE)
+          }
+          else
+              description <- new("MIAME")
       }
-      else
-        description <- new("MIAME")
-    }
   }
-  
+
   ##MIAME stuff
   description@preprocessing$filenames <- filenames
   if(exists("tksn")) description@samples$description <- tksn[,2]
@@ -225,7 +225,7 @@ ReadAffy <- function(..., filenames=character(0),
                              sampleNames=sampleNames,
                              phenoData=phenoData,
                              description=description)
-  
+
   ##and now we are ready to read cel files
   ret <- read.affybatch(filenames=l$filenames,
                         phenoData=l$phenoData,

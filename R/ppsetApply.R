@@ -1,11 +1,11 @@
 ppsetApply <- function(abatch, FUN, genenames=NULL, ...) {
 
-  if (! inherits(abatch, "AffyBatch"))
-    stop("abatch must be inheriting from class AffyBatch")
+    if (! is(abatch, "AffyBatch"))
+        stop("abatch must be inheriting from class AffyBatch")
 
-  if (! inherits(FUN, "function"))
-    stop("FUN must be a function")
-  
+    if (! is(FUN, "function"))
+        stop("FUN must be a function")
+
   cdfenv <- getCdfInfo(abatch)
 
   if (is.null(genenames))
@@ -15,12 +15,12 @@ ppsetApply <- function(abatch, FUN, genenames=NULL, ...) {
   e1 <- new.env(parent = environment(FUN))
   multiassign(names(pData(abatch)), pData(abatch), env = e1)
   environment(FUN) <- e1
-  
+
   ppset <- new("ProbeSet", pm=matrix(), mm=matrix())
 
   r <- vector("list", length=length(genenames))
   names(r) <- genenames
-  
+
   for (i in seq(along=genenames)) {
     ## use mget to get NA when genenames[i] not found
     probes.i <- mget(genenames[i], envir = cdfenv, ifnotfound = NA)[[1]]
