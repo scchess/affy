@@ -54,21 +54,45 @@ library(affy)
 \section*{Why and how}
 
 The {\it cdfenvs} are associative data structures to map efficiently a
-{\it probeset id} with indices for the corresponding probes. These
-indices are used to subset a matrix storing probe level
+{\it probeset id} with indexes for the corresponding probes. These
+indexes are used to subset a matrix storing probe level
 intensities. Technically, a {\it cdfenv} is a {\bf R} \Robject{environment}.
 The functions \Rfunction{get} and \Rfunction{multiget} (in \Rpackage{Biobase})
 are a convenient way to access what is in an environment.
 Expert users only will consider modifying what is those environment.
 
-In the case of {\it Affynetrix} data, the {\it cdfenvs} are built from
+In the case of {\it Affymetrix} data, the {\it cdfenvs} are built from
 the {\it .CDF} files. The package \Rpackage{makecdfenvs} is dedicated
-to the building of packages with {\it cdfenvs}. The simpliest way
+to the building of packages with {\it cdfenvs}. The simplest way
 to proceed is to have the package needed for the analysis installed.
-A number of {\it cdfenv} package for {\it Affymetrix} chips are available for download on
- the {\it Bioconductor} data packages repository. This release of the
-\Rpackage{affy} package has an option to allow automatic downloading
-and install of a {\it cdfenv} that would be found missing during an analysis.
+A number of {\it cdfenv} package for {\it Affymetrix} chips are
+available for download on the {\it Bioconductor} data packages repository. 
+This release (1.2.x) of the \Rpackage{affy} package has an option to
+allow automatic downloading and install of a {\it cdfenv} that would
+be found missing during an analysis. However, if you are using an {\it
+  unconventional} chip, it is possible that {\it  
+  Bioconductor} has not created the appropriate package for your {\it
+  .CDF} file. We recommend that you use the package
+\Rpackage{makecdfenvs} to create the appropriate source code for the
+{\it cdfenv} package you need. For Microsoft Windows binaries you need
+to do more, see \url{http://www.stats.ox.ac.uk/pub/R/rw-FAQ.html}. If
+you contribute the package to {\it Bioconductor} a windows binary
+will be made for you (and everybody else).  
+
+If you do not care about mapping {\it probeset id}s with indexes 
+and only want to deal with intensities, you can
+use the following work around:
+
+\begin{Sinput}
+R> x <- ReadAffy() ##read-in your cel-file info
+R> assign(x@cdfName, new.env() )
+\end{Sinput}
+
+The affy package will then find the empty environment defined by
+\verb+x@cdfName+ and will not try to find a package. But beware: if
+you do this and then install the appropriate package, you will
+continue to use the empty environment until it is removed.
+
 
 The complete structure of the options for the package is not
 completely described, but one can refer the source code for the function
@@ -89,9 +113,9 @@ print.probesloc.opt <- function(affy.opt, fields) {
   l <- lapply(l, function(x) {
                    unk <- is.na(names(x))
                    x[unk] <- rep(list(unk=NA), sum(unk))
-		   x <- lapply(x, function(y) if (is.null(y)) "NULL"
-		   else y )
-		   return(x)
+                   x <- lapply(x, function(y) if (is.null(y)) "NULL"
+                   else y )
+                   return(x)
                  }
               )
   ul <-  as.character(unlist(l))
@@ -122,11 +146,11 @@ deactivate.autoload <- function(affy.opt) {
               function(x) {
                 i <- names(x) == "autoload"
                 x[i] <- list(FALSE)
-		return(x)
+                return(x)
               })
     affy.opt$probesloc <- l
     return(affy.opt)
-  }	      
+  }           
 @ 
 It can be used to desactivate any automatic download:
 <<results=hide>>=

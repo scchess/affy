@@ -96,10 +96,6 @@
                   ##if we can get it from data dir. otherwise load package
                   
                   if(cdfname %in% do.call("data", list(package=where))$results[, 3]) {
-                    ##RI: package="affy" doesnt work it has to be package=affy
-                    ##    fix if you can
-                    ##LG: weird stuff with data... but I had a workaround...
-                    
                     where.env <- pos.to.env(match(paste("package:", where, sep = ""), search()))
                     
                     ## check if the cdfenv is already loaded. If not load it *in* the environment
@@ -189,30 +185,17 @@
                 }
               }
               
-              warning(paste("\nWe could not find and/or install the necessary probe location information.\n",
-                            "Here is a list of common problems and possible solutions:\n\n",
-                            "Problem 1: You are not connected to the Internet.\n",
-                            "Solution:  Try again once you connect to the Internet.\n\n",
-                            "Problem 2: You do not have the necessary permissions to install packages.\n",
-                            "Solution:  Ask your system administrator to install ",cleancdfname(object@cdfName), " package from:\n",
-                            "           http://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n\n",
-                            "Problem 3: Necessary package not available from Bioconductor.\n",
-                            "Solution:  Use makecdfenv package to create environment from CDF file.\n",
-                            "           See the dealing_with_cdfenvs vignette for more details\n\n",
-                            "NOTE: Once you install ",cleancdfname(object@cdfName)," you should not have this problem again.\n",
-                            sep=""))
-              warning(paste("To let you proceed for now, the dummy cdfenv:", object@cdfName,
-                            "will be created...\n"))
-              if (exists(object@cdfName, envir=.GlobalEnv)) {
-                stop("Could not create dummy environment. Giving up.")
-              }
-              assign(object@cdfName,
-                     new.env(parent=.GlobalEnv),
-                     envir=.GlobalEnv)
-              warning(paste("IMPORTANT: Once you install the correct package you may need to delete the object: ", 
-                            object@cdfName, ". We highly recommend you do. The command is:\n(command 'rm(",
-                            object@cdfName,")' )\n",sep=""))
-              return(get(object@cdfName, envir=.GlobalEnv))
+              stop(paste("\nWe could not find and/or install the necessary probe location information.\n",
+                         "Here is a list of common problems and possible solutions:\n\n",
+                         "Problem 1: You are not connected to the Internet.\n",
+                         "Solution:  Try again once you connect to the Internet.\n\n",
+                         "Problem 2: You do not have the necessary permissions to install packages.\n",
+                         "Solution:  Ask your system administrator to install ",cleancdfname(object@cdfName), " package from:\n",
+                         "           http://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n\n",
+                         "Problem 3: Necessary package not available from Bioconductor.\n",
+                         "Solution:  Use makecdfenv package to create environment from CDF file.\n\n",
+                         "NOTE: IF you install ",cleancdfname(object@cdfName)," you should not have this problem again.\nSee the dealing_with_cdfenvs vignette for more details\n",
+                         sep=""))
             }
             ,
             where=where)
@@ -252,7 +235,9 @@
               cat("number of samples=",length(object),"\n",sep="")
               cat("number of genes=", length(geneNames(object)), "\n",sep="")
               cat("annotation=",object@annotation,"\n",sep="")
-              cat("notes=",object@notes,"\n",sep="")
+              if(length(object@notes)>0)
+                if(nchar(object@notes)>0)
+                  cat("notes=",object@notes,"\n",sep="")
             },
             where=where)
 
