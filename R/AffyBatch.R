@@ -185,7 +185,7 @@ if( is.null(getGeneric("pmindex")))
 ##wrapper
 setMethod("pmindex", "AffyBatch",
             function(object, genenames=NULL)
-            indexProbes(object, "pm", genenames=genenames))
+          indexProbes(object, "pm", genenames=genenames))
 
   ##mmindex method
 if( is.null(getGeneric("mmindex")))
@@ -207,7 +207,7 @@ setMethod("probeNames","AffyBatch",
           function(object, genenames=NULL, mm=FALSE){
             if(mm) Index <- mmindex(object,genenames)
             else Index <- pmindex(object,genenames)
-            reps <- unlist(lapply(Index,length))
+            reps <- unlist(lapply(Index,length),use.names=FALSE)
             rep(names(Index),reps)
           })
 
@@ -242,17 +242,32 @@ if( is.null(getGeneric("pm") ))
              standardGeneric("pm"))
 
 setMethod("pm","AffyBatch",
-          function(object, genenames=NULL, LISTRUE=FALSE)
-          probes(object, "pm", genenames, LISTRUE=LISTRUE))
-
+          function(object, genenames=NULL, LISTRUE=FALSE){
+            if(is.null(genenames) & !LISTRUE){
+              cdfname <- getCdfInfo(object)
+              psets<- as.list(cdfname)
+              psets<- psets[order(names(psets))]
+              index <-unlist(sapply(psets, function(x) x[,1]),use.names=FALSE)
+              return(exprs(object)[index,])
+            }
+            else{
+              return(probes(object, "pm", genenames, LISTRUE=LISTRUE))
+            }
+          })
+          
 if( is.null(getGeneric("pm<-") ))
   setGeneric("pm<-", function(object, value)
              standardGeneric("pm<-"))
+
 setReplaceMethod("pm", "AffyBatch", function(object, value){
-  Dimnames <- dimnames(intensity(object))
-  pmIndex <- unlist(pmindex(object))
-  intensity(object)[pmIndex,] <- value
-  dimnames(intensity(object)) <- Dimnames
+  Dimnames <- dimnames(exprs(object))
+  cdfname <- getCdfInfo(object)
+  psets<- as.list(cdfname)
+  psets<- psets[order(names(psets))]
+  pmIndex <-unlist(sapply(psets, function(x) x[,1]),use.names=FALSE)
+  
+  exprs(object)[pmIndex,] <- value
+  dimnames(exprs(object)) <- Dimnames
   object
 })
 
@@ -264,17 +279,32 @@ if( is.null(getGeneric("mm") ))
              standardGeneric("mm"))
 
 setMethod("mm",signature("AffyBatch"),
-          function(object, genenames=NULL, LISTRUE=FALSE) probes(object, "mm", genenames, LISTRUE=LISTRUE))
+          function(object, genenames=NULL, LISTRUE=FALSE){
+            if(is.null(genenames) & !LISTRUE){
+              cdfname <- getCdfInfo(object)
+              psets<- as.list(cdfname)
+              psets<- psets[order(names(psets))]
+              index <-unlist(sapply(psets, function(x) x[,2]),use.names=FALSE)
+              return(exprs(object)[index,])
+            }
+            else{
+              probes(object, "mm", genenames, LISTRUE=LISTRUE)
+            }
+          })
+          
 
 if( is.null(getGeneric("mm<-") ))
   setGeneric("mm<-", function(object, value)
              standardGeneric("mm<-"))
 
 setReplaceMethod("mm", "AffyBatch", function(object, value){
-  Dimnames <- dimnames(intensity(object))
-  mmIndex <- unlist(mmindex(object))
-  intensity(object)[mmIndex,] <- value
-  dimnames(intensity(object)) <- Dimnames
+  Dimnames <- dimnames(exprs(object))
+  cdfname <- getCdfInfo(object)
+  psets<- as.list(cdfname)
+  psets<- psets[order(names(psets))]
+  mmIndex <-unlist(sapply(psets, function(x) x[,2]),use.names=FALSE)
+  exprs(object)[mmIndex,] <- value
+  dimnames(exprs(object)) <- Dimnames
   object
 })
 
