@@ -612,7 +612,7 @@ if( is.null(getGeneric("boxplot")))
 setMethod("boxplot",signature(x="AffyBatch"),
           function(x,which="both",range=0,...){
             tmp <- description(x)
-            if (is(tmp, "MIAME") main <- tmp@title
+            if (is(tmp, "MIAME")) main <- tmp@title
 
             tmp <- unlist(indexProbes(x,which))
             tmp <- tmp[seq(1,length(tmp),len=5000)]
