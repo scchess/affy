@@ -27,7 +27,7 @@ indices2xy <- function(i, nr=NULL, cel=NULL, abatch=NULL) {
   
   x <- i %% nr
   x[x == 0] <- nr
-  y <- i %/% nr + 1
+  y <- (i-1) %/% nr + 1
   xy <- cbind(x, y)
   colnames(xy) <- c("x", "y")
   return(xy)
