@@ -106,6 +106,8 @@
  **                some of the documentation
  ** Dec 2, 2003 - Fix up fopen commands (hopefully) for a problem
  **               on w32 machines with text files.
+ ** May 7, 2004 - make strncmp strncasecmp. No more problems
+ **               with cdf name capitalization. 
  **
  *************************************************************/
  
@@ -456,7 +458,7 @@ static int check_cel_file(char *filename, char *ref_cdfName, int ref_dim_1, int 
   findStartsWith(currentFile,"DatHeader",buffer);
   cur_tokenset = tokenize(buffer," ");
   for (i =0; i < tokenset_size(cur_tokenset);i++){
-    if (strncmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) == 0){
+    if (strncasecmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) == 0){
       break;
     }
     if (i == (tokenset_size(cur_tokenset) - 1)){
@@ -874,7 +876,7 @@ static int check_gzcel_file(char *filename, char *ref_cdfName, int ref_dim_1, in
   gzfindStartsWith(currentFile,"DatHeader",buffer);
   cur_tokenset = tokenize(buffer," ");
   for (i =0; i < tokenset_size(cur_tokenset);i++){
-    if (strncmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) == 0){
+    if (strncasecmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) == 0){
       break;
     }
     if (i == (tokenset_size(cur_tokenset) - 1)){
@@ -1639,7 +1641,7 @@ static int check_binary_cel_file(char *filename, char *ref_cdfName, int ref_dim_
     }
   }
 
-  if (strncmp(cdfName,ref_cdfName,strlen(ref_cdfName)) != 0){
+  if (strncasecmp(cdfName,ref_cdfName,strlen(ref_cdfName)) != 0){
     error("Cel file %s does not seem to be of %s type",filename,ref_cdfName);
   }
 
