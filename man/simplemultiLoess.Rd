@@ -11,18 +11,18 @@ simplemultiLoess(y, x, weights, span = 0.75, degree = 2,
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-See  \code{\link{simpleLoess}}.
+See  \code{\link[modreg]{loess}}.
 }
 \details{
-Please refer to  \code{\link{simpleLoess}}.}
+Please refer to  \code{\link[modreg]{loess}}.}
 
 }
 \value{
-See \code{\link{simpleLoess}}.
+See  \code{\link[modreg]{loess}}.
 }
 \references{Åstrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
 \author{Magnus Åstrand}
-\seealso{ \code{\link{simpleLoess}}}
+\seealso{ \code{\link[modreg]{loess}}}
 \keyword{internal}
 
 
