@@ -4,7 +4,7 @@
 bg.parameters <- function(pm, mm, n.pts=2^14){
 
   max.density <- function(x,n.pts){
-    aux <- density(x,kernel="epanechnikov",n=n.pts)
+    aux <- density(x, kernel="epanechnikov", n=n.pts, na.rm=TRUE)
     aux$x[order(-aux$y)[1]] 
   }
   
