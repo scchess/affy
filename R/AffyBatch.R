@@ -397,7 +397,7 @@
   setMethod("[[", "AffyBatch",
             function(x, i, j, ...) { ##no need for j
               return(new("Cel",
-                         intensity=matrix(intensity(x)[,i],x@ncol,x@nrow),
+                         intensity=matrix(intensity(x)[, i], x@ncol, x@nrow),
                          name=sampleNames(x)[i],
                          cdfName=x@cdfName))
               ##later we can get history from MIAME
