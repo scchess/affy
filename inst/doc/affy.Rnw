@@ -896,6 +896,11 @@ listcel.n <- normalize(listcel, method="nothing")
 
 \subsection{Measures of Expression}
 \label{s3.2}
+
+Things described in this section could change slightly in the near future.
+If you develop methods for the package, you are warmly encouraged to look at
+it again when upgrading this package.
+
 As seen in Section \ref{s1.5} the function \verb+express+ creates
 \verb+exprSet+ from \verb+Plob+ objects. The function \verb+express+
 is quite flexible.
@@ -913,16 +918,20 @@ current default is based on a background correction method described
 in \cite{iriz:etal:2002} and available throuh the function
 \verb+bg.adjust+.
 If something other than a function is sent, no background correction is
-performed. If a function is sent, it must receive a matrix containing
-the $PM$s in the first half of the rows and the $MM$s in the bottom. The
+performed. If a function is sent, it must receive two matrices. The
+first matrix will contain the $PM$s while the second matrix will contain
+the corresponding $MM$s. The
 function must return a matrix with the background corrected $PM$s. For
 example, the function \verb+subtractmm+, made available in this
-package, receives \verb+x+ (typically \verb+rbind(pm(plob),mm(plob)+
-wiht \verb+plob+ an object of class \verb+Plob+) and returns
-{\tt x[1:(nrow(x)/2),]-x[(nrow(x)/2 + 1):nrow(x),]}. 
+package, is implemented easily:
+\begin{verbatim}
+subtractmm <- function(pm, mm){
+  return(pm - mm)
+}
+\end{verbatim}
 
-Once background corrected $PM$s are available we compute expression
-measures via some summary statistic. The $PM$ data will be a matrix,
+Once background corrected probe intensities are available we compute expression
+measures via some summary statistic. The probe data will be a matrix,
 say \verb+mat+ of
 dimensions probes times number of arrays. The default is to return the
 overall plus column effect of a median polish. In general one can use
@@ -941,60 +950,49 @@ or more precisely \verb+PPSset.container+ objects.
 \verb+PPSet+  
 objects and it                                                                      
 used here to collect the {\it PPSet} for a given gene in different 
-hybridizations (i.e. on different arrays).                       
-Methods that generate expression values accept as first parameter a
-list of \verb+data.frame+. There is one \verb+data.frame+ per
-hybridization.                                                             
-All the data are related to the same probe pair set on a chip. Each
-data.frame has a column called {\it pm} and a column called {\it mm}
-(note: each of these data.frame 
-correspond to the slot \verb+probes+ of the \verb+PPSet+).                                                                    
+hybridizations (i.e. on different arrays).
+The method \verb+express.summary.stat+ is defined for objects of class
+\verb+PPSet.container+. Its signature is
+\verb+(x="PPSet.container", method="character", bg.correct="character")+. 
+The parameter \verb+method+ will indicate how to compute the expression
+value, and the parameter \verb+bg.correct+ how to perform the {\it background correction}.
+
+Methods that generate expression values accept a matrix of probe intensities (one row per probe in the set, one column per experiment (or oligonucleotide array).
+They as first parameter a matrix
+ of $PM$s values and as second parameter a matrix of $MM$s values. 
 The method can then accept other optional parameters, but default must
-be defined. The name of the met 
-hod must be of the form \verb+generateExprVal.method.xyz+, where
-\verb+xyz+ in the name of the method. Then the methods nickname must
-be registered in \verb+generateExprSet.methods+. 
-% shit ! I just realized the slight inconsistency in the name of all the stuff
+be defined. The name of the method must be of the form \verb+generateExprVal.method.xyz+, where
+\verb+xyz+ in the name of the method. Then the methods nicknames should
+be registered in \verb+express.summary.stat.methods+. 
 The mechanism is not unlike the one used for \verb+normalize+.   
 As an illustrative example, we present a method called
 {\it outlieraverage}, that generates expression values in two
 steps. In a first step, identical {\it pm} probes across the probes
-sets from the different hybridizations are processed.                                                                                         
-Probe values that are more than  2 times away from the median absolute
+sets from the different hybridizations are processed.                                   Probe values that are more than  2 times away from the median absolute
 deviation (mad) are replaced by the median value  for these probes. In
 a second step the average of all the probes in the set is calculated
 for each hyridization experiment. 
 
 \begin{verbatim}                                                                                      
-generateExprVal.method.outlieraverage <- function(probes) {                                           
-  ## probes is a list of data.frame                              
-                                                                                                      
-  m <- length(probes)          # number of hybridizations                                             
-  n <- length(probes[[1]]$pm)  # number of pm probes in a set                                         
-                                                                                                      
-  modif.probes <- matrix(0, n, m) # modified probes to be stored in a matrix                          
-                                  # one row per probe, one column per hybridization                   
-                                                                                                      
-  ## loop over the probes                                                                             
-  for (i in 1:n) {                                                                                    
-    ## get all the identical probes from all the hybridizations                                       
-    p <- unlist(lapply(probes, function(x) x$pm[i]))                                                  
-    pmed <- median(p)                                                                                 
-    pmad <- mad(p)                                                                                    
-    p[abs(p-pmed) > 2 * pmad)] <- pmed  # replace the 'outliers' by the median value                  
-    modif.probes[i,] <- p                                                                             
-  }                                                                                                   
-                                                                                                      
-  r <- apply(modif.probes, 1, mean)                                                                   
-                                                                                                      
-  return(r)                                                                                           
-                                                                                                      
-}                                                                                                     
+generateExprVal.method.outlieraverage <- function(probes) {                             
+              
+  probes.med <- apply(probes, 2, median, na.rm=TRUE)
+  probes.mad <- apply(probes, 2, mad, na.rm=TRUE)
+  ## replace the 'outliers' by the median value                  
+  probes[abs(probes - probes.med) > 2 * probes.mad)] <- probes.med                                                                                                     
+  r <- apply(probes, 1, mean, na.rm=TRUE)                                                                                                       
+  return(r)                                                                             }                                                                         
 
 ## register the method
-generateExprSet.methods <- c(generateExprSet.methods, "outlieraverage")
+express.summary.stats..methods <- c(generateExprSet.methods, "outlieraverage")
 
 \end{verbatim}                                                                                        
+The background correction methods differ slightly from the ones used with \verb+Plob+.
+They must have as first parameter a matrix of $PM$ values and as a second parameter
+ a matrix of the corresponding $MM$s. These are the values for the probes relating to
+one {\it affyID} across different arrays ({\it i.e.} the values contained in a \verb+PPSet.container+)\footnote{{\it Plob} work on all the $PM$s and $MM$s on the array in one acall (note: So looping through all the affyIDs will be slower, but offers more 
+flexibility... but we may unify all that in the future...)}. The \verb+bg.correct+
+ methods available in the package are stored in the variable \verb+bg.correct.methods+.
 
 \bibliographystyle{plainnat} 
 \bibliography{affy} 
