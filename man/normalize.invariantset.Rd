@@ -10,15 +10,13 @@
 normalize.Cel.container.invariantset(container, f.cdf, prd.td=c(0.003,
 0.007), progress=FALSE)
 
-normalize.Plob.invariantset(plob, prd.td=c(0.003, 0.007),
+normalize.Plob.invariantset(container, prd.td=c(0.003, 0.007),
 progress=FALSE)
 
 normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 }
 \arguments{
-  \item{container}{a \code{\link[Biobase]{container-class}} (\code{Cel.container} for
-    now.. .any kind of array data container in the future...)}
-  \item{plob}{a \code{Plob} (surprise)}
+  \item{container}{a \code{\link{Cel.container}} or a \code{\link{Plob}}.}
   \item{data}{a vector of intensities on a chip (to normalize to the reference).}
   \item{f.cdf}{a \code{Cdf} object.}
   \item{ref}{a vector of reference intensities.}

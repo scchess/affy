@@ -82,10 +82,7 @@ normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progre
                              xout=container@mm[,i])$y)
     container@mm[,i] <- tmp
     
-    ## storing information about what has been done
-    ## (where should I put that in Plob ??????)
-    ## <- list(name="normalized by invariant set",
-    ##                             invariantset=i.set)
+    container@notes <- list(name="normalized by invariant set", invariantset=i.set)
 
     if (progress) cat("done.\n")
     

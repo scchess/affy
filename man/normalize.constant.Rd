@@ -17,6 +17,7 @@ normalize.constant(x, refconstant, FUN=mean, na.rm=TRUE)
   \item{plob}{ a \code{\link{Plob-class}}}
   \item{x}{a vector of intensities on a chip (to normalize to the reference).}
   \item{refindex}{the index of the array used as a reference.}
+  \item{refconstant}{the constant used as a reference}
   \item{FUN}{A function generating a value from the intensities on an
     array. Typically \code{mean} or \code{median}.}
   \item{na.rm}{Paramater passed to the function FUN.}

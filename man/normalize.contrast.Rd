@@ -12,20 +12,20 @@ normalize.Cel.container.contrasts(listcel,span=2/3,choose.subset=T,subset.size=5
 normalize.Plob.contrasts(object,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric")
 }
 \arguments{
-  \item{container}{a \code{\link[Biobase]{container-class}} (\code{Cel.container} for
-    now.. .any kind of array data container in the future...)}
-  \item{plob}{ a \code{\link{Plob-class}}}
-  \item{refindex}{the index of the array used as a reference.}
-  \item{FUN}{A function generating a value from the intensities on an
-    array. Typically \code{mean} or \code{median}.}
-  \item{na.rm}{Paramater passed to the function FUN.}
+  \item{listcel}{a \code{\link{Cel.container}}. }
+  \item{object}{ a \code{\link{Plob-class}}}
+  \item{span}{parameter to be passed to the function \code{\link[modreg]{loess}}.}
+  \item{choose.subset}{}
+  \item{subset.size}{}
+  \item{verbose}{verbosity flag}
+  \item{family}{parameter to be passed to the function \code{\link[modreg]{loess}}.}
 }
 \value{
   An object of the same class as the one passed.
 }
 \author{
   L. Gautier <laurent@cbs.dtu.dk> (<--- not me... this is a copy/paste
-  accident. I think the author is Rafael...)
+  accident. I think the author is Rafael or Ben Bolstad...)
 }
 \seealso{
   \code{\link{maffy.normalize}}

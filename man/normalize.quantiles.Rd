@@ -10,13 +10,13 @@
 \usage{
   normalize.quantiles(x)
   normalize.Cel.container.quantiles(listcel)
-  normalize.Plob.quantiles(plob)
+  normalize.Plob.quantiles(object)
 }
 \arguments{
   \item{x}{A matrix of intensities where each column corresponds to a
     chip and each row is a probe.}
   \item{listcel}{A \code{\link{Cel.container}}}
-  \item{plob}{A \code{\link{Plob}}}
+  \item{object}{A \code{\link{Plob}}}
 }
 \details{This method is based upon the concept of a quantile-quantile
   plot extended to n dimensions. No special allowances are made for outliers.
