@@ -30,14 +30,14 @@ Experience shows that you only need 1-2 iterations to obtain useful
 results. This function is not written in an efficient way. In order to
 make it faster, loess is fit to a sample of the data which we then use to
 predict the curve for all the data. By setting
-\code{family.loess="guassian"} the function is faster, but you risk
+\code{family.loess="gaussian"} the function is faster, but you risk
 losing information on differentially expressed genes. The function
 \code{\link{normalize.quantiles}} is faster. 
 }
 
 \value{A matrix with normalized values for chips in columns.}
 
-\seealso{\code{\link{normalize.quantiles}}, \code{\link{maffy.normalise}},
+\seealso{\code{\link{normalize.quantiles}}, \code{\link{maffy.normalize}},
   \code{\link{maffy.subset}}}
 \author{Rafael A. Irizarry}
 \keyword{smooth}

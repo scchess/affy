@@ -1,12 +1,11 @@
-\name{maffy.normalise}
-\alias{maffy.normalise}
+\name{maffy.normalize}
 \alias{maffy.normalize}
 \alias{normalize.contrast}
-\title{Normalise Itensities}
-\description{Normalises feauture intensities from
+\title{Normalize Itensities}
+\description{Normalizes feauture intensities from
   \code{\link[affy:AffyBatch-class]{AffyBatch}}s}
 \usage{
-maffy.normalise(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE)}
+maffy.normalize(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE)}
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{data}{an matrix of intensities.}
@@ -22,19 +21,18 @@ Please refer to references.
 
 }
 \value{
-The normalised intensities.
+The normalized intensities.
 }
 \references{
-Åstrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
-\author{Magnus Åstrand}
+Astrand, M. (2003) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
+\author{Magnus Astrand}
 \seealso{ \code{\link{maffy.subset}}}
 \examples{
-     #require(affydata)
-     #data(Dilution)
-     #x <- pm(Dilution[,1:3])
-     #mva.pairs(x)
-     #x <- maffy.normalise(x,subset=1:nrow(x))
-     #mva.pairs(x)
+     data(affybatch.example)
+     x <- pm(affybatch.example)[1:2000,1:3]
+     mva.pairs(x)
+     x <- maffy.normalize(x,subset=1:nrow(x))
+     mva.pairs(x)
 }
 \keyword{internal}
 

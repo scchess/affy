@@ -1,9 +1,9 @@
 \name{normalize.contrasts}
 \alias{normalize.contrasts}
 \alias{normalize.AffyBatch.contrasts}
-\title{Scale Cel objects in a container}
+\title{Normalize intensities using the contrasts method}
 \description{
-  Scale chip objects in a container.
+  Scale chip objects in an \code{\link{AffyBatch-class}}.
 }
 \usage{
 %normalize.contrast() ## currenlt maffy.normalize

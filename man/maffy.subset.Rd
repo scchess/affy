@@ -24,7 +24,7 @@ A list with component
 }
 \references{Åstrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}}
 \author{Magnus Åstrand}
-\seealso{ \code{\link{maffy.normalise}}}
+\seealso{ \code{\link{maffy.normalize}}}
 \examples{
      #data(Dilution)
      #x <- log2(pm(Dilution)[,1:3])

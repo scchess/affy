@@ -1,7 +1,7 @@
 library(modreg)
 ##*******************************************************************************************
-#**********  maffy.normalise     *****
-maffy.normalise <- function(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE){
+#**********  maffy.normalize     *****
+maffy.normalize <- function(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE){
 
 k <- dim(data)[2]   ### Number of chips
 

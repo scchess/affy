@@ -13,7 +13,7 @@ normalize.AffyBatch.contrasts <- function(abatch,span=2/3,choose.subset=TRUE,sub
     subset1 <- maffy.subset(alldata,verbose=verbose,subset.size=subset.size)$subset
   else
     subset1 <- sample(1:dim(alldata)[1],subset.size)
-  aux <-   maffy.normalise(alldata,subset=subset1,verbose=verbose,span=span,family=family)
+  aux <-   maffy.normalize(alldata,subset=subset1,verbose=verbose,span=span,family=family)
   
   intensity(abatch)[Index,] <- aux
 
