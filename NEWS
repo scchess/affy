@@ -4,6 +4,8 @@ version 1.4.x [under development]
     esetApply in Biobase (the covariate information in phenoData are
     directly accessible from the function (see example in the man page). 
 
+  o rma - the subset parameter now works properly.
+
 
 version 1.3.x 
 

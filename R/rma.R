@@ -20,22 +20,36 @@
 # destructive=TRUE and you might actually save a little memory.
 # the destructive refers only to Plobs, which would be destroyed.
 #
+# History
+#
+# Feb 22, 2004 - activated subset. In is now possible to
+#                do the entire RMA procedure using a subset of probesets
+#
+#
+#
+#
+#
+#
 ########################################################
 
 rma <- function(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=TRUE,background=TRUE,bgversion=2,...){
 
-  rows <- length(probeNames(object))
+  rows <- length(probeNames(object,subset))
   cols <- length(object)
- 
-  ngenes <- length(geneNames(object))
+
+  if (is.null(subset)){
+    ngenes <- length(geneNames(object))
+  } else {
+    ngenes <- length(subset)
+  }
   
   #background correction
   bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
 
   if (destructive){
-  	exprs <- .Call("rma_c_complete",pm(object),mm(object),probeNames(object),ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
+  	exprs <- .Call("rma_c_complete",pm(object,subset),mm(object,subset),probeNames(object,subset),ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
   } else {
-	exprs <- .Call("rma_c_complete_copy",pm(object),mm(object),probeNames(object),ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
+	exprs <- .Call("rma_c_complete_copy",pm(object,subset),mm(object,subset),probeNames(object,subset),ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
   }
   colnames(exprs) <- sampleNames(object)
   se.exprs <- array(NA, dim(exprs)) # to be fixed later, besides which don't believe much in nominal se's with medianpolish

@@ -12,8 +12,8 @@ rma(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=TRUE,backgrou
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{object}{an \code{\link[affy:AffyBatch-class]{AffyBatch}}}
-  \item{subset}{an indexing vector with the the probe sets do to be
-    converted to expression. (not currently implemented)}
+  \item{subset}{a character vector with the the names of the probesets
+    to be used in expression calculation.}
   \item{verbose}{logical value. If \code{TRUE} it writes out some messages. (Curently ignored)}
   \item{destructive}{logical value. If \code{TRUE} works on the PM matrix in place as much as possible, good for large datasets.}
   \item{normalize}{logical value. If \code{TRUE} normalize data using
