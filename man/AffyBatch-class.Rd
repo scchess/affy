@@ -84,8 +84,11 @@ Class \code{"exprSet"}, directly.
       each sample.}
     \item{indexProbes}{\code{signature(object = "AffyBatch", which =
 	"character")}: returns a list with locations of the probes in
-      each probe  set. The list names defines the probe set
-      names. \code{which} can be "pm", "mm", or "both". If "both" then
+      each probe set. The affyID corresponding to the probe set to
+      retrieve can be specified in an optional parameter
+      \code{genenames}. By default, all the affyIDs are retrieved.
+      The names of the elements in the list returned are the affyIDs.
+      \code{which} can be "pm", "mm", or "both". If "both" then
       perfect match locations are given followed by mismatch locations.} 
     \item{intensity<-}{\code{signature(object = "AffyBatch")}: a
       replacement method for the \code{exprs} slot, i.e. the intensities. }
@@ -118,16 +121,29 @@ Class \code{"exprSet"}, directly.
   }
 }
 \note{This class is better described in the vignette.}
-\seealso{  \code{\link{Cel}}, \code{\link{Cdf}}, 
+\seealso{  related methods \code{\link{merge.AffyBatch}},
+  \code{\link{split.AffyBatch}} and \code{\link{pairs.AffyBatch}}, and related classes \code{\link{Cel}},
+  \code{\link{Cdf}} and 
   \code{\link{exprSet-class}}} 
 
 \examples{
+## load example
 data(affybatch.example)
+
+## nice print
 print(affybatch.example)
+
 pm(affybatch.example)[1:5,]
 mm(affybatch.example)[1:5,]
-pmindex(affybatch.example,"A28102_at")
 
+## get indexes for the PM probes for the affyID "A28102_at" 
+mypmindex <- pmindex(affybatch.example,"A28102_at")
+## same operation using the primitive
+mypmindex <- indexProbes(affybatch.example, which="pm", genenames="A28102_at")[[1]]
+## get the probe intensities from the index
+intensity(affybatch.example)[mypmindex, ]
+
+## load bigger example (try 'help(Dilution)' )
 data(Dilution)
 description(Dilution) ##we can also use the methods of exprSet
 sampleNames(Dilution)

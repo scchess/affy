@@ -12,7 +12,7 @@ meths <- express.summary.stat.methods[-i]
 for (m in meths) {
   for (mbc in pmcorrect.methods) {
      cat("expression value with method=", m, "bg correct=", mbc, "...")
-     computeExprSet(affybatch.example, pmcorrect.method=mbc, summary.method=m, warnings=FALSE)
+     computeExprSet(affybatch.example, pmcorrect.method=mbc, summary.method=m)
      cat("done.\n")
    }
 }
@@ -21,7 +21,7 @@ for (m in meths) {
 m <- "playerout"
 for (mbc in pmcorrect.methods) {
   cat("expression value with method=", m, "bg correct=", mbc, "...")
-  computeExprSet(affybatch.example, pmcorrect.method=mbc, summary.method=m, ids=geneNames(affybatch.example)[1:3], warnings=FALSE)
+  computeExprSet(affybatch.example, pmcorrect.method=mbc, summary.method=m, ids=geneNames(affybatch.example)[1:3])
   cat("done.\n")
 }
 

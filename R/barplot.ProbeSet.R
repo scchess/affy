@@ -3,7 +3,7 @@ barplot.ProbeSet <- function(height,
                              main=NA,
                              col.pm="red", col.mm="blue",
                              beside=TRUE, names.arg="pp",
-                             ask = TRUE,
+                             ask = TRUE, scale = TRUE,
                              ...)
 {
 
@@ -16,10 +16,18 @@ barplot.ProbeSet <- function(height,
   }
 
   col <- c(col.pm, col.mm)
-  
+
+  if (scale) {
+    ylim <- range(c(pm(height), mm(height)), na.rm=TRUE)
+  } else {
+    ylim <- NULL
+  }
+
   for (i in 1:ncol(pm(height))) {
-    if (is.na(main))
+    
+    if (is.na(main)) {
       main <- paste(height@id, "(", i, ")")
+    }
     
     hh <- rbind(pm(height)[, i], mm(height)[, i])
       
@@ -28,6 +36,7 @@ barplot.ProbeSet <- function(height,
             col=col,
             beside=beside,
             names.arg=names.arg,
+            ylim = ylim,
             ...)
   }
 }

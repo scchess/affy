@@ -26,7 +26,7 @@ expresso(
         summary.subset = NULL,
     # misc.
         verbose = TRUE,
-        warnings = TRUE,
+%        warnings = TRUE,
         widget = FALSE)
 }
 
@@ -49,7 +49,7 @@ expresso(
     expression summary value is computed for everything on the chip.}
   \item{verbose}{logical value. If \code{TRUE} it writes out some
     messages.}
-  \item{warnings}{warning when something goes wrong}
+%  \item{warnings}{warning when something goes wrong}
   \item{widget}{a boolean to specify the use of widgets (the package
     tkWidget is required).}
 }
@@ -63,15 +63,16 @@ expresso(
   expression. The function \code{\link{affy.scalevalue.exprSet}} does this.
 }
 \value{
-  An object of class \code{\link[Biobase]{exprsSet}}
+  An object of class \code{\link[Biobase]{exprsSet}}, with an attribute
+  \code{pps.warnings} as returned by the method \code{\link{computeExprSet}}.
 }
-%\seealso{\code{\link{}}, \code{\link{}}, \code{\link{}}}
+\seealso{\code{\link{AffyBatch}}}
 \examples{
 data(affybatch.example)
 
 eset <- expresso(affybatch.example, bgcorrect.method="rma",
                  normalize.method="constant",pmcorrect.method="pmonly",
-                 summary.method="avgdiff", warnings=FALSE)
+                 summary.method="avgdiff")
 }
 \keyword{ manip }
 

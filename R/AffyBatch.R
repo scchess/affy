@@ -220,8 +220,8 @@
               ans <-  multiget(genenames, pos, envir, iffail=NA)
 
               ## this kind of thing could be included in 'multiget' as
-              ## and extra feature. A function could be specified to
-              ## process what is 'multiget' on the fly
+              ## an extra feature. A function could be specified to
+              ## process what is 'multi'-get on the fly
               for (i in seq(along=ans)) {
                 
                 if ( is.na(ans[[i]]) )
@@ -232,6 +232,7 @@
                 
                 
                 if (xy) {
+                  warning("flag 'xy' is deprecated")
                   x <- tmp %% nrow(object)
                   x[x == 0] <- nrow(object)
                   y <- tmp %/% nrow(object) + 1
@@ -509,7 +510,7 @@
   setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character", summary.method="character"),
             function(x, pmcorrect.method, summary.method, ids=NULL,
                      verbose=TRUE, summary.param=list(),
-                     pmcorrect.param=list(), warnings=TRUE)
+                     pmcorrect.param=list())
             {
               
               pmcorrect.method<- match.arg(pmcorrect.method, pmcorrect.methods)
@@ -522,7 +523,8 @@
                 ids <- geneNames(x)
               
               m <- length(ids)
-
+              pps.warnings <- vector("list", length=m)
+              
               ## cheap trick to (try to) save time
               c.pps <- new("ProbeSet",
                            pm=matrix(),
@@ -531,7 +533,7 @@
               ## matrix to hold expression values
               exp.mat <- matrix(NA, m, n)
               se.mat <- matrix(NA, m, n)
-
+              
               if (verbose) {
                 cat(m, "ids to be processed\n")
                 countprogress <- 0
@@ -590,15 +592,16 @@
                 if (! inherits(ev, "try-error")) {
                   exp.mat[i, ] <- ev$exprs
                   se.mat[i,] <- ev$se.exprs
-                } else if (warnings) {
-                  warning(paste("Error with affyid:", id))
+                  ## 
+                } else {
+                  pps.warnings[[i]] <- "Error"
+                  ##warning(paste("Error with affyid:", id))
                 }
-                ## no need for an 'else' branching since exp.mat was initialized with NA
                 
               }
               
-              options(show.error.messages = TRUE)
-              on.exit(NULL)
+              #options(show.error.messages = TRUE)
+              #on.exit(NULL)
               
               if (verbose) cat("\n")
 
@@ -612,10 +615,11 @@
                           phenoData=phenoData(x))
                           ##description=description(x)
                           ##annotation=annotation(x),
-                          ##notes=notes(x))
+                          ##notes=c(notes(x))
               ##if (verbose) cat(".....done.\n")
-              
-              return(eset)
+
+              attribute(eset, "pps.warnings") <- pps.warnings
+              ##return(list(exprSet=eset, pps.warnings=pps.warnings))
             },
             where=where)
 

@@ -60,8 +60,8 @@ normalize.qspline <- function(x,
     k <- round(py.inds[1]/min.offset)
   }
 
-  if (k < 1) {
-    warning("'k' found is non-sense. using default")
+  if (k <= 1) {
+    warning("'k' found is non-sense. using default 'fit.iter'")
     k <- fit.iters
   }
   

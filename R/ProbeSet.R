@@ -27,7 +27,7 @@
             function(object) {
               cat("ProbeSet object:\n")
               cat("  id=", object@id, "\n", sep="")
-              cat("  pm=", nrow(object@pm), "probes\n")
+              cat("  pm=", nrow(object@pm), "probes x ", ncol(object@pm), " chips\n")
             }, where=where)
   
   ##DEBUG: what to do with that ?
