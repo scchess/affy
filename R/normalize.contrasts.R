@@ -19,11 +19,11 @@ normalize.Plob.contrasts <- function(object,span=2/3,choose.subset=T,subset.size
 normalize.Cel.container.contrasts <- function(listcel,span=2/3,choose.subset=T,subset.size=5000,verbose=T,family="symmetric") { 
   
   cols <- length(listcel)
-  rows <- length(listcel[[1]]@intensity)
-  chipdim <- dim(listcel[[1]]@intensity)
+  rows <- length(intensity(listcel[[1]]))
+  chipdim <- dim(intensity(listcel[[1]]))
   
   x <- matrix(0,rows,cols)
-  for (i in 1:cols) x[,i] <- c(listcel[[i]]@intensity)
+  for (i in 1:cols) x[,i] <- c(intensity(listcel[[i]]))
   
   n <-  dim(x)[1]/2
   if(choose.subset)
@@ -35,7 +35,7 @@ normalize.Cel.container.contrasts <- function(listcel,span=2/3,choose.subset=T,s
   
   for (i in 1:cols) {
     listcel[[i]]@intensity  <- matrix(x[,i],chipdim[1], chipdim[2])
-    listcel[[i]]@history$name <- "normalized by quantiles"
+    listcel[[i]]@history$name <- "normalized by contrasts"
     listcel[[i]]@sd <- matrix() # set 'sd' to nothing (meaningless after normalization)
   }
   return(listcel)
