@@ -50,7 +50,7 @@ probably help you to achieve your goals. You may want to refer to
 the respective help pages. Try \verb+help(Cel)+, \verb+help(AffyBatch)+.
 
 \section{How-to}
- \subsection{\verb+Cel+ objects}
+ \subsection{Cel objects}
 The functions \verb+getNrowForCEL+ and \verb+getNcolForCEL+ are assumed to return
 the number of rows and the number of columns in the \verb+.CEL+ file respectively
 
@@ -96,10 +96,10 @@ The function \verb+import.celfile+ can now replace the function \verb+read.celfi
 in the \verb+affy+ package
 
 
- \subsection{\verb+AffyBatch+ objects}
+ \subsection{AffyBatch objects}
 
 (scratch)
-the use of \verb{...} should make you able to override the function
+the use of \verb+...+ should make you able to override the function
 read.celfile by a hack like:
 \begin{Sinput}
 read.celfile <- import.celfile
