@@ -40,10 +40,10 @@
          envir=as.environment(where))
 }
 
-.initMapCdfName <- function(where) {
-  filepath <- file.path(.path.package("affy"), "data", "mapCdfName.rda")
-  load(filepath, envir=as.environment(where))
-}
+##.initMapCdfName <- function(where) {
+##  filepath <- file.path(.path.package("affy"), "data", "mapCdfName.rda")
+##  load(filepath, envir=as.environment(where))
+##}
 
 .setAffyOptions <- function(affy.opt=NA) {
 
@@ -114,7 +114,7 @@
 
   library.dynam("affy", pkgname, libname)
 
-  .initMapCdfName(match(paste("package:", pkgname, sep=""), search()))
+  ##.initMapCdfName(match(paste("package:", pkgname, sep=""), search()))
   
   .initNormalize(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initExpression(match(paste("package:", pkgname, sep=""), search()), all.affy)

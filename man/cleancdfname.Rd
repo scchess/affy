@@ -28,7 +28,8 @@ cleancdfname(cdfname, addcdf = TRUE)
   about these cases. It is a
   \code{data.frame} of three elements: the 
   first is the name as found in the CDF file, the second the name in the
-  CEL file and the third the name in bioconductor.
+  CEL file and the third the name in bioconductor. \code{mapCdfName} can
+  bne loaded using \code{data(mapCdfName)}.
 }
 \value{
 A \code{character}
