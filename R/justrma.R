@@ -12,96 +12,32 @@ justRMA <- function(..., filenames=character(0),
                      hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE,
                      normalize=TRUE, background=TRUE,
                      bgversion=2, destructive=FALSE){
-  ##first figure out filenames
-  auxnames <- unlist(as.list(substitute(list(...)))[-1])
 
-  if (widget){
-    require(tkWidgets)
-    widgetfiles <- fileBrowser(textToShow="Choose CEL files",
-                               testFun=hasSuffix("[cC][eE][lL]"))
-  }
-  else
-    widgetfiles <- character(0)
+  l <- AllButCelsForReadAffy(..., filenames=filenames,
+                             widget=widget,
+                             celfile.path=celfile.path,
+                             sampleNames=sampleNames,
+                             phenoData=phenoData,
+                             description=description)
 
-  filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
-
-  if(length(filenames)==0) filenames <- list.celfiles(celfile.path,full.names=TRUE)
-
-  if(length(filenames)==0) stop("No cel filenames specified and no cel files in specified directory:",celfile.path,"\n")
-
-
-  ##now assign sampleNames if phenoData not given
-  if(is.null(phenoData)){
-    if(is.null(sampleNames)){
-      if(widget){
-        require(tkWidgets)
-        tksn <- tkSampleNames(filenames=filenames)
-        sampleNames <- tksn[,1]
-        ##notice that a description of the files is ingored for now
-        ##soon to go into MIAME
-      }
-      else{
-        sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
-      }
-    }
-    else{
-      if(length(sampleNames)!=length(filenames)){
-        warning("sampleNames not same length as filenames. Using filenames as sampleNames instead\n")
-        sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
-      }
-    }
-  }
-
-  ##now get phenoData
-  if(is.character(phenoData)) ##if character read file
-    phenoData <- read.phenoData(filename=phenoData)
-  else{
-    if(class(phenoData)!="phenoData"){
-      if(widget){
-        require(tkWidgets)
-        phenoData <- read.phenoData(sampleNames=sampleNames,widget=TRUE)
-      }
-      else
-        phenoData <- read.phenoData(sampleNames=sampleNames,widget=FALSE)
-    }
-  }
-
-  ##get MIAME information
-  if(is.character(description)){
-    description <- read.MIAME(filename=description,widget=FALSE)
-  }
-  else{
-    if(class(description)!="MIAME"){
-      if(widget){
-        require(tkWidgets)
-        description <- read.MIAME(widget=TRUE)
-      }
-      else
-        description <- new("MIAME")
-    }
-  }
-
-  ##MIAME stuff
-  description@preprocessing$filenames <- filenames
-  if(exists("tksn")) description@samples$description <- tksn[,2]
-  description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
 
   ##and now we are ready to read cel files
-  return(just.rma(filenames=filenames,
-                        phenoData=phenoData,
-                        description=description,
-                        notes=notes,
-                        compress=compress,
-                        rm.mask=rm.mask,
-                        rm.outliers=rm.outliers,
-                        rm.extra=rm.extra,
-                        #hdf5=hdf5, ## took these two out b/c I am not sure if hdf5 should be used
-                        #hdf5FilePath=hdf5FilePath,
-                        verbose=verbose,
-                        normalize=normalize,
-                        background=background,
-                        bgversion=bgversion,
-				destructive=destructive))
+ ret<- just.rma(filenames=l$filenames,
+                  phenoData=l$phenoData,
+                  description=l$description,
+                  notes=notes,
+                  compress=compress,
+                  rm.mask=rm.mask,
+                  rm.outliers=rm.outliers,
+                  rm.extra=rm.extra,
+                  verbose=verbose,
+                  normalize=normalize,
+                  background=background,
+                  bgversion=bgversion,
+                  destructive=destructive)
+  sampleNames(ret) <- l$sampleNames
+  return(ret)
+
 }
 
 
