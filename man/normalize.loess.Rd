@@ -42,7 +42,13 @@ normalize.Plob.loess(plob, ...)
   code... )
 }
 \seealso{
-  \code{\link{probe.profile}}
+  \code{\link{probe.profile}}}
+\examples{
+     data(Dilution)
+     x <- pm(Dilution[,1:3])
+     mva.pairs(x)
+     x <- normalize.loess(x,subset=1:nrow(x))
+     mva.pairs(x)
 }
 \keyword{smooth}
 

@@ -18,6 +18,7 @@
   \item{listcel}{A \code{\link{Cel.container}}}
   \item{object}{A \code{\link{Plob}}}
   \item{...}{extra arguments can be passed (we dont use them yet).}
+
 }
 \details{This method is based upon the concept of a quantile-quantile
   plot extended to n dimensions. No special allowances are made for outliers.
@@ -27,8 +28,14 @@
   a matrix of normalized intensites, or a \code{Cel.container} of
   normalized arrays, or a \code{Plob}.} 
 
+\references{
+  Bolstad, B (2001) \emph{Probe Level Quantile Normalization of High Density
+    Oligonucleotide Array Data}. Unpublished manuscript
+  \url{http://oz.berkeley.edu/~bolstad/stuff/qnorm.pdf}
+  }
+
 \author{Ben Bolstad, \email{bolstad@stat.berkeley.edu}}
 
-\seealso{\code{\link{qnrm}}}
+\seealso{\code{\link{normalize}}}
 
 \keyword{manip}

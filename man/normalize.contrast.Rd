@@ -27,6 +27,14 @@ normalize.Plob.contrasts(object,span=2/3,choose.subset=T,subset.size=5000,verbos
   L. Gautier <laurent@cbs.dtu.dk> (<--- not me... this is a copy/paste
   accident. I think the author is Rafael or Ben Bolstad...)
 }
+\examples{
+    data(listcel)
+    data(CDF.example)
+    plob <- convert(listcel,CDF.example)
+    tmp <- normalize(listcel,CDF.example,method="contrasts",subset.size=1000)
+    tmp <- normalize(plob,method="contrasts",subset.size=1000)
+}
+
 \seealso{
   \code{\link{maffy.normalize}}
   }

@@ -47,7 +47,6 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 \seealso{
   \code{\link{normalize}} to normalize \code{\link{Cel.container}} objects.
 }
-%\examples{
-%  
-%}
+
+}
 \keyword{manip}
