@@ -2,6 +2,8 @@
   debug.affy123 <- F #DEBUG
   library.dynam("affy", pkgname, libname)
   require(methods)
+  require(modreg)
+  require(eda)
   where <- match(paste("package:", pkgname, sep=""), search())
   if (debug.affy123) cat("-->initCdf\n")
   .initCdf(where)
@@ -15,8 +17,8 @@
   .initPPSet(where)
   if (debug.affy123) cat("-->initPPSet.container\n")
   .initPPSet.container(where)
-  ##if (debug.affy123) cat("-->initPlob\n")
-  ##.initPlob(where)
+  if (debug.affy123) cat("-->initPlob\n")
+  .initPlob(where)
   
   rm(debug.affy123)
   cacheMetaData(as.environment(where))

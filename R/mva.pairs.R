@@ -17,7 +17,7 @@ par(mfrow=c(J,J),mgp=c(0,.2,0),mar=c(1,1,1,1),oma=c(1,1.4,2,1))
       aux <- loess(yy~xx,degree=1,span=span,family=family.loess)$fitted
       plot(xx,yy,pch=".",xlab="",ylab="",tck=0,...)
       o <- order(xx)
-      lines(xx[o],aux[o],col=line.col)
+      lines(approx(xx[o],aux[o]),col=line.col)
       par(mfg=c(k,j))
       sigma <- quantile(yy,.75)-quantile(yy,.25)
       txt <- format(c(sigma,0.123456789),digits=digits)

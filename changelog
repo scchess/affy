@@ -1,0 +1,201 @@
+## a * means the change are in madman
+###Rafa's changes
+
+"changelog" added this file
+	
+*"test" 
+	+removed empty file test
+
+*"proj.vec" 
+	+changed proj.vec to projvec in R and Rd
+
+*"class-Plob.Rd" 
+	+created this file with help file for Plob
+
+*"class-probe.matrix.Rd" 
+	+created this file but ended up removing it
+
+*"probe.level.object.Rd" 
+	+changed file 
+
+*"old2newPlob" created function  
+	+makes old probe level objects into Class Plob. there is R and Rd
+
+*"zzz.R" 
+	+edited so that it runs .initPlob 
+
+*"ReadAffy" 
+	+changed in R and Rd. 
+	+Now one can specify if one wants to make outlier and/or masks into outliers. It passes along arguments to read.celfile. 
+	+It now returns an object of class Plob.
+
+*"probe.level.object" 
+	+changed help file on  to say its old.
+
+*"bxp2.R" and "boxplot.default2.R"
+	+added these files and then removed them so ignore this
+
+###Leslie's changes
+*"Plob.R"
+   +changed class of pm and mm to data.frame and removed 
+     def of class "probe.matrix"
+   +eliminated "id" slot and "gene.names" slot and added "name" slot
+   +changed method for $ to allow auto-completion of slot name
+   +removed methods for Math which I could never make work properly
+
+*"ReadAffy.R"
+   +made pm and mm slots into data.frames
+   +pm and mm have no rownames, but data.frame names are chip.names
+   +eliminated id and gene.names slot and made name slot
+   +if no cdf.name is provided it is derived from name of cdf file
+
+*"convert.R"
+   +made pm and mm slots into data.frames
+   +pm and mm have no rownames, but data.frame names are chip.names
+   +eliminated id and gene.names slot and made name slot
+   +if no cdf.name is provided, it is derived from name of cdf object
+   
+*"boxplot.Plob"
+   +removed arguments so only the object x and ,... remain
+   +fixed the prompting using the "ask" option in par
+   +eliminated dependence on boxplot.probe.matrix
+   +still uses boxplot.default2 which can be changed
+	
+*"boxplot.probe.matrix"
+   +no longer used.  Should be removed
+
+*"mva.pairs.Plob"
+   + made a method. there is no file. its defined in Plob.R	
+   +removed arguments so only the object x and ,... remain
+     it just samples 5000 total values from mm and pm for each chip 
+     and calls mva.pairs to give a quick convenient look
+
+*"hist.Plob"
+   +removed arguments so only object x,col.pm, and col.mm and ,... remain
+   +fixed both x and y range problems
+   +fixed prompt using par option "ask" and made it "smart" 
+     with respect to mfrow options
+   +added the hidden and undocumented function .hist.Plob to do the work
+
+*"plot.Plob"
+   +removed arguments so only the object x and ,... remain
+   +fixed prompt using par option "ask" and made it "smart" 
+     with respect to mfrow options
+   +uses mva.pairs.Plob,.hist.Plob, and boxplot.default2
+   +plots mva first, and sets mfcol to (1,1) since these are large
+    then it resets mfcol for remaining plots
+
+###BACK to Rafa's changes
+*"ReadAffy"
+	+changed names(pm) <- .. to colnames etc...
+*"covert"
+	+changed names(pm) <- .. to colnames etc...
+	+added line   probe.names <- info@name.levels[probe.ids]
+
+*"boxplot.Plob"
+      +using R base boxplot
+      +removed boxplot.default2 and bxp2
+
+"boxplot.Plob.Rd"
+	+ need to write help file
+   
+*"hist.Plob.R"
+	+ added some missing ... in file .hist.Plob
+
+"hist.Plob" 
+	+added Rd file
+	
+*"class-probe.matrix.Rd" 
+	+ removed this file
+      
+*"affy.mva.pairs.R" 
+	+ removed this file
+
+*"mva.pairs.Plob.R"
+	+ removed this file, used setMethod instead
+
+"affy.mva.paris.Rd"
+	+ changed this to mva.paris.Plob
+
+
+"plot.Plob.R"
+	+changed mva.pairs.Plob to mva.pairs since the method now exists
+	+change boxplot.default2 to boxplot
+	+there are some minor problems with this function. NEEDS FIX
+
+
+*"mva.pairs"
+	+changed lines(xx[o],aux[o]) to lines(approx(xx[o],aux[o])
+
+
+*"read.container.celfile"
+	+ changed so that it can use vectors along with ...
+	 filenames <- as.list(substitute(list(...)))[-1]
+	  list <- .Primitive("c")(list, filenames)
+ 
+
+*"image.Cel"
+	+ took out col as an option so that it uses the image.default col
+
+*"Cdf.R"
+	+ changed a print to a cat
+
+*"affy.subset.R" 
+	+ added and made a method for "["
+
+*"names.Cel.R"
+	+ADDED this file
+
+*"names.CDF.R"
+	+ADDED this file
+
+*"names.PPSet.R"
+	+ADDED this file
+
+
+*"Cel.R"
+	+setMethod $
+
+*"Cdf.R"
+	+setMethod $
+
+*"PPSet.R"
+	+setMethod $
+	+fixed method show so that it shows number of probe pairs
+
+*"Normalize.R"
+	+added this. it used to be normalize.Raffy
+
+*"normalize.R"
+	+deleted this. now its Normalize.R
+
+*"normalize.Raffy.Rd"
+	+changed to Normalize.Rd
+	
+###TO FIX  
+
+"barplot.PPSet" 
+	+gives a warning when called with a PPSet object with col.mm or col.pm
+
+
+"Normalize" make normalize work with Plobs. 
+	
+###to ADD
+
+"Rd files": Normalize, plot.Plob, hist.Plob, probably more
+"mva.pairs.CEL.container"
+
+"cbind" for Plobs
+
+"Dilution" Plob
+
+"Spike in" PPSet container
+
+"Demo"
+	
+
+
+
+
+
+	
