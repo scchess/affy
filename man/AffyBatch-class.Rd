@@ -13,6 +13,8 @@
 \alias{mmindex}
 \alias{probeset}
 \alias{$.AffyBatch}
+\alias{cdfName}
+\alias{cdfName,AffyBatch-method}
 \alias{probes,AffyBatch-method}
 \alias{geneNames,AffyBatch-method}
 \alias{getCdfInfo,AffyBatch-method}
@@ -77,6 +79,8 @@ Class \code{"exprSet"}, directly.
 }
 \section{Methods}{
   \describe{
+    \item{cdfName}{\code{signature(object = "AffyBatch")}: Obtains the
+      cdfName slot.}
     \item{pm<-}{\code{signature(object = "AffyBatch")}: replaces the
       perfect match intensities }
     \item{pm}{\code{signature(object = "AffyBatch")}: extracts the pm intensities. }
