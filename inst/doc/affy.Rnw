@@ -75,11 +75,11 @@ to locations on the array.
 \end{description}
 
 Section \ref{whatsnew} described the main differences between version 1.1 and
-this version. Section \ref{sec:get.started} describes a quick way of getting started and
+this version (1.2). Section \ref{sec:get.started} describes a quick way of getting started and
 getting expression measures. Section \ref{qc} describes the different classes
 defined in the package. Section \ref{s1.4} describes normalization routines. Section \ref{classes} describes the different classes in the package.
 \ref{sec:probesloc} describes our strategy to map probe
-locations to probe set membership. Section \ref{configure.options} describes how to change the default options on the package.
+locations to probe set membership. Section \ref{configure.options} describes how to change the default options on the package. Section \ref{whatwasnew} describes earlier changes.
 
 %%%make sure to change this when we get a publication about version 2.
 {\bf Note:} If you use this package please cite \cite{iriz:gaut:cope:2003}.
@@ -92,8 +92,7 @@ locations to probe set membership. Section \ref{configure.options} describes how
   normalization step information [not finished, list returned
   "constant" and "invariantset" for the moment. Need for a class
   and check compliance with MIAME standards]
-  \item tuning of the MAS5.0 methods implemented (bgcorrect.mas, ...)
-  [Ben for details. add URL for the comparison he made]
+  \item tuning of the MAS5.0 methods implemented (bgcorrect.mas, ...). \footnote{A comparison between official MAS5.0 and the {\tt affy} implementation can be found at \url{http://stat-www.berkeley.edu/~bolstad/MAS5diff/Mas5difference.html}.}
 \item method \verb+plot.ProbeSet+, an alternative to barplot, to plot probe
   level information.
 \item parameter 'scale' in the method barplot for ProbeSet. All the
@@ -103,6 +102,7 @@ locations to probe set membership. Section \ref{configure.options} describes how
 \noindent{\bf What's different?}
 
 \begin{itemize}
+\item Some of the large example datasets have been moved to a a new package \verb+affydata+.
 \item  Autoload of cdfenvs on demand (uses reposTools). Can be configured through the options.
 \item default methods for normalization, bg correction, pm correction
   and summary now in the package options [options exist for all, but
@@ -128,31 +128,10 @@ be observed (see Ben Bolstad's webpage). Precise comments on how these differenc
 affecting you, or even better, on how you think our code could be improved are welcome} .
  Throughout the package we use \verb+mas+ to denote the procedures described in the MAS 5.0 software.
 
-The main difference between Version 1.0 and this version is that the
-user no longer needs to provide the {\it CDF} files. We now provide a more
-efficient way of obtaining this information. Data packages containing the
-necessary CDF information can be obtained from
-\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}.
-Simply download as many of these {\it cdf environments} as you need and install
-them. The affy package will know where to look.
-If you are using the {\bf HGU95Av2} or {\bf HGU133A} chip the
-information is included in the affy package and you do not need to
-download further packages. You can also create your own cdf
-environments. See Section \ref{sec:probesloc} for information on how
-the environments work. A cdf environment making package is available
-from the Bioconductor web site \url{www.bioconductor.org}.
-
-The new version  provides a unified approach to working with probe level
-data.  {\it AffyBatch} is the main class the user will manipulate.
-We believe it combines the simplicity of the former {\it Plob} with the
-flexibility of the former {\it Cel.container}. As before, it bundles the data
-from a {\it batch} of experiments. The class {\it Cel} models the data from
-a single experiment (coming from a CEL file).
-The classes {\it Cdf} contains the information of {\it CDF} file, the
-class {\it ProbeSet} contain $PM$ and $MM$ intensities for a
-particular probe set. Beginners need do not understand these
-classes. However, they are briefly described in Section
-\ref{classes}.
+The main difference between Version 1.1 and this version (1.2) is that in most cases the user no longer needs to manually download and install the appropriate CDF environment package. If the appropriate \verb+cdfenv+ is not installed it will, by default, be downloaded and installed automatically for the user. If a prepacked CDF environment for your particular chip type is not currently available you can create your own CDF environment. You may do this using the \verb+makecdfenv+ package which is available from the Bioconductor web site \url{www.bioconductor.org}. If you are using the {\bf HGU95Av2} or {\bf HGU133A} chip the
+information is included in the affydata package and you do not need to
+download further packages. See Section \ref{sec:probesloc} for information on how
+the environments work. 
 
 There are some minor differences in what you can do but little
 functionality has disappeared. Much has been added!
@@ -170,8 +149,7 @@ library(affy)
 @
 
 And download and install the cdf environment you need
-from
-\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html} (except if
+from \url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html} (except if
 you are using the HGU95Av2 or HGU133A chip or making your own).
 
 \subsection{Quick start}
@@ -207,11 +185,15 @@ For other popular methods use \verb+expresso+ instead of \verb+rma+. For example
 R> eset <- expresso(Data, normalize=FALSE, bgcorrect.method="mas",
                      pmcorrect.method="mas",summary.method="mas")
 \end{Sinput}
-For creating your own expression measures you can use \verb+express+
-\begin{Sinput}
-R> Data <-  ReadAffy() ##read data in working directory
-R> eset <- expres(Data, summary.method=function(x) apply(x,2,median))
-\end{Sinput}
+
+
+%%% this is handled in a seperate Vignette and express has been 
+%%% deprecated
+%For creating your own expression measures you can use \verb+express+
+%\begin{Sinput}
+%R> Data <-  ReadAffy() ##read data in working directory
+%R> eset <- express(Data, summary.method=function(x) apply(x,2,median))
+%\end{Sinput}
 
 In all the above examples, the variable \verb+eset+ is an object of class \verb+exprSet+
 described in the Biobase vignette. Many of the packages in
@@ -363,7 +345,7 @@ The available methods are
 bgcorrect.methods
 @
 
- \item[normalize.method]. The normalization method to use. The
+\item[normalize.method]. The normalization method to use. The
    available methods can be queried by using
 {\it normalize.methods}.
 <<>>=
@@ -448,17 +430,19 @@ normalization similar to that described in the MAS 5.0 manual.
 
 \subsection{Li and Wong's MBEI (dchip)}
 To obtain our version of Li and Wong's MBEI one can use
-\begin{Sinput}
 %<<>>=
+\begin{Sinput}
 R> eset <- expresso(affybatch.example, normalize.method="invariantset",
                  bg.correct=FALSE,
                  pmcorrect.method="pmonly",summary.method="liwong")
-%@
 \end{Sinput}
+%@
 This gives the current $PM$-only default. The reduced model (previous
 default) can be obtained using \verb+pmcorrect.method="subtractmm"+.
 
-Or you can use \verb+express+ to use your own implementation.
+
+%%%  REMOVE because express is deprecated
+%%Or you can use \verb+express+ to use your own implementation.
 
 \subsection{C implementation of RMA}
 One of the quickest ways to compute expression using the \verb+affy+
@@ -468,12 +452,11 @@ of minutes for datasets that may have taken hours in previous versions
 of \verb+affy+. The function serves as an interface to a hard coded C
 implementation of the RMA method \cite{iriz:etal:2003}. Generally, the
 following would be sufficient to compute RMA expression measures:
-\begin{Sinput}
 %<<>>=
+\begin{Sinput}
 R> eset <- rma(affybatch.example)
-%@
 \end{Sinput}
-
+%@
 Currently the \verb+rma+ function implements RMA in the following manner
 \begin{enumerate}
 \item Probe specific correction of the PM probes using a model based
@@ -509,7 +492,7 @@ is publicly available from Gene Logic
 describes the data set.
 
 <<>>=
-require(affydata)
+library(affydata)
 data(Dilution)
 Dilution
 @
@@ -1139,7 +1122,7 @@ element {\it what} can be one of {\it package}, {\it environment}.
 
 
 \section{Previous Release Notes}
-\label{whatwassnew}
+\label{whatwasnew}
 \subsection{Changes in Version 1.1.x}
 {\bf What's new?}
 \begin{itemize}
@@ -1155,7 +1138,7 @@ preprocessing when computing expression measures.
 \end{itemize}
 
 \noindent{\bf What's different?}
-The new version is not backwards compatible! Unfurtunately the changes
+The new version is not backwards compatible! Unfortunately the changes
 we had to make to gain efficiency has resulted in some lack of
 backwards compatibility. Here are some   
 important ones:
@@ -1171,7 +1154,34 @@ important ones:
   \verb+AffyBatch+) by probe set name
 \end{itemize}
 
+The main difference between Version 1.0 and this version (1.1) is that the
+user no longer needs to provide the {\it CDF} files. We now provide a more
+efficient way of obtaining this information. Data packages containing the
+necessary CDF information can be obtained from
+\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}.
+Simply download as many of these {\it cdf environments} as you need and install
+them. The affy package will know where to look.
+If you are using the {\bf HGU95Av2} or {\bf HGU133A} chip the
+information is included in the affy package and you do not need to
+download further packages. You can also create your own cdf
+environments. See Section \ref{sec:probesloc} for information on how
+the environments work. A cdf environment making package is available
+from the Bioconductor web site \url{www.bioconductor.org}.
 
+Version 1.1 provides a unified approach to working with probe level
+data.  {\it AffyBatch} is the main class the user will manipulate.
+We believe it combines the simplicity of the former {\it Plob} with the
+flexibility of the former {\it Cel.container}. As before, it bundles the data
+from a {\it batch} of experiments. The class {\it Cel} models the data from
+a single experiment (coming from a CEL file).
+The classes {\it Cdf} contains the information of {\it CDF} file, the
+class {\it ProbeSet} contain $PM$ and $MM$ intensities for a
+particular probe set. Beginners need do not understand these
+classes. However, they are briefly described in Section
+\ref{classes}.
+
+There are some minor differences in what you can do but little
+functionality has disappeared. Much has been added!
 
 \bibliographystyle{plainnat}
 \bibliography{affy}
