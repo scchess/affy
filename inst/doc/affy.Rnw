@@ -89,69 +89,18 @@ locations to probe set membership. Section \ref{configure.options} describes how
 {\bf Note:} If you use this package please cite
 \cite{iriz:gaut:cope:2003} (or \cite{gaut:cope:bols:iriz:200x}).
 
-\section{Changes in Version 1.2.x}
+\section{Changes in Version 1.3.x}
 \label{whatsnew}
 {\bf What's new?}
 \begin{itemize}
-\item slot 'preprocessing' of the MIAME attribute used to store
-  normalization step information [list returned; more complex but
-  organised structures (like a class) are under evaluation.]
-  \item tuning of the implementations of the MAS5.0 methods 
-  (bgcorrect.mas, ...).
-  \footnote{A comparison between the implementations of algorithms in
- MAS5.0 and the ones in {\tt affy}
- can be found at \url{http://stat-www.berkeley.edu/~bolstad/MAS5diff/Mas5difference.html}.}
-\item method \Rfunction{plot.ProbeSet}, an alternative to barplot, to plot probe
-  level information.
-\item parameter 'scale' in the method barplot for ProbeSet. All the
-  barplots are scaled to each other.
-\item New functions 'xy2indices' and 'indices2xy' to shuttle from
-  x/y pos to indices (like the ones in cdfenvs) (and reverse).
-\item The documentation for normalization has been improved.
-\item Due to some new protocols \verb+?AffyBatch+ no longer will give you the help file. One needs to
-to type \verb+class?AffyBatch+, \verb+help("AffyBatch-class")+ or \verb+?"AffyBatch-class"+.
- Same is true for other classes.
-\item The function \verb+justRMA+ added for those who want to use \verb+rma+ and are having memory problems.
+\item \verb+Cel+ class no longer supported. Function \verb+read.celfile+ and other \verb+Cel+ related methods and functions removed.
+\item Speedn and memory improvement of \verb+ReadAffy+ and \verb+read.affybatch+.
+\item Package no longer depends on \verb+affydata+ package. For this reasone many examples have been moved from this vignette to the \verb+affydata+ vignette.
 \end{itemize}
-
-\noindent{\bf What's different?}
-
-\begin{itemize}
-\item Some of the large example datasets have been moved to a a new package \Rpackage{affydata}.
-\item  Autoload of cdfenvs on demand (uses reposTools). Can be configured through the options.
-\item default methods for normalization, bg correction, pm correction
-  and summary now in the package options [options exist for all, but
-  only used by normalize for the moment].
-\item The default background on the \Rfunction{rma} function has been changed. Now 
-  the results from \Rfunction{rma} and \Rfunction{expresso} should agree completely.
-\item  The function \Rfunction{express} is deprecated. It still functions normally 
-  but gives warning mesage. It will be removed in a future release.
-  The function \Rfunction{expresso} should be used as a replacement.
-\item bug in the parser fixed (infinite loop reported with apparently
-  non-standard CEL files).
-\item bug in the parser fixed (the 'sd' data returned were not correct).
-\item missing slot in the dataset SpikeIn fixed.
-\item  bug in normalize.AffyBatch.qspline fixed (thanks to people at
-  Insightful). The expression data matrix sent to normalize.qspline
-  was mistakingly transposed.
-\item barplot.ProbeSet scales plots to eachothers by default.
-\end{itemize}
-
-In this version, we have implemented some procedures
-described in the MAS 5.0 manual the best we could\footnote{Differences can still
-be observed (see Ben Bolstad's webpage). Precise comments on how these differences are
-affecting you or on how you think our code could be improved are welcome} .
-Throughout the package we use \Rfunction{mas} to denote the procedures described in the MAS 5.0 software. 
-
-The main difference between Version 1.1 and this version (1.2) is that in most cases the user no longer needs to manually download and install the appropriate CDF environment package. If the appropriate \verb+cdfenv+ is not installed it will, by default, be downloaded and installed automatically for the user. If a prepacked CDF environment for your particular chip type is not currently available you can create your own CDF environment. You may do this using the \Rpackage{makecdfenv} package which is available from the Bioconductor web site \url{www.bioconductor.org}. If you are using {\bf HGU95Av2} or {\bf HGU133A} chips, the
-information is included in the \Rpackage{affydata} package. You can load this package instead of downloading further packages. See Section \ref{sec:probesloc} for information on how the environments work. 
 
 There are some minor differences in what you can do but little
 functionality has disappeared. Much has been added!
 
-%%% RI: raw is DAT file. so i changed raw to probe level.
-%% LG: Depends on point of view. It is the case for people doing image
-%% analysis, not for us so far... 
 \section{Getting Started: From probe level data to expression values}
 \label{sec:get.started}
 
@@ -162,7 +111,13 @@ R> library(affy) ##load the affy package
 <<echo=F,results=hide>>=
 library(affy)
 @
-This release of the \Rpackage{affy} pacakge will automatically download the appropriate cdf environment when you require it. However, if you wish you may download and install the cdf environment you need from \url{http://www.bioconductor.org/data/metaData.html} manually. If there is no cdf environment currently built for your particular chip and you have access to the CDF file then you may use the \Rpackage{makecdfenv} package to create one yourself.
+This release of the \Rpackage{affy} pacakge will automatically
+download the appropriate cdf environment when you require it. However,
+if you wish you may download and install the cdf environment you need
+from \url{http://www.bioconductor.org/data/metaData.html} manually. If
+there is no cdf environment currently built for your particular chip
+and you have access to the CDF file then you may use the
+\Rpackage{makecdfenv} package to create one yourself.  
 
 \subsection{Quick start}
 If all you want is to go from probe level data ({\it Cel} files) to
@@ -173,7 +128,7 @@ is the following:
 \begin{enumerate}
 \item Create a directory, move all the relevant
 {\it CEL} files to that directory
-\item Start R in that directory.
+\item If using linux/unix, start R in that directory.
 \item If using the Rgui for 
 Microsoft Windows make sure your working directory contains the {\it
 Cel} files (use ``File -> Change Dir'' menu item).
@@ -198,7 +153,8 @@ An another option is to use the function \Rfunction{justRMA}.
 \begin{Sinput}
 R> eset <- justRMA(Data)
 \end{Sinput}
-This reads the data and performs the `RMA' way to preprocess them at the {\it C} level.
+This reads the data and performs the `RMA' way to preprocess them at
+the {\it C} level. 
 One does not need to call \verb+ReadAffy+, probe level
 data is never stored in an AffyBatch. \verb+rma+ continues to be the
 recommended function for computing RMA.
@@ -223,7 +179,8 @@ be turned off through the \verb+normalize+ argument.
 %R> eset <- express(Data, summary.method=function(x) apply(x,2,median))
 %\end{Sinput}
 
-In all the above examples, the variable \Robject{eset} is an object of class \Robject{exprSet}
+In all the above examples, the variable \Robject{eset} is an object of
+class \Robject{exprSet} 
 described in the Biobase vignette. Many of the packages in
 Bioconductor work on objects of this class. See the genefilter and
 geneplotter packages for some examples.
@@ -532,28 +489,27 @@ for \Robject{AffyBatch} objects.  Each of these functions presents
 side-by-side graphical summaries of intensity information from each
 array.  Important differences in the distribution of intensities are
 often evident in these plots. The function
-\Rfunction{mva.pairs} (applied, for example, to \verb+pm(Dilution)+), 
+\Rfunction{mva.pairs} (applied, for example, to \verb+pm(affybatch.example)+), 
 offers pairwise 
 graphical comparison of intensity data.  These plots can be particularly
 useful in diagnosing problems in replicate sets of arrays.
 
 For the users convenience we have included a sample data set
-containing part of the data from a Dilution experiment. The full data
+containing part of the data from a affybatch.example experiment. The full data
 is publicly available from Gene Logic
 \url{http://qolotus02.genelogic.com/datasets.nsf/} and described in
-\cite{iriz:etal:2003}. The help file obtained via \verb+?Dilution+
+\cite{iriz:etal:2003}. The help file obtained via \verb+?affybatch.example+
 describes the data set.
 
 <<results=hide>>=
-library(affydata)
-data(Dilution)
+data(affybatch.example)
 @
 
 <<>>=
-Dilution
+affybatch.example
 @
 
-This will create the \verb+Dilution+ object of class \Robject{AffyBatch}.
+This will create the \verb+affybatch.example+ object of class \Robject{AffyBatch}.
 \Rfunction{print} (or \Rfunction{show}) will display summary information.
 These objects represent data from one
 experiment. The \Robject{AffyBatch} class combines the
@@ -562,13 +518,13 @@ class is designed to keep information of one experiment. The probe
 level data is contained in this object.
 
 
-The data in \verb+Dilution+ is a small sample of probe sets from 2
+The data in \verb+affybatch.example+ is a small sample of probe sets from 2
 sets of duplicate arrays hybridized with different concentrations of the
 same RNA.  This information is part of the \Robject{AffyBatch} and can be
 accessed with the \verb+phenoData+ and \verb+pData+ methods:
 <<>>=
-phenoData(Dilution)
-pData(Dilution)
+phenoData(affybatch.example)
+pData(affybatch.example)
 @
 
 \subsection{Accessing $PM$ and $MM$ Data}
@@ -581,34 +537,34 @@ $i$th entry of the vector returned by \Rfunction{probeNames}.
 
 <<>>=
 Index <- c(1,2,3,100,1000,2000) ##6 arbitrary probe positions
-pm(Dilution)[Index,]
-mm(Dilution)[Index,]
-probeNames(Dilution)[Index]
+pm(affybatch.example)[Index,]
+mm(affybatch.example)[Index,]
+probeNames(affybatch.example)[Index]
 @
 \verb+Index+ contains six arbitrary probe positions.
 
 Notice that the column names of $PM$ and $MM$ matrices are the sample
-names and the row names are the {\it affyID}, e.g. \verb+1000_at+ and \verb+1006_at+ together with the probe
+names and the row names are the {\it affyID}, e.g. \verb+AB000114_at+ and \verb+AB000115_at+ together with the probe
 number (related to position in the target sequence).
 
 <<>>=
-sampleNames(Dilution)
+sampleNames(affybatch.example)
 @
 
 {\bf Quick example:} To see what percentage of the $MM$ are larger than the $PM$ simply type
 <<>>=
-mean(mm(Dilution)>pm(Dilution))
+mean(mm(affybatch.example)>pm(affybatch.example))
 @
 
 The \Rfunction{pm} and \Rfunction{mm} functions can be used to extract specific
 probe set intensities.
 <<>>=
-gn <- geneNames(Dilution)
-pm(Dilution,gn[1000])
+gn <- geneNames(affybatch.example)
+pm(affybatch.example,gn[100])
 @
 The method \Rfunction{geneNames} extracts the unique {\it
-affyID}s. Also notice that the 1000th probe set is different from the
-1000th probe! The 1000th probe is not part of the the 1000th probe set.
+affyID}s. Also notice that the 100th probe set is different from the
+100th probe! The 100th probe is not part of the the 100th probe set.
 
 The methods \Rfunction{boxplot}, \Rfunction{hist}, and
 \Rfunction{image}
@@ -660,9 +616,9 @@ The method \Rfunction{boxplot} can be used to show $PM$, $MM$ or both intensitie
 \begin{center}
 <<fig=TRUE>>=
 par(mfrow=c(1,1))
-boxplot(Dilution,col=c(2,2,3,3))
+boxplot(affybatch.example,col=c(2,2,3,3))
 @
-\caption{\label{f4}Boxplot of arrays in dilution data.}
+\caption{\label{f4}Boxplot of arrays in affybatch.example data.}
 \end{center}
 \end{figure}
 As discussed in the next section this plot shows that we need to
@@ -709,89 +665,14 @@ plotAffyRNAdeg(deg)
 \section{Normalization}
 \label{s1.4}
 Various researchers have pointed out the need for normalization of Affymetrix
-arrays. See for example \cite{bols:etal:2003}. Let's look at an  example.
-The first two arrays in \verb+Dilution+ are technical replicates (same RNA),
-so the intensities obtained from these should be about the same. The
-second 2 are also replicates. The second arrays are hybridized to
-twice as much RNA so the intensities should be in general
-bigger. However, notice that the scanner effect is stronger than
-the RNA concentration effect.
+arrays. See for example \cite{bols:etal:2003}. The method \verb+normalize+
+lets one normalize at the probe level
 
-<<>>=
-pData(Dilution) ##notice the scanner covariate
-@
-The \Rfunction{boxplot} method for the \verb+AffyBatch+ class, shown in
-Figure \ref{f4},  shows this is the case.
+<<>>= 
+affybatch.example.normalized <- normalize(affybatch.example)
+@ 
 
-
-Figure \ref{f4} shows the need for normalization. For example arrays
-scanned using scanner 1 are
-globally larger than those scanned with 2.
-
-Another way to see that normalization is needed is by looking at log ratio
-versus average log intensity (MVA) plots. The method \verb+mva.pairs+ will
-show all MVA plots of each pairwise comparison on the top right half and
-the interquartile range (IQR) of the log ratios on the bottom left half.
-For replicates and cases where most genes are not differentially expressed,
-we want the cloud of points to be around 0 and the IQR to be small.
-\begin{figure}[htbp]
-\begin{center}
-<<echo=F>>=
-options(warn=-1)
-@
-<<fig=TRUE>>=
-gn <- sample(geneNames(Dilution),100) ##pick only a few genes
-pms <- pm(Dilution[3:4],gn)
-mva.pairs(pms)
-@
-\caption{\label{f5}MVA pairs for first two arrays in dilution data}
-  \end{center}
-\end{figure}
-
-
-The method \verb+normalize+ lets one normalize the data.
-<<>>=
-normalized.Dilution <- merge(normalize(Dilution[1:2]),
-                             normalize(Dilution[3:4]))
-@
-We normalize the two concentration groups separately.
-Notice the function \verb+merge+ permits us to put together two
-\verb+AffyBatch+ objects.
-
-Various methods are available for normalization (see the help
-file). The default is quantile normalization \citep{bols:etal:2003}).
-All the available methods are obtained using this function:
-<<>>=
-normalize.methods(Dilution)
-@
-and can be called using the \verb+method+ argument of the normalize
-function.
-
-Figures \ref{f4.2} and \ref{f5.2} show the boxplot and mva pairs plot after
-normalization. The normalization routine seems to correct the boxplots
-and mva plots.
-
-
-\begin{figure}[htbp]
-\begin{center}
-<<fig=TRUE>>=
-boxplot(normalized.Dilution,col=c(2,2,3,3))
-@
-\caption{\label{f4.2}Boxplot of first arrays in normalized
-dilution data.}
-  \end{center}
-\end{figure}
-
-\begin{figure}[htbp]
-\begin{center}
-<<fig=TRUE>>=
-pms <- pm(normalized.Dilution[3:4],gn)
-mva.pairs(pms)
-@
-\caption{\label{f5.2}MVA pairs for first two replicate arrays in normalized
-dilution data}
-\end{center}
-\end{figure}
+For an etended example on normalization please refer to the vignette in the affydata package.
 
 \section{Classes}
 \label{classes}
@@ -836,8 +717,8 @@ The method \verb+probeset+ extracts probe sets from \verb+AffyBatch+
 objects. It takes as arguments an \verb+AffyBatch+ object and a vector of
 {\it affyIDs} and returns a list of objects of class \verb+ProbeSet+
 <<>>=
-gn <- geneNames(Dilution)
-ps <- probeset(Dilution,gn[1:2])
+gn <- geneNames(affybatch.example)
+ps <- probeset(affybatch.example,gn[1:2])
 #this is what i should be using: ps
 show(ps[[1]])
 @
@@ -850,14 +731,14 @@ default is to use the definition of a probe set given by Affymetrix in
 the CDF file. However, the user can define arbitrary probe sets. The
 argument \verb+locations+ lets the user decide the row numbers in the
 \verb+intensity+ that define a probe set. For example, if we are
-interested in redefining the \verb+1000_at+ and \verb+1001_at+ probe
+interested in redefining the \verb+AB000114_at+ and \verb+AB000115_at+ probe
 sets, we could do the following:
 
 First, define the locations of the $PM$ and $MM$ on the array of the
-\verb+1000_at+ and \verb+1001_at+ probe sets
+\verb+AB000114_at+ and \verb+AB000115_at+ probe sets
 <<>>=
-mylocation <- list("1000_at"=cbind(pm=c(1,2,3),mm=c(4,5,6)),
-                   "1001_at"=cbind(pm=c(4,5,6),mm=c(1,2,3)))
+mylocation <- list("AB000114_at"=cbind(pm=c(1,2,3),mm=c(4,5,6)),
+                   "AB000115_at"=cbind(pm=c(4,5,6),mm=c(1,2,3)))
 @
 The first column of the matrix defines the location of the $PM$s and
 the second column the $MM$s.
@@ -865,7 +746,7 @@ the second column the $MM$s.
 Now we are ready to extract the \verb+ProbSet+s using the
 \verb+probeset+ function:
 <<>>=
-ps <- probeset(Dilution,genenames=c("1000_at","1001_at"),locations=mylocation)
+ps <- probeset(affybatch.example,genenames=c("AB000114_at","AB000115_at"),locations=mylocation)
 @
 Now, \verb+ps+ is list of \verb+ProbeSet+s. We can see the $PM$s and
 $MM$s of each component using the \verb+pm+ and \verb+mm+ accessor methods.
@@ -1069,14 +950,15 @@ This gives annotation name:
 cat("HG_U95Av2 is",cleancdfname("HG_U95Av2",addcdf=FALSE),"\n")
 @
 
-The HGU95Av2 and HGU133A environments are available with the package.
+An environment representing the corner of an Hu6800 array 
+is available with the package.
 In the following, we load the environment,
 look at the names for the first 5 objects defined
 in the environment, and finally look at the first object in the environment:
 <<>>=
-data(hgu95av2cdf)
-ls(hgu95av2cdf)[1:5]
-get(ls(hgu95av2cdf)[1],hgu95av2cdf)
+data(cdfenv.example)
+ls(cdfenv.example)[1:5]
+get(ls(cdfenv.example)[1],cdfenv.example)
 @
 
 The package needs to know what locations correspond to which probe
@@ -1097,13 +979,13 @@ myenv <- getCdfInfo(affybatch.example)
 ls(myenv)[1:5]
 @
 Notice \verb+affybatch.example+ must be loaded (see above).
-Now lets look at \verb+Dilution+
+Now lets look at \verb+affybatch.example+
 <<>>=
-print(Dilution@cdfName)
-myenv <- getCdfInfo(Dilution)
+print(affybatch.example@cdfName)
+myenv <- getCdfInfo(affybatch.example)
 ls(myenv)[1:5]
 @
-Notice \verb+Dilution+ should be loaded already as abouve.
+Notice \verb+affybatch.example+ should be loaded already as abouve.
 
 By default we search for the environment first in the global
 environment, then in a package named \verb+cleancdfname(x@cdfName)+,
@@ -1115,29 +997,26 @@ options (see Section \ref{configure.options}).
 Various methods exist to obtain locations of probes as demonstrated
 in the following examples:
 <<>>=
-Index <- pmindex(Dilution)
+Index <- pmindex(affybatch.example)
 names(Index)[1:2]
 Index[1:2]
 @
 \verb+pmindex+ returns a list with probe set names as names and
 locations in the components. We can also get specific probe sets:
 <<>>=
-pmindex(Dilution,genenames=c("1000_at","1001_at"))
-pmindex(Dilution,genenames=c("1000_at"),xy=TRUE)
+pmindex(affybatch.example,genenames=c("AB000114_at","AB000115_at"))
 @
-The \verb+xy+ argument permits us to figure out the original $x$ and
-$y$ coordinates of the probes. The locations are ordered from 5' to 3'
+The locations are ordered from 5' to 3'
 on the target transcript. The function \verb+mmindex+ performs in a
 similar way:
 <<>>=
-mmindex(Dilution,genenames=c("1000_at","1001_at"))
-mmindex(Dilution,genenames=c("1000_at"),xy=TRUE)
+mmindex(affybatch.example,genenames=c("AB000114_at","AB000115_at"))
 @
 They both use the method \verb+indexProbes+
 <<>>=
-indexProbes(Dilution,which="pm")[1]
-indexProbes(Dilution,which="mm")[1]
-indexProbes(Dilution,which="both")[1]
+indexProbes(affybatch.example,which="pm")[1]
+indexProbes(affybatch.example,which="mm")[1]
+indexProbes(affybatch.example,which="both")[1]
 @
 The \verb+which="both"+ options returns the location of the $PM$s
 followed by the $MM$s.

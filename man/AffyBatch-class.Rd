@@ -169,11 +169,10 @@ mypmindex <- indexProbes(affybatch.example, which="pm", genenames="A28102_at")[[
 intensity(affybatch.example)[mypmindex, ]
 
 ## load bigger example (try 'help(Dilution)' )
-require(affydata)
-data(Dilution)
-description(Dilution) ##we can also use the methods of exprSet
-sampleNames(Dilution)
-abstract(Dilution)
+data(affybatch.example)
+description(affybatch.example) ##we can also use the methods of exprSet
+sampleNames(affybatch.example)
+abstract(affybatch.example)
 }
 
 \keyword{classes}

@@ -27,19 +27,18 @@ plotLocation(x, col="green", pch=22, ...)
 }
 \examples{
   ## loading data
-  require(affydata)
-  data(Dilution)
+  data(affybatch.example)
 
   ## image of the celfile
-  image(Dilution[1])
+  image(affybatch.example[1])
 
-  ## genenames
-  n <- geneNames(Dilution)[1]
+  ## genenames, arbitrarily pick the 101th
+  n <- geneNames(affybatch.example)[101]
 
   ## get the location for the gene n
-  l <- indexProbes(Dilution, "both", n)[[1]]
+  l <- indexProbes(affybatch.example, "both", n)[[1]]
   ## convert the index to X/Y coordinates
-  xy <- indices2xy(l, abatch=Dilution) 
+  xy <- indices2xy(l, abatch=affybatch.example) 
 
   ## plot
   plotLocation(xy)
