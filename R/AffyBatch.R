@@ -1,62 +1,52 @@
 .initAffyBatch <- function(where){
-
+  
   if (debug.affy123) cat("-->initAffyBatch\n")
-    
-  setClass("AffyBatch",
-           representation(intensity="array",
-                          cdfName="character",
-                          chipNames="character",
-                          phenoData="phenoData",
-                          nrow="numeric", # dim(intensity) <- c(nrow, ncol, nexp) to go 3-ways
-                          ncol="numeric",
-                          nexp="numeric",
-                          annotation="character",
-                          description="characterORMIAME",
-                          notes="character",
-                          history="list"),
-           where=where)
+  
+  setClass("AffyBatch", ##keep it very simple and like exprSet
+           representation(cdfName="character",
+                          nrow="numeric",
+                          ncol="numeric"),
+           prototype=list(exprs=matrix(nr=0,nc=0),
+             se.exprs = matrix(nr=0,nc=0),
+             description=new("MIAME"),
+             annotation="",
+             notes="",
+             cdfName="",
+             nrow=0,
+             ncol=0), contains="exprSet", where=where)
 
   if (debug.affy123) cat("--->accessors\n")
-  ## accessors
+
+#######################################################
+### accessors
+#######################################################
+  
+  ##intensity
   setMethod("intensity", signature(object="AffyBatch"),
-            function(object) object@intensity,
+            function(object) object@exprs,
             where=where)
+  
   
   setReplaceMethod("intensity", signature(object="AffyBatch"),
                    function(object, value){
-                     object@intensity <- value
-                     object
-                   }, where=where)
-  
-  setMethod("chipNames", signature(object="AffyBatch"),
-            function(object) object@chipNames,
-            where=where)
-  
-  setReplaceMethod("chipNames", signature(object="AffyBatch"),
-                   function(object, value){
-                     object@chipNames <- value
-                     object
-                   }, where=where)
-  
-  setMethod("history", signature(max.show="AffyBatch", reverse="missing"),
-            function(max.show) max.show@history,
-            where=where)
-  
-  setReplaceMethod("history", signature(object="AffyBatch"),
-                   function(object, value){
-                     object@history <- value
+                     object@exprs <- value
+                     colnames(object@exprs) <- sampleNames(object)
                      object
                    }, where=where)
 
+  ##for now, there is no accessor for se.exprs. we could use this to store
+  ##sd, but if no one uses it... why do it
+  
   setMethod("length",signature(x="AffyBatch"),
-            function(x) x@nexp,
+            function(x) ncol(x@exprs), ##RI: assumes matrices
             where=where)
   
+  ##sample Names now comes from Biobase
   if (debug.affy123) cat("--->getCdfInfo\n")
   if( !isGeneric("getCdfInfo") )
     setGeneric("getCdfInfo", function(object, ...)
                standardGeneric("getCdfInfo"), where=where)
-
+  
   setMethod("getCdfInfo", signature("AffyBatch"),
             function (object, how=getOption("BioC")$affy$probesloc) {
               ## "how" is a list. each element of the list must have an element
@@ -64,29 +54,46 @@
               ## "what" can be "package", "file" or "environment"
               ## "where" is where it can be found
               
-              for (i in length(how)) {
+              for (i in 1:length(how)) {
                 what <- how[[i]]$what
                 where <- how[[i]]$where
                 
                 if (what == "package") {
-                  loc <- .find.package(object@cdfName, lib.loc=where, quiet=TRUE)
-                  
-                  if (identical(loc, character(0)))
-                    stop(paste("AffyBatch: Looked for probes information in the package ", object@cdfName, "but could not find it.\n"))
-                  ##may be an option to try to autoload the package from
-                  ##the bioconductor website woud be nice here
-                  ## there is already a "how[[i]]$autoload" available
-                  
-                  if (length(loc) > 1)
-                    warning(paste("several packages with a matching name. Using the one at", loc[1]))
-                  
-                  do.call("library", list(object@cdfName, lib.loc=dirname(loc[1])))
-                  return(get(name, envir=as.environment(paste("package:", object@cdfName, sep=""))))
-                  ##object@cdfInfo <<- get(name, envir=as.environment(paste("package:",name, sep="")))
+                  cdfname <- cleancdfname(object@cdfName)
+                  ##if we can get it from data dir. otherwise load package
+                  if(cdfname%in%data(package="affy")$results[,3]){
+                    where <- as.environment(match(paste("package:affy",
+                                                        sep = ""),search()))
+                    if(!exists(cdfname,where=where,inherits=FALSE)){
+                      path <- .path.package("affy")
+                      filename <- paste(cdfname,".rda",sep="")
+                      load(file.path(path, "data", filename) ,
+                           envir = where)
+                    }
+                    return(get(cdfname, envir=where))
+                  }
+                  else{
+                    loc <- .find.package(cdfname, lib.loc=where, quiet=TRUE)
+                    
+                    if (identical(loc, character(0)))
+                      stop(paste("AffyBatch: Looked for probes information in the package ", cdfname, "but could not find it.\n"))
+                    ##may be an option to try to autoload the package from
+                    ##the bioconductor website woud be nice here
+                    ## there is already a "how[[i]]$autoload" available
+                    
+                    if (length(loc) > 1)
+                      warning(paste("several packages with a matching name. Using the one at", loc[1]))
+                    
+                    do.call("library", list(cdfname, lib.loc=dirname(loc[1])))
+                    return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
+                    ##object@cdfInfo <<- get(name, envir=as.environment(paste("package:",name, sep="")))
+                  }
                 }
-              
+                
                 if (what == "file") {
-                  cdf <- read.cdffile(file.path(path.expand(where), object@cdfName))
+                  ##now this is an actual Affymetrix filename
+                  cdfname <- paste(object@cdfName,".CDF",sep="")
+                  cdf <- read.cdffile(file.path(path.expand(where), cdfname))
                   ## ---> extra paranoia <---
                   if (cdf@cdfName != object@cdfName)
                     warning(paste("The CDF file identifies as", cdf@cdfName,
@@ -99,14 +106,15 @@
                 }
                 
                 if (what == "environment") {
-                  return(as.environment(get(object@cdfName, where)))
+                  return(as.environment(get(cleancdfname(object@cdfName),
+                                            where)))
                   ##object@cdfInfo <<- as.environment(get(name, where))
                 }
               }
-              stop(paste("Informations about probes locations for ", object@cdfName, " could not be found"))
+              stop(paste("Information about probe locations for ", object@cdfName, " could not be found"))
             },
             where=where)
-
+  
   ##geneNames method
   if (debug.affy123) cat("--->geneNames\n")
   if( !isGeneric("geneNames") )
@@ -117,26 +125,6 @@
               cdf.envir <- getCdfInfo(object)
               return(ls(env=cdf.envir))
             },where=where)
-
-  
-  ##chipNames method
-  if( !isGeneric("chipNames") )
-    setGeneric("chipNames", function(object)
-               standardGeneric("chipNames"), where=where)
-  setMethod("chipNames","AffyBatch",function(object){
-    ##colnames(object@intensity)
-    object@chipNames
-  },where=where)
-
-  if( !isGeneric("chipNames<-") )
-    setGeneric("chipNames<-", function(object)
-               standardGeneric("chipNames<-"), where=where)
-  setReplaceMethod("chipNames", signature(object="AffyBatch"),
-                   function(object, value){
-                     ##colnames(intensity(object)) <- value
-                     object@chipNames <- value
-                     object
-                   }, where=where)
 
   
   ##show method
@@ -178,7 +166,8 @@
               
               which <- match.arg(which)
               
-              i.probes <- match(which, c("pm", "mm")) # i.probes will know if "[,1]" or "[,2]"
+              i.probes <- match(which, c("pm", "mm"))
+              ## i.probes will know if "[,1]" or "[,2]"
               
               envir <- getCdfInfo(object)
               
@@ -221,17 +210,17 @@
   if( !isGeneric("pmindex") )
     setGeneric("pmindex", function(object,...)
                standardGeneric("pmindex"), where=where)
-
+  
   ##wrapper
   setMethod("pmindex", "AffyBatch",
             function(object, genenames=NULL,xy=FALSE) 
             indexProbes(object, "pm", genenames=genenames, xy=xy),
             where=where
             )
-            
+  
   ##mmindex method
-            if( !isGeneric("mmindex") )
-            setGeneric("mmindex", function(object,...)
+  if( !isGeneric("mmindex") )
+    setGeneric("mmindex", function(object,...)
                standardGeneric("mmindex"), where=where)
   
   ##wrapper
@@ -249,12 +238,12 @@
                standardGeneric("probeNames"), where=where)
   
   setMethod("probeNames","AffyBatch",
-  function(object,genenames=NULL,mm=FALSE){
-    if(mm) Index <- mmindex(object,genenames)
-    else Index <- pmindex(object,genenames)
-    reps <- unlist(lapply(Index,length))
-    rep(names(Index),reps)
-  },where=where)
+            function(object,genenames=NULL,mm=FALSE){
+              if(mm) Index <- mmindex(object,genenames)
+              else Index <- pmindex(object,genenames)
+              reps <- unlist(lapply(Index,length))
+              rep(names(Index),reps)
+            },where=where)
 
 
   if (debug.affy123) cat("--->probes\n")
@@ -263,18 +252,19 @@
                standardGeneric("probes"), where=where)
   
   setMethod("probes", signature("AffyBatch"),
-            function(object, which=c("pm", "mm"), genenames=NULL, LISTRUE=FALSE){
-
+            function(object, which=c("pm", "mm"),
+                     genenames=NULL, LISTRUE=FALSE){
+              
               which <- match.arg(which)
               
               index <- indexProbes(object, which, genenames)
               
               if(LISTRUE)
-                ans <- lapply(index, function(i) object@intensity[i, ])
+                ans <- lapply(index, function(i) object@exprs[i, ])
               else{
                 index <- unlist(index)
-                ans <- object@intensity[index, ]
-                colnames(ans) <- chipNames(object)
+                ans <- object@exprs[index, ]
+                colnames(ans) <- sampleNames(object)
                 rownames(ans) <- names(index)
               }
               
@@ -289,7 +279,8 @@
                standardGeneric("pm"), where=where)
   
   setMethod("pm","AffyBatch",
-            function(object, genenames=NULL, LISTRUE=FALSE) probes(object, "pm", genenames, LISTRUE=LISTRUE),
+            function(object, genenames=NULL, LISTRUE=FALSE)
+            probes(object, "pm", genenames, LISTRUE=LISTRUE),
             where=where
             )
   
@@ -341,47 +332,35 @@
     return(p.pps)
     
   },where=where)
-
-  if (debug.affy123) cat("--->[[\n")
-  setMethod("[[", "AffyBatch",
-            function(x, i, j) {
-              ##DEBUG: NA ?! watch this in next versions of R
-              ## spotsd stuff to be really removed ?
-              ##if (is.na.spotsd(x)) {
-              mysd <- matrix()
-              ##} else {
-              ##  mysd <- spotsd(x)[, , i]
-              ##}
-              oldim <- dim(intensity(x))
-              dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
-              ##new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=chipNames(x)[i], cdfName=x@cdfName, outliers=outliers(x)[[i]], masks=masks(x)[[i]], history=history(x)[[i]]) ## commented out becuase no 'outliers' or 'masks'.
-              cel <- new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=chipNames(x)[i], cdfName=x@cdfName, outliers=matrix(), masks=matrix(), history=history(x)[[i]])
-              dim(intensity(x)) <- oldim
-              return(cel)
-            },
-            where=where)
-
-  setReplaceMethod("[[", "AffyBatch",
-                   function(x, i, j, ..., value) {
-                     oldim <- dim(intensity(x))
-                     dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
-                     intensity(x)[, , i] <- intensity(value)
-                     ## spotsd ?
-                     ##if ((! is.na.spotsd(x)) & (spotsd(value) != c(NA)))
-                     ##  spotsd(x)[, , i] <- spotsd(value)
-                     x@name[i] <- chipNames(value)
-                     
-                     if (x@cdfName != value@cdfName)
-                       warning("cdfName mismatch !")
-                     
-                     ##outliers(x)[[i]] <- outliers(value)
-                     ##masks(x)[[i]] <- masks(value)
-                     history(x)[[i]] <- history(value)
-                     dim(intensity(x)) <- oldim
-                     return(x)
-                   },
-                   where=where)
   
+  if (debug.affy123) cat("--->[[\n")
+  ##[[
+  setMethod("[[", "AffyBatch",
+            function(x, i, j, ...) { ##no need for j
+              return(new("Cel",
+                         intensity=matrix(intensity(x)[,i],x@ncol,x@nrow),
+                         name=sampleNames(x)[i],
+                         cdfName=x@cdfName))
+              ##later we can get history from MIAME
+            },where=where)
+  
+  ##[[ we need replacement that takes an entry by the Cel in value
+    
+  ##[ subseting. can only happen by sample. for now not by gene
+  setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
+    if( !missing(i) ) {
+      phenoData(x) <- phenoData(x)[i, , ..., drop=FALSE]
+      intensity(x) <- intensity(x)[ ,i, ..., drop=FALSE]
+    }
+    x
+  },where=where)
+  
+  setReplaceMethod("[", "AffyBatch", function(x, i, j,..., value) {
+    phenoData(x)[i,, ...] <- phenoData(value)[i, , ..., drop=FALSE]
+    intensity(x)[,i]      <- intensity(value)[ ,i,... , drop=FALSE]
+    x
+  },where=where)
+
   ## normalize.methods
   if (debug.affy123) cat("--->normzalize.methods\n")
   if( !isGeneric("normalize.methods") )
@@ -394,7 +373,7 @@
               normalize.AffyBatch.methods
             },
             where=where)
-
+  
   
   if (! isGeneric("normalize"))
     setGeneric("normalize", function(object, ...) standardGeneric("normalize"),
@@ -533,14 +512,21 @@
 
               ## instance exprSet
               ##if (verbose) cat("instancianting an exprSet.....")
-              dimnames(exp.mat) <- list(ids, chipNames(x))
-              eset <- new("exprSet", exprs=exp.mat, se.exprs=matrix())
+              dimnames(exp.mat) <- list(ids, sampleNames(x))
+              eset <- new("exprSet",
+                          exprs=exp.mat,
+                          se.exprs=matrix(), ##these needs to change
+                          phenoData=phenoData(x),
+                          description=description(x),
+                          annotation=annotation(x),
+                          notes=x@notes)
               ##if (verbose) cat(".....done.\n")
               
               return(eset)
             },
             where=where)
-  
+}
+
   ## use [[ and image instead !
   
  #  if( !isGeneric("image") )
@@ -559,9 +545,87 @@
   
 
 
-}
 
 
 
 
 
+          
+
+##this used to be in [[ and [[<-
+##if we ever want to add other slots to this could
+  ##be used in the "[[" method
+  ##mysd <- sd(x)
+  ##mymasks <- masks(x)
+  ##myoutliers <- outliers(x)
+  ##if statement make sure sd is actually somethings..
+  ##same for other slots
+  ##if(dim(mysd)[1]==ncols*nrows & dim(mysd)>=i)
+  ##  mysd <- matrix(mysd[,i],ncols,nrows)
+  ##if(dim(mymasks)[1]==ncols*nrows & dim(mymasks)>=i)
+  ##  mymasks <- matrix(mymasks[,i],ncols,nrows)
+  ##if(dim(myoutliers)[1]==ncols*nrows & dim(myoutliers)>=i)
+  ##  myoutliers <- matrix(myoutliers[,i],ncols,nrows)
+  
+  ##cel <- new("Cel",
+  ##           intensity=matrix(intensity(x)[i],ncols,nrows),
+  ##           sd=mysd,
+  ##           masks=mymaks,
+  ##          outliers=myoutliers,
+  ##           name=sampleNames(x)[i],
+  ##           cdfName=x@cdfName,
+  ##           history=history(x)[[i]])
+  ##},
+  ##where=where)
+  
+  ##this used to be part of "[[ 
+  ##DEBUG: NA ?! watch this in next versions of R
+              ## spotsd stuff to be really removed ?
+              ##if (is.na.spotsd(x)) {
+              #mysd <- matrix()
+              ##} else {
+              ##  mysd <- spotsd(x)[, , i]
+              ##}
+              ##oldim <- dim(intensity(x))
+              ##dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
+              ##new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=sampleNames(x)[i], cdfName=x@cdfName, outliers=outliers(x)[[i]], masks=masks(x)[[i]], history=history(x)[[i]]) ## commented out becuase no 'outliers' or 'masks'.
+              #cel <- new("Cel", intensity=intensity(x)[, , i], sd=mysd, name=sampleNames(x)[i], cdfName=x@cdfName, outliers=matrix(), masks=matrix(), history=history(x)[[i]])
+              #dim(intensity(x)) <- oldim
+              #return(cel)
+            #},
+            #where=where)
+
+  ##if we ever want to add sd, masks, etc.. slots we can use this
+  ## in the [[<- replacement method
+  ##mysd <- sd(x)
+  ##mymasks <- masks(x)
+  ##myoutliers <- outliers(x)
+  ##if statement make sure sd is actually somethings..
+  ##if it is we put what should be put same for other slots
+  ##if(dim(mysd)[1]==ncols*nrows & dim(mysd)>=i)
+  ##  sd(x)[,i] <- as.vector(sd(value))
+  ##if(dim(mymasks)[1]==ncols*nrows & dim(mymasks)>=i)
+  ##  masks(x)[,i] <- as.vector(masks(value))
+  ##if(dim(myoutliers)[1]==ncols*nrows & dim(myoutliers)>=i)
+  ##  outliers(x)[,i] <- as.vector(outliers(value))
+  ##},where=where)
+  
+  ##oldim <- dim(intensity(x))
+  ##dim(intensity(x)) <- c(x@nrow, x@ncol, x@nexp)
+  ##intensity(x)[,i] <- intensity(value)
+#### spotsd ?
+####if ((! is.na.spotsd(x)) & (spotsd(value) != c(NA)))
+####  spotsd(x)[, , i] <- spotsd(value)
+  ##x@name[i] <- sampleNames(value)
+  ##
+  ##if (x@cdfName != value@cdfName)
+  ## warning("cdfName mismatch !")
+  
+  ##outliers(x)[[i]] <- outliers(value)
+  ##masks(x)[[i]] <- masks(value)
+  ##history(x)[[i]] <- history(value)
+  ##dim(intensity(x)) <- oldim
+  ##return(x)
+  ##},
+  ##where=where)
+  

@@ -1,17 +1,16 @@
-normalize.AffyBatch.quantiles <- function(abatch) {
-  ## make the matrix (not very memory friendly... will be better when HDF5,
-  ## or an another mecanism is around...)
-  
-  ## this is may be too much.. I am taking every intensity in there... something like
-  ## taking only the PM (see invariantset) could be what you want (this is only a trial,
-  ## know better your own algorithm that I will ever... modify if needed).
-   
-  intensity(abatch) <- normalize.quantiles(intensity(abatch))
-  
-  ##set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
-  for (i in 1:abatch@nexp) {
-    history(abatch)[[i]]$name <- "normalized by quantiles"
+normalize.AffyBatch.quantiles <- function(abatch,pmonly=FALSE) {
+
+  pms <- unlist(pmindex(abatch))
+  intensity(abatch)[pms,] <- normalize.quantiles(intensity(abatch)[pms,])
+  if(!pmonly){ 
+    mms <- unlist(mmindex(abatch))
+    intensity(abatch)[mms,] <- normalize.quantiles(intensity(abatch)[mms,])
   }
+  
+  ##this is MIAME we need to decide how to do this properly.
+  ##for (i in 1:length(abatch)) {
+  ##  history(abatch)[[i]]$name <- "normalized by quantiles"
+  ##}
 
   return(abatch)
 }
@@ -21,9 +20,7 @@ normalize.Cel.container.quantiles <- function(listcel) {
   ## or an another mecanism is around...)
   ## note to Rafael: I hope I did not butcher your code too much... this is just
   ## an example on how to get the function to the new objects scheme
-  ## (note on the note: you may want to create a 'Plob' object the very same way I
   ## did with 'Cel' and the corresponding generic method (see 'Cel.R'), and of course
-  ## the 'normalize.Plob.yyy' methods (see 'normalize.invariantset.R')).
   ##
   ## Laurent
   
@@ -50,15 +47,6 @@ normalize.Cel.container.quantiles <- function(listcel) {
   return(listcel)
 }
 
-normalize.Plob.quantiles <- function(object, ...) {
-
-  x <- normalize.quantiles(rbind(pm(object),mm(object)))
-  n <- dim(x)[1]/2
-  pm(object) <- x[1:n, ] 
-  mm(object) <- x[(n+1):(2*n), ]
-  return(object)
-
-}
 
 normalize.quantiles <- function(x){
 

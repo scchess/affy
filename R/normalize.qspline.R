@@ -5,9 +5,10 @@ normalize.AffyBatch.qspline <- function(abatch, ...) {
   
   #set.na.spotsd(listcel)
   
-  for (i in 1:length(abatch)) {
-    history(abatch)[[i]] <- list(name="normalized by qspline")
-  }
+  ##need to use MIAME for this
+  ##  for (i in 1:length(abatch)) {
+  ##    history(abatch)[[i]] <- list(name="normalized by qspline")
+  ## }
   
   return(abatch)
 }
@@ -28,16 +29,6 @@ normalize.Cel.container.qspline <- function(listcel, ...) {
   
   return(listcel)
 }
-
-
-normalize.Plob.qspline <- function(plob, ...) {
-  x <- normalize.qspline(rbind(pm(plob), mm(plob)))
-  n <- dim(x)[1]/2
-  pm(plob) <- x[1:n,] 
-  mm(plob) <- x[(n+1):(2*n), ]
-  return(plob)
-}
-
 
 normalize.qspline <- function(x,
                               target        = NULL,

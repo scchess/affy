@@ -6,28 +6,30 @@ read.affybatch <- function(..., filenames=character(0),
                            compress=getOption("BioC")$affy$compress.cel,
                            rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                            hdf5=FALSE, hdf5FilePath=NULL,
-                           widget = FALSE,
+                           ##widget = FALSE, ##now a separate function to get filenames
                            verbose=FALSE) {
   
   auxnames <- as.list(substitute(list(...)))[-1]
-  widgetfiles <- character(0)
-  if (widget) {
-    widgetfiles <- fileBrowser(textToShow="Choose CEL files",
-                               testFun=hasSuffix("[cC][eE][lL]"))
-  }
-  filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
-
-  if (widget && is.null(description)) {
-    description <- tkMIAME()
-  }
-  if (is.null(description))
-    description <- new("MIAME")
+  filenames <- .Primitive("c")(filenames, auxnames)
   
   n <- length(filenames)
   
   ## error if no file name !
   if (n == 0)
     stop("No file name given !")
+  
+  pdata <- pData(phenoData)
+  ##try to read sample names form phenoData. if not there use CEL filenames
+  if(dim(pdata)[1]!=n){#if empty pdata filename are samplenames
+    warning("Incompatible phenoData object. Created a new one.\n")
+    samplenames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+    pdata <- data.frame(sample=1:n,row.names=samplenames)
+    phenoData <- new("phenoData",pData=pdata,varLabels=list(sample="arbitrary numbering"))
+  }
+  else samplenames <- rownames(pdata)
+  
+  if (is.null(description))
+    description <- new("MIAME")
   
   ## read the first file to see what we have
   if (verbose) cat(1, "reading",filenames[[1]],"...")
@@ -40,7 +42,9 @@ read.affybatch <- function(..., filenames=character(0),
                       rm.extra = rm.extra)
   if (verbose) cat("done.\n")
   
-  dim.intensity <- dim(intensity(cel))
+  ##now we use the length
+  firstintensity <- intensity(cel)
+  dim.intensity <- dim(firstintensity)
   ##if (sd)
   ##  dim.sd <- dim.intensity
   ##else
@@ -53,7 +57,7 @@ read.affybatch <- function(..., filenames=character(0),
     if (! is.na(file.info(hdf5FilePath)$size)) {
       warning(paste("The file \"", hdf5FilePath, "\" already exists !", sep=""))
     }
-    conty <- new.AffyBatch.hdf5(n, dim.intensity,
+    conty <- new.AffyBatch.hdf5(n, prod(dim.intensity), ##prod cause no 2d array
                                 hdfile.group="raw",
                                 hdfile.name=hdf5FilePath,
                                 cdfName = cel@cdfName
@@ -61,60 +65,154 @@ read.affybatch <- function(..., filenames=character(0),
     
   } else {
     conty <- new("AffyBatch",
-                 intensity  = array(NA, dim=c(dim.intensity, n)),
-                 ##sd = array(NA, dim=dim.sd),
+                 exprs  = array(NA, dim=c(prod(dim.intensity), n)),
+                 ##se.exprs = array(NA, dim=dim.sd),
                  cdfName    = cel@cdfName,
                  phenoData  = phenoData,
                  nrow       = dim.intensity[1],
                  ncol       = dim.intensity[2],
-                 nexp       = n,
+                 annotation = cleancdfname(cel@cdfName,addcdf=FALSE),
                  description= description,
-                 notes      = notes,
-                 history    = vector("list", length=n))
-    dimnames(intensity(conty)) <- list(NULL, NULL, rep("", n))
+                 notes      = notes)
+    ##           history    = vector("list", length=n)) we need to put this in MIAME
+    ##we have to use phenoData here: dimnames(intensity(conty)) <- list(NULL, NULL, rep("", n))
+    
   }
   
-  intensity(conty)[, , 1] <- intensity(cel)
-  
+  intensity(conty)[, 1] <- as.vector(firstintensity)
+   
   ##if (sd)
   ##  spotsd(conty)[, , 1] <- spotsd(cel)
-  
-  c.names <- rep("", n)
-  c.names[1] <- cel@name
+
+  ##We need to get names from phenoData
+  ##c.names <- rep("", n)
+  ##c.names[1] <- cel@name
   ##outliers(conty)[[1]] <- outliers(cel)
   ##masks(conty)[[1]] <- masks(cel)
-  history(conty)[[1]] <- history(cel)
+  ##history(conty)[[1]] <- history(cel) ###this must be done through MIAME
 
-  ## finish if only one file
-  if (n == 1)
-    return(conty)
+  ## finish if only one file.. we have to make phenoData agree. cant return just yet
+  ##if (n == 1)
+  ##  return(conty)
 
-  for (i in 2:n) {
-    
-    if (verbose) cat(i, "reading",filenames[[i]],"...")
-    cel <- read.celfile(filenames[[i]],
-                        ##sd=sd,
-                        compress=compress, rm.mask=rm.mask,
-                        rm.outliers=rm.outliers, rm.extra=rm.extra)
-    if (dim(intensity(cel)) != dim.intensity)
-      stop(paste("CEL file dimension mismatch !\n(file",filenames[[i]],")"))
-    if (verbose) cat("done.\n")
-
-    if (cel@cdfName != conty@cdfName)
-      warning(paste("cdfName mismatch !\n(", filenames[[i]], ")"))
-    
-    intensity(conty)[, , i] <- intensity(cel)
-    dimnames(intensity(conty))[[3]][i] <- cel@name
-    ##if (sd)
-    ##  spotsd(conty)[, , i] <- spotsd(cel)
-    c.names[i] <- cel@name
-    ##outliers(conty)[[i]] <- outliers(cel)
-    ##masks(conty)[[i]] <- masks(cel)
-    history(conty)[[i]] <- history(cel)
+  if(n>1) {
+    for (i in 2:n) {
+      
+      if (verbose) cat(i, "reading",filenames[[i]],"...")
+      cel <- read.celfile(filenames[[i]],
+                          ##sd=sd,
+                          compress=compress, rm.mask=rm.mask,
+                          rm.outliers=rm.outliers, rm.extra=rm.extra)
+      if (dim(intensity(cel)) != dim.intensity)
+        stop(paste("CEL file dimension mismatch !\n(file",filenames[[i]],")"))
+      if (verbose) cat("done.\n")
+      
+      if (cel@cdfName != conty@cdfName)
+        warning(paste("cdfName mismatch !\n(", filenames[[i]], ")"))
+      
+      intensity(conty)[, i] <- as.vector(intensity(cel))
+      ##      dimnames(intensity(conty))[[3]][i] <- cel@name ##now through phenoData
+      ##if (sd)
+      ##  spotsd(conty)[, , i] <- spotsd(cel)
+      
+      ##c.names[i] <- cel@name ##from phenoData now
+      ##outliers(conty)[[i]] <- outliers(cel)
+      ##masks(conty)[[i]] <- masks(cel)
+      ##history(conty)[[i]] <- history(cel) now through MIAME
+    }
+    ##dim(intensity(conty)) <- c(prod(dim.intensity), n) ##alread done. by definition
+    ##chipNames(conty) <- c.names  ##now phenoData
   }
-  dim(intensity(conty)) <- c(prod(dim.intensity), n)
-  chipNames(conty) <- c.names 
-
-  return(conty)
   
+  colnames(intensity(conty)) <- samplenames
+  return(conty)
+}
+
+list.celfiles <-   function(...){
+  files <- list.files(...)
+  return(files[grep(".[cC][eE][lL]", files)])
+}
+
+ReadAffy <- function(..., filenames=character(0),
+                     widget=getOption("BioC")$affy$use.widgets,
+                     compress=getOption("BioC")$affy$compress.cel,
+                     celfile.path=".",
+                     sampleNames=NULL,
+                     phenoData=NULL,
+                     description=NULL,
+                     notes="",
+                     rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
+                     hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE){
+  ##first figure out filenames
+  auxnames <- unlist(as.list(substitute(list(...)))[-1])
+
+  if (widget) 
+    widgetfiles <- fileBrowser(textToShow="Choose CEL files",
+                               testFun=hasSuffix("[cC][eE][lL]"))
+  else
+    widgetfiles <- character(0)
+
+  filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
+  
+  if(length(filenames)==0) filenames <- list.celfiles(celfile.path)
+  
+  if(length(filenames)==0) stop("No cel filennames specified and no cel files in specified directory:",cel.path,"\n")
+  
+  
+  ##now assign sampleNames if phenoData not given
+  if(is.null(phenoData)){
+    if(is.null(sampleNames)){
+      if(widget){
+        sampleNames <- tkSampleNames(filenames=filenames)[,2]
+      }
+      else{
+        sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+      }
+    }
+    else{
+      if(length(sampleNames)!=length(filenames)){
+        warning("sampleNames not same length as filenames. Using filenames as sampleNames instead\n")
+        sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+      }
+    }
+  }
+  
+  ##now get phenoData
+  if(is.character(phenoData)) ##if character read file
+    phenoData <- read.phenoData(filename=phenoData)
+  else{
+    if(class(phenoData)!="phenoData"){
+      if(widget)
+        phenoData <- read.phenoData(sampleNames=sampleNames,widget=TRUE)
+      else
+        phenoData <- read.phenoData(sampleNames=sampleNames,widget=FALSE)
+    }
+  }
+  
+  ##get MIAME information
+  if(is.character(description)){
+    description <- read.MIAME(filename=description,widget=FALSE)
+  }
+  else{
+    if(class(description)!="MIAME"){
+      if(widget)
+        description <- read.MIAME(widget=TRUE)
+      else
+        description <- new("MIAME")
+      }
+  }
+
+  
+  ##and now we are ready to read cel files
+  return(read.affybatch(filenames=filenames,
+                        phenoData=phenoData,
+                        description=description,
+                        notes=notes,
+                        compress=compress,
+                        rm.mask=rm.mask,
+                        rm.outliers=rm.outliers,
+                        rm.extra=rm.extra,
+                        hdf5=hdf5,
+                        hdf5FilePath=hdf5FilePath,
+                        verbose=verbose))
 }

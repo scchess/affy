@@ -1,3 +1,15 @@
+##this function changes the affymetrix cdf file name to the Bioconductor
+##annotation name for that cdf file
+cleancdfname <- function(cdfname,addcdf=TRUE){
+  tmp <- gsub("_","",cdfname) #take out underscore
+  tmp <- gsub("-","",tmp) #take out underscore
+  tmp <- gsub("\ ","",tmp) ##take out spaces
+  tmp <- tolower(tmp) #make lower case
+  if(addcdf) tmp <- paste(tmp,"cdf",sep="")
+  return(tmp)
+}
+##this funnction gets the cdf from a celfile
+
 whatcdf <- function(filename, compress=getOption("BioC")$affy$compress.cel){
   
   ##finds what cdf environment to use with cdf file
@@ -7,10 +19,9 @@ whatcdf <- function(filename, compress=getOption("BioC")$affy$compress.cel){
   if (identical(tmp, character(0))) {
     warning("could not find CDF name, setting it to 'unknown'")
     tmp <- "unknown"
-  } else {
+  }
+  else {
     tmp <- gsub("\.1sq","",tmp) #take out .1sq
-    tmp <- gsub("_","",tmp) #take out underscore
-    tmp <- tolower(tmp) #make lower case
   }
   return(tmp)
 }

@@ -3,12 +3,9 @@
 
   #all.affy <- ls(where)
   
-  ## this could move into the respective methods of Plob and Cel.container later
+  ## this could move into the respective methods of AffyBatch later
   assign("normalize.Cel.container.methods",
          substr(all.affy[grep("normalize\.Cel\.container\.*", all.affy)], 25, 100),
-         envir=as.environment(where))
-  assign("normalize.Plob.methods",
-         substr(all.affy[grep("normalize\.Plob\.*", all.affy)], 16,100),
          envir=as.environment(where))
   assign("normalize.AffyBatch.methods",
          substr(all.affy[grep("normalize\.AffyBatch\.*", all.affy)], 21, 100),
@@ -74,13 +71,11 @@
   .initNormalize(where, all.affy)
   .initExpression(where, all.affy)
   .initBackgroundCorrect(where, all.affy)
-  
   .initCdf(where)
   .initCel(where)
   .initPPSet(where)
   .initPPSet.container(where)
   .initAffyBatch(where)
-  .initPlob(where)
   .initCel.container(where)
 
   ## add affy specific options
@@ -92,9 +87,11 @@
   }
   
   ##affy$urls <- list( bioc = "http://www.bioconductor.org")
+
   probesloc.first <- list(what="package", where=NULL, probesloc.autoload=TRUE)
   probesloc.second <- list(what="environment", where=as.environment(-1))
-  affy <- list(compress.cdf=FALSE, compress.cel=FALSE,
+  ## i added use.widgets=FALSE. Shuold it be true?
+  affy <- list(compress.cdf=FALSE, compress.cel=FALSE, use.widgets=FALSE,
                probesloc = list(probesloc.first, probesloc.second))
   class(affy) <- "BioCPkg"
   
@@ -108,7 +105,7 @@
 }
 
 .Last.lib <- function(libpath) {
-  options(BioC)$affy <- NULL
+  options("BioC")$affy <- NULL
   dyn.unload(file.path(libpath, "libs",
                        paste("affy", .Platform$"dynlib.ext", sep="")))
   .Dyn.libs <- .Dyn.libs[- which(.Dyn.libs == "affy")]

@@ -1,19 +1,23 @@
-normalize.Plob.contrasts <- function(object,span=2/3,choose.subset=TRUE,subset.size=5000,verbose=TRUE,family="symmetric") {
+normalize.AffyBatch.contrasts <- function(abatch,span=2/3,choose.subset=TRUE,subset.size=5000,verbose=TRUE,family="symmetric",pmonly=FALSE) {
+  
+  if(pmonly)
+    Index <- unlist(pmindex(abatch))
+  else
+    Index <- c(unlist(pmindex(abatch)),unlist(mmindex(abatch)))
+  
+  
   ##we need default argumetns becuase they are used in this transitional file
-  alldata <- rbind(object@pm,object@mm)
-  n <-  dim(alldata)[1]/2
+  alldata <- intensity(abatch)[Index,]
+  
   if(choose.subset)
     subset1 <- maffy.subset(alldata,verbose=verbose,subset.size=subset.size)$subset
   else
     subset1 <- sample(1:dim(alldata)[1],subset.size)
   aux <-   maffy.normalise(alldata,subset=subset1,verbose=verbose,span=span,family=family)
-
   
-  pm(object) <- aux[1:n,]
-  mm(object) <- aux[(n+1):(2*n),]
-
+  intensity(abatch)[Index,] <- aux
   
-  return(object)
+  return(abatch)
 }
 
 normalize.Cel.container.contrasts <- function(listcel,span=2/3,choose.subset=TRUE,subset.size=5000,verbose=TRUE,family="symmetric") { 

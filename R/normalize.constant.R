@@ -44,22 +44,6 @@ normalize.Cel.container.constant <- function(container, refindex=1, FUN=mean, na
 
 
 
-normalize.Plob.constant <- function(plob, refindex=1, FUN=mean, na.rm=TRUE) {
-  ## extract the vector that will be used as a reference
-  ## and apply the function FUN to generate a value
-  refconstant <- FUN(c(plob@pm[, refindex], plob@mm[, refindex]), na.rm=na.rm)
-
-  ## loop over the arrays (excluding the reference)
-  for (i in (1:(nchips(plob)))[-refindex]) {
-    ## only using the PM -- this is an example
-    
-    plob@pm[,i] <- normalize.constant(plob@pm[,i], refconstant, FUN=FUN, na.rm=na.rm)
-    plob@mm[,i] <- normalize.constant(plob@mm[,i], refconstant, FUN=FUN, na.rm=na.rm)
-    }
-  ## state somewhere in a slot of the Plob that it has been normalized ?
-  return(plob)
-}
-
 
 normalize.constant <- function(x, refconstant, FUN=mean, na.rm=TRUE) {
   thisconstant <- FUN(x, na.rm=na.rm)

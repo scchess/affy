@@ -46,46 +46,6 @@ library(modreg)
 ## needed ?
 
 
-normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progress=FALSE) {
-
-  nc <- ncol(pm(container))
-  np <- nrow(pm(container))
-  
-  ## take as a reference the array having the median overall intensity
-  l <- ncol(pm(container))
-  m <- vector("numeric", length=l)
-  for (i in 1:l)
-    m[i] <- mean(pm(container)[,i])
-  refindex <- trunc(median(rank(m)))
-  rm(m,l)
-  
-  ## loop over the CEL files and normalize them
-  for (i in (1:nc)[-refindex]) {
-
-    if (progress) cat("normalizing array", attr(container[[i]], "name"), "...")
-    
-    ##temporary
-    tmp <- normalize.invariantset(pm(container)[, i],
-                                  pm(container)[, refindex],
-                                  prd.td)
-                         
-    
-    # pm first...
-    pm(container)[, i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                          xout=container@pm[,i])$y, rule=2)
-    # then mm... (note: I am not quite sure whether MMs should be 'normalized' or discarded...)
-    mm(container)[, i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                           xout=mm(container)[,i])$y, rule=2)
-    
-    ##container@notes <- list(name="normalized by invariant set", invariantset=tmp$i.set)
-    container@notes <- "normalized by invariant set"
-    
-    if (progress) cat("done.\n")
-    
-  }
-  return(container)
-}
-
 normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), progress=FALSE) {
   
   

@@ -1,16 +1,17 @@
 normalize.AffyBatch.loess <- function(abatch, ...) {
   
-  ## this is may be too much.. I am taking every intensity in there... something like
-  ## taking only the PM (see invariantset) could be what you want (this is only a trial,
-  ## know better your own algorithm that I will ever... modify if needed).  
   
-  intensity(abatch) <- normalize.loess(intensity(abatch), ...)
+  Index <- c(unlist(pmindex(abatch),mmindex(abatch)))
+  intensity(abatch)[Index,] <- normalize.loess(intensity(abatch)[Index,], ...)
 
   ##set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)
   ##cat(cols,rows)
-  for (i in 1:abatch@nexp) {
-    history(abatch)[[i]] <- list(name="normalized by loess")
-  }
+
+
+  ##need to use MIAME
+  ##for (i in 1:abatch@nexp) {
+  ##  history(abatch)[[i]] <- list(name="normalized by loess")
+  ##}
 
   return(abatch)
 }
@@ -39,25 +40,6 @@ normalize.Cel.container.loess <- function(listcel, ...) {
   return(listcel)
 }
 
-normalize.Plob.loess <- function(plob, ...){
-
-  x <-  matrix(0, nprobes(plob)*2, nchips(plob))
-  
-  for (i in 1:nchips(plob)) {
-    x[1:nprobes(plob), i] <- pm(plob)[, i]
-    x[(nprobes(plob)+1):(nprobes(plob)*2), i] <- mm(plob)[, i]
-  }
-
-  y <- normalize.loess(x, ...)
-  
-  for (i in 1:nchips(plob)) {
-    pm(plob)[, i] <- y[1:nprobes(plob), i]
-    mm(plob)[, i] <- y[(nprobes(plob)+1):(nprobes(plob)*2), i]
-  }
-  
-  return(plob)
-  
-}
 
 
 normalize.loess <- function(mat, subset=sample(1:(dim(mat)[1]), min(c(5000, nrow(mat)))),
