@@ -31,7 +31,7 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL)
   to these values\ldots a unified scheme with \code{oligochips} might
   come in the future (release 1.3), and make the (dangerous) juggling
   with zero-offset/one-offset unnecessary\ldots~~ }
-\seealso{\code{\link{locate.name}}, \code{\link{indexProbes}}}
+\seealso{\code{\link{indexProbes}}}
 \examples{
 data(affybatch.example)
 

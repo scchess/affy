@@ -127,5 +127,9 @@ if( is.null(getGeneric("barplot")))
 
 setMethod("barplot",signature(height="ProbeSet"),function(height,...) barplot.ProbeSet(height,...))
 
+if( is.null(getGeneric("mas5calls")) )
+  setGeneric("mas5calls", function(object,...) standardGeneric("mas5calls"))
 
+setMethod("mas5calls",signature(object="ProbeSet"),
+          function(object,...) mas5calls.ProbeSet(object,...))
 

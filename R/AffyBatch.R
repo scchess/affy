@@ -596,6 +596,12 @@ if( is.null(getGeneric("hist")) )
 setMethod("hist",signature(x="AffyBatch"),function(x,...) plotDensity.AffyBatch(x,...))
 
 
+if( is.null(getGeneric("mas5calls")) )
+  setGeneric("mas5calls", function(object,...) standardGeneric("mas5calls"))
+
+setMethod("mas5calls",signature(object="AffyBatch"),
+          function(object,...) mas5calls.AffyBatch(object,...))
+
 
 ##like for exprSet
 
