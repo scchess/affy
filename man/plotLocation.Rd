@@ -32,23 +32,23 @@ plotLocation(x, cdf=NULL, nrow=NULL, ncol=NULL,
 }
 \examples{
   ## loading data
-  data(listcel)
-  data(CDF.example)
+  #data(listcel)
+  #data(CDF.example)
 
   ## image of the celfile
-  image(listcel[[1]])
+  #image(listcel[[1]])
   
   ## getting the location for the one called "A28102_at"
-  l <- locate.name("A28102_at",CDF.example)
+  #l <- locate.name("A28102_at",CDF.example)
 
   ## plot
-  plotLocation(l, CDF.example)
+  #plotLocation(l, CDF.example)
 
   ## the same without passing the cdffile object as a parameter
   ## (it may prove usefull to save memory)
-  f.row <- nrow(CDF.example@name)
-  f.col <- ncol(CDF.example@name)
-  plotLocation(l,nrow=f.row,ncol=f.col)
+  #f.row <- nrow(CDF.example@name)
+  #f.col <- ncol(CDF.example@name)
+  #plotLocation(l,nrow=f.row,ncol=f.col)
 }
 \keyword{aplot}
 

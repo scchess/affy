@@ -16,7 +16,7 @@ normalize(object, ...)
 normalize.methods(object)
 }
 \arguments{
-  \item{object}{An \code{AffyBatch}, a \code{Cel.container} or a \code{Plob}}
+  \item{object}{An \code{AffyBatch}}
   \item{...}{Optional arguments for the normalization funtion. See the
     details below.}
 %  \item{method}{the method used to scale. Different methods will be

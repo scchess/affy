@@ -1,9 +1,9 @@
 \name{normalize.invariantset}
 \alias{normalize.invariantset}
 \alias{normalize.AffyBatch.invariantset}
-\title{Scale Cel objects in a container}
+\title{InvarianteSet normalization}
 \description{
-  Scale chip objects in a container.
+Normalize arrays in an  \code{\link{AffyBatch}} using an invariant set.
 }
 \usage{
 normalize.AffyBatch.invariantset(abatch,

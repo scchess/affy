@@ -1,15 +1,15 @@
 \name{SpikeIn}
 \alias{SpikeIn}
 \alias{concentrations}
-\title{SpikeIn Experiment Data: PPSet Example}
+\title{SpikeIn Experiment Data: ProbeSet Example}
 \description{
-This \code{\link{PPSet.container}} represents part of SpikeIn experiment
+This \code{\link{ProbeSet}} represents part of SpikeIn experiment
 data set. 
 }
 \usage{data(SpikeIn)}
-\format{\code{SpikeIn} is \code{\link{PPSet.container}} containing the
+\format{\code{SpikeIn} is \code{\link{ProbeSet}} containing the
   $PM$ and $MM$ intensities for a gene spiked in at different
-  concentrations (given in the vector \code{concentrations}) in 12
+  concentrations (given in the vector \code{colnames(pm(SpikeIn))}) in 12
   different arrays.}
 \source{This comes from an experiments where 11 different cRNA
 fragments have been added to the hybridization mixture of the GeneChip

@@ -125,7 +125,7 @@
             }, where=where)
 }
 
-  ###no need for the commented out below since its no longer container
+######no need for the commented out below since its no longer container
 #   ## extract/set a PPSet in the container
 #   setMethod("[[", "ProbeSet",
 #             function(x, i, j) {

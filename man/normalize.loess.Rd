@@ -1,17 +1,15 @@
 \name{normalize.loess}
 \alias{normalize.loess}
-\alias{normalize.Cel.container.loess}
-\alias{normalize.Plob.loess}
+\alias{normalize.AffyBatch.loess}
 \title{Scale microarray data}
 \description{
-  normalizes two microarray data to each others.
+   Normalizes arrays using loess.}
 }
 \usage{
 normalize.loess(mat, subset=sample(1:(dim(mat)[2]),5000),
                 epsilon=10^-2,maxit=1,log.it=TRUE,verbose=TRUE,span=2/3,
                 family.loess="symmetric")
-normalize.Cel.container.loess(listcel, ...)
-normalize.Plob.loess(plob, ...)
+normalize.AffyBatch.loess(ab, ...)
 }
 \arguments{
   \item{mat}{a matrix with columns containing the values of the chips
@@ -27,19 +25,13 @@ normalize.Plob.loess(plob, ...)
   \item{family.loess}{parameter to be passed the function
     \code{\link[modreg]{loess}}. \code{"gaussian"} or \code{"symmetric"}
     are acceptable values for this parameter.}
-  \item{listcel}{a \code{\link{Cel.container}} object}
-  \item{plob}{a \code{\link{Plob}} object}
+  \item{abtach}{a \code{\link{AffyBatch}} object}
   \item{...}{any of the options of normalize.loess you would like to
     modify (described above).}
 }
 \details{
   While a unifired scheme is on its way, please see
   \link{loess.normalize} for a complete descritption...
-}
-\author{
-  Rafael\cr
-  (if there is a problem it must be because I (LG) butchered his nice
-  code... )
 }
 \seealso{
   \code{\link{normalize}}}

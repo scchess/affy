@@ -3,7 +3,7 @@ normalize.AffyBatch.contrasts <- function(abatch,span=2/3,choose.subset=TRUE,sub
   if(pmonly)
     Index <- unlist(pmindex(abatch))
   else
-    Index <- c(unlist(pmindex(abatch)),unlist(mmindex(abatch)))
+    Index <- unlist(indexProbes(abatch,"both"))
   
   
   ##we need default argumetns becuase they are used in this transitional file

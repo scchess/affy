@@ -1,9 +1,9 @@
 \name{normalize.constant}
 \alias{normalize.constant}
 \alias{normalize.AffyBatch.constant}
-\title{Scale Cel objects in a container}
+\title{Scale probe intensities}
 \description{
-  Scale chip objects in a container.
+  Scale array intensities in a \code{\link{AffyBatch}}.
 }
 \usage{
 normalize.AffyBatch.constant(abatch, refindex=1, FUN=mean, na.rm=TRUE)

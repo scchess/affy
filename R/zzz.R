@@ -4,9 +4,6 @@
   #all.affy <- ls(where)
   
   ## this could move into the respective methods of AffyBatch later
-  assign("normalize.Cel.container.methods",
-         substr(all.affy[grep("normalize\.Cel\.container\.*", all.affy)], 25, 100),
-         envir=as.environment(where))
   assign("normalize.AffyBatch.methods",
          substr(all.affy[grep("normalize\.AffyBatch\.*", all.affy)], 21, 100),
          envir=as.environment(where)) 

@@ -1,7 +1,7 @@
 normalize.AffyBatch.loess <- function(abatch, ...) {
   
   
-  Index <- c(unlist(pmindex(abatch),mmindex(abatch)))
+  Index <- unlist(indexProbes(abatch,"both"))
   intensity(abatch)[Index,] <- normalize.loess(intensity(abatch)[Index,], ...)
 
   ##set.na.spotsd(listcel) # set 'sd' to nothing (meaningless after normalization)

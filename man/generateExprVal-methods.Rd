@@ -29,22 +29,22 @@ Returns a vector of expression values.
 }
 \examples{
   ## loading data
-  data(listcel)
-  data(CDF.example)
+  ##data(listcel)
+  ##data(CDF.example)
 
-  affyid <- "A28102_at"
-  pps <- get.PPSet(affyid, CDF.example, listcel[[1]])
-  nprobes <- nrow(probes(pps))
+  ##affyid <- "A28102_at"
+  ##pps <- get.PPSet(affyid, CDF.example, listcel[[1]])
+  ##nprobes <- nrow(probes(pps))
 
-  pc <- new("PPSet.container",
-            pmProbes=matrix(NA, nprobes, 2, dimnames=list(NULL, rep(affyid,2))),
-            mmProbes=matrix(NA, nprobes, 2)
-           )
+  ##pc <- new("PPSet.container",
+   ##         pmProbes=matrix(NA, nprobes, 2, dimnames=list(NULL, rep(affyid,2)##)),
+     ##       mmProbes=matrix(NA, nprobes, 2)
+       ##    )
 
-  pc[[1]] <- get.PPSet(affyid, CDF.example, listcel[[1]])
-  pc[[2]] <- get.PPSet(affyid, CDF.example, listcel[[2]])
+##  pc[[1]] <- get.PPSet(affyid, CDF.example, listcel[[1]])
+##  pc[[2]] <- get.PPSet(affyid, CDF.example, listcel[[2]])
 
-  express.summary.stat(pc, method="playerout", bg.correct="bg.correct.pmonly")
+ ## express.summary.stat(pc, method="playerout", bg.correct="bg.correct.pmonly")
 
 }
 \keyword{}

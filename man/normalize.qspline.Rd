@@ -2,9 +2,9 @@
 \alias{qspline-normalize}
 \alias{normalize.qspline}
 \alias{normalize.AffyBatch.qspline}
-\title{Normalize CEL files}
+\title{Normalize arrays}
 \description{
-  normalizes a list of CEL files to each other or to a set of target intensities
+  normalizes arrays in an AffyBatch each other or to a set of target intensities
 }
 \usage{
 normalize.Cel.container.qspline(abatch, ...)
