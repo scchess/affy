@@ -18,10 +18,14 @@ expresso(
     # data processing methods
          normalize = TRUE,
          normalize.method = NULL,
+         normalize.param = list(),
          bg.method = NULL,
+         bg.param = list(),
          summary.method = NULL,
          summary.subset = NULL,
+         summary.param = list(),
     # misc.
+         phenodata = NULL,
          chip.names = NULL,
          verbose = TRUE,
          widget = TRUE,
@@ -40,15 +44,22 @@ expresso(
   \item{rm.extra}{see \code{read.celfile}}
   \item{normalize}{normalization step wished or not.}
   \item{normalize.method}{the method used to normalize}
+  \item{normalize.param}{a list of parameters to be passed to the
+    normalization method (if wanted).}
   \item{bg.method}{a background adjustment function}
+  \item{bg.param}{a list of parameters to be passed to the background
+    correction function.}
   \item{summary.method}{the method used for the computation of expression values}
-  \item{summary.subset}{(CURRENTLY NOT REALLY IMPLEMENTED (so not really
-    working)).}
+  \item{summary.subset}{a list of 'affyids'. If \code{NULL}, a
+    expression summary value is computed for everything on the chip.}
+  \item{summary.param}{a list of parameters to be passed to the
+    \code{summary.method} (if wanted).}
+  \item{chipNames}{CURRENTLY NOT IMPLEMENTED}
+  \item{phenodata}{\code{phenoData} object}
   \item{verbose}{logical value. If \code{TRUE} it writes out some messages.}
   \item{widget}{a boolean to specify the use of widgets (the package
     tkWidget is required).}
   \item{hdf5}{Use of hdf5 or not (requires the package \code{rhdf5}).}
-  \item{...}{extra stuff passed over to the normalization function}
 }
 \details{
   Some arguments can be left to \code{NULL} if the \code{widget=TRUE}.

@@ -58,8 +58,11 @@ normalize.qspline(x, target = NULL, samples = NULL,
   Laurent and Workman C.
 }
 \references{
-Workman C. et al., 2002, A new non-linear normalization method to reduce
-variability in DNA microarray experiments, submitted to Genome Biology.
+  Christopher Workman, Lars Juhl Jensen, Hanne Jarmer, Randy Berka,
+     Laurent Gautier, Henrik Bj{\o}rn Nielsen, Hans-Henrik Saxild, Claus
+     Nielsen, S{\o}ren Brunak, and Steen Knudsen. A new non-linear normal-
+     ization method for reducing variability in dna microarray experiments.
+     Genome Biology, accepted, 2002
 }
 %\seealso{
 %}
