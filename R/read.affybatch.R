@@ -60,7 +60,7 @@ read.affybatch <- function(..., filenames=character(0),
 
 
   conty <- new("AffyBatch",
-               exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, filenames)),
+               exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
                ##se.exprs = array(NaN, dim=dim.sd),
                cdfName    = cel@cdfName,
                phenoData  = phenoData,
