@@ -31,7 +31,7 @@ Biostatistics (2003).
 
 Please note that the default background adjustment method was changed during the lead up
 to the bioconductor 1.2 release. This means that this function and
-\code{link{expresso}} should give results that directly agree.
+\code{\link{expresso}} should give results that directly agree.
 
 }
 \value{
