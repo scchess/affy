@@ -94,19 +94,24 @@
                 
                 if (what == "data") {
                   ##if we can get it from data dir. otherwise load package
-                  if(cdfname %in% do.call("data", list(package=where))$results[, 3]){
+                  
+                  if(cdfname %in% do.call("data", list(package=where))$results[, 3]) {
                     ##RI: package="affy" doesnt work it has to be package=affy
                     ##    fix if you can
                     ##LG: weird stuff with data... but I had a workaround...
+                    
                     where.env <- pos.to.env(match(paste("package:", where, sep = ""), search()))
                     
+                    ## check if the cdfenv is already loaded. If not load it *in* the environment
+                    ## of the package (where.env)
                     if( ! exists(cdfname, where = where.env, inherits = FALSE)) {
                       path <- .path.package(where)
                       filename <- paste(cdfname, ".rda", sep="")
                       load(file.path(path, "data", filename) ,
                            envir = where.env)
                     }
-                    return(get(cdfname, envir=where.env))
+                    cdfenv <- get(cdfname, envir=where.env)
+                    return(cdfenv)
                   }
                 }
                 
@@ -520,7 +525,7 @@
               preproc <- c(description(object)@preprocessing,
                            list(normalization = attr(object, "normalization")))
               attr(object, "normalization") <- NULL
-              ## and store it miame
+              ## and store it in MIAME
               MIAME <- description(object)
               MIAME@preprocessing <- preproc
               description(object) <- MIAME
@@ -640,11 +645,11 @@
               dimnames(se.mat) <- list(ids, sampleNames(x))
               eset <- new("exprSet",
                           exprs=exp.mat,
-                          se.exprs=se.mat, ##this changed
-                          phenoData=phenoData(x))
-                          ##description=description(x)
-                          ##annotation=annotation(x),
-                          ##notes=c(notes(x))
+                          se.exprs=se.mat,
+                          phenoData=phenoData(x),
+                          description=description(x),
+                          annotation=annotation(x),
+                          notes=c(notes(x)))
               ##if (verbose) cat(".....done.\n")
 
               attr(eset, "pps.warnings") <- pps.warnings

@@ -7,6 +7,8 @@ plotDensity <- function(mat,
   all.y <- do.call("cbind", lapply(x.density, function(x) x$y))
   
   matplot(all.x, all.y, ylab=ylab, xlab=xlab, ...)
+
+  invisible(list(all.x=all.x, all.y=all.y))
 }
  
 
@@ -27,5 +29,7 @@ plotDensity.AffyBatch <- function(x, col=rainbow(length(x)), log=TRUE,
   else  if(is.null(xlab)) xlab <- "intensity"
   
   
-  plotDensity(x, ylab=ylab, xlab=xlab, col=col, ...)
+  rv <- plotDensity(x, ylab=ylab, xlab=xlab, col=col, ...)
+
+  invisible(rv)
 }

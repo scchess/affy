@@ -127,7 +127,6 @@
   require(Biobase, quietly=TRUE) ##Biobase uses methods
   require(modreg, quietly=TRUE)
   require(eda, quietly=TRUE)
-  require(affydata,quietly=TRUE)
 
   ##i was having troulbes, and changing where to
   ###match(paste("package:", pkgname, sep=""), search()) fixed.. thanx to RG
@@ -142,10 +141,10 @@
   .initAffyBatch(match(paste("package:", pkgname, sep=""), search()))
   .initProbeSet(match(paste("package:", pkgname, sep=""), search()))
 
-  .setAffyOptions()
-
+  .setAffyOptions()  
   cacheMetaData(as.environment(where))
 
+  require(affydata,quietly=TRUE)
 }
 
 .Last.lib <- function(libpath) {

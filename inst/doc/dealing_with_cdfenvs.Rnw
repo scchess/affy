@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{affy: Automatic downloading of cdfenvs (HowTo)}
+%\VignetteIndexEntry{HOWTO: cdfenvs and affy}
 %\VignetteKeywords{Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
@@ -29,16 +29,19 @@
 
 \bibliographystyle{plainnat}
 
-\begin{document}
-\title{affy: Automatic downloading of cdfenvs (HowTo)}
 \author{Laurent}
+\begin{document}
+\title{cdfens and oligonucleotides arrays}
 
 \maketitle
 \tableofcontents
 \section*{Introduction}
 This document describes briefly how the package gets (or tries to get)
 the needed cdfenvs. Various issues like security and configuring the
-options for the package \Rpackage{affy} are outlined. 
+options for the package \Rpackage{affy} are outlined. To some extend,
+what is developped here could\footnote{Currently this would require
+a bit of effort, but it should become very easy very soon}
+ be applied to the package \Rpackage{oligochips}.
 
 As usual, loading the package in your \verb+R+ session is required. 
 \begin{Sinput}
@@ -49,17 +52,30 @@ library(affy)
 @
 
 \section*{Why and how}
+
 The {\it cdfenvs} are associative data structures to map efficiently a
 {\it probeset id} with indices for the corresponding probes. These
 indices are used to subset a matrix storing probe level
-intensities.
+intensities. Technically, a {\it cdfenv} is a {\bf R} \Robject{environment}.
+The functions \Rfunction{get} and \Rfunction{multiget} (in \Rpackage{Biobase})
+are a convenient way to access what is in an environment.
+Expert users only will consider modifying what is those environment.
+
+In the case of {\it Affynetrix} data, the {\it cdfenvs} are built from
+the {\it .CDF} files. The package \Rpackage{makecdfenvs} is dedicated
+to the building of packages with {\it cdfenvs}. The simpliest way
+to proceed is to have the package needed for the analysis installed.
+A number of {\it cdfenv} package for {\it Affymetrix} chips are available for download on
+ the {\it Bioconductor} data packages repository. This release of the
+\Rpackage{affy} package has an option to allow automatic downloading
+and install of a {\it cdfenv} that would be found missing during an analysis.
 
 The complete structure of the options for the package is not
 completely described, but one can refer the source code for the function
 \Rfunction{.setAffyOptions()}. The entry {\it probesloc} in the
 options details the path used to look for the corresponding {\it cdfenv}.
 We introduce a simple function to display the content of the options
-for the {\it cdfenvs}:
+for the obtention of the information about probe locations:
 <<>>=
 print.probesloc.opt <- function(affy.opt, fields) {
   all.fields <- c("what", "where", "autoload", "repository", "installdir")
@@ -92,31 +108,31 @@ affy.opt <- getOption("BioC")$affy
 print.probesloc.opt(affy.opt, c("what", "where", "autoload"))
 @
 
-The option {\it autoload} is only relevant where {\it where}
+The option \Rfunarg{autoload} is only relevant where \Rfunarg{where}
 is equal to {\it package}. Having it set to \verb+TRUE+ means
 that an attempt of download will be made in case the package is not found
 in \Rfunction{.libPaths()} (and of course that the relevant {\it cdfenv} was not
 found in the search path shown above).
 
 The following function returns a set of options with any existing automatic download
-deactivated :
+desactivated :
 <<>>=
-deactivate.autoload <- function(affy.opt) {
+desactivate.autoload <- function(affy.opt) {
   l <- lapply(affy.opt$probesloc, 
               function(x) {
                 i <- names(x) == "autoload"
                 x[i] <- list(FALSE)
 		return(x)
               })
-  affy.opt$probesloc <- l
-  return(affy.opt)
-}	      
+    affy.opt$probesloc <- l
+    return(affy.opt)
+  }	      
 @ 
 It can be used to desactivate any automatic download:
 <<>>=
 affy.opt <- getOption("BioC")$affy
 
-affy.opt.noauto <- deactivate.autoload(affy.opt)
+affy.opt.noauto <- desactivate.autoload(affy.opt)
 
 # commit the changes
 .setAffyOptions(affy.opt.noauto)
