@@ -34,16 +34,16 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
         phi <- apply(data.matrix, 2, mean)
         c <- sqrt(cJ/sum(phi[!phi.outliers]^2))
         phi <- c * phi
-        theta <- (data.matrix[,!phi.outliers] %*% phi[!phi.outliers])/cJ
+        theta <- (data.matrix[, !phi.outliers, drop=F] %*% phi[!phi.outliers, drop=F])/cJ
         iter <- 0
         change <- 1 #start with one
         theta.old <- rep(0, II)
         while(change > delta & iter < maxit) {
           iter <- iter + 1
-          phi <- t(data.matrix[!theta.outliers,]) %*% theta[!theta.outliers] ##ignore the outliers
-          c <- sqrt(cJ/sum(phi[!phi.outliers]^2))
+          phi <- t(data.matrix[!theta.outliers, ,drop=F]) %*% theta[!theta.outliers, drop=F] ##ignore the outliers
+          c <- sqrt(cJ/sum(phi[!phi.outliers, drop=F]^2))
           phi <- c * phi
-          theta <- (data.matrix[,!phi.outliers] %*% phi[!phi.outliers])/cJ
+          theta <- (data.matrix[,!phi.outliers, drop=F] %*% phi[!phi.outliers, drop=F])/cJ
           change <- max(abs(theta[!theta.outliers] - theta.old[!theta.outliers]))
           if(verbose) cat(paste("Outlier iteration:",outer.iter,"estimation iteration:",iter,"chage=",change,"\n"))
           theta.old <- theta
@@ -77,8 +77,8 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
         single.outliers.old <- single.outliers
       }
       else{
-        sigma.theta <- sqrt(apply(resid[,!phi.outliers]^2, 1, sum)/(cJ - 1))
-        sigma.phi <- sqrt(apply(resid[!theta.outliers,]^2, 2, sum)/(cI - 1))
+        sigma.theta <- sqrt(apply(resid[, !phi.outliers, drop=F]^2, 1, sum)/(cJ - 1))
+        sigma.phi <- sqrt(apply(resid[!theta.outliers, , drop=F]^2, 2, sum)/(cI - 1))
         ###THETA OUTLIERS
         if(outer.iter%%3==2){
           theta.outliers <- sigma.theta > large.threshold*quantile(sigma.theta,normal.array.quantile) | theta^2/sum(theta^2) > large.variation
@@ -123,8 +123,8 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
     all.outliers <- outer(theta.outliers,phi.outliers,FUN="|") | single.outliers
     sigma <- sqrt(sum(resid[!all.outliers]^2)/sum(!all.outliers))
     ##in case we leave iteration and these havent been defined
-    sigma.theta <- sqrt(apply(resid[,!phi.outliers]^2, 1, sum)/(cJ - 1))
-    sigma.phi <- sqrt(apply(resid[!theta.outliers,]^2, 2, sum)/(cI - 1))
+    sigma.theta <- sqrt(apply(resid[,!phi.outliers, drop=F]^2, 1, sum)/(cJ - 1))
+    sigma.phi <- sqrt(apply(resid[!theta.outliers, ,drop=F]^2, 2, sum)/(cI - 1))
   }
   ###code for NO OUTLIER REMOVAL
   else{
