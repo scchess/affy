@@ -70,7 +70,8 @@
  **                C code 
  ** Jun 29, 2003 - remove some unnecessary cruft from tokenize
  **                routine
- **
+ ** Jun 30, 2003 - remove tokenize step from read_cel_intensities. 
+ **                aim is to gain more speed.
  **
  *************************************************************/
  
@@ -434,7 +435,8 @@ int read_cel_file_intensities(char *filename, double *intensity, int chip_num, i
   double cur_mean;
   FILE *currentFile; 
   char buffer[BUF_SIZE];
-  tokenset *cur_tokenset;
+  /* tokenset *cur_tokenset;*/
+  char *current_token;
 
   currentFile = open_cel_file(filename);
   
@@ -443,13 +445,21 @@ int read_cel_file_intensities(char *filename, double *intensity, int chip_num, i
   
   for (i=0; i < rows; i++){
     ReadFileLine(buffer, BUF_SIZE,  currentFile);
-    cur_tokenset = tokenize(buffer," \t");
+    /* cur_tokenset = tokenize(buffer," \t");
     cur_x = atoi(get_token(cur_tokenset,0));
     cur_y = atoi(get_token(cur_tokenset,1));
-    cur_mean = atof(get_token(cur_tokenset,2));
+    cur_mean = atof(get_token(cur_tokenset,2)); */
+    
+    current_token = strtok(buffer," \t");
+    cur_x = atoi(current_token);
+    current_token = strtok(NULL," \t");
+    cur_y = atoi(current_token);
+    current_token = strtok(NULL," \t");
+    cur_mean = atof(current_token);
+
     cur_index = cur_x + chip_dim_rows*(cur_y);
     intensity[chip_num*rows + cur_index] = cur_mean;
-    delete_tokens(cur_tokenset);
+    /* delete_tokens(cur_tokenset); */
   }
 
   fclose(currentFile);
@@ -503,8 +513,8 @@ void apply_masks(char *filename, double *intensity, int chip_num, int rows, int 
 
 
      for (i =0; i < numcells; i++){
-       //fgets(buffer, BUF_SIZE,  currentFile);
        ReadFileLine(buffer, BUF_SIZE, currentFile);
+       
        
        cur_tokenset = tokenize(buffer," \t");
        cur_x = atoi(get_token(cur_tokenset,0));
@@ -527,9 +537,7 @@ void apply_masks(char *filename, double *intensity, int chip_num, int rows, int 
     delete_tokens(cur_tokenset);
     findStartsWith(currentFile,"CellHeader=",buffer); 
     for (i = 0; i < numcells; i++){
-      ReadFileLine(buffer, BUF_SIZE, currentFile);
-      
-      //     fgets(buffer, BUF_SIZE,  currentFile);
+      ReadFileLine(buffer, BUF_SIZE, currentFile);      
       cur_tokenset = tokenize(buffer," \t");
       cur_x = atoi(get_token(cur_tokenset,0));
       cur_y = atoi(get_token(cur_tokenset,1));
