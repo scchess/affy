@@ -7,7 +7,7 @@
  triangle and the variance of the Ms are displayed in the lower triangle}
 }
 \usage{
-mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="symmetric",
+mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="gaussian",
           digits=3,line.col=2,main="MVA plot",...)
 }
 %- maybe also `usage' for other objects documented here.
