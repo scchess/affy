@@ -11,24 +11,23 @@ generateExprVal.method.mas <- function(probes, ...)
     
   }
   
-  return(list(exprs=slg,se.exprs=rep(NA,M)))
+  return(list(exprs=2^slg,se.exprs=rep(NA,M)))
     
 }
 
-affy.scalevalue.exprSet <- function(eset, sc=500, analysis)
+affy.scalevalue.exprSet <- function(eset, sc=500, analysis="absolute")
 {
   
   analysis <- match(analysis, c("absolute", "comparison"))
   
-  if (analysis == "absolute")
+  if(analysis == 1)
     nf <- 1
   else
-    stop("not implemented")
-  
+    stop("sorry! comparison not implemented.")
   for (i in 1:ncol(exprs(eset))) {
     slg <- exprs(eset)[, i]
-    sf <- sc / mean(2^slg, trim=0.02)  
-    reported.value <- nf * sf * 2^slg
+    sf <- sc / mean(slg, trim=0.02)  
+    reported.value <- nf * sf * slg
     eset@exprs[, i] <- reported.value
   }
   

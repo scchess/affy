@@ -8,13 +8,14 @@
   Affymetrix user manual.
 }
 \usage{
-affy.scalevalue.exprSet(eset, sc = 500, analysis)
+affy.scalevalue.exprSet(eset, sc = 500, analysis="absolute")
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{eset}{An \code{\link{exprSet}} object.}
   \item{sc}{Value at which all arrays will be scaled to.}
-  \item{analysis}{should we do absolute or comparison analysis?}
+  \item{analysis}{should we do absolute or comparison analysis, although
+  "comparison" is still not implemented.}
 }
 \details{
   See the affymetrix user manual for details.

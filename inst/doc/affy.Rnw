@@ -44,6 +44,7 @@ quality control, RNA degradation assessments, different probe level
 normalization and background correction procedures, and
 flexible functions that permit the user to convert probe level data to
 expression measures. The package includes utilities for computing
+expression measures similar to 
 MAS 4.0's AvDiff \citep{affy4}, MAS 5.0's signal \citep{affy5},
 DChip's MBEI \citep{li:wong:2001a}, and RMA \citep{iriz:etal:2003}.
 
@@ -94,9 +95,27 @@ preprocessing when computing expression measures.
 \item No need to read in {\it CDF} files.
 \item More efficient expression measure functions. (\verb+?expresso+, \verb+?express+).
 \item Very fast RMA (\verb+?rma+).
-\item MAS 5.0 available (\verb+?expresso+).
+\item Our version of MAS 5.0 available (\verb+?expresso+).
 \item RNA degradation assessment. (\verb+?AffyRNAdeg+)
 \end{itemize}
+
+\noindent{\bf What's different?}
+The new version is not backwards compatible! Unfurtunately the changes
+we had to make to gain efficiency has resulted in some lack of
+backwards compatibility. Here are some   
+important ones:
+\begin{itemize}
+\item Unless you are using the HG-U95Av2 chip or the HGU133A chip you
+  need to download and install a package for each chip type. They can
+  be obtained from  
+\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}
+\item You need the latest version of Biobase
+\item To get RMA you no longer use \verb+express+, you use \verb+rma+
+\item \verb+ReadAffy+ uses the argument \verb+filenames+ instead of \verb+CELS+ for denoting cel files.
+\item You can no longer subset probe level objects (now
+  \verb+AffyBatch+) by probe set name
+\end{itemize}
+
 
 In this version, we have implemented various of the procedures
 described in the MAS 5.0 manual. Throughout the package we use
@@ -176,7 +195,7 @@ R> eset <- rma(Data)
 The \verb+rma+ function was written in C for speed and
 efficiency. It uses the expression measure described in \cite{iriz:etal:2003}.
 
-For other popular methods use \verb+expresso+ instead of \verb+rma+. For example for MAS 5.0 signal you can use
+For other popular methods use \verb+expresso+ instead of \verb+rma+. For example for our version of MAS 5.0 signal you can use
 \begin{Sinput}
 R> eset <- expresso(Data, normalize=FALSE, bgcorrect.method="mas",
                      pmcorrect.method="mas",summary.method="mas")
@@ -421,10 +440,10 @@ measures. The function \verb+affy.scalevalue.exprSet+ performs a
 normalization similar to that described in the MAS 5.0 manual.
 
 \subsection{Li and Wong's MBEI (dchip)}
-To obtain a measure similar to Li and Wong's MBEI one can use
+To obtain our version of Li and Wong's MBEI one can use
 \begin{Sinput}
 %<<>>=
-R> eset <- expresso(affybatch.example, normalize.method="invarianteset",
+R> eset <- expresso(affybatch.example, normalize.method="invariantset",
                  bg.correct=FALSE,
                  pmcorrect.method="pmonly",summary.method="liwong")
 %@
@@ -432,6 +451,7 @@ R> eset <- expresso(affybatch.example, normalize.method="invarianteset",
 This gives the current $PM$-only default. The reduced model (previous
 default) can be obtained using \verb+pmcorrect.method="subtractmm"+.
 
+Or you can use \verb+express+ to use your own implementation.
 
 \subsection{C implementation of RMA}
 One of the quickest ways to compute expression using the \verb+affy+
