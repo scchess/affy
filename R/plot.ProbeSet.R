@@ -4,7 +4,7 @@ plot.ProbeSet <- function(x, which=c("pm", "mm"), xlab="probes", type="l", ylim=
   if (which == "pm")
     f <- getMethod("pm", "ProbeSet")
   else
-    g <- getMethod("mm", "ProbeSet")
+    f <- getMethod("mm", "ProbeSet")
   
   if (is.null(ylim))
     ylim = range(c(f(x)), na.rm=TRUE)

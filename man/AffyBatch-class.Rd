@@ -155,7 +155,7 @@ Class \code{"exprSet"}, directly.
 }
 \note{This class is better described in the vignette.}
 \seealso{  related methods \code{\link{merge.AffyBatch}},
-  \code{\link{split.AffyBatch}} and \code{\link{pairs.AffyBatch}}, and related classes \code{\link[affy:Cel-class]{Cel}},
+  \code{\link{pairs.AffyBatch}}, and related classes \code{\link[affy:Cel-class]{Cel}},
   \code{\link[affy:Cdf-class]{Cdf}} and 
   \code{\link[Biobase]{exprSet-class}}} 
 
