@@ -19,7 +19,6 @@ bg.correct(object, method, ...)
 
 %bg.correct.subtractmm(object)
 bg.correct.rma(object,...)
-
 bg.correct.mas(object, griddim)
 
 bg.correct.none(object, ...)}
@@ -48,6 +47,12 @@ bg.correct.none(object, ...)}
 
   More details are available in the vignette.
 
+  \code{bg.correct.rma2} gives access to the older background method
+  that was used by the \code{\link{rma}} function in the version 1.1
+  bioconductor releases. For the 1.2 release \code{\link{rma}} performs
+  the same background adjustment as \code{bg.correct.rma}. Unless you
+  wish to duplicate older results you should use \code{bg.correct.rma}
+  
   Details on the internal fucntions used by \code{bg.correct.rma} are in
   \code{\link{bg.adjust}}.
   

@@ -16,9 +16,13 @@
 # dangerous if you are not careful. Use destructive=FALSE if this is
 # deemed likely to be a problem.
 #
+# UPDATE: note that the affybatch is now not affected if you use
+# destructive=TRUE and you might actually save a little memory.
+# the destructive refers only to Plobs, which would be destroyed.
+#
 ########################################################
 
-rma <- function(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,background=TRUE,bgversion=1,...){
+rma <- function(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,background=TRUE,bgversion=2,...){
 
   rows <- length(probeNames(object))
   cols <- length(object)

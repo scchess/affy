@@ -5,7 +5,7 @@ just.rma <- function(..., filenames=character(0),
                      compress=getOption("BioC")$affy$compress.cel,
                      rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                      verbose=FALSE, background=TRUE, normalize=TRUE,
-                     bgversion=1, destructive=FALSE) {
+                     bgversion=2, destructive=FALSE) {
   
   auxnames <- as.list(substitute(list(...)))[-1]
   filenames <- .Primitive("c")(filenames, auxnames)
@@ -93,7 +93,7 @@ justRMA <- function(..., filenames=character(0),
                      rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                      hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE,
                      normalize=TRUE, background=TRUE, 
-                     bgversion=1, destructive=FALSE){
+                     bgversion=2, destructive=FALSE){
   ##first figure out filenames
   auxnames <- unlist(as.list(substitute(list(...)))[-1])
   

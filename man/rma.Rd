@@ -7,7 +7,7 @@
 the robust multi-array average (RMA) expression measure.
 }
 \usage{
-rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,background=TRUE,bgversion=1,...)
+rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,background=TRUE,bgversion=2,...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
@@ -15,7 +15,7 @@ rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,backgro
   \item{subset}{an indexing vector with the the probe sets do to be
     converted to expression. (not currently implemented)}
   \item{verbose}{logical value. If \code{TRUE} it writes out some messages. (Curently ignored)}
-  \item{destructive}{logical value. If \code{TRUE} works on the PM matrix in place as much as possible, good for large datasets, but dangerous because it will leave the PM element of the AffyBatch changed after a call to \code{rma}}
+  \item{destructive}{logical value. If \code{TRUE} works on the PM matrix in place as much as possible, good for large datasets.}
   \item{normalize}{logical value. If \code{TRUE} normalize data using
     quantile normalization}
   \item{background}{logical value. If \code{TRUE} background correct
@@ -29,8 +29,10 @@ rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,backgro
 This function computes the RMA (Robust Multichip Average) expression measure described in Irizarry et al
 Biostatistics (2003).
 
-Note it is recommended to use version 1 background, unless you wish to
-have directly comparable RMA results with those from either \code{\link{express}} or \code{\link{expresso}}.
+Please note that the default background adjustment method was changed during the lead up
+to the bioconductor 1.2 release. This means that this function and
+\code{link{expresso}} should give results that directly agree.
+
 }
 \value{
 An \code{\link{exprSet}}
