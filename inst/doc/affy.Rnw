@@ -373,10 +373,10 @@ The example below presents the method \verb+image+.
 <<fig=TRUE>>=
 opar <- par
 par(mfrow=c(2,2))
-image(mycelfile, transf=log, col=rainbow(32), main="raw values")
+image(mycelfile, sub="raw values")
+image(mycelfile, col=rainbow(32), sub="raw values")
 image(mycelfile, transf=log, sub="log-transformed values")
-image(mycelfile, transf=log, col=rainbow(32),
-      main="log-tranfomed values", sub="rainbow coloring")
+image(mycelfile, transf=log, col=rainbow(32), sub="log-tranfomed values")
 par <- opar
 @
 %\end{verbatim}
