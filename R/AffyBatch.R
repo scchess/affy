@@ -521,7 +521,7 @@
               ## and store it miame
               MIAME <- description(object)
               MIAME@preprocessing <- preproc
-              description(abatch) <- MIAME
+              description(object) <- MIAME
               ##
               return(object)
             },
