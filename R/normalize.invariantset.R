@@ -46,6 +46,55 @@ library(modreg)
 ## needed ?
 
 
+normalize.Plob.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
+
+  nc <- ncols(container@pm)
+  np <- nrows(container@pm)
+  
+  ## take as a reference the array having the median overall intensity
+  l <- ncols(container@pm)
+  m <- vector("numeric", length=l)
+  for (i in 1:l)
+    m[i] <- mean(container@pm[,i])
+  refindex <- trunc(median(rank(m)))
+  rm(m,l)
+  
+  ## loop over the CEL files and normalize them
+  for (i in (1:nc)[-refindex]) {
+
+    if (progress) cat("normalizing array", attr(container[[i]], "name"), "...")
+    
+    ##temporary
+    i.set <- which(i.pm)[attr(normalize.invariantset(container@pm[,i],
+                                                     container@pm[,refindex],
+                                                     prd.td),
+                              "invariant.set")
+                         ]
+    
+    # pm first...
+    tmp <- as.numeric(approx(container@pm[,i][i.set],
+                             container@pm[,refindex][i.set],
+                             xout=container@pm[,i])$y)
+    container@pm[,i] <- tmp
+    # then mm... (note: I am not quite sure whether MMs should be 'normalized' or discarded...)
+    tmp <- as.numeric(approx(container@mm[,i][i.set],
+                             container@mm[,refindex][i.set],
+                             xout=container@mm[,i])$y)
+    container@mm[,i] <- tmp
+    
+    ## storing information about what has been done
+    ## (where should I put that in Plob ??????)
+    ## <- list(name="normalized by invariant set",
+    ##                             invariantset=i.set)
+
+    if (progress) cat("done.\n")
+    
+  }
+  return()
+}
+
+
+
 normalize.Cel.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), progress=FALSE) {
 
   if (! inherits(container, "Cel.container"))
@@ -65,7 +114,7 @@ normalize.Cel.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), 
   l <- length(container)
   m <- vector("numeric",length=l)
   for (i in 1:l)
-    m[i] <- mean(container[[i]]@intensity)
+    m[i] <- mean(container[[i]]@intensity[i.pm])
   refindex <- trunc(median(rank(m)))
   rm(m,l)           
 
@@ -104,7 +153,6 @@ normalize.Cel.invariantset <- function(container, f.cdf, prd.td=c(0.003,0.007), 
   
   return(container)
 }
-
 
 ##  The 'common-to-all' part of the algorithm. Operates on two vectors of numeric data
 ##
