@@ -151,7 +151,7 @@
               
               cat("AffyBatch object\n")
               cat("size of arrays=", object@nrow, "x", object@ncol,
-                  " features (", object.size(object), " Mb)\n", sep="")
+                  " features (", object.size(object) %/% 1024, " kb)\n", sep="")
               
               ## Location from cdf env
               try( cdf.env <- getCdfInfo(object) )
