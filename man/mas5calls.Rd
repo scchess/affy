@@ -122,7 +122,7 @@ whitepaper.
 \author{Benjamin I. P. Rubinstein, Rafael A. Irizarry}
 \examples{
 
-data(affybatch.exmample)
+data(affybatch.example)
 PACalls <- mas5calls(affybatch.example)
 }
 \keyword{manip}
