@@ -473,46 +473,18 @@
             },
             where=where)
 
-  
-  ## ---expression value computation
-  if (debug.affy123) cat("--->computeExprSet\n")
-  if( !isGeneric("computeExprSet") )
-    setGeneric("computeExprSet", function(x, summary.method, ...)
-               standardGeneric("computeExprSet"),
+  ## --- 
+  if (debug.affy123) cat("--->bg.correct\n")
+  if( !isGeneric("bg.correct") )
+    setGeneric("bg.correct", function(x, bg.method, ...)
+               standardGeneric("bg.correct"),
                where=where)
   
-  setMethod("computeExprSet", signature(x="AffyBatch", #bg.method="character",
-                                        summary.method="character"),
-            function(x, ##bg.method,
-                     summary.method, ids=NULL, verbose=TRUE,
-                                        #bg.param=list(),
-                     summary.param=list(), warnings=TRUE) {
-
-              ##this is now done in expresso cause it needs to come before
-              ##normalization
-              ##bg.method <- match.arg(bg.method, bg.correct.methods)
-              ##see below for why this is commented out
-              summary.method <- match.arg(summary.method, express.summary.stat.methods)
+  setMethod("bg.correct", signature(x="AffyBatch", #bg.method="character",
+                                        bg.method="character"),
+            function(x, bg.method, bg.param=list()) {
               
-              n <- length(x)
-
-              ## if NULL compute for all
-              if (is.null(ids))
-                ids <- geneNames(x)
-              
-              m <- length(ids)
-
-              ##why is this defined
-              ##idsi <- match(ids, geneNames(x))
-              
-              ## cheap trick to (try to) save time
-              c.pps <- new("ProbeSet",
-                           pm=matrix(),
-                           mm=matrix())
-              
-              ## matrix to hold expression values
-              exp.mat <- matrix(NA, m, n)
-              se.mat <- matrix(NA, m, n)
+              bg.method <- match.arg(bg.method, bg.correct.methods)
               ##DEBUG: hackish (put global adjsutment names below
               ##Because this must go before normalization it must be
               ##done to the entire array.. so its either moved to
@@ -531,6 +503,49 @@
 #                 if (verbose) cat(".....done.\n")
 #               }
               
+            },
+            where = where)
+            
+            
+  ## --- expression value computation
+  if (debug.affy123) cat("--->computeExprSet\n")
+  if( !isGeneric("computeExprSet") )
+    setGeneric("computeExprSet", function(x, summary.method, ...)
+               standardGeneric("computeExprSet"),
+               where=where)
+  
+  setMethod("computeExprSet", signature(x="AffyBatch", pm.correct.method="character",
+                                        summary.method="character"),
+            function(x, pm.method,
+                     summary.method, ids=NULL, verbose=TRUE,
+                                        #bg.param=list(),
+                     summary.param=list(), warnings=TRUE) {
+
+              
+              pm.correct.method <- match.arg(pm.correct.method, pm.correct.methods)
+              
+              summary.method <- match.arg(summary.method, express.summary.stat.methods)
+              
+              n <- length(x)
+
+              ## if NULL compute for all
+              if (is.null(ids))
+                ids <- geneNames(x)
+              
+              m <- length(ids)
+
+              ##why is this defined
+              ## --> from the migration to AffyBatch... 'forget to remove it...
+              ## idsi <- match(ids, geneNames(x))
+              
+              ## cheap trick to (try to) save time
+              c.pps <- new("ProbeSet",
+                           pm=matrix(),
+                           mm=matrix())
+              
+              ## matrix to hold expression values
+              exp.mat <- matrix(NA, m, n)
+              se.mat <- matrix(NA, m, n)
 
               if (verbose) {
                 cat(m, "ids to be processed\n")
@@ -539,13 +554,14 @@
               
               ## loop over the ids
               mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character")), list(c.pps, method=summary.method,param.method=summary.param)))
-##only one character cause no more bg correct
+              ##only one character cause no more bg correct
 ###bg.correct=bg.method, param.bg.correct=bg.param,
 
               options(show.error.messages = FALSE)
               on.exit(options(show.error.messages = TRUE))
               
               CDFINFO <- getCdfInfo(x) ##do it once!
+              
               for (i in seq(along=ids)) {
                 
                 id <- ids[i]
@@ -563,7 +579,7 @@
                 ## locations for an id
                 ##l.pm <- locate.name(ids[id], cdf, type="pm")
                 ##l.mm <- locate.name(ids[id], cdf, type="mm")
-                loc <- get(id ,envir=CDFINFO)
+                loc <- get(id, envir=CDFINFO)
                 l.pm <- loc[, 1]
                 if (ncol(loc) == 2)
                   l.mm <- loc[ ,2]

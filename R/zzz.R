@@ -31,6 +31,13 @@
          envir=as.environment(where))
        }
 
+.initPmCorrect <- function(where, all.affy) {
+  if (debug.affy123) cat("-->detecting pm correction methods from naming convention\n")
+  assign("pm.correct.methods",
+         all.affy[grep("pm.correct\.*", all.affy)],
+         envir=as.environment(where))
+}
+
 .initMapCdfName <- function(where) {
   filepath <- file.path(.path.package("affy"), "data", "mapCdfName.tab")
   mapCdfName <- read.table(filepath, colClasses=rep("character", 3), quote="\"", sep="\t", comment="#", row.names=NULL, header=TRUE)
@@ -72,6 +79,7 @@
   .initNormalize(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initExpression(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initBackgroundCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
+  .initPmCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initMapCdfName(match(paste("package:", pkgname, sep=""), search()))
   .initCdf(match(paste("package:", pkgname, sep=""), search()))
   .initCel(match(paste("package:", pkgname, sep=""), search()))

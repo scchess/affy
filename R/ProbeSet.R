@@ -15,13 +15,15 @@
   
   setClass("ProbeSet",
            representation(pm="matrix", mm="matrix"),
-            prototype=list(pm=matrix(),mm=matrix()),
+           prototype=list(pm=matrix(), mm=matrix()),
            where=where)
   
   ###we need a show
+  ## --> not only... barplot and plot for PPSet should have been ported too...
   
   ##DEBUG: what to do with that ?
-
+  ## --> with what ?
+  
   if( !isGeneric("colnames") )
     #setGeneric("colnames", function(x, do.NULL, prefix)
     setGeneric("colnames", where=where)
@@ -88,9 +90,8 @@
     setGeneric("express.summary.stat", function(x,method, ...)#bg.correct, ...)
                standardGeneric("express.summary.stat"), where=where)
   
-  setMethod("express.summary.stat",signature(x="ProbeSet", method="character"),
-                                              #bg.correct="character"),
-            function(x, method, #bg.correct, param.bg.correct=list(),
+  setMethod("express.summary.stat",signature(x="ProbeSet", method="character", pm.correct="character"),
+            function(x, method, pm.correct, param.pm.correct=list(),
                      param.method=list()) {
             
               ## simple for system to let one add background correction methods
