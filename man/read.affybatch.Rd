@@ -12,7 +12,6 @@ read.affybatch(..., filenames = character(0),
                notes = "",
                compress = getOption("BioC")$affy$compress.cel,
                rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE,
-               hdf5 = FALSE,hdf5FilePath = NULL,
                verbose = FALSE)
 
 ReadAffy(..., filenames=character(0),
@@ -24,7 +23,7 @@ ReadAffy(..., filenames=character(0),
               description=NULL,
               notes="",
               rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-              hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE)
+              verbose=FALSE)
 }
 \arguments{
   \item{\dots}{ file names separated by comma.}
@@ -36,8 +35,6 @@ ReadAffy(..., filenames=character(0),
   \item{rm.mask}{ should the spots marked as 'MASKS' set to \code{NA} ? }
   \item{rm.outliers}{ should the spots marked as 'OUTLIERS' set to \code{NA} }
   \item{rm.extra}{ if \code{TRUE}, overrides what is in \code{rm.mask} and \code{rm.oultiers} }
-  \item{hdf5}{ use of hdf5 ? (not available yet)}
-  \item{hdf5FilePath}{ a filename to use with hdf5 (not available yet)}
   \item{verbose}{ verbosity flag }
   \item{widget}{a logical specifying if widgets should be used.}
   \item{celpath}{a character specifying the path where to look for celfiles}

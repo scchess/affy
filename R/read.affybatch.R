@@ -6,7 +6,6 @@ read.affybatch <- function(..., filenames=character(0),
                            compress = getOption("BioC")$affy$compress.cel,
                            rm.mask = FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                            insitu = FALSE,
-                           ##widget = FALSE, ##now a separate function to get filenames
                            verbose = FALSE) {
   
   auxnames <- as.list(substitute(list(...)))[-1]
@@ -102,30 +101,20 @@ read.affybatch <- function(..., filenames=character(0),
                         compress=compress, rm.mask=rm.mask,
                         rm.outliers=rm.outliers, rm.extra=rm.extra)
     
-    if (dim(intensity(cel)) != dim.intensity)
+    if (all(dim(intensity(cel)) != dim.intensity))
       stop(paste("CEL file dimension mismatch !\n(file",filenames[[i]],")"))
     if (verbose) cat("done.\n")
     
     if (cel@cdfName != ref.cdfName)
       warning(paste("cdfName mismatch !\n(", filenames[[i]], ")"))
 
-    if (insitu)
-      intensity(conty) <- get("<+")(intensity(conty), , i, c(intensity(cel)))
-    else
-      intensity(conty)[, i] <- c(intensity(cel))
-
-    ##      dimnames(intensity(conty))[[3]][i] <- cel@name ##now through phenoData
     ##if (sd)
     ##  spotsd(conty)[, , i] <- spotsd(cel)
     
-    ##c.names[i] <- cel@name ##from phenoData now
     ##outliers(conty)[[i]] <- outliers(cel)
     ##masks(conty)[[i]] <- masks(cel)
     ##history(conty)[[i]] <- history(cel) now through MIAME
   }
-  ##dim(intensity(conty)) <- c(prod(dim.intensity), n) ##alread done. by definition
-  ##chipNames(conty) <- c.names  ##now phenoData
-  
   
   return(conty)
 }

@@ -74,7 +74,7 @@
   
   setReplaceMethod("pm", signature=c("ProbeSet", "matrix"),
                    function(object, value) {
-                     if (sum(dim(value) != dim(object@mm)) != 2)
+                     if (! all(dim(value) == dim(object@mm)))
                        stop("dimension mismatch between 'pm' and 'mm'")
                      object@pm <- value
                    }, where=where)
