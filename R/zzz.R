@@ -85,7 +85,7 @@
                    normalize.method = normalize.method,
                    pmcorrect.method = pmcorrect.method,
                    summary.method = summary.method,
-                   xy.offset = 1 ## this one is for temporary compatibility
+                   xy.offset = 0 ## this one is for temporary compatibility
                    ) 
 
   class(affy.opt) <- "BioCPkg"
