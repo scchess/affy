@@ -1,17 +1,17 @@
 .initNormalize <- function(where, all.affy) {
   if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
-  
+
   ## this could move into the respective methods of AffyBatch later
 
   start <- nchar("normalize.AffyBatch.")
   assign("normalize.AffyBatch.methods",
          substr(all.affy[grep("normalize\.AffyBatch\.*", all.affy)], start+1, 100),
-         envir=as.environment(where)) 
+         envir=as.environment(where))
 }
 
 .initExpression <- function(where, all.affy) {
   if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
-  
+
   ## the first one is deprecated (well... "should be"...)
   assign("generateExprSet.methods",
          substr(all.affy[grep("generateExprVal\.method\.*", all.affy)], 24,100),
@@ -47,17 +47,17 @@
 }
 
 .setAffyOptions <- function(affy.opt=NA) {
-  
+
   if (! any(is.na(affy.opt))) {
     if (class(affy.opt) != "BioCPkg")
       stop("obviously invalid package options !")
-    
+
     BioC <- getOption("BioC")
     BioC$affy <- affy.opt
     options("BioC"=BioC)
     return()
   }
-  
+
   ## add affy specific options
   ## (not unlike what is done in 'Biobase')
   if (is.null(getOption("BioC"))) {
@@ -84,7 +84,7 @@
   normalize.method <- "quantiles"
   pmcorrect.method <- "pmonly"
   summary.method <- "liwong"
-  
+
   affy.opt <- list(compress.cdf=FALSE, compress.cel=FALSE,
                    use.widgets=FALSE,
                    probesloc = list(probesloc.first, probesloc.second, probesloc.third, probesloc.forth),
@@ -92,9 +92,9 @@
                    normalize.method = normalize.method,
                    pmcorrect.method = pmcorrect.method,
                    summary.method = summary.method)
-  
+
   class(affy.opt) <- "BioCPkg"
-  
+
   BioC <- getOption("BioC")
   BioC$affy <- affy.opt
   options("BioC"=BioC)
@@ -102,17 +102,12 @@
 }
 
 .First.lib <- function(libname, pkgname, where) {
-  
+
 
   where <- match(paste("package:", pkgname, sep=""), search())
   all.affy <- ls(where)
-  
-  ## DEBUG flag
-  ##assign("debug.affy123", TRUE, envir=as.environment(where))
-  assign("debug.affy123", FALSE, envir=as.environment(where))
-  
-  message <- FALSE
-  
+ message <- FALSE
+
   if (message) {
     cat(rep("*",13),"\n",sep="")
     cat("affy: development version\n")
@@ -121,30 +116,19 @@
     cat("IMPORTANT: you need the latest versions of the required packages too.\n")
     cat(rep("*",13),"\n",sep="")
   }
-  
-  library.dynam("affy", pkgname, libname)
-  
-  require(Biobase, quietly=TRUE) ##Biobase uses methods
-  require(modreg, quietly=TRUE)
-  require(eda, quietly=TRUE)
 
-  ##i was having troulbes, and changing where to
-  ###match(paste("package:", pkgname, sep=""), search()) fixed.. thanx to RG
-  
+  library.dynam("affy", pkgname, libname)
+
   .initNormalize(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initExpression(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initBackgroundCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initPmCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initMapCdfName(match(paste("package:", pkgname, sep=""), search()))
-  .initCdf(match(paste("package:", pkgname, sep=""), search()))
-  .initCel(match(paste("package:", pkgname, sep=""), search()))
-  .initAffyBatch(match(paste("package:", pkgname, sep=""), search()))
-  .initProbeSet(match(paste("package:", pkgname, sep=""), search()))
 
-  .setAffyOptions()  
+  .setAffyOptions()
   cacheMetaData(as.environment(where))
 
-  
+
 }
 
 
