@@ -61,6 +61,16 @@ expresso(
 
   For the mas 5.0 and 4.0 methods ones need to normalize after obtaining
   expression. The function \code{\link{affy.scalevalue.exprSet}} does this.
+
+  For the Li and Wong summary method notice you will not get
+  the same results as you would get with dChip. dChip is not open source
+  so it is not easy to reproduce. 
+  Notice also that this iterative algorithm will not always converge.
+  If you run the algorithm on thousands of probes expect some non-convergence
+  warnings. These are more likely when few arrays are used. We recommend
+  using this method only if you have 10 or more arrays.
+  Please refer to the \code{\link{fit.li.wong}} help page for more details.
+
 }
 \value{
   An object of class \code{\link[Biobase]{exprsSet}}, with an attribute

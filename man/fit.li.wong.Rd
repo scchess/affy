@@ -49,7 +49,7 @@ li.wong(data.matrix,remove.outliers=TRUE, normal.array.quantile=0.5,
   This is Bioconductor's implementation of the Li and Wong algorithm. The
   Li and Wong PNAS 2001 paper was followed. However, you will not get
   the same results as you would get with dChip. dChip is not open source
-  so it is hard if not impossible to reproduce. 
+  so it is not easy to reproduce. 
 
   Notice that this iterative algorithm will not always converge.
   If you run the
