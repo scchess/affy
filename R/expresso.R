@@ -13,6 +13,7 @@ expresso <- function(afbatch,
                      ## ---
                      ##phenodata = NULL,##assume it comes with AffyBatch, samee for MIAME
                      verbose = TRUE,
+                     warnings = TRUE,
                      widget = FALSE
                      ) {
   
@@ -124,8 +125,10 @@ expresso <- function(afbatch,
   }  
   
   eset <- computeExprSet(afbatch, #bg.method=bg.method,
-                         summary.method=summary.method, pmcorrect.method= pmcorrect.method, ids=summary.subset,
-                         summary.param=summary.param, pmcorrect.param=pmcorrect.param)
+                         summary.method=summary.method, pmcorrect.method= pmcorrect.method,
+                         ids=summary.subset,
+                         summary.param=summary.param, pmcorrect.param=pmcorrect.param,
+                         warnings=warnings)
   
   ##  if (! is.null(phenodata)), ##must assume we get it 
   

@@ -3,7 +3,7 @@
 ###
 bg.parameters <- function(pm, n.pts=2^14){
   
-  max.density <- function(x,n.pts){
+  max.density <- function(x, n.pts){
     aux <- density(x, kernel="epanechnikov", n=n.pts, na.rm=TRUE)
     aux$x[order(-aux$y)[1]] 
   }
@@ -26,21 +26,22 @@ bg.parameters <- function(pm, n.pts=2^14){
   list(alpha=alpha,mu=mubg,sigma=bgsd)  
 }
 
-bg.adjust <- function(pm,n.pts=2^14){
+bg.adjust <- function(pm, n.pts=2^14, ...){
   param <- bg.parameters(pm,n.pts)
   b <- param$sigma
   pm <- pm - param$mu - param$alpha*b^2
   pm + b*((1./sqrt(2*pi))*exp((-1./2.)*((pm/b)^2)))/pnorm(pm/b)
 }
 
-bg.correct.none <- function(object) object
+bg.correct.none <- function(object, ...)
+  object
 
 ##bg.correct.subtractmm <- function(object){
 ##  pm(object) <- pm(object) - mm(object)
 ##  return(object)
 ##}
 
-bg.correct.rma <- function(object){
+bg.correct.rma <- function(object, ...){
   pm(object) <- apply(pm(object),2,bg.adjust)
   return(object)
 }
