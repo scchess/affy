@@ -232,7 +232,6 @@
                 
                 
                 if (xy) {
-                  warning("flag 'xy' is deprecated")
                   x <- tmp %% nrow(object)
                   x[x == 0] <- nrow(object)
                   y <- tmp %/% nrow(object) + 1
