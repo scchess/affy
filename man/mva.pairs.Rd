@@ -4,7 +4,7 @@
 \title{M vs. A Matrix}
 \description{
  A matrix of M vs. A plots is produced. Plots are made on the upper
- triangle and the variance of the Ms are displayed in the lower triangle}
+ triangle and the IQR of the Ms are displayed in the lower triangle}
 }
 \usage{
 mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="gaussian",
@@ -17,7 +17,7 @@ mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="gaussian",
   \item{log.it}{logical. If \code{TRUE} uses log scale.}
   \item{span}{span to be used for loess fit.}
   \item{family.loess}{\code{"guassian"} or \code{"symmetric"} as in \code{\link[modreg]{loess}}.}
-  \item{digits}{number of digits to use in the display of variance.}
+  \item{digits}{number of digits to use in the display of IQR.}
   \item{line.col}{color of the loess line.}
   \item{main}{an overall title for the plot.}
   \item{\dots}{graphical parameters can be given as arguments to \code{mva.plot}}}
