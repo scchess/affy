@@ -96,9 +96,9 @@
 
   probesloc.first <- list(what="environment", where=.GlobalEnv)
   probesloc.second <- list(what="package", where=NULL,
-                           autoload=FALSE, ##autoload=TRUE,
+                           autoload=TRUE,
                            installdir=NULL,
-                           repository="http://www.bioconductor.org/data/cdfenvs/Source/")
+                           repository="http://www.bioconductor.org/data/cdfenvs/repos/")
   probesloc.third <- list(what="data", where="affy")
 
   ## default for the methods

@@ -72,7 +72,9 @@
 
               cdfname <- cleancdfname(object@cdfName)
               
-              for (i in 1:length(how)) {
+              i <- 0
+              while(i <= length(how)) {
+                i <- i+1
                 what <- how[[i]]$what
                 where <- how[[i]]$where
 
@@ -100,15 +102,21 @@
                     ## download the missing cdfenv pack
                     
                     if (how[[i]]$autoload) {
+                      
+                      if (! "package:reposTools" %in% search()) {
+                        on.exit(detach("package:reposTools"))
+                      }
+                      
                       if (! require(reposTools))
                         stop("The package reposTools is required to download environments.")
                       
-                      if (is.null(how[[i]]$installdir))
-                        install.packages2(cdfname, how[[i]]$repository)
-                      else
-                        install.packages2(cdfname, how[[i]]$repository, how[[i]]$installdir)
+                      reposEntry <- getReposEntry(how[[i]]$repository)
                       
-                      detach("package:reposTools")
+                      if (is.null(how[[i]]$installdir))
+                        install.packages2(cdfname, reposEntry)
+                      else
+                        install.packages2(cdfname, reposEntry, how[[i]]$installdir)
+                      
                       ## rewind the iterator i and try again
                       i <- i-1
                     }
