@@ -502,8 +502,8 @@ common to all the chips. Knowing that a {\it CDF} files weights 20 Megabytes, wi
 
 \begin{description}
  \item[name] Each {\it probe} (or {\it feature}) on an array is an oligonucleotide from a larger sequence of nucleic acids 
-(generally a gene or a fraction of a gene), we refer to as a probe pairs set (XXX see PPSet).
- All these {\it large sequences} were given a unique name by the chip manufacturer. By design of the arrays severals probes correspond to different
+(generally a gene or a fraction of a gene, we refer to as a probe pairs set).
+ All these {\it large sequences} were given a unique name by the chip manufacturer. We call this name {\it affyID}. By design of the arrays severals probes correspond to different
 parts of the same larger sequence, hence have the same name. Names are stored as factors, and the corresponding factors labels (or levels) are found in the
 attribute \verb+name.levels+.
  \item[name.level]
@@ -672,6 +672,67 @@ data(listcel)
 
 listcel.n <- normalize(listcel, method="nothing")
 @
+
+\subsection{expression values}
+Expression values are generated from the probes informations.                                         
+
+
+
+
+
+ A way to include new approaches is to go through the \verb+PPSet+ objects,                            
+or more precisely \verb+PPSset.container+ objects.
+ As described above, a container is used to bundle several \verb+PPSet+
+objects and it                                                                         
+used here to collect the {\it PPSet} for a given gene in different hybridizations (i.e. on different arrays).                      
+Methods that generate expression values accept as first parameter a list of \verb+data.frame+. There i
+s one \verb+data.frame+ per hybridization.                                                            
+All the data are related to the same probe pair set on a chip. Each data.frame has a column called {\i
+t pm} and a column called {\it mm} (note: each of these data.frame correspond to the slot \verb+probes+ of the \verb+PPSet+).                                                                   
+The method can then accept other optional parameters, but default must be defined. The name of the met
+hod must be of the form                                                                               
+\verb+generateExprVal.method.xyz+, where \verb+xyz+ in the name of the method.                        
+Then the methods nickname must be registered in \verb+generateExprSet.methods+.
+% shit ! I just realized the slight inconsistency in the name of all the stuff
+The mecanism is not unlike the one used for \verb+normalize+.                                                                                                      
+As an illustrative example, we present a method called \it{outlieraverage} that generates expression v
+alues in two steps.                                                                                   
+ In a first step, identical {\it pm} probes across the probes sets from the different hybridizations a
+re processed.                                                                                         
+Probe values that are more than  2 times away from the median absolute deviation (mad) are replaced by
+ the median value                                                                                     
+ for these probes. In a second step the average of all the probes in the set is calculated for each hy
+bridization experiment.                                                                               
+\begin{verbatim}                                                                                      
+generateExprVal.method.outlieraverage <- function(probes) {                                           
+  ## probes is a list of data.frame                              
+                                                                                                      
+  m <- length(probes)          # number of hybridizations                                             
+  n <- length(probes[[1]]$pm)  # number of pm probes in a set                                         
+                                                                                                      
+  modif.probes <- matrix(0, n, m) # modified probes to be stored in a matrix                          
+                                  # one row per probe, one column per hybridization                   
+                                                                                                      
+  ## loop over the probes                                                                             
+  for (i in 1:n) {                                                                                    
+    ## get all the identical probes from all the hybridizations                                       
+    p <- unlist(lapply(probes, function(x) x$pm[i]))                                                  
+    pmed <- median(p)                                                                                 
+    pmad <- mad(p)                                                                                    
+    p[abs(p-pmed) > 2 * pmad)] <- pmed  # replace the 'outliers' by the median value                  
+    modif.probes[i,] <- p                                                                             
+  }                                                                                                   
+                                                                                                      
+  r <- apply(modif.probes, 1, mean)                                                                   
+                                                                                                      
+  return(r)                                                                                           
+                                                                                                      
+}                                                                                                     
+
+## register the method
+generateExprSet.methods <- c(generateExprSet.methods, "outlieraverage")
+
+\end{verbatim}                                                                                        
 
 \bibliographystyle{plainnat} 
 \bibliography{affy} 
