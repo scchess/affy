@@ -4,6 +4,7 @@
 \alias{AffyBatch}
 \alias{probes}
 \alias{geneNames}
+\alias{geneNames<-}
 \alias{getCdfInfo}
 \alias{image}
 \alias{indexProbes}
@@ -17,6 +18,7 @@
 \alias{cdfName,AffyBatch-method}
 \alias{probes,AffyBatch-method}
 \alias{geneNames,AffyBatch-method}
+\alias{geneNames<-,AffyBatch-method}
 \alias{getCdfInfo,AffyBatch-method}
 \alias{image,AffyBatch-method}
 \alias{indexProbes,AffyBatch-method}
@@ -103,7 +105,9 @@ Class \code{"exprSet"}, directly.
 	summary.method = "character")}: For each probe set computes an
       expression value using \code{summary.method}. }
     \item{geneNames}{\code{signature(object = "AffyBatch")}: return the
-      probe set names also referred to as the Affymetrix IDs. }
+      probe set names also referred to as the Affymetrix IDs. Notice
+      that one can not assign geneNames. You must do this by changing
+      the cdfenvs.}
     \item{getCdfInfo}{\code{signature(object = "AffyBatch")}: retrieve
       the environment that defines the location of probes by probe set. }
     \item{image}{\code{signature(x = "AffyBatch")}: creates an image for
