@@ -8,10 +8,10 @@ Plots the non-parametric density estimates using values contained in the
 columns of a matrix.
 }
 \usage{
-plotDensity(mat, col = rainbow(dim(mat)[2]), ylab = "density", xlab = "x", lwd = rep(2, dim(mat)[2]), lty = rep(1, dim(mat)[2]), xlim = range(mat), ylim = c(0, 1), ...)
+plotDensity(mat, ylab = "density", xlab="x", ...)
 
 plotDensity.AffyBatch(x, col = rainbow(dim(x)[2]), log=TRUE,
-which=c("pm","mm","both"), ylab = "density", xlab = NULL, lwd = rep(2, length(x)), lty = rep(1, length(x)), xlim = NULL, ylim = c(0, 1), ...)
+which=c("pm","mm","both"), ylab = "density", xlab = NULL, ...)
 
 }
 %- maybe also `usage' for other objects documented here.
@@ -24,10 +24,6 @@ which=c("pm","mm","both"), ylab = "density", xlab = NULL, lwd = rep(2, length(x)
   \item{col}{The colors to use fot the different arrays}
   \item{ylab}{a title for the y axis.}
   \item{xlab}{ a title for the x axis.}
-  \item{lwd}{A vector of line widths.}
-  \item{lty}{A vector of line types.}
-  \item{xlim}{the range to be encompassed by the x}
-  \item{ylim}{the range to be encompassed by the x}
   \item{\dots}{graphical parameters can be given as arguments to \code{\link{plot}}}
 }
 \author{Ben Bolstad}

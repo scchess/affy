@@ -1,80 +1,46 @@
-##this function does the expression for our method: RMA. not flexible
-rma <- function(object, subset=NULL, verbose=TRUE, normalize=TRUE,
-                bg.correct=TRUE, ...){
+######################################################
+#
+# rma - RMA interface to c code
+#
+# the RMA method implemented in c code
+#
+# this code serves as interface to the c code.
+# currently
+# implemented (version 0.25) background correction
+#
+# Background correction code has been added.
+#
+# note this function does not leave the supplied
+# AffyBatch unchanged if you select DESTRUCTIVE=TRUE. this is 
+# for memory purposes but can be quite
+# dangerous if you are not careful. Use destructive=FALSE if this is
+# deemed likely to be a problem.
+#
+########################################################
+
+rma <- function(object,subset=NULL, verbose=TRUE, destructive = FALSE,...){
+
+  rows <- length(probeNames(object))
+  cols <- length(object)
+ 
+  ngenes <- length(geneNames(object))
   
-  
-  if(bg.correct){
-    if(verbose) cat("Background correcting\n")
-    ##ADD pm<- to methods!
-    object <- bg.correct.rma(object)
+  #background correction
+  bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
+
+  if (destructive){
+  	exprs <- .Call("rma_c_complete",pm(object),mm(object),probeNames(object),ngenes,body(bg.dens),new.env())
+  } else {
+	exprs <- .Call("rma_c_complete_copy",pm(object),mm(object),probeNames(object),ngenes,body(bg.dens),new.env())
   }
-
-  if(normalize){
-    if(verbose) cat("Normalizing Data\n")
-    object <- normalize(object,"quantiles", pmonly=TRUE)
-  }
+  colnames(exprs) <- sampleNames(object)
+  se.exprs <- array(NA, dim(exprs)) # to be fixed later, besides which don't believe much in nominal se's with medianpolish
   
-  ## if NULL compute for all
-  if (is.null(subset))
-    subset <- geneNames(object)
-
-  n <- length(object)
-  m <- length(subset)
-
-  c.pps <- new("ProbeSet",pm=matrix(), mm=matrix())
-              
-  ## matrix to hold expression values
-  exp.mat <- matrix(NA, m, n)
-  se.mat <- matrix(NA, m, n)
+  phenodata <- phenoData(object)
+  annotation <- annotation(object)
+  description <- description(object) 
+  notes <- notes(object)
   
-  if (verbose) {
-    cat(m, "ProbeSets to be processed\n")
-    countprogress <- 0
-  }
-              
-  mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character")),list(c.pps, method="medianpolish",param.method=list())))
-
-
-  CDFINFO <- getCdfInfo(object) ##do it once!
-  for (i in seq(along=subset)) {
-                
-    id <- subset[i]
-    if (verbose) {
-      if ( round(m/10) == countprogress) {
-        cat(".")
-        countprogress <- 0
-      }
-      else
-        countprogress <- countprogress + 1
-    }
-    loc <- get(id ,envir=CDFINFO)
-    l.pm <- loc[, 1]
-                
-    np <- length(l.pm)
-                
-    c.pps@pm <- matrix(intensity(object)[l.pm, ],
-                       np, n, byrow=TRUE)
-                
-    mycall[[2]] <- c.pps
-    ev <- eval(mycall)
-                
-    exp.mat[i, ] <- ev$exprs
-    se.mat[i,] <- ev$se.exprs
-  }
-
-  if (verbose) cat("\n")
-  
-  dimnames(exp.mat) <- list(subset, sampleNames(object))
-  dimnames(se.mat) <- list(subset, sampleNames(object))
-
-  object@exprs <- exp.mat
-  object@se.exprs <- se.mat
-  class(object) <- "exprSet"
-  return(object)
+  new("exprSet", exprs = exprs, se.exprs = se.exprs, phenoData = phenodata, 
+       annotation = annotation, description = description, notes = notes)
 }
-  
-
-
-
-
-

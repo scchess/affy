@@ -9,3 +9,8 @@ tukey.biweight <- function(x, c=5, epsilon=0.0001)
     t.bi <- sum(w * x) / sum(w)
     return(t.bi)
   }
+
+tukeybiweight <-  function(x, c=5, epsilon=0.0001)
+  list(exprs=apply(x,2,tukey.biweight,c=c,epsilon=epsilon),se.exprs=rep(NA,ncol(x)))
+
+

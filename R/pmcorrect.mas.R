@@ -1,4 +1,4 @@
-pmcorrect.mas <- function(object, contrast.tau=0.03, scale.tau=10, delta=2^-20)
+pmcorrect.mas <- function(object, contrast.tau=0.03, scale.tau=10, delta=9.536743e-07)
   {
     all.pps.pm <- pm(object)
     all.pps.mm <- mm(object)

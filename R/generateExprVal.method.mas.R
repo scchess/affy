@@ -1,4 +1,4 @@
-generateExprVal.methods.mas <- function(probes)
+generateExprVal.method.mas <- function(probes, ...)
 {
   
   probes <- log2(probes)
@@ -7,7 +7,7 @@ generateExprVal.methods.mas <- function(probes)
   
   for (i in 1:ncol(probes)) {
     
-    slg[i] <- tukey.biweight(probes[ ,i])
+    slg[i] <- tukey.biweight(probes[ ,i], ...)
     
   }
   

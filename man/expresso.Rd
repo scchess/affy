@@ -1,5 +1,6 @@
 \name{expresso}
 \alias{expresso}
+
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{ From raw probe intensities to expression values }
 \description{
@@ -57,6 +58,9 @@ expresso(
   In this case, a widget pops up and let the user choose with the mouse.
   The arguments are: \code{AffyBatch},
   \code{bgcorrect.method}, \code{normalize.method}, \code{pmcorrect.method} and \code{summary.method}.
+
+  For the mas 5.0 and 4.0 methods ones need to normalize after obtaining
+  expression. The function \code{\link{affy.scalevalue.exprSet}} does this.
 }
 \value{
   An object of class \code{\link[Biobase]{exprsSet}}
