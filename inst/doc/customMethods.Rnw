@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{HOWTO: custom processing methods in affy}
+%\VignetteIndexEntry{affy: Custom Processing Methods (HowTo)}
 %\VignetteKeywords{Preprocessing, Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
@@ -21,7 +21,7 @@
 \newcommand{\scst}{\scriptstyle}
 \author{Laurent}
 \begin{document}
-\title{Processing methods in the package affy}
+\title{affy: Custom Processing Methods (HowTo)}
 
 \maketitle
 \tableofcontents

@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{HOWTO: Various Import Methods }
+%\VignetteIndexEntry{affy: Import Methods (HowTo)}
 %\VignetteKeywords{Preprocessing, Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
@@ -22,7 +22,7 @@
 
 \author{Laurent}
 \begin{document}
-\title{Various Import Methods}
+\title{affy: Import Methods (HowTo)}
 
 \maketitle
 \tableofcontents
