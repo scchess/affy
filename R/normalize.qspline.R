@@ -61,8 +61,8 @@ normalize.qspline <- function(x,
   }
 
   if (k < 1) {
-    warning("qspline cannot be performed (insufficient number of arrays)")
-    return(x)
+    warning("'k' found is non-sense. using default")
+    k <- fit.iters
   }
   
   y.offset <- c(0, array(y.offset, (k-1)))
