@@ -1,54 +1,40 @@
 ##
 ## Basic set of tests for the class AffyBatch
 ##
-
 library(affy)
 
-## CEL file
-
-n <- 50
-
-## --- ripped from the example in 'persp()'
-x <- seq(-10, 10, length=n)
-y <- x
-f <- function(x,y)
-  {
-    r <- sqrt(x^2+y^2)
-    10 * sin(r)/r
-  }
-z <- outer(x, y, f)
-z[is.na(z)] <- 1
-## ------------------
-z <- z - min(z)
-
-z <- matrix(runif(50^2, min=1, max=8000), nrow=50, ncol=50)
-#DEBUG: cleaner way to get a temp file ?
-tmpfile <- .getTmpFileName()
-cel <- new("Cel", intensity=z, sd=z/10, name="", cdfName="dummy.1sq",
-            masks=matrix(c(1,1), nrow=1), outliers=matrix(c(1,1), nrow=1))
-
-write.celfile(cel, tmpfile)
-
-cat("---> read.affybatch...\n")
-pd <- read.phenoData(sampleNames=c("file1","file2"))
-afbatch <- read.affybatch(filenames=c(tmpfile, tmpfile),phenoData=pd)
-cat("done.\n")
-
-unlink(tmpfile)
-
-
 ## fake environment
+##it the below change the environment def must change too
+NCOL <- 8
+NROW <- 8
+n <- NCOL*NROW
 
+cat("---> normalizing an environment...\n")
+tmp <- sample(1:50)
 dummy <- new.env(hash=T)
-index <- cbind(runif(10, 1, n), runif(10, 1, n))
+index <- cbind(tmp[1:10], tmp[11:20])
 assign("gene.a", index, envir=dummy)
-index <- cbind(runif(10, 1, n), runif(10, 1, n))
+index <- cbind(tmp[21:30],tmp[31:40])
 assign("gene.b", index, envir=dummy)
-
-## get a Cel in the AffyBatch
-cat("---> getting a Cel from an AffyBatch...\n")
-cel <- afbatch[[1]]
 cat("done.\n")
+
+cat("---> creating an AffyBatch...\n")
+samplenames <- c("sample1","sample2")
+signal <- exp(rexp(n,1))
+e <- cbind(exp(rnorm(n,4,1))+signal,exp(rnorm(n,4,1))+signal)
+colnames(e) <- samplenames
+pd <- read.phenoData(sampleNames=samplenames)
+afbatch <- new("AffyBatch",
+               exprs=e,
+               phenoData=pd,
+               cdfName="dummy",
+               ncol=NCOL,nrow=NROW)
+cat("done.\n")
+
+
+##can i get pms?
+pms <- pm(afbatch)
+mms <- mm(afbatch)
 
 ## normalize the AffyBatch
 cat("---> normalizing an AffyBatch...\n")
@@ -61,5 +47,10 @@ e.set <- computeExprSet(n.afbatch, pmcorrect.method="pmonly", summary.method="av
 if (! inherits(e.set, "exprSet"))
   stop("eset does not inherit from 'exprSet' !")
 cat("done.\n")
+
+
+
+
+
 
 

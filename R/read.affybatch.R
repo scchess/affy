@@ -1,3 +1,24 @@
+#############################################################
+##
+## read.affybatch.R
+##
+## Adapted by B. M. Bolstad from read.affybatch in the affy
+## package version 1.2.  The goal is a faster, less memory hungry
+## ReadAffy. To do this we will shunt more work off to
+## the c code.
+##
+## History
+## Jun 13-15 Intial version
+## Jun 16    Verbose flag passed to C routine
+## Jun 17    New method for checking header of first cel
+##           file.
+## Jul 7     Added the function read.probematrix which
+##           reads in PM, MM or both into matrices
+## Sep 28    changed name from read.affybatch2 to read.affybatch
+##           and cleaned up some old commented stuff
+#############################################################
+
+
 read.affybatch <- function(..., filenames=character(0),
                            ##sd=FALSE,
                            phenoData=new("phenoData"),
@@ -36,86 +57,71 @@ read.affybatch <- function(..., filenames=character(0),
     }
   ## read the first file to see what we have
   if (verbose) cat(1, "reading",filenames[[1]],"...")
+
+  headdetails <- .Call("ReadHeader",filenames[[1]],compress)
+
+  #print(headdetails)
   
-  cel <- read.celfile(filenames[[1]],
-                      ##sd=sd,
-                      compress=compress,
-                      rm.mask = rm.mask,
-                      rm.outliers = rm.outliers,
-                      rm.extra = rm.extra)
-  if (verbose) cat("done.\n")
+  
   
   ##now we use the length
-  dim.intensity <- dim(intensity(cel))
+  dim.intensity <- headdetails[[2]]   ##dim(intensity(cel))
   ##and the cdfname as ref
-  ref.cdfName <- cel@cdfName
+  ref.cdfName <- headdetails[[1]]   #cel@cdfName
   
-  ##if (sd)
-  ##  dim.sd <- dim.intensity
-  ##else
-  ##  dim.sd <- c(1,1)
-
   if (verbose)
     cat(paste("instanciating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
 
 
-  conty <- new("AffyBatch",
-               exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
+ 
+  if (verbose)
+    cat("done.\n")
+
+  #### this is where the code changes from the original read.affybatch.
+  #### what we will do here is read in from the 1st to the nth CEL file
+  
+  return(new("AffyBatch",
+               exprs  =  .Call("read_abatch",filenames,compress, rm.mask,
+                 rm.outliers, rm.extra, ref.cdfName, dim.intensity,verbose) ,       
                ##se.exprs = array(NaN, dim=dim.sd),
-               cdfName    = cel@cdfName,
+               cdfName    = ref.cdfName,   ##cel@cdfName,
                phenoData  = phenoData,
                nrow       = dim.intensity[1],
                ncol       = dim.intensity[2],
                annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
                description= description,
-               notes      = notes)
-  ##           history    = vector("list", length=n)) we need to put this in MIAME
+               notes      = notes))
+}
+
+
+
+
+
+######################################################################################
+
+read.probematrix <- function(..., filenames = character(0), phenoData = new("phenoData"),
+    description = NULL, notes = "", compress = getOption("BioC")$affy$compress.cel,
+    rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE, verbose = FALSE,which="pm"){
+
+  auxnames <- as.list(substitute(list(...)))[-1]
+  filenames <- .Primitive("c")(filenames, auxnames)
+
+  match.arg(which,c("pm","mm","both"))
   
   if (verbose)
-    cat("done.\n")
-
-  # intensity(conty)[, 1] <- c(intensity(cel))
-  ##if (sd)
-  ##  spotsd(conty)[, , 1] <- spotsd(cel)
+        cat(1, "reading", filenames[[1]], "to get header informatio")
+    headdetails <- .Call("ReadHeader", filenames[[1]], compress)
+    dim.intensity <- headdetails[[2]]
+    ref.cdfName <- headdetails[[1]]
   
-  ##outliers(conty)[[1]] <- outliers(cel)
-  ##masks(conty)[[1]] <- masks(cel)
-  ##history(conty)[[1]] <- history(cel) ###this must be done through MIAME
-  ival <- intensity(conty)
-  ival[, 1] <- c(intensity(cel))
+  Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
   
-  for (i in (1:n)[-1]) {
-    
-    if (verbose) cat(i, "reading",filenames[[i]],"...")
-    cel <- read.celfile(filenames[[i]],
-                        ##sd=sd,
-                        compress=compress, rm.mask=rm.mask,
-                        rm.outliers=rm.outliers, rm.extra=rm.extra)
-    
-    if (any(dim(intensity(cel)) != dim.intensity))
-      stop(paste("CEL file dimension mismatch !\n(file",filenames[[i]],")"))
-    if (verbose) cat("done.\n")
-    
-    if (cel@cdfName != ref.cdfName)
-      warning(paste("\n***\nDetected a mismatch of the cdfName: found ", cel@cdfName,
-                    ", expected ", ref.cdfName, "\nin file number ", i, " (", filenames[[i]], ")\n",
-                    "Please make sure all cel files belong to the same chip type!\n***\n", sep=""))
-    
-    #intensity(conty)[, i] <- c(intensity(cel))
-    
-    ##if (sd)
-    ##  spotsd(conty)[, , i] <- spotsd(cel)
-    
-    ##outliers(conty)[[i]] <- outliers(cel)
-    ##masks(conty)[[i]] <- masks(cel)
-    ##history(conty)[[i]] <- history(cel) now through MIAME
-
-    ival[, i] <- c(intensity(cel))
-  }
-  intensity(conty) <- ival
-  #colnames(intensity(conty)) = filenames
-  return(conty)
+  cdfInfo <- multiget(ls(getCdfInfo(Data)),-1,getCdfInfo(Data))
+  .Call("read_probeintensities", filenames,
+        compress, rm.mask, rm.outliers, rm.extra, ref.cdfName,
+        dim.intensity, verbose, cdfInfo,which)
 }
+
 
 list.celfiles <-   function(...){
   files <- list.files(...)
@@ -209,7 +215,7 @@ ReadAffy <- function(..., filenames=character(0),
   description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
 
   ##and now we are ready to read cel files
-  return(read.affybatch2(filenames=filenames,
+  return(read.affybatch(filenames=filenames,
                         phenoData=phenoData,
                         description=description,
                         notes=notes,

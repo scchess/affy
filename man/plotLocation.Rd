@@ -31,7 +31,7 @@ plotLocation(x, col="green", pch=22, ...)
   data(Dilution)
 
   ## image of the celfile
-  image(Dilution[[1]])
+  image(Dilution[1])
 
   ## genenames
   n <- geneNames(Dilution)[1]

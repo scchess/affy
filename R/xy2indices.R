@@ -5,7 +5,7 @@ xy2indices <- function(x, y, nr=NULL, cel=NULL, abatch=NULL) {
   if (ct != 2)
     stop("One and only one of 'nr', 'cel', 'abatch' should be specified.")
   if (! is.null(cel))
-    nr <- nrow(intensity(cel))
+    stop("Cel class no longer supported") #nr <- nrow(intensity(cel))
   if (! is.null((abatch)))
     nr <- nrow(abatch)
   
@@ -21,7 +21,7 @@ indices2xy <- function(i, nr=NULL, cel=NULL, abatch=NULL) {
   if (ct != 2)
     stop("One and only one of 'nr', 'cel', 'abatch' should be specified.")
   if (! is.null(cel))
-    nr <- nrow(intensity(cel))
+    stop("Cel class no longer supported")#    nr <- nrow(intensity(cel))
   if (! is.null((abatch)))
     nr <- nrow(abatch)
   

@@ -1,7 +1,7 @@
 \name{read.affybatch}
 \alias{read.affybatch}
 \alias{ReadAffy}
-\title{ Read CEL files into an AffyBatch}
+\title{Read CEL files into an AffyBatch}
 \description{
   Read CEL files into an Affybatch
 }
@@ -82,6 +82,9 @@ passed along to the function \code{\link{read.celfile}}.
 \value{
   An \code{AffyBatch} object.
 }
+\author{Ben Bolstad \email{bolstad@stat.berkeley.edu} (read.affybatch),
+  Laurent Guatier,
+  and Rafael A. Irizarry (ReadAffy)}
 
 \seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}
 
@@ -89,3 +92,15 @@ passed along to the function \code{\link{read.celfile}}.
 
 }
 \keyword{manip}
+
+
+
+
+
+
+
+
+
+
+
+

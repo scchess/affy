@@ -21,22 +21,10 @@ cleancdfname <- function(cdfname, addcdf=TRUE) {
   }
   return(tmp)
 }
-##this function gets the cdf from a celfile
 
-whatcdf <- function(filename, compress=getOption("BioC")$affy$compress.cel){
-  
-  ##finds what cdf environment to use with cdf file
-  tmp <- getInfoInAffyFile(filename,"CEL","HEADER","DatHeader",compress=compress) ##find appropriate line
-  tmp <- strsplit(tmp," ")[[1]] #split by space
-  tmp <- tmp[grep(".1sq",tmp)] #pick the one with 1sq (from experience)
-  if (identical(tmp, character(0))) {
-    warning("could not find CDF name, setting it to 'unknown'")
-    tmp <- "unknown"
-  }
-  else {
-    tmp <- gsub("\.1sq","",tmp) #take out .1sq
-  }
-  return(tmp)
-}
+##this function gets the cdf from a celfile
+whatcdf <- function(filename, compress=getOption("BioC")$affy$compress.cel)
+  return(.Call("ReadHeader",filename,compress)[[1]])
+ 
 
   

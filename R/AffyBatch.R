@@ -22,9 +22,20 @@ setClass("AffyBatch",
 if (debug.affy123) cat("--->accessors\n")
 
 ##intensity
+if ( !isGeneric("intensity") ) {
+  setGeneric("intensity", function(object)
+             standardGeneric("intensity"))
+} else
+cat("intensity is already generic, could be a problem.\n")
+
+
 setMethod("intensity", signature(object="AffyBatch"),
           function(object) exprs(object))
 
+
+if( !isGeneric("intensity<-") )
+  setGeneric("intensity<-", function(object, value)
+             standardGeneric("intensity<-"))
 
 setReplaceMethod("intensity", signature(object="AffyBatch"),
                  function(object, value){
@@ -453,15 +464,15 @@ setMethod("probeset", "AffyBatch", function(object, genenames=NULL,
 if (debug.affy123) cat("--->[[\n")
 
 
-##[[
-setMethod("[[", "AffyBatch",
-          function(x, i, j, ...) { ##no need for j
-            return(new("Cel",
-                       intensity = matrix(intensity(x)[, i], ncol(x), nrow(x)),
-                       name = sampleNames(x)[i],
-                       cdfName = x@cdfName,
-                       history = description(x)@preprocessing))
-          })
+##[[: no more [[, because no more cel class
+# setMethod("[[", "AffyBatch",
+#           function(x, i, j, ...) { ##no need for j
+#             return(new("Cel",
+#                        intensity = matrix(intensity(x)[, i], ncol(x), nrow(x)),
+#                        name = sampleNames(x)[i],
+#                        cdfName = x@cdfName,
+#                        history = description(x)@preprocessing))
+#           })
 
 ##[[ we need replacement that takes an entry by the Cel in value
 
@@ -671,14 +682,25 @@ if( is.null(getGeneric("image")))
   setGeneric("image")
 
 setMethod("image",signature(x="AffyBatch"),
-          function(x, transfo=log, ...){
+          function(x, transfo=log, col=gray(c(0:64)/64),xlab="",ylab="", ...){
             scn <- prod(par("mfrow"))
             ask <- dev.interactive()
             which.plot <- 0
+
+            NCOL <- ncol(x)
+            NROW <- nrow(x)
+
             for(i in 1:length(sampleNames(x))){
               which.plot <- which.plot+1;
               if(trunc((which.plot-1)/scn)==(which.plot-1)/scn && which.plot>1 && ask)  par(ask=TRUE)
-                image(x[[i]], transfo=transfo, ...)
+              m <- x@exprs[,i]
+              if (is.function(transfo)) {
+                m <- transfo(m)
+              }
+             
+              image(1:NROW, 1:NCOL, matrix(m,nrow=NROW,ncol=NCOL),
+                    col=col, main=sampleNames(x)[i],
+                    xlab=xlab, ylab=ylab, ...)
               par(ask=FALSE)}
           })
 

@@ -1,90 +1,4 @@
 ## Sept 11, 2003 - justRMA calls just.rma2
-
-
-just.rma <- function(..., filenames=character(0),
-                     phenoData=new("phenoData"),
-                     description=NULL,
-                     notes="",
-                     compress=getOption("BioC")$affy$compress.cel,
-                     rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-                     verbose=FALSE, background=TRUE, normalize=TRUE,
-                     bgversion=2, destructive=FALSE) {
-  
-  auxnames <- as.list(substitute(list(...)))[-1]
-  filenames <- .Primitive("c")(filenames, auxnames)
-  
-  n <- length(filenames)
-  
-  ## error if no file name !
-  if (n == 0)
-    stop("No file name given !")
-  
-  pdata <- pData(phenoData)
-  ##try to read sample names form phenoData. if not there use CEL filenames
-  if(dim(pdata)[1]!=n){#if empty pdata filename are samplenames
-    warning("Incompatible phenoData object. Created a new one.\n")
-    
-    samplenames <- gsub("^/?([^/]*/)*", "", unlist(filenames), extended=TRUE	)
-    pdata <- data.frame(sample=1:n,row.names=samplenames)
-    phenoData <- new("phenoData",pData=pdata,varLabels=list(sample="arbitrary numbering"))
-  }
-  else samplenames <- rownames(pdata)
-  
-  if (is.null(description))
-    {
-      description <- new("MIAME")
-      description@preprocessing$filenames <- filenames
-      description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
-    }
-  ## read the first file to see what we have
-  ##if (verbose) cat(1, "reading",filenames[[1]],"...")
-  
-  ## get information from cdf environment
-  
-  cdfname <- whatcdf(filenames[1], compress=compress)
-  tmp <- new("AffyBatch",
-             cdfName=cdfname,
-             annotation=cleancdfname(cdfname, addcdf=FALSE))
-  pmIndex <- pmindex(tmp)
-  probenames <- rep(names(pmIndex), unlist(lapply(pmIndex,length)))
-  pmIndex <- unlist(pmIndex)
-  
-  ## read pm data into matrix
-  
-  pms <- matrix(NA, length(pmIndex), length(filenames))
-  for(i in 1:length(filenames)){
-    pms[,i] <- as.vector(intensity(read.celfile(filenames[[i]])))[pmIndex]
-		
-    if(length(pms[,i]) != length(pmIndex))
-      stop(paste("CEL file dimension mismatch !\n(file",filenames[[i]],")"))
-    
-	if(whatcdf(filenames[[i]]) != cdfname)
-          stop(paste("cdfName mismatch !\n(", filenames[[i]], ")"))
-    
-  }
-  
-  ##pass matrix of pm values to rma
-  
-  ngenes <- length(geneNames(tmp))
-  
-  ##background correction
-  bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
-  
-  if(destructive){
-    exprs <- .Call("rma_c_complete",pms,pms,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
-  }else{
-    exprs <- .Call("rma_c_complete_copy",pms,pms,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
-  }
-  colnames(exprs) <- samplenames
-  se.exprs <- array(NA, dim(exprs))
-  
-  annotation <- annotation(tmp)
-  
-  new("exprSet", exprs = exprs, se.exprs = se.exprs, phenoData = phenoData, 
-      annotation = annotation, description = description, notes = notes)    
-}
-
-
 ### A user friendly wrapper for just.rma
 justRMA <- function(..., filenames=character(0),
                      widget=getOption("BioC")$affy$use.widgets,
@@ -173,7 +87,7 @@ justRMA <- function(..., filenames=character(0),
   description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
 
   ##and now we are ready to read cel files
-  return(just.rma2(filenames=filenames,
+  return(just.rma(filenames=filenames,
                         phenoData=phenoData,
                         description=description,
                         notes=notes,
@@ -200,7 +114,7 @@ justRMA <- function(..., filenames=character(0),
 #
 ###########################################################################################
 
-just.rma2 <- function(..., filenames=character(0),
+just.rma <- function(..., filenames=character(0),
                      phenoData=new("phenoData"),
                      description=NULL,
                      notes="",
@@ -275,3 +189,8 @@ just.rma2 <- function(..., filenames=character(0),
   new("exprSet", exprs = exprs, se.exprs = se.exprs, phenoData = phenoData, 
       annotation = annotation, description = description, notes = notes)    
 }
+
+
+
+
+
