@@ -8,7 +8,7 @@ with one function call}
 \usage{
 expresso(
     # data files
-         CDFfile = NULL,
+         cdf = NULL,
          CELfiles = NULL,
          compress.cdf = FALSE,
          compress.cel = FALSE,
@@ -29,7 +29,7 @@ expresso(
          ...)
 }
 \arguments{
-  \item{CDFfile}{the path the CDF file.}
+  \item{cdf}{a \code{\link{Cdf}} object or the path to the CDF file.}
   \item{CELfiles}{a list of path(s) to the CEL file(s)}
   \item{compress.cdf}{a boolean to specify if the CDF file is
     compressed}

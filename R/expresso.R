@@ -1,39 +1,31 @@
-expresso <- function(CDFfile = NULL,
+expresso <- function(cdf = NULL,
                      CELfiles = NULL,
                      compress.cdf = FALSE,
                      compress.cel = FALSE,
                      rm.mask = FALSE,
                      rm.outliers = FALSE,
                      rm.extra = FALSE,
+                     ## ---
                      normalize = TRUE,
                      normalize.method = NULL,
+                     normalize.param=list(),
                      summary.method = NULL,
+                     summary.param = list(),
                      summary.subset = NULL,
                      bg.method = NULL,
+                     bg.param = list(),
                      chip.names = NULL,
+                     ## ---
                      verbose = T,
                      widget = F,
-                     hdf5 = F,
-                     ...) {
-
-  getTmpFileName <- function() {
-    ## --- temp file
-    hdf5FilePath <- c("test",".hd5")
-    tmp.filename <- paste(hdf5FilePath, sep="", collapse=as.character(1))
-    i <- 1
-    ## avoid to delete something mistakingly
-    while(! is.na(file.info(tmp.filename)$size)) {
-      i <- i+1
-      tmp.filename <- paste(hdf5FilePath, sep="", collapse=as.character(i))
-    }
-    return(tmp.filename)
-  }
+                     hdf5 = F) {
+  
 
   ## --- temp file (if hdf5)
   if (hdf5) {
     require(rhdf5) || stop("library rhdf5 could not be found !")
     
-    hdf5FilePath <- getTmpFileName()
+    hdf5FilePath <- .getTmpFileName(".hf5")
     
     if (verbose)
       cat("temporary hdf5 file:",hdf5FilePath,"\n")
@@ -46,10 +38,10 @@ expresso <- function(CDFfile = NULL,
   }
 
   ## --- CDF
-  if (is.null(CDFfile)) {
+  if (is.null(cdf)) {
     if (widget) {
-      CDFfile <- fileBrowser(textToShow="Choose one CDF file",nSelect=1,
-                             testFun=hasSuffix("[cC][dD][fF]"))
+      cdf <- fileBrowser(textToShow="Choose one CDF file",nSelect=1,
+                         testFun=hasSuffix("[cC][dD][fF]"))
     } else {
       stop("CDF file missing")
     }
@@ -123,18 +115,20 @@ expresso <- function(CDFfile = NULL,
     }
   }
 
-  ## --- reading CDF
-  if (verbose) cat("reading CDF file...")
+  ## --- reading CDF (if needed)
+  if (class(cdf) != "Cdf") {
+    if (verbose) cat("reading CDF file...")
+    
+    ##cdf <- try(read.cdffile(CDFfile, compress = compress.cdf))
+    ##if (inherits(cdf,"try-error")) {
+    ##  if (verbose) cat("(trying again with/without compression)...")
+    ##  cdf <- try(read.cdffile(CDFfile, compress = !compress.cdf))
+    ##}
+    cdf <- read.cdffile(CDFfile, compress = compress.cdf)
+    
+    if (verbose) cat("done.\n")
+  }
   
-  ##cdf <- try(read.cdffile(CDFfile, compress = compress.cdf))
-  ##if (inherits(cdf,"try-error")) {
-  ##  if (verbose) cat("(trying again with/without compression)...")
-  ##  cdf <- try(read.cdffile(CDFfile, compress = !compress.cdf))
-  ##}
-  cdf <- read.cdffile(CDFfile, compress = compress.cdf)
-  
-  if (verbose) cat("done.\n")
-
   ## --- reading CELs
   if (verbose) cat("reading ", length(CELfiles), "CEL file(s):\n")
 
@@ -181,7 +175,7 @@ expresso <- function(CDFfile = NULL,
   if (normalize) {
 
     if (hdf5) {
-      hdf5FilePath2 <- getTmpFileName()
+      hdf5FilePath2 <- .getTmpFileName(".hd5")
       on.exit(cat("unlinking temporary file", hdf5FilePath2, ".\n"), add=TRUE)
       on.exit(unlink(hdf5FilePath2), add=TRUE)
       
@@ -202,13 +196,17 @@ expresso <- function(CDFfile = NULL,
         cat("normalizing...")
       }
       
-      listcel.n <- normalize(listcel.n, cdf, method=normalize.method, ...)
+      listcel.n <- do.call("normalize", c(list(listcel.n, cdf, method=normalize.method), normalize.param))
       
       listcel <- listcel.n
       
     } else {
       ## hdf5 == FALSE
-      listcel <- normalize(listcel, cdf, method=normalize.method, ...)
+      if (verbose)
+        cat("normalizing...")
+      listcel <- do.call("normalize", c(list(listcel, cdf, method=normalize.method), normalize.param))
+      if (verbose)
+        cat("done.\n")
     }
     
     if (verbose) cat("done.\n")
