@@ -36,14 +36,13 @@
   the noise (or background signal). The original algorithm for
   background correction was to subtract the \emph{MM} signal to the
   \emph{PM} signal. The methods currently inclluded in the package are
-  "bg.correct.subtractmm", "bg.correct.pmonly" and "bg.correct.adjust"
-  (see documentation for the method \code{express}).
+  "bg.correct.subtractmm", "bg.correct.pmonly" and "bg.correct.adjust".
 
 }
 \seealso{
   method \code{generateExprSet} of the class
   \code{\link[affy:AffyBatch-class]{AffyBatch}}\cr
-  \code{\link{express}} 
+  \code{\link{expresso}} 
 }
 \examples{
  data(affybatch.example)

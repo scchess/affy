@@ -22,7 +22,7 @@
 \details{This method is based upon the concept of a quantile-quantile
   plot extended to n dimensions. No special allowances are made for
   outliers. If you make use of quantile normalization either through
-  \code{\link{rma}}, \code{\link{express}} or \code{\link{expresso}}
+  \code{\link{rma}} or \code{\link{expresso}}
   please cite Bolstad et al, Bioinformatics (2003).
 
   The type arguement should be one of

@@ -9,6 +9,8 @@ Objects can be created by applying the method \code{\link{probeset}} to
 instances of AffyBatch.}
 \section{Slots}{
   \describe{
+    \item{\code{id}:}{Object of class \code{"character"} containing the
+      probeset ID}
     \item{\code{pm}:}{Object of class \code{"matrix"} containing the PM
       intensities. Columns represent samples and rows the different probes.}
     \item{\code{mm}:}{Object of class \code{"matrix"} containing the MM intensities}

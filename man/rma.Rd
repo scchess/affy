@@ -50,7 +50,7 @@ An \code{\link[affy:exprSet-class]{exprSet}}
 
   Irizarry, RA, Hobbs, B, Collin, F, Beazer-Barclay, YD, Antonellis, KJ, Scherf, U, Speed, TP (2003) Exploration, Normalization, and Summaries of High Density Oligonucleotide Array Probe Level Data. Biostatistics .Vol. 4, Number 2: 249-264 
 }
-\seealso{\code{\link{express}},\code{\link{expresso}} }
+\seealso{\code{\link{expresso}} }
 
 \examples{
 data(affybatch.example)

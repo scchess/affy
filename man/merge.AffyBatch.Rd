@@ -31,3 +31,7 @@ data(affybatch.example)
 m.abatch <- merge(affybatch.example, affybatch.example)
 }
 \keyword{ manip }
+
+
+
+

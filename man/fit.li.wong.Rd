@@ -61,10 +61,11 @@ li.wong(data.matrix,remove.outliers=TRUE, normal.array.quantile=0.5,
 }
 
 \value{\code{li.wong} returns a vector of expression measures (or column
-  effects) followed by their respective standard error estimates. It is
-  designed to work with \code{\link{express}}.
+  effects) followed by their respective standard error estimates. It
+  was designed to work with \code{express} which is no longer part of
+  the package.
 
-  \code{fit.li.wong} reutnes much more. Namely, a list containing the
+  \code{fit.li.wong} returns much more. Namely, a list containing the
   fitted parameters and relevant information. 
   \item{theta}{fitted thetas.}
   \item{phi}{fitted phis.}
@@ -96,7 +97,7 @@ li.wong(data.matrix,remove.outliers=TRUE, normal.array.quantile=0.5,
   \bold{98}, 31--36.
 }
 \author{Rafael A. Irizarry, Cheng Li, Fred A. Wright, Ben Bolstad}
-\seealso{ \code{\link{li.wong}}, \code{\link{express}}}
+\seealso{ \code{\link{li.wong}}, \code{\link{expresso}}}
 \keyword{manip}
 \keyword{models}
 

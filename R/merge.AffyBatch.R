@@ -10,9 +10,11 @@ merge.AffyBatch <- function(x, y, annotation=paste(annotation(x), annotation(y))
   if (x@cdfName != y@cdfName)
     warning("cdfName mismatch (using the cdfName of x)!")
 
-  if (is.null(description))
-    description <- paste("merged")
-                         
+  if (is.null(description)){
+    description <- new("MIAME")
+    description@title <- "Created from merging two AffyBatches. No description was supplied. The description of the two original AffyBatches was not kept."
+  }                       
+
   lx <- length(x)
   ly <- length(y)
 
@@ -25,7 +27,11 @@ merge.AffyBatch <- function(x, y, annotation=paste(annotation(x), annotation(y))
              ncol=ncol(x),
              phenoData=phenodata,
              annotation=x@annotation,
-             description=description(x), ##need to write a merge for MIAME
-             notes=paste(x@notes,y@notes))
+             description=description, ##need to write a merge for MIAME
+             notes=paste("Merge from two AffyBatches with notes: 1)",
+               x@notes,", and 2)",y@notes))
          )
 }
+
+
+
