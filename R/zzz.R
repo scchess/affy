@@ -68,8 +68,9 @@
 
   probesloc.first <- list(what="environment", where=.GlobalEnv)
   probesloc.second <- list(what="libPath", where=NULL)
-  probesloc.third <- list(what="bioC", where=.libPaths()[1])
-  probesloc.fourth <- list(what="data", where="affy")
+  probesloc.third <- list(what="data", where="affy")
+  probesloc.fourth <- list(what="bioC", where=.libPaths()[1])
+
 
   ## default for the methods
   bgcorrect.method <- "mas"

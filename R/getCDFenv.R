@@ -1,4 +1,4 @@
-getCdfInfo <- function(object,  how=getOption("BioC")$affy$probesloc, verbose=TRUE) {
+getCdfInfo <- function(object,  how=getOption("BioC")$affy$probesloc, verbose=FALSE) {
     ## cdfname is the cdf environment
     ## methods is a vector detailing how to get the file - one of
     ## 'environment', 'data', 'library', 'bioC'
@@ -7,7 +7,7 @@ getCdfInfo <- function(object,  how=getOption("BioC")$affy$probesloc, verbose=TR
     if (length(how) == 0)
         stop("No available method to obtain CDF file")
 
-    cdfname <- cleancdfname(cdfName(object))
+    cdfname <- cdfName(object)
 
     badOut <- list()
     for (i in 1:length(how)) {
@@ -17,7 +17,7 @@ getCdfInfo <- function(object,  how=getOption("BioC")$affy$probesloc, verbose=TR
                       cur$where, verbose),
                       "data" = cdfFromData(cdfname, cur$where, verbose),
                       "libPath" = cdfFromLibPath(cdfname, cur$where,
-                      verbose=TRUE),
+                      verbose=verbose),
                       "bioC" = cdfFromBioC(cdfname, cur$where,
                       verbose)
                       )
@@ -69,7 +69,8 @@ cdfFromEnvironment <- function(cdfname, where, verbose=TRUE) {
 }
 
 cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
-    require(reposTools) || stop("Package 'reposTools' is required",
+  cdfname <- cleancdfname(cdfname)
+  require(reposTools) || stop("Package 'reposTools' is required",
                                 " for this operation.")
 
     if (verbose)
@@ -152,33 +153,34 @@ cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
 }
 
 cdfFromLibPath <- function(cdfname, lib = NULL, verbose=TRUE) {
-    ## First check to see if package is installed
+  cdfname <- cleancdfname(cdfname)
+  ## First check to see if package is installed
+  if (verbose)
+    print(paste("Checking to see if package",cdfname,
+                "is already installed"))
+  
+  if (length(.find.package(cdfname, lib.loc=lib, quiet=TRUE)) == 0)
+    return(list(paste("Library - package",cdfname,"not installed")))
+  
+  ## See if package is already loaded
+  if (cdfname %in% .packages()) {
     if (verbose)
-        print(paste("Checking to see if package",cdfname,
-                    "is already installed"))
-
-    if (length(.find.package(cdfname, lib.loc=lib, quiet=TRUE)) == 0)
-        return(list(paste("Library - package",cdfname,"not installed")))
-
-    ## See if package is already loaded
-    if (cdfname %in% .packages()) {
-        if (verbose)
-            print(paste("The package", cdfname, "is already loaded"))
+      print(paste("The package", cdfname, "is already loaded"))
+  }
+  else {
+    if (verbose)
+      print(paste("Attempting to load package", cdfname))
+    ## Attempt to load the library requested
+    do.call("library", list(cdfname, lib.loc=lib))
+    
+    ## Check to see if it got loaded
+    if (! cdfname %in% .packages()) {
+      ## package didn't get loaded
+      if (verbose)
+        print(paste("The package", cdfname, "could not be loaded"))
+      return(list(paste("Library - package",cdfname,"is not loadable")))
     }
-    else {
-        if (verbose)
-            print(paste("Attempting to load package", cdfname))
-        ## Attempt to load the library requested
-        do.call("library", list(cdfname, lib.loc=lib))
-
-        ## Check to see if it got loaded
-        if (! cdfname %in% .packages()) {
-            ## package didn't get loaded
-            if (verbose)
-                print(paste("The package", cdfname, "could not be loaded"))
-            return(list(paste("Library - package",cdfname,"is not loadable")))
-        }
-    }
-
+  }
+  
     return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
 }
