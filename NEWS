@@ -33,6 +33,9 @@ version 1.2 [under development]:
   but gives warning mesage. It will be removed in a future release.
   The function expresso() should be used as a replacement.
 
+  o The default background on the rma() function has been changed. Now 
+  the results from rma() and expresso() should agree completely.
+
 
 version 1.1.x:
 
