@@ -30,6 +30,9 @@
  ** Feb 28, 2003 - Change background to be average of lowest 2% rather than
  **                2% quantile following suggestion by Helene Boucher <bouchel01@borabora.crchul.ulaval.ca>             
  **
+ ** Mar 10, 2003 - Check indexing, see that it roams on x =1..ncol  and y=1..nrow. Note
+ **                that affy cdf files are on x=0.. ncol-1  and y=0..nrow-1
+ **
  ***********************************************************************/
 
 #include <stdlib.h>
