@@ -53,8 +53,8 @@
   all.affy <- ls(where)
   
   ## DEBUG flag
-  assign("debug.affy123", TRUE, envir=as.environment(where))
-  ##assign("debug.affy123", FALSE, envir=as.environment(where))
+  ##assign("debug.affy123", TRUE, envir=as.environment(where))
+  assign("debug.affy123", FALSE, envir=as.environment(where))
   
   message <- TRUE
   
@@ -67,6 +67,8 @@
     cat("The draft for the new vignette (called 'affy2') is distributed with the pacakge\n")
     cat(rep("*",13),"\n",sep="")
     cat("demo(affy.tour) will eventually work and give an overview...\n")
+    cat(rep("*",13),"\n",sep="")
+    cat("IMPORTANT: you need the latest versions of the required packages too.\n")
     cat(rep("*",13),"\n",sep="")
   }
   
