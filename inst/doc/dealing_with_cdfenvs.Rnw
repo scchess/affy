@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{HOWTO: cdfenvs and affy}
+%\VignetteIndexEntry{affy: Automatic downloading of cdfenvs (HowTo)}
 %\VignetteKeywords{Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
@@ -29,9 +29,9 @@
 
 \bibliographystyle{plainnat}
 
-\author{Laurent}
 \begin{document}
-\title{cdfens and the package affy}
+\title{affy: Automatic downloading of cdfenvs (HowTo)}
+\author{Laurent}
 
 \maketitle
 \tableofcontents
@@ -99,24 +99,24 @@ in \Rfunction{.libPaths()} (and of course that the relevant {\it cdfenv} was not
 found in the search path shown above).
 
 The following function returns a set of options with any existing automatic download
-desactivated :
+deactivated :
 <<>>=
-desactivate.autoload <- function(affy.opt) {
+deactivate.autoload <- function(affy.opt) {
   l <- lapply(affy.opt$probesloc, 
               function(x) {
                 i <- names(x) == "autoload"
                 x[i] <- list(FALSE)
 		return(x)
               })
-    affy.opt$probesloc <- l
-    return(affy.opt)
-  }	      
+  affy.opt$probesloc <- l
+  return(affy.opt)
+}	      
 @ 
 It can be used to desactivate any automatic download:
 <<>>=
 affy.opt <- getOption("BioC")$affy
 
-affy.opt.noauto <- desactivate.autoload(affy.opt)
+affy.opt.noauto <- deactivate.autoload(affy.opt)
 
 # commit the changes
 .setAffyOptions(affy.opt.noauto)
