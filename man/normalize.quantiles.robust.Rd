@@ -7,7 +7,7 @@
 \usage{
       normalize.quantiles.robust(x,weights=NULL,
                 remove.extreme=c("variance","mean","both","none"),
-                n.remove=1,approx.meth = FALSE,use.median=FALSE,...)
+                n.remove=1,approx.meth = FALSE,use.median=FALSE,use.log2=FALSE)
 }
 
 \arguments{
@@ -21,7 +21,8 @@
     implememnted}
   \item{use.median}{if TRUE use the median to compute normalization
     chip, otherwise use a weighted median}
-  \item{...}{addtional parameters for the approximation method}
+  \item{use.log2}{work on log2 scale. This means we will be using the
+    geometric mean rather than ordinary mean}
 }
 \details{This method is based upon the concept of a quantile-quantile 
   plot extended to n dimensions. Note that the matrix is of intensities

@@ -1,26 +1,58 @@
-normalize.AffyBatch.quantiles <- function(abatch,pmonly=FALSE) {
+##################################################################
+##
+## file: normalize.quantiles.R
+##
+## For a description of quantile normalization method see
+##
+##  Bolstad, B. M., Irizarry R. A., Astrand, M, and Speed, T. P. (2003)(2003) 
+##  A Comparison of Normalization Methods for High 
+##  Density Oligonucleotide Array Data Based on Bias and Variance.
+##  Bioinformatics 19,2,pp 185-193
+##
+## History
+## Pre Aug 23, 2003 Two years worth of stuff
+## Aug 23, 2003 - Added use.log2 to "robust",
+##                added ability to pass additional parameters
+##                to normalize.AffyBatch.Quantiles.robust
+##                changed pmonly parameters on functions
+##                so that it is now a string argument "type"
+##                the options are pmonly, mmonly, together, separate
+##
+##
+##################################################################
 
-  pms <- unlist(pmindex(abatch))
-  noNA <- apply(intensity(abatch)[pms,,drop=FALSE],1,function(x) all(!is.na(x)))
-  pms <- pms[noNA]
-  intensity(abatch)[pms,] <- normalize.quantiles(intensity(abatch)[pms,,drop=FALSE ])
-  if(!pmonly){ 
+normalize.AffyBatch.quantiles <- function(abatch,type=c("separate","pmonly","mmonly","together")) {
+
+
+  type <- match.arg(type)
+
+  if ((type == "pmonly")|(type == "separate")){
+    pms <- unlist(pmindex(abatch))
+    noNA <- apply(intensity(abatch)[pms,,drop=FALSE],1,function(x) all(!is.na(x)))
+    pms <- pms[noNA]
+    intensity(abatch)[pms,] <- normalize.quantiles(intensity(abatch)[pms,,drop=FALSE ],copy=FALSE)
+  }
+  if((type == "mmonly") | (type == "separate")){ 
     mms <- unlist(mmindex(abatch))
     noNA <- apply(intensity(abatch)[mms,,drop=FALSE],1,function(x) all(!is.na(x)))
     mms <- mms[noNA]
 
-    intensity(abatch)[mms,] <- normalize.quantiles(intensity(abatch)[mms,,drop=FALSE ])
+    intensity(abatch)[mms,] <- normalize.quantiles(intensity(abatch)[mms,,drop=FALSE ],copy=FALSE)
   }
-  
+  if (type == "together"){
+
+    intensity(abatch)  <- normalize.quantiles(intensity(abatch),copy=TRUE)
+  }
+    
   ##this is MIAME we need to decide how to do this properly.
   ##for (i in 1:length(abatch)) {
   ##  history(abatch)[[i]]$name <- "normalized by quantiles"
   ##}
 
-                return(abatch)
+  return(abatch)
 }
   
-normalize.quantiles <- function(x){
+normalize.quantiles <- function(x,copy=TRUE){
 
   rows <- dim(x)[1]
   cols <- dim(x)[2]
@@ -29,18 +61,30 @@ normalize.quantiles <- function(x){
     stop("Matrix expected in normalize.quantiles")
   }
   
-  matrix(.C("qnorm_c", as.double(as.vector(x)), as.integer(rows), as.integer(cols))[[1]], rows, cols)
+  #matrix(.C("qnorm_c", as.double(as.vector(x)), as.integer(rows), as.integer(cols))[[1]], rows, cols)
+
+  .Call("R_qnorm_c",x,copy);
 }
 
 
-normalize.AffyBatch.quantiles.robust <- function(abatch, pmonly=FALSE) {
+normalize.AffyBatch.quantiles.robust <- function(abatch, type=c("separate","pmonly","mmonly","together"),weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,approx.meth = FALSE,use.median=FALSE,use.log2=FALSE) {
 
-  pms <- unlist(pmindex(abatch))
-  intensity(abatch)[pms, ] <- normalize.quantiles.robust(intensity(abatch)[pms, ])
-  if(!pmonly){ 
-    mms <- unlist(mmindex(abatch))
-    intensity(abatch)[mms, ] <- normalize.quantiles.robust(intensity(abatch)[mms, ])
+  type <- match.arg(type)
+
+  if ((type == "pmonly")|(type == "separate")){
+    pms <- unlist(pmindex(abatch))
+    intensity(abatch)[pms, ] <- normalize.quantiles.robust(intensity(abatch)[pms, ], weights,remove.extreme,n.remove,approx.meth,use.median,use.log2)
   }
+  if ((type == "mmonly")|(type == "separate")){
+    mms <- unlist(mmindex(abatch))
+    intensity(abatch)[mms, ] <- normalize.quantiles.robust(intensity(abatch)[mms, ],weights,remove.extreme,n.remove,approx.meth,use.median,use.log2)
+  }
+
+  if (type == "together"){
+    intensity(abatch)  <- normalize.quantiles.robust(intensity(abatch),weights,remove.extreme,n.remove,approx.meth,use.median,use.log2)
+  }
+
+  
   
   ##this is MIAME we need to decide how to do this properly.
   ##for (i in 1:length(abatch)) {
@@ -50,7 +94,7 @@ normalize.AffyBatch.quantiles.robust <- function(abatch, pmonly=FALSE) {
   return(abatch)
 }
 
-normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,approx.meth = FALSE,use.median=FALSE,...){
+normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,approx.meth = FALSE,use.median=FALSE,use.log2=FALSE){
   
   calc.var.ratios <- function(x){
     cols <- dim(x)[2]
@@ -75,6 +119,9 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
       }
     results
   }
+
+
+  remove.extreme <- match.arg(remove.extreme)
   
   rows <- dim(x)[1]
   cols <- dim(x)[2]
@@ -115,9 +162,9 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
   }
   cat("Chip weights are ",weights,"\n") 
   if (approx.meth == FALSE){
-    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median))[[1]],rows,cols)
+    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2))[[1]],rows,cols)
   } else {
     cat("Approximation currently not implemented \nFalling back to standard Quantile method\n")
-    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median))[[1]],rows,cols)
+    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2))[[1]],rows,cols)
   }
 }

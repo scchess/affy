@@ -28,6 +28,10 @@
  ** Feb 25, 2003 - try to reduce or eliminate compiler warnings (with gcc -Wall)
  ** Feb 28, 2003 - update reference to normalization paper in comments
  ** Mar 25, 2003 - ability to use median, rather than mean in so called "robust" method
+ ** Aug 23, 2003 - add ability to do normalization on log scale in "robust" method.
+ **                also have added .Call() interface c functions which may be called
+ **                now from R as alterative to traditonal means.
+ **                Fixed a bug where use_median was not being dereferenced in "robust method"
  **
  ***********************************************************/
 
@@ -35,6 +39,16 @@
 #include <stdlib.h>
 #include <math.h>
 #include "rma_common.h"
+
+
+
+#include <R.h>
+#include <Rdefines.h>
+#include <Rmath.h>
+#include <Rinternals.h>
+ 
+
+
 
 /*************************************************************
  **
@@ -220,7 +234,8 @@ void qnorm_c(double *data, int *rows, int *cols){
  ** double *weights - weights to give each chip when computing normalization chip
  ** int *rows, *cols - matrix dimensions
  ** int *use_median - 0 if using weighted mean, otherwise use median.
- **
+ ** int *use_log2  - 0 if natural scale, 1 if we should log2 the data and normalize
+ **                  on that scale
  **
  ** this is the function that actually implements the 
  ** quantile normalization algorithm. It is called from R. 
@@ -228,9 +243,11 @@ void qnorm_c(double *data, int *rows, int *cols){
  ** chips, in the calculation of the mean or to use the median
  ** rather than the mean. If median is used weights are ignored.
  **
+ ** note that log scale with mean is equivalent to geometric mean.
+ **
  ********************************************************/
 
-void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use_median){
+void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use_median, int *use_log2){
   int i,j,ind;
   int half, length;
   dataitem **dimat;
@@ -239,7 +256,18 @@ void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use
   double *datvec = malloc(*cols*sizeof(double));
   double *ranks = malloc((*rows)*sizeof(double));
 
+  /* Log transform the data if needed */
+
+  if ((*use_log2)){
+    for (j =0; j < *cols; j++)
+      for (i =0; i < *rows; i++){
+	data[j *(*rows) + i] = log(data[j*(*rows) + i])/log(2.0);
+      }
+  }
+  
+
   dimat = get_di_matrix(data, *rows, *cols);
+
   
   for (j=0; j < *cols; j++){
     qsort(dimat[j],*rows,sizeof(dataitem),sort_fn);
@@ -250,7 +278,7 @@ void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use
     for (j=0; j < *cols; j++)
       datvec[j] = dimat[j][i].data;
     /* qsort(datvec,*cols,sizeof(double),(int(*)(const void*, const void*))sort_double); */
-    if (!use_median){
+    if (!(*use_median)){
       for (j=0; j < (*cols); j++){
 	sum +=weights[j]*datvec[j];
       }
@@ -280,6 +308,16 @@ void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use
       data[j*(*rows) + ind] = row_mean[(int)floor(ranks[i])-1];
     }
   }
+
+  /* antilog  return to the natural scale*/
+
+   if ((*use_log2)){
+    for (j =0; j < (*cols); j++)
+      for (i =0; i < (*rows); i++){
+	data[j *(*rows) + i] = pow(2.0,data[j*(*rows) + i]);
+      }
+   }
+
   free(datvec);
   free(ranks); 
 
@@ -289,4 +327,47 @@ void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use
 
   free(dimat);
   free(row_mean); 
+}
+
+
+/*********************************************************
+ **
+ ** SEXP R_qnorm_c(SEXP X)
+ **
+ ** SEXP X      - a matrix
+ ** SEXP copy   - a flag if TRUE then make copy
+ **               before normalizing, if FALSE work in place
+ **               note that this can be dangerous since
+ **               it will change the original matrix.
+ **
+ ** returns a quantile normalized matrix.
+ **
+ ** This is a .Call() interface for quantile normalization
+ **
+ *********************************************************/
+
+SEXP R_qnorm_c(SEXP X, SEXP copy){
+
+  SEXP Xcopy,dim1;
+  double *Xptr;
+  int rows,cols;
+  
+  PROTECT(dim1 = getAttrib(X,R_DimSymbol));
+  rows = INTEGER(dim1)[0];
+  cols = INTEGER(dim1)[1];
+  if (asInteger(copy)){
+    PROTECT(Xcopy = allocMatrix(REALSXP,rows,cols));
+    copyMatrix(Xcopy,X,0);
+  } else {
+    Xcopy = X;
+  }
+  Xptr = NUMERIC_POINTER(AS_NUMERIC(Xcopy));
+  
+  qnorm_c(Xptr, &rows, &cols);
+  if (asInteger(copy)){
+    UNPROTECT(2);
+  } else {
+    UNPROTECT(1);
+  }
+  return Xcopy;
 }

@@ -704,14 +704,14 @@
   if( !isGeneric("boxplot") )
     setGeneric("boxplot",where=where)
   setMethod("boxplot",signature(x="AffyBatch"),
-            function(x,which="both",...){
+            function(x,which="both",range=0,...){
               tmp <- description(x)
               if(class(tmp)=="MIAME") main <- tmp@title
 
               tmp <- unlist(indexProbes(x,which))
               tmp <- tmp[seq(1,length(tmp),len=5000)]
 
-              boxplot(data.frame(log2(intensity(x)[tmp,])),main=main,range=0, ...)
+              boxplot(data.frame(log2(intensity(x)[tmp,])),main=main,range=range, ...)
             },where=where)
 
 ###hist
