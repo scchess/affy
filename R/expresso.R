@@ -86,7 +86,7 @@ expresso <- function(CDFfile = NULL,
       bg.method <- pwidget.selector(bg.correct.methods,
                                     title = "Method for background correction",
                                     choices.help = NULL)
-      ##bg.method <- paste("bg.correct", bg.method, sep=".")
+      #bg.method <- paste("bg.correct", bg.method, sep=".")
     } else {
       stop("bg.method missing")
     }
@@ -208,7 +208,7 @@ expresso <- function(CDFfile = NULL,
       
     } else {
       ## hdf5 == FALSE
-      listcel <- normalize(listcel.n, cdf, method=normalize.method, ...)
+      listcel <- normalize(listcel, cdf, method=normalize.method, ...)
     }
     
     if (verbose) cat("done.\n")
