@@ -183,6 +183,7 @@ R> Data <-  ReadAffy() ##read data in working directory
 R> eset <- rma(Data)
 \end{Sinput}
 \end{enumerate}
+
 If your data set is too large and this gives you memory problem try the following instead
 \begin{Sinput}
 R> eset <- justRMA(Data)
@@ -190,7 +191,6 @@ R> eset <- justRMA(Data)
 Notice one does not need to call \verb+ReadAffy+ and thus probe level
 data is never stored. However, \verb+rma+ continues to be the
 recommended function for computing RMA.
-\end{enumerate}
 
 
 The \Rfunction{rma} function was written in C for speed and
