@@ -10,13 +10,26 @@
 ###               a function ma.plot now does the actual plotting
 ###               for mva.pairs
 ###
-###
+### Aug 23, 2004 - change the placement location of statistics in
+###                ma.plot
 
 ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,...){
+
+  fn.call <- list(...)
+
   sigma <- IQR(M)
   mean <- median(M)
-  xloc <- max(A) - 1
-  yloc <- max(M)*0.75
+  if (!is.element("ylim",names(fn.call))){
+    yloc <- max(M)
+  } else {
+    yloc <- max(fn.call$ylim)
+  }
+  if (!is.element("xlim",names(fn.call))){
+    xloc <- max(A)
+  } else {
+    yloc <- max(fn.call$xlim)
+  }
+  
   aux <- loess(M[subset]~A[subset],degree=1,span=span,family=family.loess)$fitted
   
   plot(A,M,...)
@@ -31,7 +44,7 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
   if (show.statistics){
     txt <- format(sigma,digits=3)
     txt2 <- format(mean,digits=3)
-    text(xloc ,yloc,paste(paste("Median:",txt2),paste("IQR:",txt),sep="\n"),cex=cex)
+    text(xloc ,yloc,paste(paste("Median:",txt2),paste("IQR:",txt),sep="\n"),cex=cex,adj=c(1,1))
   }
 
   
@@ -111,7 +124,7 @@ if (!isGeneric("MAplot"))
 
 
 setMethod("MAplot",signature("AffyBatch"),
-          function(object,log=TRUE,type=c("both","pm","mm"),ref=NULL,...){
+          function(object,log=TRUE,type=c("both","pm","mm"),ref=NULL,subset=NULL,which=NULL,...){
             type <- match.arg(type)
             if (type == "both"){
               pms <- unlist(indexProbes(object, "both"))
@@ -125,22 +138,56 @@ setMethod("MAplot",signature("AffyBatch"),
             } else {
               x <- intensity(object)[pms, ]
             }
-            if (is.null(ref)){
-              medianchip <- apply(x, 1, median)
+
+
+            if (is.null(subset)){
+              if (is.null(ref)){
+                medianchip <- apply(x, 1, median)
+              } else {
+                medianchip <- x[,ref]
+              }
+              M <- sweep(x,1,medianchip,FUN='-')
+              A <- 1/2*sweep(x,1,medianchip,FUN='+')
+              if (is.null(ref)){
+                for (i in which){
+                  title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
+                  ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                }
+              } else {
+                for (i in which){
+                  if (which != ref){
+                    title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
+                    ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                  }
+                }
+              }
             } else {
-              medianchip <- x[,ref]
+              if (is.null(ref)){
+                medianchip <- apply(x[,subset], 1, median)
+              } else {
+                if (is.element(ref,subset)){
+                  medianchip <- x[,ref]
+                } else {
+                  stop("Ref ",ref, "is not part of the subset")
+                }
+              }
+              if (!all(is.element(which,subset))){
+                stop("Specified arrays not part of subset")
+              }
+              M <- sweep(x,1,medianchip,FUN='-')
+              A <- 1/2*sweep(x,1,medianchip,FUN='+')
+              if (is.null(ref)){
+                for (i in which){
+                  title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
+                  ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                }
+              } else {
+                for (i in which){
+                  if (i != ref){
+                    title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
+                    ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                  }
+                }
+              }
             }
-            M <- sweep(x,1,medianchip,FUN='-')
-            A <- 1/2*sweep(x,1,medianchip,FUN='+')
-            if (is.null(ref)){
-              for (i in 1:dim(x)[2]){
-                title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
-                ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
-              }
-            } else {
-              for (i in (1:dim(x)[2])[-ref]){
-                title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
-                ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
-              }
-            }  
           })
