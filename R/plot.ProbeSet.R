@@ -1,19 +1,16 @@
-plot.ProbeSet <- function(x, col=1:6, lty=1:6, xlab=NA, type="l", ylim=NULL, ..., covariate=NULL, col.covariate=TRUE, lty.covariate=FALSE) {
+plot.ProbeSet <- function(x, which=c("pm", "mm"), xlab="probes", type="l", ylim=NULL, ...) {
+
+  which <- match.arg(which)
+  if (which == "pm")
+    f <- getMethod("pm", "ProbeSet")
+  else
+    g <- getMethod("mm", "ProbeSet")
+  
   if (is.null(ylim))
-    ylim = range(c(pm(x), mm(x)), na.rm=TRUE)
+    ylim = range(c(f(x)), na.rm=TRUE)
   
   if (is.na(xlab))
     xlab="probes"
   
-  if (! is.null(covariate)) {
-    if (col.covariate)
-      col <- as.integer(covariate)
-    if (lty.covariate)
-      lty <- as.integer(covariate)
-    matplot(pm(x), col=col, lty=lty, xlab=xlab, type=type, ylim=ylim, ...)
-    matplot(mm(x), col=col, lty=lty, xlab=xlab, type=type, ylim=ylim, ...)
-  } else {
-    matplot(pm(x), col=col, lty=lty, xlab=xlab, type=type, ylim=ylim, ...)
-  }
-  
+  matplot(f(x), xlab=xlab, type=type, ylim=ylim, ...)  
 }
