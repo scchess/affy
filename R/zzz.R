@@ -40,11 +40,6 @@
          envir=as.environment(where))
 }
 
-.initMapCdfName <- function(where) {
-  filepath <- file.path(.path.package("affy"), "data", "mapCdfName.tab")
-  mapCdfName <- read.table(filepath, colClasses=rep("character", 3), quote="\"", sep="\t", comment="#", row.names=NULL, header=TRUE)
-  assign("mapCdfName", mapCdfName, envir=as.environment(where))
-}
 
 .setAffyOptions <- function(affy.opt=NA) {
 
@@ -119,7 +114,6 @@
   .initExpression(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initBackgroundCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
   .initPmCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
-  .initMapCdfName(match(paste("package:", pkgname, sep=""), search()))
 
   .setAffyOptions()
 

@@ -25,14 +25,10 @@ cleancdfname(cdfname, addcdf = TRUE)
   in the code.
   We observed exceptions that made us create a set of special cases for
   mapping CEL to CDF. The object \code{mapCdfName} holds information
-  about these cases. It is a \code{data.frame} of three elements: the
+  about these cases and can be loaded using \code{data}. It is a
+  \code{data.frame} of three elements: the 
   first is the name as found in the CDF file, the second the name in the
   CEL file and the third the name in bioconductor.
-  (note: \code{mapCdfName} is created dynamically each time you attach
-  the package by a call to the function \code{library} from the
-  information in the file
-  \code{mapCdfName.tab} in the \code{data} directory of your
-  installation of the package)
 }
 \value{
 A \code{character}
