@@ -1,10 +1,10 @@
-merge.AffyBatch <- function(x, y, annotation=paste(x@annotation, y@annotation),
+merge.AffyBatch <- function(x, y, annotation=paste(annotation(x), annotation(y)),
                             description=NULL,
                             notes=paste(x@notes, y@notes), ...) {
 
   adim <- dim(intensity(x))[1]
 
-  if ((x@nrow != y@nrow) || (x@ncol != y@ncol))
+  if ((nrow(x) != nrow(y)) || (ncol(x) != ncol(y)))
     stop("cannot merge chips of different sizes !")
 
   if (x@cdfName != y@cdfName)
@@ -21,11 +21,11 @@ merge.AffyBatch <- function(x, y, annotation=paste(x@annotation, y@annotation),
   return(new("AffyBatch",
              exprs=cbind(intensity(x),intensity(y)),
              cdfName=x@cdfName,
-             nrow=x@nrow,
-             ncol=x@ncol,
+             nrow=nrow(x),
+             ncol=ncol(x),
              phenoData=phenodata,
              annotation=x@annotation,
-             description=x@description, ##need to write a merge for MIAME
+             description=description(x), ##need to write a merge for MIAME
              notes=paste(x@notes,y@notes))
          )
 }

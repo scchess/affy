@@ -3,7 +3,7 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), prog
   require(modreg, quietly=TRUE)
   
   w.pm <- unlist(indexProbes(abatch, which="pm"))             # boolean to find the PM probes
-  i.pm <- rep(FALSE, abatch@nrow * abatch@ncol)
+  i.pm <- rep(FALSE, nrow(abatch) * ncol(abatch))
   i.pm[w.pm] <- TRUE
   rm(w.pm)
   

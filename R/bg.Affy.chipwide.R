@@ -5,8 +5,8 @@ bg.correct.mas <- function(object, griddim=16)
    pm.index <- unique(unlist(indexProbes(object, "pm")))
    mm.index <- unique(unlist(indexProbes(object, "mm")))
    
-   rows <- object@nrow
-   cols <- object@ncol
+   rows <- nrow(object)
+   cols <- ncol(object)
    
    allintensities <- intensity(object)[c(pm.index, mm.index), ]
    
