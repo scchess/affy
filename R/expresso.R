@@ -9,13 +9,14 @@ expresso <- function(cdf = NULL,
                      normalize = TRUE,
                      normalize.method = NULL,
                      normalize.param=list(),
+                     bg.method = NULL,
+                     bg.param = list(),
                      summary.method = NULL,
                      summary.param = list(),
                      summary.subset = NULL,
-                     bg.method = NULL,
-                     bg.param = list(),
                      chip.names = NULL,
                      ## ---
+                     phenodata = NULL,
                      verbose = T,
                      widget = F,
                      hdf5 = F) {
@@ -212,7 +213,10 @@ expresso <- function(cdf = NULL,
     if (verbose) cat("done.\n")
   }
   
-  eset <- generateExprSet(listcel, cdf, method=summary.method, bg.correct=bg.method)
+  eset <- generateExprSet(listcel, cdf, method=summary.method, bg.correct=bg.method, ids=summary.subset)
+
+  if (! is.null(phenodata))
+    phenoData(eset) <- phenodata
   
   return(eset)
 }
