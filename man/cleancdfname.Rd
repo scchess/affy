@@ -15,22 +15,33 @@ cleancdfname(cdfname, addcdf = TRUE)
   \item{cdfname}{A \code{character} denoting Affymetrix'x CDF file name }
   \item{addcdf}{A \code{logical}. If \code{TRUE} it adds the string
     "cdf" at the end of the cleaned CDF name. This is used to name the
-    location packages.}
+    \code{cdfenvs} packages.}
 }
 \details{
-  This function takes the CDF filenames obtained from the CEL files and
-  converts them to the convention used in Bioconductor. All small caps
-  and only alphanumeric characters. There is a simple rule, see code,
-  but there are also some exception which are defined in
-  \code{mapCdfName.tab} in the \code{data} directory.
+  This function takes a CDF filename obtained from an Affymetrix file
+  (from a CEL file for example) and
+  convert it to a convention of ours: all small caps
+  and only alphanumeric characters. The details of the rule can be seen
+  in the code.
+  We observed exceptions that made us create a set of special cases for
+  mapping CEL to CDF. The object \code{mapCdfName} holds information
+  about these cases. It is a \code{data.frame} of three elements: the
+  first is the name as found in the CDF file, the second the name in the
+  CEL file and the third the name in bioconductor.
+  (note: \code{mapCdfName} is created dynamically each time you attach
+  the package by a call to the function \code{library} from the
+  information in the file
+  \code{mapCdfName.tab} in the \code{data} directory of your
+  installation of the package)
 }
 \value{
 A \code{character}
 }
 
 \examples{
-cat("HG_U95Av2 is",cleancdfname("HG_U95Av2"),"\n")
-cat("HG-133A is",cleancdfname("HG-133A"),"\n")
+cdf.tags <- c("HG_U95Av2", "HG-133A")
+for (i in cdf.tags)
+  cat(i, "becomes", cleancdfname(i), "\n")
 }
 \keyword{character}% at least one, from doc/KEYWORDS
 
