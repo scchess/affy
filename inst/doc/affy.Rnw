@@ -397,6 +397,23 @@ probe intensities.}
 
 Options for the package can be configured (see Section~\ref{configure.options}).
 
+\subsection{C implementation of RMA}
+
+One of the quickest ways to compute expression using the \verb+affy+ package is to use the \verb+rma+ function. We have found that this method allows a user to compute the RMA expression measure in a matter of minutes for datasets that may have taken hours in previous versions of \verb+affy+. The function serves as an interface to a hard coded C implementation of the RMA method \cite{iriz:etal:2003}. Generally, the following would be sufficient to compute RMA expression measures:
+\begin{Sinput}
+R> Data <-  ReadAffy() ##read data in working directory
+R> eset <- rma(Data)
+\end{Sinput}
+
+Currently the \verb+rma+ function implements RMA in the following manner
+\begin{enumerate}
+\item Probe specific correction of the PM probes using a model based on observed intensity being the sum of signal and noise
+\item Normalization of corrected PM probes using quantile normalization \cite{bols:etal:2002}
+\item Calculation of Expression measure using median polish
+\end{enumerate}
+
+The \verb+rma+ function is likely to be improved and extended in the future as the RMA method is fine-tuned.
+
 \newpage
 
 \section{Quality Control through Data Exploration}
