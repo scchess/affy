@@ -1,5 +1,28 @@
 version 1.4.x [under development]
-  o ppsetApply: a function to apply a function to ProbeSet that can be
+
+  o xy2indices/indices2xy  have now a (dangerous) parameter xy.offset.
+    See below for more details.
+
+  o a new package-wide parameter called 'xy.offset' was added. This is
+    the first towards getting rid of the 'indexing-starting-at-one-and
+    -not-at-zero' difficulty. This package-wide parameter is the only
+    thing one should play play with to change the offset of x/y
+    coordinates for features on a chip.
+
+  o computeExprSet (method of AffyBatch) has the following (visible)
+    improvements:
+      - better reporting of errors
+      - better handlings ids as parameters (does not crash any longer when
+        unknown ids are given)
+
+  o indexProbes (method of AffyBatch) sees the deprecated flag 'xy' removed
+    for good.
+
+  o mmindex (see indexProbes above)
+
+  o pmindex (see indexProbes above)
+ 
+  o ppsetApply: a function to apply a function over the probe sets that can be
     built from an instance of AffyBatch. This is done in the spirit of
     esetApply in Biobase (the covariate information in phenoData are
     directly accessible from the function (see example in the man page). 
