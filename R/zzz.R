@@ -28,7 +28,7 @@
   ##       envir=as.environment(where))
   start <- nchar("bg.correct.")
   assign("bgcorrect.methods",
-         substr(all.affy[grep("bg\.correct\.*", all.affy)], start+1, 100),
+         substr(all.affy[grep("bg\.correct\.", all.affy)], start+1, 100),
          envir=as.environment(where))
        }
 
