@@ -119,7 +119,7 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
 
   Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
 
-  cdfInfo<- as.list(getCdfInfo(object))
+  cdfInfo<- as.list(getCdfInfo(Data))
   cdfInfo <- cdfInfo[order(names(cdfInfo))]
 
   
