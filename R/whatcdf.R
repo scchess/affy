@@ -1,4 +1,4 @@
-whatcdf <- function(filename, compress=getOptions("BioC")$affy$compress.cel){
+whatcdf <- function(filename, compress=getOption("BioC")$affy$compress.cel){
   
   ##finds what cdf environment to use with cdf file
   tmp <- getInfoInAffyFile(filename,"CEL","HEADER","DatHeader",compress=compress) ##find appropriate line
