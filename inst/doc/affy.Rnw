@@ -98,11 +98,11 @@ preprocessing when computing expression measures.
 \item RNA degradation assessment. (\verb+?AffyRNAdeg+)
 \end{itemize}
 
-In version 2.0, we have implemented various of the procedures
+In this version, we have implemented various of the procedures
 described in the MAS 5.0 manual. Throughout the package we use
 \verb+mas+ to denote the procedures described in the MAS 5.0 software.
 
-The main difference between Version 1.0 and version 2.0 is that the
+The main difference between Version 1.0 and this version is that the
 user no longer needs to provide the {\it CDF} files. We now provide a more
 efficient way of obtaining this information. Data packages containing the
 necessary CDF information can be obtained from 
@@ -565,7 +565,7 @@ Figure \ref{f3} provides evidence of saturation in that we see two
 small ``bumps'' near the largest value. 
 
 As seen in the previous example, the sub-setting method \verb+[+ can be used to extract specific
-arrays. {\bf NOTE: Sub-setting is different in version 2.0. One can no
+arrays. {\bf NOTE: Sub-setting is different in this version. One can no
 longer subset by gene. We can only define subsets by one dimension: the
 columns, i.e. the arrays.}
  
