@@ -24,6 +24,8 @@
  ** Jan 6, 2003 actually // is correct according to standards. SOme compilers are 
  **             of course not fully standards compliant :)
  **
+ ** Jan 9, 2003 - check that background version switching happens
+ **
  *****************************************************************************/
 
 #include "rma_background2.h"
@@ -356,7 +358,7 @@ void bg_parameters2(double *PM,double *MM, double *param, int rows, int cols, in
   param[1] = PMmax;
   param[2] = sd;
 
-  printf("%f %f %f\n",param[0],param[1],param[2]);
+  /* printf("%f %f %f\n",param[0],param[1],param[2]); */
 
 
   free(tmp_less);
@@ -451,8 +453,8 @@ SEXP bg_correct_c_copy(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho, SEXP bgt
   printf("Background correcting\n");
   /* printf("%d \n", INTEGER(bgtype)[0]); */
   for (j=0; j < cols; j++){
-    if (INTEGER(bgtype)[0]){
-      /*  printf("using type 2\n"); */
+    if (asInteger(bgtype)==2){
+      /* printf("using type 2\n");*/ 
       bg_parameters2(PM,MM,param,rows,cols,j,densfunc,rho);
     } else {
       bg_parameters(PM,MM,param,rows,cols,j,densfunc,rho);
