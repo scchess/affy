@@ -45,7 +45,21 @@ li.wong(data.matrix,remove.outliers=TRUE, normal.array.quantile=0.5,
     the status of the algorithm.}
   \item{...}{       }
 }
-\details{Please refer to references.}
+\details{
+  This is Bioconductor's implementation of the Li and Wong algorithm. The
+  Li and Wong PNAS 2001 paper was followed. However, you will not get
+  the same results as you would get with dChip. dChip is not open source
+  so it is hard if not impossible to reproduce. 
+
+  Notice that this iterative algorithm will not always converge.
+  If you run the
+  algorithm on thousands of probes expect some non-convergence
+  warnings. These are more likely when few arrays are used. We recommend
+  using this method only if you have 10 or more arrays.
+
+  Please refer to references for more details.
+}
+
 \value{\code{li.wong} returns a vector of expression measures (or column
   effects) followed by their respective standard error estimates. It is
   designed to work with \code{\link{express}}.
