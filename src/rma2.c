@@ -85,6 +85,7 @@
  ** Dec 9, 2003 - fix a bug in do_RMA (max_nrows in Calloc)
  ** Mar 6, 2004 - all mallocs/frees are now Calloc/Frees. Removed
  **               the function R_median_polish
+ ** Jul 27, 2004 - fix a small memory leak
  **
  ************************************************************************/
 
@@ -547,6 +548,10 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   SET_VECTOR_ELT(dimnames,0,names);
   setAttrib(outvec, R_DimNamesSymbol, dimnames);
   UNPROTECT(2);
+  for (i =0; i < nprobesets; i++)
+    Free(outnames[i]);
+  
+  Free(outnames);
   Free(ProbeNames);
   return outvec;
 }
