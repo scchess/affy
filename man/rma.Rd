@@ -26,8 +26,11 @@ rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,backgro
   \item{\dots}{further arguments to be passed (not currently implemented - stub for future use)}
 }
 \details{
-This function computes the expression measure described in Irizarry et al
+This function computes the RMA (Robust Multichip Average) expression measure described in Irizarry et al
 Biostatistics (2003).
+
+Note it is recommended to use version 1 background, unless you wish to
+have directly comparable RMA results with those from either \code{\link{express}} or \code{\link{expresso}}.
 }
 \value{
 An \code{\link{exprSet}}
