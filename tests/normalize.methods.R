@@ -27,8 +27,8 @@ cat("AffyBatch\n")
 
 data(affybatch.example)
 n.meth <- normalize.methods(affybatch.example)
-## remove loess an qspline
-n.meth <- n.meth[ ! (n.meth %in% c("loess", "pspline"))]
+## remove qspline
+n.meth <- n.meth[ ! (n.meth %in% c("pspline"))]
 for (m in n.meth) {
   cat("-->", m, "...")
   affybatch.example.n <- normalize(affybatch.example, method=m)

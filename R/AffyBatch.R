@@ -147,10 +147,18 @@
               cat("AffyBatch object\n")
               cat("size of arrays=",object@nrow,"x",object@ncol,
                   " features\n",sep="")
-              #cat("cdf=",object@cdffile,"\n",sep="")
-              cdf.env <- getCdfInfo(object)
+              
+              ## Location from cdf env
+              try( cdf.env <- getCdfInfo(object) )
+              if (! inherits(cdf.env,"try-error")) {
+                num.ids <- length(ls(env=cdf.env))
+              } else {
+                warning("missing cdf environment !")
+                num.ids <- "???"
+              }
+              
               cat("cdf=", object@cdfName,
-                  " (", length(ls(env=cdf.env)), " affyids)\n",
+                  " (", num.ids, " affyids)\n",
                   sep="")
               cat("number of experiments=",length(object),"\n",sep="")
               cat("number of genes=",length(tmp),"\n",sep="")
@@ -412,7 +420,7 @@
                where=where)
   
   setMethod("computeExprSet", signature(x="AffyBatch", bg.method="character", summary.method="character"),
-            function(x, bg.method, summary.method, ids=NULL, verbose=TRUE, bg.param=list(), summary.param=list()) {
+            function(x, bg.method, summary.method, ids=NULL, verbose=TRUE, bg.param=list(), summary.param=list(), warnings=TRUE) {
               
               bg.method <- match.arg(bg.method, bg.correct.methods)
               summary.method <- match.arg(summary.method, express.summary.stat.methods)
@@ -511,7 +519,7 @@
                 
                 if (! inherits(ev,"try-error")) {
                   exp.mat[i, ] <- ev
-                } else {
+                } else if (warnings) {
                   warning(paste("Error with affyid:", name.levels(cdf)[id]))
                 }
                 ## no need for an 'else' branching since exp.mat was initialized with NA
