@@ -1,4 +1,4 @@
-normalize.Cel.loess <- function(listcel) {
+normalize.Cel.loess <- function(listcel, ...) {
   
   cols <- length(listcel)
   rows <- length(listcel[[1]]@intensity) # assuming all the Cel are of the same size in listcel
@@ -10,7 +10,7 @@ normalize.Cel.loess <- function(listcel) {
   x <- matrix(0,rows,cols)
   for (i in 1:cols) x[,i] <- c(listcel[[i]]@intensity)
 
-  x <- normalize.loess(x)
+  x <- normalize.loess(x, ...)
 
   cat(cols,rows)
   for (i in 1:cols) {
