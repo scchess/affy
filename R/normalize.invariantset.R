@@ -48,14 +48,14 @@ library(modreg)
 
 normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progress=FALSE) {
 
-  nc <- ncols(container@pm)
-  np <- nrows(container@pm)
+  nc <- ncol(pm(container))
+  np <- nrow(pm(container))
   
   ## take as a reference the array having the median overall intensity
-  l <- ncols(container@pm)
+  l <- ncol(pm(container))
   m <- vector("numeric", length=l)
   for (i in 1:l)
-    m[i] <- mean(container@pm[,i])
+    m[i] <- mean(pm(container)[,i])
   refindex <- trunc(median(rank(m)))
   rm(m,l)
   
@@ -65,24 +65,25 @@ normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progre
     if (progress) cat("normalizing array", attr(container[[i]], "name"), "...")
     
     ##temporary
-    tmp <- normalize.invariantset(container@pm[,i],
-                                  container@pm[,refindex],
+    tmp <- normalize.invariantset(pm(container)[,i],
+                                  pm(container)[,refindex],
                                   prd.td)
                          
     
     # pm first...
-    container@pm[,i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+    pm(container)[,i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
                                           xout=container@pm[,i])$y)
     # then mm... (note: I am not quite sure whether MMs should be 'normalized' or discarded...)
-    container@mm[,i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                          xout=container@mm[,i])$y)
+    mm(container)[,i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                                          xout=mm(container)[,i])$y)
     
-    container@notes <- list(name="normalized by invariant set", invariantset=tmp$i.set)
-
+    ##container@notes <- list(name="normalized by invariant set", invariantset=tmp$i.set)
+    container@notes <- "normalized by invariant set"
+    
     if (progress) cat("done.\n")
     
   }
-  return()
+  return(container)
 }
 
 
