@@ -111,13 +111,17 @@ describes how to change the package's default options. Section
   efficient than \verb+read.affybatch+.
 
 \item Package no longer depends on \verb+affydata+ package. For this
-  reasone some examples have been moved from this vignette to the
+  reason some examples have been moved from this vignette to the
   \verb+affydata+ vignette. 
+
+\item The previously deprecated \verb+express+ function has been completely removed.
+
+\item Most normalization routines for AffyBatches can now be called with the parameter \verb+type+ which specifies whether the normalization should be applied as a PM-only, MM-only, both PM and MM together or PM and MM separately.
 
 \end{itemize}
 
 There are some minor differences in what you can do but little
-functionality has disappeared. Memorey efficiency and speed have improved.
+functionality has disappeared. Memory efficiency and speed have improved.
 
 \section{Getting Started: From probe level data to expression values}
 \label{sec:get.started}
@@ -129,7 +133,7 @@ R> library(affy) ##load the affy package
 <<echo=F,results=hide>>=
 library(affy)
 @
-This release of the \Rpackage{affy} pacakge will automatically
+This release of the \Rpackage{affy} package will automatically
 download the appropriate cdf environment when you require it. However,
 if you wish you may download and install the cdf environment you need
 from \url{http://www.bioconductor.org/data/metaData.html} manually. If
@@ -215,7 +219,7 @@ R> exprs2excel(eset, file="mydata.csv")
 \subsection{Reading CEL file information}
 The function \Rfunction{ReadAffy} is quite flexible. It
 lets you specify the filenames,
-phenotypic, and MIAME information.
+phenotype, and MIAME information.
 You can enter them by reading files (see the help
 file) or widgets (you need to have the tkWidgets package installed
 and working)
@@ -241,7 +245,7 @@ of the {\it tkWidgets} package.
 Next, a widget (not shown) permits the user to enter sample names for
 the arrays and descriptions for these samples. In the next step a
 series of three widgets permits the user
-to enter phenotypic or covariate information.
+to enter phenotype or covariate information.
 See Figure \ref{fig:widget.pd}.
 
 \begin{figure}[htbp]
