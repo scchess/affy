@@ -1,4 +1,4 @@
-
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 %\VignetteIndexEntry{affy primer}
 %\VignetteKeywords{Preprocessing, Affymetrix}
 %\VignetteDepends{affy}
@@ -93,13 +93,16 @@ locations to probe set membership. Section \ref{configure.options} describes how
   "constant" and "invariantset" for the moment. Need for a class
   and check compliance with MIAME standards]
   \item tuning of the MAS5.0 methods implemented (bgcorrect.mas, ...). \footnote{A comparison between official MAS5.0 and the {\tt affy} implementation can be found at \url{http://stat-www.berkeley.edu/~bolstad/MAS5diff/Mas5difference.html}.}
+\item The function \verb+mas5+ now available as a wrapper for \verb+expresso+ and \verb+affy.scalevalue.exprSet+.
 \item method \verb+plot.ProbeSet+, an alternative to barplot, to plot probe
   level information.
 \item parameter 'scale' in the method barplot for ProbeSet. All the
   barplots are scaled to eachothers. 
 \item New functions \verb+xy2indices+ and \verb+indices2xy+ to shuttle from
   x/y pos to indices (like the ones in cdfenvs) (and reverse).
-                                                                                                                                         
+\item The documentation for normalization has been improved.
+\item Due to some new protocols \verb+?AffyBatch+ no longer will give you the help file. One needs to type \verb+help("AffyBatch-class")+. Same is true for other classes.
+\item The function \verb+justRMA+ added for those who want to use \verb+rma+ and are having memory problems.
 \end{itemize}
 
 \noindent{\bf What's different?}
@@ -115,14 +118,14 @@ locations to probe set membership. Section \ref{configure.options} describes how
 \item  The function \verb+express+ is deprecated. It still functions normally 
   but gives warning mesage. It will be removed in a future release.
   The function \verb+expresso+ should be used as a replacement.
-\item bug in the parser fixed (infinite loop reported with apparently
+\item bug in the parser fixed (infinite loop reported with 
   non-standard CEL files).
 \item bug in the parser fixed (the 'sd' data returned were not correct).
 \item missing slot in the dataset SpikeIn fixed.
-\item  bug in normalize.AffyBatch.qspline fixed (thanks to people at
+\item bug in normalize.AffyBatch.qspline fixed (thanks to people at
   Insightful). The expression data matrix sent to normalize.qspline
   was mistakingly transposed.
-\item barplot.ProbeSet scales plots to eachothers by default.
+\item barplot.ProbeSet scales plots to each other by default.
 \end{itemize}
 
 In this version, we have implemented some procedures
@@ -132,12 +135,10 @@ affecting you, or even better, on how you think our code could be improved are w
  Throughout the package we use \verb+mas+ to denote the procedures described in the MAS 5.0 software.
 
 The main difference between Version 1.1 and this version (1.2) is that in most cases the user no longer needs to manually download and install the appropriate CDF environment package. If the appropriate \verb+cdfenv+ is not installed it will, by default, be downloaded and installed automatically for the user. If a prepacked CDF environment for your particular chip type is not currently available you can create your own CDF environment. You may do this using the \verb+makecdfenv+ package which is available from the Bioconductor web site \url{www.bioconductor.org}. If you are using the {\bf HGU95Av2} or {\bf HGU133A} chip the
-information is included in the affydata package and you do not need to
-download further packages. See Section \ref{sec:probesloc} for information on how
-the environments work. 
+information is included in the affydata package and you can load this package instead of downloading further packages. See Section \ref{sec:probesloc} for information on how the environments work. 
 
 There are some minor differences in what you can do but little
-functionality has disappeared. Much has been added!
+functionality has disappeared. 
 
 %%% RI: raw is DAT file. so i changed raw to probe level.
 \section{Getting Started: From probe level data to expression values}
@@ -175,6 +176,11 @@ R> library(affy) ##load the affy package
 R> Data <-  ReadAffy() ##read data in working directory
 R> eset <- rma(Data)
 \end{Sinput}
+If your data set is too large and this gives you memory problem try the following instead
+\begin{Sinput}
+R> eset <- justRMA(Data)
+\end{Sinput}
+Notice one does not need to call \verb+ReadAffy+ and thus probe level data is never stored.
 \end{enumerate}
 
 The \verb+rma+ function was written in C for speed and
@@ -186,6 +192,11 @@ R> eset <- expresso(Data, normalize=FALSE, bgcorrect.method="mas",
                      pmcorrect.method="mas",summary.method="mas")
 \end{Sinput}
 
+For MAS 5.0 one can simply use 
+\begin{Sinput}
+R> eset <- mas5(Data)
+\end{Sinput}
+which will aslo normalize the expression values. The normalization can be turned off through the \verb+normalize+ argument. 
 
 %%% this is handled in a seperate Vignette and express has been 
 %%% deprecated
