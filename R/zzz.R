@@ -67,17 +67,9 @@
   }
 
   probesloc.first <- list(what="environment", where=.GlobalEnv)
-  ## no autoload in the first place, to give 'data' a chance
-  probesloc.second <- list(what="package", where=NULL,
-                           autoload=FALSE,
-                           installdir=NULL,
-                           repository="http://www.bioconductor.org/data/cdfenvs/repos/")
-  probesloc.third <- list(what="data", where="affy")
-  ## still no available cdfenvs... give autoload a try...
-  probesloc.forth <- list(what="package", where=NULL,
-                          autoload=TRUE,
-                          installdir=NULL,
-                          repository="http://www.bioconductor.org/data/cdfenvs/repos/")
+  probesloc.second <- list(what="libPath", where=NULL)
+  probesloc.third <- list(what="bioC", where=.libPaths()[1])
+  probesloc.fourth <- list(what="data", where="affy")
 
   ## default for the methods
   bgcorrect.method <- "mas"
@@ -87,7 +79,8 @@
 
   affy.opt <- list(compress.cdf=FALSE, compress.cel=FALSE,
                    use.widgets=FALSE,
-                   probesloc = list(probesloc.first, probesloc.second, probesloc.third, probesloc.forth),
+                   probesloc = list(probesloc.first, probesloc.second,
+                   probesloc.third, probesloc.fourth),
                    bgcorrect.method = bgcorrect.method,
                    normalize.method = normalize.method,
                    pmcorrect.method = pmcorrect.method,

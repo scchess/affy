@@ -7,19 +7,26 @@ setClass("AffyBatch",
                         nrow="numeric",
                         ncol="numeric"),
          prototype=list(exprs=matrix(nr=0,nc=0),
-           se.exprs = matrix(nr=0,nc=0),
-           description=new("MIAME"),
-           annotation="",
-           notes="",
-           cdfName="",
-           nrow=0,
-           ncol=0), contains="exprSet")
+         se.exprs = matrix(nr=0,nc=0),
+         description=new("MIAME"),
+         annotation="",
+         notes="",
+         cdfName="",
+         nrow=0,
+         ncol=0), contains="exprSet")
 
 #######################################################
 ### accessors
 #######################################################
 
 if (debug.affy123) cat("--->accessors\n")
+
+if (is.null(getGeneric("cdfName")))
+    setGeneric("cdfName", function(object)
+               standardGeneric("cdfName"))
+
+setMethod("cdfName", "AffyBatch", function(object)
+          object@cdfName)
 
 ##intensity
 if ( !isGeneric("intensity") ) {
