@@ -2,10 +2,10 @@
 \title{Normalize array data}
 \docType{methods}
 \alias{normalize}
+\alias{normalize-methods}
+\alias{normalize.methods-methods}
 \alias{normalize.methods}
-\alias{normalize.methods-method}
-\alias{normalize.methods}
-\alias{normalize.methods-method}
+\alias{normalize.methods-methods}
 \alias{normalize.Cel.container.methods}
 \alias{normalize.Plob.methods}
 \description{
@@ -18,6 +18,8 @@ normalize.methods(object)
 }
 \arguments{
   \item{object}{A \code{Cel.container} or a \code{Plob}}
+  \item{...}{Optional arguments for the normalization funtion. See the
+    details below.}
 %  \item{f.cdf}{a chip definition object object (as it is likely to be used by
 %    many scaling functions) (for other kinds of arrays, this could be an
 %    object holding informations about the chip... has to be discussed...).}

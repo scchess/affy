@@ -1,5 +1,6 @@
 \name{maffy.normalise}
 \alias{maffy.normalise}
+\alias{maffy.normalize}
 \alias{normalize.contrast}
 \title{Normalise Itensities}
 \description{Normalises feauture intensities from
