@@ -112,27 +112,32 @@ boxplot(normalize(Dilution))
 # generates pseudo repeated measurments
 # by adding noise to two differents measurements
 ##
-p <- new("PPSet.container", x=vector("list", length=4), content="PPSet", locked=FALSE)
-p[[1]] <- get.PPSet("A28102_at",CDF.example,listcel[[1]])
-p[[2]] <- get.PPSet("A28102_at",CDF.example,listcel[[2]])
+p <- new("PPSet.container",
+         pmProbes=matrix(NA, 20, 4),
+         mmProbes=matrix(NA, 20, 4))
+         
+p[[1]] <- get.PPSet("A28102_at", CDF.example, listcel[[1]])
+p[[2]] <- get.PPSet("A28102_at", CDF.example, listcel[[2]])
 p[[3]] <- p[[1]]
 p[[4]] <- p[[2]]
 
-p[[3]]@probes$pm[c(13,7)] <- p[[3]]@probes$pm[c(13,7)] + c(500,-400)
-p[[4]]@probes$pm[c(3,7)] <- p[[4]]@probes$pm[c(3,7)] + runif(2,10,2000)
+pm(p[[3]])[c(13,7)] <- pm(p[[3]])[c(13,7)] + c(500,-400)
+pm(p[[4]])[c(3,7)] <- pm(p[[4]])[c(3,7)] + runif(2,10,2000)
 
-ylimi <- range(unlist(lapply(p@x, function(y) y@probes)), 0)
+ylimi <- range(pmProbes(p), mmProbes(p))
+ylimi[1] <- 0
 
 #par(mfcol=c(4,2))
 mymethods <- c("avgdiff", "playerout", "liwong")
 nmet <- length(mymethods)
 
-layout(matrix(c(1:4,rep(5:(5+nmet-1), times=rep(4,nmet))),4,1+nmet), width=c(4,rep(1,nmet)))
+layout(matrix(c(1:4, rep(5:(5+nmet-1), times=rep(4, nmet))), 4, 1+nmet),
+       width=c(4, rep(1, nmet)))
 
-for (i in 1:4) barplot(p[[i]],ylim=ylimi, main=paste(p[[i]]@name, " - hybridization ", i))
+for (i in 1:4) barplot(p[[i]], ylim=ylimi, main=paste(p[[i]]@name, " - hybridization ", i))
 
 for (i in 1:nmet) {
-  ev <- generateExprVal.PPSet.container(p,method=mymethods[i],bg.correct="bg.correct.pmonly")
+  ev <- express.summary.stat(p, method=mymethods[i], bg.correct="bg.correct.pmonly")
   barplot(rev(c(ev)),main=paste("expression values using\n",mymethods[i], sep=""),
           names.arg=rev(paste("hybrid. ",1:4)), horiz=TRUE)
 }

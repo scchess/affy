@@ -39,15 +39,21 @@
          envir=as.environment(where))
 
   if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
-  assign("generateExprSet.methods", substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))],
-                                           23,100),
-         
+  ## the first one is deprecated
+  assign("generateExprSet.methods",
+         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))],
+                23,100),
          envir=as.environment(where))
-  if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
-  assign("bg.correct.methods", substr(ls(where)[grep("bg.correct\.*", ls(where))],
-                                           12,100),
-         
+  assign("express.summary.stat.methods",
+         substr(ls(where)[grep("generateExprVal\.method\.*", ls(where))],
+                23,100),
          envir=as.environment(where))
+  if (debug.affy123) cat("-->detecting background correction methods from naming convention\n")
+  assign("bg.correct.methods",
+         substr(ls(where)[grep("bg.correct\.*", ls(where))],
+                12,100),
+         envir=as.environment(where))
+  
   cacheMetaData(as.environment(where))
 
 }

@@ -1,12 +1,21 @@
 \name{generateExprVal}
 \alias{generateExprVal}
 \alias{generateExprVal-methods}
+\alias{generateExprVal.methods}
+\alias{express.summary.stat}
+\alias{express.summary.stat-methods}
+\alias{express.summary.stat.methods}
+
 \title{Generate an expression value from the probes informations}
 \description{
   Generate an expression from the from the probes
 }
 \usage{
 generateExprVal.PPSet.container(pps.container, method, ...)
+generateExprVal.methods # vector of names of methods
+
+express.summary.stat(pps.container, method, ...)
+express.summary.stat.methods # vector of names of methods
 }
 \arguments{
   \item{pps.container}{a \code{\link[Biobase]{container-class}} (\code{PPSet.container} for
@@ -18,10 +27,6 @@ generateExprVal.PPSet.container(pps.container, method, ...)
 \value{
 Returns a vector of expression values.
 }
-\seealso{
-  \code{\link{generateExprVal.method.playerout}},
-  \code{\link{generateExprVal.method.avgdiff}}
-  }
 \examples{
   ## loading data
   data(listcel)
@@ -39,7 +44,7 @@ Returns a vector of expression values.
   pc[[1]] <- get.PPSet(affyid, CDF.example, listcel[[1]])
   pc[[2]] <- get.PPSet(affyid, CDF.example, listcel[[2]])
 
-  generateExprVal(pc, method="playerout", bg.correct="bg.correct.pmonly")
+  express.summary.stat(pc, method="playerout", bg.correct="bg.correct.pmonly")
 
 }
 \keyword{}
