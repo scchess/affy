@@ -17,9 +17,9 @@ expresso <- function(cdf = NULL,
                      chip.names = NULL,
                      ## ---
                      phenodata = NULL,
-                     verbose = T,
-                     widget = F,
-                     hdf5 = F) {
+                     verbose = TRUE,
+                     widget = FALSE,
+                     hdf5 = FALSE) {
   
 
   ## --- temp file (if hdf5)

@@ -1,25 +1,25 @@
-fit.li.wong <- function(data.matrix, remove.outliers=T,
+fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
                         normal.array.quantile=0.5,
                         normal.resid.quantile=0.9,
                         large.threshold=3,
                         large.variation=0.8,
                         outlier.fraction=0.14,
-                        delta = 1e-06,maxit=50,outer.maxit=50,verbose=F,...){
+                        delta = 1e-06,maxit=50,outer.maxit=50, verbose=FALSE, ...){
   if(missing(data.matrix)) stop("Argument data.matrix missing, with no default")
   II <- dim(data.matrix)[1] ##II instrad of I cause I is a fuction in R
   J <- dim(data.matrix)[2]
   cI <- II ##current I
   cJ <- J ##current J
-  theta.outliers.old <- rep(F,II) ##ith entry will be true if theta_i is an outlier
-  phi.outliers.old <- rep(F,J) ##jth entry will be true if phi_j is an outlier
-  single.outliers.old <- matrix(F,II,J) ##ij entry will be true if y_is an outlier
+  theta.outliers.old <- rep(FALSE, II) ##ith entry will be true if theta_i is an outlier
+  phi.outliers.old <- rep(FALSE, J) ##jth entry will be true if phi_j is an outlier
+  single.outliers.old <- matrix(FALSE, II, J) ##ij entry will be true if y_is an outlier
   theta.outliers <- theta.outliers.old ##need this to now if change ocurred in outliers
   phi.outliers <- phi.outliers.old ##need this to know if chages occured in outlies
   single.outliers <- single.outliers.old
   flag1 <- NA ##these will be false if convergence not reacher,
   flag2 <- NA ## this will be false if outliers respectively cuase iter to stop
   if(remove.outliers){
-    flag1 <- T;flag2<-T
+    flag1 <- T;flag2<-TRUE
     original.data.matrix <- data.matrix ##so we can get it back after outlier removal
     change.theta <- 1 #start with 1 
     change.phi <- 1
@@ -34,23 +34,23 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
         phi <- apply(data.matrix, 2, mean)
         c <- sqrt(cJ/sum(phi[!phi.outliers]^2))
         phi <- c * phi
-        theta <- (data.matrix[, !phi.outliers, drop=F] %*% phi[!phi.outliers, drop=F])/cJ
+        theta <- (data.matrix[, !phi.outliers, drop=FALSE] %*% phi[!phi.outliers, drop=FALSE])/cJ
         iter <- 0
         change <- 1 #start with one
         theta.old <- rep(0, II)
         while(change > delta & iter < maxit) {
           iter <- iter + 1
-          phi <- t(data.matrix[!theta.outliers, ,drop=F]) %*% theta[!theta.outliers, drop=F] ##ignore the outliers
-          c <- sqrt(cJ/sum(phi[!phi.outliers, drop=F]^2))
+          phi <- t(data.matrix[!theta.outliers, ,drop=FALSE]) %*% theta[!theta.outliers, drop=FALSE] ##ignore the outliers
+          c <- sqrt(cJ/sum(phi[!phi.outliers, drop=FALSE]^2))
           phi <- c * phi
-          theta <- (data.matrix[,!phi.outliers, drop=F] %*% phi[!phi.outliers, drop=F])/cJ
+          theta <- (data.matrix[,!phi.outliers, drop=FALSE] %*% phi[!phi.outliers, drop=FALSE])/cJ
           change <- max(abs(theta[!theta.outliers] - theta.old[!theta.outliers]))
           if(verbose) cat(paste("Outlier iteration:",outer.iter,"estimation iteration:",iter,"chage=",change,"\n"))
           theta.old <- theta
         }
         if(iter>=maxit){ ##convergence not reached. might as well get out
           warning(paste("No convergence in inner loop after",iter,"in outerler tieration",outer.iter,"\n"))
-          flag1 <- F
+          flag1 <- FALSE
         }
         if(mean(phi[!phi.outliers]<0)>.5){ ##for identifiability.. theta*phi = (-theta)*(-phi), i require that most phis are positive
           theta <- -theta
@@ -67,9 +67,9 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
       ##if even iteration take out thetas that are outliers (as defined by Li and Wong).
       if(outer.iter%%3==1){ ## we start with single outliers
         single.outliers <- resid > large.threshold*quantile(abs(resid),normal.resid.quantile)
-        single.outliers[apply(single.outliers,1,sum) > outlier.fraction*cJ,]<-rep(F,J)
+        single.outliers[apply(single.outliers,1,sum) > outlier.fraction*cJ,]<-rep(FALSE,J)
         ##probably chip oulier, defer calling outlier
-        single.outliers[,apply(single.outliers,2,sum) > outlier.fraction*cI]<-rep(F,II)
+        single.outliers[,apply(single.outliers,2,sum) > outlier.fraction*cI]<-rep(FALSE,II)
         ##probably probe outlier, defer calling outlier
         data.matrix[single.outliers] <- data.matrixhat[single.outliers]
         data.matrix[!single.outliers] <- original.data.matrix[!single.outliers]
@@ -77,18 +77,18 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
         single.outliers.old <- single.outliers
       }
       else{
-        sigma.theta <- sqrt(apply(resid[, !phi.outliers, drop=F]^2, 1, sum)/(cJ - 1))
-        sigma.phi <- sqrt(apply(resid[!theta.outliers, , drop=F]^2, 2, sum)/(cI - 1))
+        sigma.theta <- sqrt(apply(resid[, !phi.outliers, drop=FALSE]^2, 1, sum)/(cJ - 1))
+        sigma.phi <- sqrt(apply(resid[!theta.outliers, , drop=FALSE]^2, 2, sum)/(cI - 1))
         ###THETA OUTLIERS
         if(outer.iter%%3==2){
           theta.outliers <- sigma.theta > large.threshold*quantile(sigma.theta,normal.array.quantile) | theta^2/sum(theta^2) > large.variation
           cI <- sum(!theta.outliers)
           if(cI<3) {
             warning("No convergence achieved, too many outliers")
-            flag2 <- F
+            flag2 <- FALSE
           }
           ##single outliers in outlier chips are not longer single outliers
-          single.outliers[theta.outliers,] <- rep(F,J)
+          single.outliers[theta.outliers,] <- rep(FALSE,J)
           data.matrix[single.outliers] <- data.matrixhat[single.outliers]
           data.matrix[!single.outliers]<-original.data.matrix[!single.outliers]
           change.theta <- sum(abs(theta.outliers.old-theta.outliers)) #sum will be total of changes
@@ -101,9 +101,9 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
           cJ <- sum(!phi.outliers)
           if(cJ<3) {
             warning("No convergence achieved, too many outliers")
-            flag2 <- F
+            flag2 <- FALSE
           }
-          single.outliers[,phi.outliers] <- rep(F,II)
+          single.outliers[,phi.outliers] <- rep(FALSE,II)
           data.matrix[single.outliers] <- data.matrixhat[single.outliers]
           data.matrix[!single.outliers]<-original.data.matrix[!single.outliers]
           change.phi <- sum(abs(phi.outliers.old-phi.outliers))
@@ -118,17 +118,17 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
     }
     if(outer.iter>=outer.maxit){
       warning("No convergence achieved in outlier loop\n")
-      flag2 <- F
+      flag2 <- FALSE
     }
     all.outliers <- outer(theta.outliers,phi.outliers,FUN="|") | single.outliers
     sigma <- sqrt(sum(resid[!all.outliers]^2)/sum(!all.outliers))
     ##in case we leave iteration and these havent been defined
-    sigma.theta <- sqrt(apply(resid[,!phi.outliers, drop=F]^2, 1, sum)/(cJ - 1))
-    sigma.phi <- sqrt(apply(resid[!theta.outliers, ,drop=F]^2, 2, sum)/(cI - 1))
+    sigma.theta <- sqrt(apply(resid[,!phi.outliers, drop=FALSE]^2, 1, sum)/(cJ - 1))
+    sigma.phi <- sqrt(apply(resid[!theta.outliers, ,drop=FALSE]^2, 2, sum)/(cI - 1))
   }
   ###code for NO OUTLIER REMOVAL
   else{
-    flag1 <- T
+    flag1 <- TRUE
     phi <- apply(data.matrix, 2, mean)
     c <- sqrt(J/sum(phi^2))
     phi <- c * phi
@@ -149,7 +149,7 @@ fit.li.wong <- function(data.matrix, remove.outliers=T,
     }
     if(iter>=maxit){
       warning(paste("No convergence after",iter,"iterations.\n"))
-      flag1 <- F
+      flag1 <- FALSE
     }
     if(mean(phi[!phi.outliers]<0)>.5){
       ##for identifiability.. theta*phi = (-theta)*(-phi), i require that most phis are positive

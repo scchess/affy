@@ -1,15 +1,15 @@
 \name{whatcdf}
 \alias{whatcdf}
 
-\title{Find which CDF...}
+\title{Find which CDF corresponds}
 \description{
-  Find which kind of CDF corresponds to CEL files...
+  Find which kind of CDF corresponds to a CEL file.
 }
 \usage{
 whatcdf(filename, compress = FALSE)
 }
 \arguments{
-  \item{filename}{a CEL file name}
+  \item{filename}{a '.CEL' file name}
   \item{compress}{boolean (file compressed or not}
 }
 \details{

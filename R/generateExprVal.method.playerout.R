@@ -1,4 +1,4 @@
-generateExprVal.method.playerout <- function(probes, weights=F){
+generateExprVal.method.playerout <- function(probes, weights=FALSE, optim.method="L-BFGS-B"){
   
   probes <- t(probes)
   nprobes <- ncol(probes)
@@ -10,7 +10,7 @@ generateExprVal.method.playerout <- function(probes, weights=F){
   ## is really equivalent to the use of nlminb in S-plus
   S1 <- optim(runif(nprobes),
               playerout.costfunction,
-              method="L-BFGS-B",
+              method=optim.method,
               control=list(maxit=500),
               y=probes)
   ##S1 <- nlm(playerout,runif(20),iterlim=500,y=t(y))
@@ -20,9 +20,6 @@ generateExprVal.method.playerout <- function(probes, weights=F){
   return(r)
 }
 
-
-## Code kindly provided by E. Lazaridris
-## (I could not help butchering it a bit before putting it into the package)
 
 ## The loss function:
 
