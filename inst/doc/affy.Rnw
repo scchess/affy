@@ -19,8 +19,9 @@
 \begin{document}
 \title{Textual Description of affy}
 \maketitle
+\tableofcontents
 \section*{Introduction}
-\verb+affy+ is part of the Bioconductor project. It is meant to be 
+\verb+affy+ is part of the Bioconductor\footnote{http://www.bioconductor.org/} project. It is meant to be 
 an extendible, interactive environment for data analysis
 and exploration of Affymetrix oligonucleotide array probe level data. 
 Our package is distributed as open source code for Linux, UNIX, and
@@ -567,7 +568,7 @@ The expression value for an {\it affyID} is derived from the information contain
 One can obeserve how performs a set of probe pairs for a given {\it affyID}. 
 The advantage again is that one can program patterns of analysis. 
 
-The classes verb+PPSet+, verb+PPSet.container+ and verb+Plob+ give acess to the information at the probe level.
+The classes \verb+PPSet+, \verb+PPSet.container+ and \verb+Plob+ give acess to the information at the probe level.
 Each class has its own methods. The respective help pages will give comprehensive information about them.
 We present some of them to demonstrate some of the capabilities
 
