@@ -12,7 +12,7 @@ bg.parameters <- function(pm,mm,n.pts=2^14){
  
   bg.data <- mm[mm < mmbg]
   bg.data <- bg.data-mmbg
-  bgsd <- sqrt(sum(bg.data^2)/(length(bg.data)-1))
+  bgsd <- sqrt(sum(bg.data^2)/(length(bg.data)-1))*sqrt(2)/.85
  
   sig.data <- pm[pm > pmbg]
   sig.data <- sig.data-pmbg

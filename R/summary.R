@@ -23,8 +23,7 @@ li.wong <- function(x,remove.outliers=T,
 }
 
 medianpolish <- function(x,...){
-  cat(".")
-  tmp <- medpolish(log2(x),...)
+  tmp <- medpolish(log2(x),trace.iter=F,...)
   c(tmp$overall + tmp$col,rep(NA,ncol(x)))
 }
 
@@ -32,7 +31,6 @@ medianpolish <- function(x,...){
 biweight <- function(x,...){
   Nprobes <- dim(x)[1]
   Nchips <- dim(x)[2]
-  cat(".")
   probes <- as.factor(rep(1:Nprobes,Nchips))
   samps <- as.factor(rep(1:Nchips,rep(Nprobes,Nchips)))
   
