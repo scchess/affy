@@ -92,6 +92,8 @@
  **                work on endian issues for no ia32 platforms) 
  ** Nov 20, 2003 - Fix endian bug in readfloat32. Clean up the
  **                some of the documentation
+ ** Dec 2, 2003 - Fix up fopen commands (hopefully) for a problem
+ **               on w32 machines with text files.
  **
  *************************************************************/
  
@@ -327,12 +329,12 @@ static void ReadFileLine(char *buffer, int buffersize, FILE *currentFile){
  ***************************************************************/
 
 static FILE *open_cel_file(char *filename){
-
-  char mode = 'r';
-  FILE *currentFile; 
+  
+  const char *mode = "r";
+  FILE *currentFile = NULL; 
   char buffer[BUF_SIZE];
 
-  currentFile = fopen(filename,&mode);
+  currentFile = fopen(filename,mode);
   if (currentFile == NULL){
      error("Could not open file %s", filename);
   } else {
@@ -673,11 +675,12 @@ static char *get_header_info(char *filename, int *dim1, int *dim2){
 
 static int isTextCelFile(char *filename){
 
- char mode = 'r';
-  FILE *currentFile; 
+  const char *mode = "r";
+
+  FILE *currentFile= NULL; 
   char buffer[BUF_SIZE];
 
-  currentFile = fopen(filename,&mode);
+  currentFile = fopen(filename,mode);
   if (currentFile == NULL){
     error("Could not open file %s", filename);
   } else {
@@ -742,12 +745,13 @@ static void ReadgzFileLine(char *buffer, int buffersize, gzFile currentFile){
  ***************************************************************/
 
 static gzFile open_gz_cel_file(char *filename){
+  
+  const char *mode = "r";
 
-  char mode = 'r';
-  gzFile currentFile; 
+  gzFile currentFile= NULL; 
   char buffer[BUF_SIZE];
 
-  currentFile = gzopen(filename,&mode);
+  currentFile = gzopen(filename,mode);
   if (currentFile == NULL){
      error("Could not open file %s", filename);
   } else {
@@ -1093,10 +1097,10 @@ static char *gz_get_header_info(char *filename, int *dim1, int *dim2){
 static int isgzTextCelFile(char *filename){
   
 #if defined HAVE_ZLIB
- char mode = 'r';
- gzFile currentFile; 
+  const char *mode = "r"; 
+ gzFile currentFile = NULL; 
  char buffer[BUF_SIZE];
- currentFile = gzopen(filename,&mode);
+ currentFile = gzopen(filename,mode);
  if (currentFile == NULL){
    error("Could not open file %s", filename);
  } else {
