@@ -596,10 +596,11 @@ setMethod("image",signature(x="AffyBatch"),
               if (is.function(transfo)) {
                 m <- transfo(m)
               }
-
-              image(x.pos, y.pos, matrix(m, nrow=length(x.pos), ncol=length(y.pos)),
+              m <- as.matrix(rev(as.data.frame(matrix(m, nrow=length(x.pos), ncol=length(y.pos)))))
+              image(x.pos, y.pos, m,
                     col=col, main=sampleNames(x)[i],
-                    xlab=xlab, ylab=ylab, ...)
+                    xlab=xlab, ylab=ylab,,xaxt='n',
+                      yaxt='n', ...)
               par(ask=FALSE)
             }
           })
