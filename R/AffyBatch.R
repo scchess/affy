@@ -128,7 +128,7 @@
                   ##object@cdfInfo <<- as.environment(get(name, where))
                 }
               }
-              stop(paste("AffyBatch: information about probe locations for ", object@cdfName, " could not be found"))
+              stop(paste("Information about probe locations for", object@cdfName, " could not be found.\nTry downloading the",cleancdfname(object@cdfName),"package from\nhttp://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n"))
             },
             where=where)
   
