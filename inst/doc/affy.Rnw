@@ -937,9 +937,6 @@ There are several other vignettes addressing more specialised topics related to 
 \end{itemize}
 
 
-
-
-
 \appendix
 
 \section{Previous Release Notes}
