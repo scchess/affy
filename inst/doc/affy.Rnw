@@ -74,13 +74,13 @@ The package relies on the presence of other packages or on the presence of exter
 funcionalities. More specifically:
 \begin{enumerate} 
  \item The library {\it zlib} is required to read through compressed files with the
-functions \code{read.cdffile} and \code{read.celfile}
- \item The R package \code{methods} is required for almost anything to work
- \item The R package \code{Biobase} is required for almost anything to work too.
- \item The R package \code{modreg} is required for some of the normalization routines
- \item The R package \code{tcltk} is required for the functions involving GUI.
+functions verb+read.cdffile+ and verb+read.celfile+
+ \item The R package verb+methods+ is required for almost anything to work
+ \item The R package verb+Biobase+ is required for almost anything to work too.
+ \item The R package verb+modreg+ is required for some of the normalization routines
+ \item The R package verb+tcltk+ is required for the functions involving GUI.
 \end{enumerate}
-The command \code{library()} within an R console will list the package installed.
+The command verb+library()+ within an R console will list the package installed.
 The missing packages can be downloaded from the {\it CRAN} website ({\it http://www.r-project.org/}) or from the
 {\it bioconductor} website ({\it http://www.bioconductor.org/}).
 
@@ -96,10 +96,10 @@ of the functionalities of the package. An instance of a class is a XXX.
 For an instance \verb+a+ of a class \verb+MyClass+ having a attribute called \verb+myAttribute+, one can access the
 attribute simply by writing \verb+a@myAttribute+.
 For the most common attributes, accessor methods are built in the class. Using the previous example, we would have an accessor
-function \verb+myAttribute+ applied to the instance \verb+a+: \code{myAttribute(a)} .
+function \verb+myAttribute+ applied to the instance \verb+a+: verb+myAttribute(a)+ .
 
 Different classes have been implemented in the package to ease the manipulation of the data. The main ones are described below,
-with a note for their main \code{slots} and \code{methods}.
+with a note for their main verb+slots+ and verb+methods+.
 Users who are already familiar with the different categories of files involved in the analysis will not be surprised to find
 classes corresponding to the \verb+Cdf+ and \verb+Cel+ files.
 
@@ -108,7 +108,7 @@ classes corresponding to the \verb+Cdf+ and \verb+Cel+ files.
 The {\it Chip Definition Files} ({\it CDF} files) are used to store informations related to
 a type of oligonucleotide array sold by the manufacturer. All the arrays belonging to a given type will share this same information.
 As the quantity of informations in a {\it CDF} can be rather large, this is an important point. This is kept in the design of the package,
-as there will be only one \code{Cdf} object in memory, to which will refer the corresponding \verb+Cel+ files.
+as there will be only one verb+Cdf+ object in memory, to which will refer the corresponding \verb+Cel+ files.
 
 For instance when during an experiment a total of 30 arrays of type {\it Hu6800} are used, the information relative the array type is
 common to all the chips. Knowing that a {\it CDF} files weights 20 Megabytes, will help to realize the interest of avoiding to repeat this information.
@@ -277,7 +277,7 @@ show & \\
 
 \subsection{class Plob}
 
-The class \code{Plob} represents an another view on the data. One could think of it as related to the class \code{Cel.container}
+The class verb+Plob+ represents an another view on the data. One could think of it as related to the class verb+Cel.container+
 as it contains most of the information contained in it. It also contains informations from the corresponding CDF file. The data
 are organised in a different structure. We think of it as an another point of view on the data. It can be more convenient .
 
@@ -315,7 +315,7 @@ If a {\it CEL} file is available, the previous lines can be replaced by
 \begin{verbatim}
 mycelfile <- read.celfile("path/to/my/celfile")
 \end{verbatim}
-or if the \code{tcltk} library is available, the {\it CEL} file can be picked with the mouse
+or if the verb+tcltk+ library is available, the {\it CEL} file can be picked with the mouse
 %>>>L EXAMPLE !!!
 XXX
 
@@ -341,7 +341,7 @@ The expression value for an {\it affyID} is derived from the information contain
 One can obeserve how performs a set of probe pairs for a given {\it affyID}. 
 The advantage again is that one can program patterns of analysis. 
 
-The classes \code{PPSet}, \code{PPSet.container} and \code{Plob} give acess to the information at the probe level.
+The classes verb+PPSet+, verb+PPSet.container+ and verb+Plob+ give acess to the information at the probe level.
 Each class has its own methods. The respective help pages will give comprehensive information about them.
 We present some of them to demonstrate some of the capabilities
 
@@ -359,8 +359,8 @@ XXX
 
 This section presents briefly how the package XXX to {\it bioconductor}.
 
-\code{exprSet} objects can be generated by the functions \code{express} and
- \code{generateExprSet.Cel.container}. XXX
+verb+exprSet+ objects can be generated by the functions verb+express+ and
+ verb+generateExprSet.Cel.container+. XXX
 
 %>>>L Rafael... tell us about 'express'...
 
@@ -376,7 +376,7 @@ R BATCH < workflow.R
 The following lines show what can be written in the file \it{workflow.R}. It performs the complete
 workflow described by the manufacturer (with GUI XXX)
 
-Two paths to go from the {\it CEL} and {\it CDF} files to the expression values are suggested. One going through the \code{Plob} objects and the
+Two paths to go from the {\it CEL} and {\it CDF} files to the expression values are suggested. One going through the verb+Plob+ objects and the
 other going through the {Cel.container} objects.
 
 XXX
