@@ -1,3 +1,7 @@
+##
+## Basic set of tests for the class AffyBatch
+##
+
 library(affy)
 
 ## CEL file
@@ -52,7 +56,10 @@ n.afbatch <- normalize(afbatch, method="constant")
 cat("done.\n")
 
 ## compute expression values
-#cat("---> computing expression values...\n")
-#e.set <- computeExprSet(n.afbatch, summary.method="avgdiff", bg.method="bg.correct.pmonly")
-#cat("done.\n")
+cat("---> computing expression values...\n")
+e.set <- computeExprSet(n.afbatch, pmcorrect.method="pmonly", summary.method="avgdiff")
+if (! inherits(e.set, "exprSet"))
+  stop("eset does not inherit from 'exprSet' !")
+cat("done.\n")
+
 
