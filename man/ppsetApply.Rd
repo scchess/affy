@@ -1,5 +1,6 @@
 \name{ppsetApply}
 \alias{ppsetApply}
+\alias{ppset.ttest}
 \title{ Apply a function over the ProbeSets in an AffyBatch }
 \description{
   Apply a function over the ProbeSets in an AffyBatch
