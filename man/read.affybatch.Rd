@@ -89,7 +89,18 @@ passed along to the function \code{\link{read.celfile}}.
 \seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}
 
 \examples{
-
+if(require(affydata)){
+     celpath <- paste(.path.package("affydata"),"celfiles",sep="/")
+     fns <- list.celfiles(path=celpath,full.names=TRUE)
+ 
+     cat("Reading files:\n",paste(fns,collapse="\n"),"\n")
+     ##read a binary file
+     abatch <- ReadAffy(filenames=fns[1])
+     ##read a compressed text file
+     abatch <- ReadAffy(filenames=fns[2])
+     ##read all files in that dir
+     abatch <- ReadAffy(celfile.path=celpath)
+}
 }
 \keyword{manip}
 
