@@ -22,8 +22,8 @@ expresso(
          bg.method = NULL,
          bg.param = list(),
          summary.method = NULL,
-         summary.subset = NULL,
          summary.param = list(),
+         summary.subset = NULL,
     # misc.
          phenodata = NULL,
          chip.names = NULL,
