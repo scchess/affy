@@ -76,7 +76,7 @@ setMethod("getCdfInfo", signature("AffyBatch"),
           function (object, how=getOption("BioC")$affy$probesloc) {
             ## "how" is a list. each element of the list must have an element
             ## tagged "what" and an element tagged "where"
-            ## "what" can be "data", "package", "file" or "environment"
+            ## "what" can be "package", "file" or "environment"
             ## "where" is where it can be found
 
             cdfname <- cleancdfname(object@cdfName)
@@ -99,26 +99,6 @@ setMethod("getCdfInfo", signature("AffyBatch"),
               if (debug.affy123) {
                 cat("what=", what, "where=")
                 print(where)
-              }
-
-              if (what == "data") {
-                ##if we can get it from data dir. otherwise load package
-
-                if(cdfname %in% do.call("data", list(package=where))$results[, 3]) {
-                  where.env <- pos.to.env(match(paste("package:", where, sep = ""), search()))
-
-                  ## check if the cdfenv is already loaded. If not load it *in* the environment
-                  ## of the package (where.env)
-                  if(!exists(cdfname, where = where.env, inherits = FALSE)) {
-                    path <- .path.package(where)
-                    filename <- paste(cdfname, ".rda", sep="")
-                    load(file.path(path, "data", filename) ,
-                         envir = where.env)
-                  }
-                  cdfenv <- get(cdfname, envir=where.env)
-                  return(cdfenv)
-                }
-                next
               }
 
               if (what == "package") {
@@ -697,7 +677,7 @@ setMethod("image",signature(x="AffyBatch"),
               if (is.function(transfo)) {
                 m <- transfo(m)
               }
-             
+
               image(1:NROW, 1:NCOL, matrix(m,nrow=NROW,ncol=NCOL),
                     col=col, main=sampleNames(x)[i],
                     xlab=xlab, ylab=ylab, ...)
