@@ -461,10 +461,11 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
             }
 
             ## loop over the ids
-            mycall <- do.call("call",
-                              list("express.summary.stat",
-                                   c.pps, pmcorrect=pmcorrect.method, summary=summary.method,
-                                   summary.param=summary.param, pmcorrect.param=pmcorrect.param))
+            mycall <- as.call(c(getMethod("express.summary.stat",
+                                          signature=c("ProbeSet","character", "character")),
+                                list(c.pps, pmcorrect=pmcorrect.method, summary=summary.method,
+                                     summary.param=summary.param, pmcorrect.param=pmcorrect.param))
+                              )
             ##only one character cause no more bg correct
             ##bg.correct=bg.method, param.bg.correct=bg.param,
 
