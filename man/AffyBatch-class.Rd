@@ -70,7 +70,10 @@ Class \code{"exprSet"}, directly.
       an \code{\link{Cel}} instance.}
     \item{boxplot}{\code{signature(x = "AffyBatch")}:  creates a
       \code{\link{boxplot}s of log base 2 intensities. }
-    \item{computeExprSet}{\code{signature(x = "AffyBatch",
+      \item{hist}{\code{signature(x = "AffyBatch")}:  creates a
+       plot showing all the histograms of the pm,mm or both data. See
+       \code{\link{plot.density}}}
+     \item{computeExprSet}{\code{signature(x = "AffyBatch",
 	summary.method = "character")}: For each probe set computes an
       expression value using \code{summary.method}. }
     \item{geneNames}{\code{signature(object = "AffyBatch")}: return the

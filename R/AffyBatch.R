@@ -634,8 +634,14 @@
               boxplot(data.frame(log2(intensity(x)[unlist(indexProbes(x,which)),])),main=main,range=0, ...)
             },where=where)
 
-}
 
+
+###hist
+  if( !isGeneric("hist") )
+    setGeneric("hist",where=where)
+  setMethod("hist",signature(x="AffyBatch"),plot.density.AffyBatch,where=where)
+  
+}
 
 
 
