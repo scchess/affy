@@ -17,7 +17,10 @@
   \item{pmonly}{logical value. If \code{TRUE} only PMs are used.}
 }
 \details{This method is based upon the concept of a quantile-quantile
-  plot extended to n dimensions. No special allowances are made for outliers.
+  plot extended to n dimensions. No special allowances are made for
+  outliers. If you make use of quantile normalization either through
+  \code{\link{rma}}, \code{\link{express}} or \code{\link{expresso}}
+  please cite Bolstad et al, Bioinformatics (2003).
 }
 
 \value{
@@ -28,7 +31,10 @@
     Oligonucleotide Array Data}. Unpublished manuscript
   \url{http://oz.berkeley.edu/~bolstad/stuff/qnorm.pdf}
 
-  Bolstad, B. M., Irizarry R. A., Astrand, M, and Speed, T. P. (2002) \emph{A Comparison of Normalization Methods for High Density Oligonucleotide Array Data Based on Bias and Variance.} To appear in Bioinformatics. \url{http://www.stat.berkeley.edu/~bolstad/normalize/normalize.html}
+  Bolstad, B. M., Irizarry R. A., Astrand, M, and Speed, T. P. (2003)
+  \emph{A Comparison of Normalization Methods for High Density
+    Oligonucleotide Array Data Based on Bias and Variance.}
+   Bioinformatics 19(2) ,pp 185-193. \url{http://www.stat.berkeley.edu/~bolstad/normalize/normalize.html}
   }
 
 \author{Ben Bolstad, \email{bolstad@stat.berkeley.edu}}
