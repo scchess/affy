@@ -409,7 +409,7 @@ SEXP bg_correct_c(SEXP PMmat, SEXP MMmat, SEXP densfunc, SEXP rho, SEXP bgtype){
   /* printf("Background correcting\n"); */
   Rprintf("Background correcting\n");
   for (j=0; j < cols; j++){
-    if (INTEGER(bgtype)[0] == 2){
+    if (asInteger(bgtype) == 2){
       bg_parameters2(PM,MM,param,rows,cols,j,densfunc,rho);
     } else {
       bg_parameters(PM,MM,param,rows,cols,j,densfunc,rho);
