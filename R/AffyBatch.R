@@ -99,7 +99,30 @@ setMethod("getCdfInfo", signature("AffyBatch"),
                 cat("what=", what, "where=")
                 print(where)
               }
+              
+              if (what == "data") {
+                ##need this until cdfenv.example is better handled
+                ##if we can get it from data dir. otherwise load package
 
+                if(cdfname %in% do.call("data", list(package=where))$results[, 3]) {
+                  where.env <- pos.to.env(match(paste("package:", where, sep = ""), search()))
+
+                  ## check if the cdfenv is already loaded. If not load it *in* the environment
+                  ## of the package (where.env)
+                  if(!exists(cdfname, where = where.env, inherits = FALSE)) {
+                    path <- .path.package(where)
+                    filename <- paste(cdfname, ".rda", sep="")
+                    load(file.path(path, "data", filename) ,
+                         envir = where.env)
+                  }
+                  cdfenv <- get(cdfname, envir=where.env)
+                  return(cdfenv)
+                }
+                next
+              }
+
+
+              
               if (what == "package") {
                 loc <- .find.package(cdfname, lib.loc=where, quiet=TRUE)
 
