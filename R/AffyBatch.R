@@ -469,7 +469,7 @@
                where=where)
   
   setMethod("normalize", signature(object="AffyBatch"),
-            function(object, f.cdf=NULL, method="quantiles", ...) {
+            function(object, method="quantiles", ...) {
               method <- match.arg(method, normalize.AffyBatch.methods)
               if (is.na(method))
                 stop("unknown method")
