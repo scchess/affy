@@ -39,10 +39,8 @@ normalize.methods(object)
   An optional parameter \code{method} can be given to specify a method to use.
 
   A list of \emph{nicknames} for the known methods for an object is returned by
-  \code{normalize.methods}. Details about them can be found knowing the
-  following naming convention. Each method is called
-  \code{normalise.NICKNAME}. If the nickname of a method is called for
-  example "loess", the help page can be accessed by doing \code{help(normalize.loess)}.
+  \code{normalize.methods}. If the nickname of a method is called for
+  example "loess", the help page can be accessed by doing \code{normalize?loess}.
   The \emph{nicknames} are stored in \code{normalize.Cel.container.methods} and in
   \code{normalize.Plob.methods} respectively. See the general documentation of the
   package to know more (like how to add your own methods).

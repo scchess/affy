@@ -388,9 +388,11 @@ An important issue in microarray data analysis is to adjust the signal obtained 
 comparable. The technical particularities of the different approaches will only be outlined here.
 The reader will refer to XXX (ref!) for more details.
 
+Individual help files for the normalization methods can be accessed with \verb+normalize?<method nickname>+.
+For example, if one wants to know more about the {\it quantiles} methods, the command \verb+normalize?quantiles+
+will display the corresponding help file.
 
-Different approaches to normalize array data have been suggested. New methods are very likely be developped too, so
-addition of new normalization methods should be straightforward.
+Different approaches to normalize array data have already been suggested, but new methods are very likely be developped too, so we tried to make the addition of new normalization methods straightforward.
 It should be the case if the following indications are carefully observed.
 Brave people may want to add new normalization methods without taking these rules into considerations. 
 It should be possible, but they are on their own.
