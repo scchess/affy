@@ -2,13 +2,13 @@
 \docType{class}
 \alias{ProbeSet-class}
 \alias{mm,ProbeSet-method}
-\alias{mm,matrix,ProbeSet-method}
-\alias{pm<-,"matrix",ProbeSet-method}
+\alias{mm<-,ProbeSet,matrix-method}
+\alias{pm<-,ProbeSet,matrix-method}
 \alias{pm,ProbeSet-method}
 \alias{show,ProbeSet-method}
 \alias{barplot,ProbeSet-method}
 \alias{colnames,ProbeSet-method}
-\alias{express.summary.stat,character,character,ProbeSet-method}
+\alias{express.summary.stat,ProbeSet,character,character-method}
 \alias{sampleNames,ProbeSet-method}
 
 

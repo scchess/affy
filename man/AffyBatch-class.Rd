@@ -28,18 +28,18 @@
 \alias{ncol,AffyBatch-method}
 \alias{show,AffyBatch-method}
 \alias{pm,AffyBatch-method}
-\alias{pm<-,ANY,AffyBatch-method}
+\alias{pm<-,AffyBatch,ANY-method}
 \alias{mm,AffyBatch-method}
-\alias{mm<-,ANNY,AffyBatch-method}
+\alias{mm<-,AffyBatch,ANY-method}
 \alias{probeNames,AffyBatch-method}
 \alias{hist,AffyBatch-method}
 \alias{[<-,AffyBatch-method}
 \alias{[,AffyBatch-method}
 \alias{[[,AffyBatch-method}
 \alias{length,AffyBatch-method}
-\alias{bg.correc,character,AffyBatch-method}
-\alias{indexProbes,character,AffyBatch-method}
-\alias{computeExprSet,character,character,AffyBatch-method}
+\alias{bg.correct,AffyBatch,character-method}
+\alias{indexProbes,AffyBatch,character-method}
+\alias{computeExprSet,AffyBatch,character,character-method}
 
 \title{Class AffyBatch}
 \description{This is a class representation for Affymetrix GeneChip probe
