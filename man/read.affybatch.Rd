@@ -83,7 +83,7 @@ passed along to the function \code{\link{read.celfile}}.
   An \code{AffyBatch} object.
 }
 \author{Ben Bolstad \email{bolstad@stat.berkeley.edu} (read.affybatch),
-  Laurent Guatier,
+  Laurent Gautier,
   and Rafael A. Irizarry (ReadAffy)}
 
 \seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}
