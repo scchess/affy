@@ -15,37 +15,17 @@ merge.AffyBatch <- function(x, y, annotation=paste(x@annotation, y@annotation),
                          
   lx <- length(x)
   ly <- length(y)
-  
-  mabatch <- new("AffyBatch",
-                 exprs=array(NA, dim=c(adim, lx+ly)),
-                 cdfName=x@cdfName,
-                 nrow=x@nrow,
-                 ncol=x@ncol,
-                 ##nexp=lx+ly,
-                 ##sd=array(),
-                                        #chipNames=c(chipNames(x), chipNames(y)),
-                 ##outliers=vector("list", lx+ly),
-                 ##masks=vector("list", lx+ly),
-                 annotation=annotation,
-                 description=description,
-                 notes=notes
-                 ##history=vector("list", lx+ly)
-                 )
-  
-  for (i in 1:lx) {
-    intensity(mabatch)[, i] <- intensity(x)[, i]
-    ##outliers(mlcel)[[i]] <- outliers(x)[[i]]
-    ##masks(mlcel)[[i]] <- masks(x)[[i]]
-    ##history(mabatch)[[i]] <- history(x)[[i]]
-  }
-  
-  for (i in 1:ly) {
-    intensity(mabatch)[, i+lx] <- intensity(y)[, i]
-    ##outliers(mlcel)[[i+lx]] <- outliers(y)[[i]]
-    ##masks(mlcel)[[i+lx]] <- masks(y)[[i]]
-    ##history(mabatch)[[i+lx]] <- history(y)[[i]]
-  }
-  
-  return(mabatch)
-  
+
+  phenodata <- phenoData(x)
+  pData(phenodata) <- rbind(pData(x),pData(y))
+  return(new("AffyBatch",
+             exprs=cbind(intensity(x),intensity(y)),
+             cdfName=x@cdfName,
+             nrow=x@nrow,
+             ncol=x@ncol,
+             phenoData=phenodata,
+             annotation=x@annotation,
+             description=x@description, ##need to write a merge for MIAME
+             notes=paste(x@notes,y@notes))
+         )
 }
