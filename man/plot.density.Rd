@@ -14,7 +14,7 @@ columns of a matrix.
 
 plotDensity(mat, ylab = "density", xlab="x", type="l", col=1:6,...)
 
-plotDensity.AffyBatch(x, col = rainbow(dim(x)[2]), log=TRUE,
+plotDensity.AffyBatch(x, col = 1:6, log=TRUE,
 which=c("pm","mm","both"), ylab = "density", xlab = NULL, ...)
 
 }

@@ -23,13 +23,13 @@ plotDensity <- function(mat,
   all.x <- do.call("cbind", lapply(x.density, function(x) x$x))
   all.y <- do.call("cbind", lapply(x.density, function(x) x$y))
   
-  matplot(all.x, all.y, ylab=ylab, xlab=xlab, type=type, ...)
+  matplot(all.x, all.y, ylab=ylab, xlab=xlab, type=type, col=col, ...)
 
   invisible(list(all.x=all.x, all.y=all.y))
 }
  
 
-plotDensity.AffyBatch <- function(x, col=rainbow(length(x)), log=TRUE,
+plotDensity.AffyBatch <- function(x, col=1:6, log=TRUE,
                                   which=c("pm","mm","both"),
                                   ylab="density",
                                   xlab=NULL,
