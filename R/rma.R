@@ -22,7 +22,7 @@
 #
 ########################################################
 
-rma <- function(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,background=TRUE,bgversion=2,...){
+rma <- function(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=TRUE,background=TRUE,bgversion=2,...){
 
   rows <- length(probeNames(object))
   cols <- length(object)

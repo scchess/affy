@@ -1,6 +1,7 @@
 \name{justRMA}
 \alias{justRMA}
 \alias{just.rma}
+\alias{just.rma2}
 \title{ Read CEL files into an AffyBatch}
 \description{
   Read CEL files and compute an expression measure using affybatch.}

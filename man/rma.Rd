@@ -7,7 +7,7 @@
 the robust multi-array average (RMA) expression measure.
 }
 \usage{
-rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,background=TRUE,bgversion=2,...)
+rma(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=TRUE,background=TRUE,bgversion=2,...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
