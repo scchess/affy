@@ -1,15 +1,15 @@
 \name{generateExprSet-method}
 \docType{methods}
-\alias{generateExprSet}
 \alias{generateExprSet-methods}
-\alias{generateExprSet.methods}
+\alias{computeExprSet}
+
 \title{generate a set of expression values}
 \description{
   Generate a set of expression values from the probe pair
   information. The set of expression is returned as an exprSet object.
 }
 \usage{
-  generateExprSet(x, method, ...)
+  computeExprSet(x, method, ...)
 
   generateExprSet.methods
 }

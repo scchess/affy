@@ -62,19 +62,21 @@
   
   library.dynam("affy", pkgname, libname)
   
-  require(methods, quietly=TRUE)
+  require(Biobase, quietly=TRUE) ##Biobase uses methods
   require(modreg, quietly=TRUE)
   require(eda, quietly=TRUE)
+
+  ##i was having troulbes, and changing where to
+  ###match(paste("package:", pkgname, sep=""), search()) fixed.. thanx to RG
   
-  
-  .initNormalize(where, all.affy)
-  .initExpression(where, all.affy)
-  .initBackgroundCorrect(where, all.affy)
-  .initMapCdfName(where)
-  .initCdf(where)
-  .initCel(where)
-  .initAffyBatch(where)
-  .initProbeSet(where)
+  .initNormalize(match(paste("package:", pkgname, sep=""), search()), all.affy)
+  .initExpression(match(paste("package:", pkgname, sep=""), search()), all.affy)
+  .initBackgroundCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
+  .initMapCdfName(match(paste("package:", pkgname, sep=""), search()))
+  .initCdf(match(paste("package:", pkgname, sep=""), search()))
+  .initCel(match(paste("package:", pkgname, sep=""), search()))
+  .initAffyBatch(match(paste("package:", pkgname, sep=""), search()))
+  .initProbeSet(match(paste("package:", pkgname, sep=""), search()))
 
 
   ## add affy specific options

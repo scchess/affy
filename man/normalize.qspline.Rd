@@ -1,4 +1,4 @@
-\name{normalize.celfile.qspline}
+\name{normalize.qspline}
 \alias{qspline-normalize}
 \alias{normalize.qspline}
 \alias{normalize.AffyBatch.qspline}
@@ -7,7 +7,7 @@
   normalizes arrays in an AffyBatch each other or to a set of target intensities
 }
 \usage{
-normalize.Cel.container.qspline(abatch, ...)
+normalize.AffyBatch.qspline(abatch, ...)
 
 normalize.qspline(x, target = NULL, samples = NULL, 
                   fit.iters = 5, min.offset = 5, 

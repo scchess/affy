@@ -3,7 +3,6 @@
 \alias{AffyBatch-class}
 \alias{AffyBatch}
 \alias{probes}
-\alias{computeExprSet}
 \alias{geneNames}
 \alias{getCdfInfo}
 \alias{image}
