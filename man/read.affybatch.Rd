@@ -28,8 +28,8 @@ ReadAffy(..., filenames=character(0),
 \arguments{
   \item{\dots}{ file names separated by comma.}
   \item{filenames}{ file names in a character vector.}
-  \item{phenoData}{ a \code{\link{phenoData}} object}
-  \item{description}{ a \code{\link{MIAME}} object }
+  \item{phenoData}{ a \code{\link[Biobase]{phenoData}} object}
+  \item{description}{ a \code{\link[Biobase]{MIAME}} object }
   \item{notes}{ notes }
   \item{compress}{are the CEL files compressed ?}
   \item{rm.mask}{ should the spots marked as 'MASKS' set to \code{NA} ? }
