@@ -56,7 +56,7 @@
   ##assign("debug.affy123", TRUE, envir=as.environment(where))
   assign("debug.affy123", FALSE, envir=as.environment(where))
   
-  message <- TRUE
+  message <- FALSE
   
   if (message) {
     cat(rep("*",13),"\n",sep="")
