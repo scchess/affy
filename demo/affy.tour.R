@@ -11,7 +11,7 @@ opar <- par(ask= (interactive() &&
 
 ## load the data
 
-data(CDF.example)
+data(cdf.example)
 data(affybatch.example)
 
 ## display the image of the data in the CEL file
@@ -24,10 +24,10 @@ image(cel,transfo=log)
 
 ## find the locations for probes corresponding to a given ID
 
-l.pm <- locate.name("AFFX-BioC-5_at", CDF.example, type="pm")
-plotLocation(l.pm, CDF.example, col="red")
-l.mm <- locate.name("AFFX-BioC-5_at", CDF.example, type="mm")
-plotLocation(l.mm, CDF.example, col="blue")
+l.pm <- locate.name("AFFX-BioC-5_at", cdf.example, type="pm")
+plotLocation(l.pm, cdf.example, col="red")
+l.mm <- locate.name("AFFX-BioC-5_at", cdf.example, type="mm")
+plotLocation(l.mm, cdf.example, col="blue")
 
 arrows(20,60, min(l.pm[,1]), min(l.pm[,2]), col="white")
 legend(20,60,c("perfect match","mismatch"),c("red","blue"),bg="white")
@@ -55,7 +55,7 @@ for (pps in p)
 plot.new()
 par(mfrow=c(2,2))
 
-nat <- pmormm(CDF.example)
+nat <- pmormm(cdf.example)
 
 cel2 <- affybatch.example[[2]]
 plot(intensity(cel), intensity(cel2), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted",type="n")
