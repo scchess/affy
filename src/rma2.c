@@ -51,6 +51,7 @@
 
 //#include "rma_structures.h"
 #include "rma_common.h"
+#include "rma_background2.h"
 //#include "qnorm.h"
 
 #include <R.h> 

@@ -16,6 +16,7 @@
  **
  *****************************************************************************/
 
+#include "rma_background2.h"
 #include "rma_common.h"
 #include <R.h>
 #include <Rdefines.h>
