@@ -1,0 +1,119 @@
+% -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
+%\VignetteIndexEntry{affy: Built-in Processing Methods}
+%\VignetteKeywords{Preprocessing, Affymetrix}
+%\VignetteDepends{affy}
+%\VignettePackage{affy}
+%documentclass[12pt, a4paper]{article}
+\documentclass[12pt]{article}
+
+\usepackage{amsmath,pstricks}
+\usepackage{hyperref}
+\usepackage[authoryear,round]{natbib}
+
+\textwidth=6.2in
+\textheight=8.5in
+%\parskip=.3cm
+\oddsidemargin=.1in
+\evensidemargin=.1in
+\headheight=-.3in
+
+\newcommand{\scscst}{\scriptscriptstyle}
+\newcommand{\scst}{\scriptstyle}
+\author{Ben Bolstad}
+\begin{document}
+\title{affy: Built-in Processing Methods}
+\maketitle
+\tableofcontents
+\section{Introduction}
+
+This document describes the preprocessing methods that have currently been built into the \verb+affy+ package.  Hopefully it will clarify for the reader what each of the routines does. There is a separate vignette which describes how you might write your own routines and use them in combination with the built-in routines.
+
+As usual, loading the package in your \verb+R+ session is required. 
+\begin{Sinput}
+R> library(affy) ##load the affy package
+\end{Sinput}
+<<echo=F,results=hide>>=
+library(affy)
+@
+
+\section{Background methods}
+
+You can see the background correction methods that are built into the package by examining the variable \verb+bgcorrect.method+.
+<<>>=
+bgcorrect.methods
+@
+
+\subsection{none}
+
+Calling this method actually does nothing. It returns the object unchanged. May be used as a placeholder.
+
+\subsection{rma/rma2}
+
+These are background adjustment implementations for the rma method \cite{iriz:etal:2003}. They differ only in how they estimate a set of parameters. In both cases PM probe intensities are corrected by using a global model for the distribution of probe intensities. The model is suggested by looking at plots of the empirical distribution of probe intensities.  In particular the observed PM probes are modeled as the sum of a normal noise component N (Normal with mean $\mu$ and variance $\sigma^2$) and a exponential signal component S (exponential with mean $\alpha$). To avoid any possibilty of negatives, the normal is trucated at zero. Given we have O the observed intensity, this leads to an adjustment.
+\begin{equation*}
+E\left(s \lvert O=o\right) = a + b \frac{\phi\left(\frac{a}{b}\right) - \phi\left(\frac{o-a}{b}\right)}{\Phi\left(\frac{a}{b}\right) + \Phi\left(\frac{o-a}{b}\right) - 1 }
+\end{equation*}
+where $a =  s- \mu - \sigma^2\alpha$ and $b = \sigma$.
+
+Note that MM probe intensitys are not corrrected by either of these routines.
+
+\subsection{mas}
+
+This is an implementation of the background correction method outlined in the Statistical Algorithms Description Document \cite{affy:tech:2002}. The chip is broken into a grid of 16 rectangular regions. For each region the lowest 2\% of probe intensities are used to compute a background value for that grid. Each probe is then adjusted based upon a weighted average of the backgrounds for each of the regions. The weights are based on the distances between the location of the probe and the centriods of 16 different regions. Note this method corrects both PM and MM probes.
+
+\section{Normalization Methods}
+
+You can see the background correction methods that are built into the package by examining the variable \verb+bgcorrect.method+.
+<<>>=
+normalize.AffyBatch.methods
+@
+
+\subsection{quantiles/quantiles.robust}
+
+\subsection{contrasts}
+
+\subsection{loess}
+
+\subsection{constant}
+
+\subsection{invariantset}
+
+\subsection{qspline}
+
+
+\section{PM correct methods}
+
+<<>>=
+pmcorrect.methods
+@
+\subsection{mas}
+
+\subsection{pmonly}
+
+\subsection{subtractmm}
+
+\section{Summarization methods}
+
+<<>>=
+express.summary.stat.methods
+@
+
+
+\subsection{avgdiff}
+
+\subsection{liwong}
+
+\subsection{mas}
+
+\subsection{medianpolish}
+
+\subsection{playerout}
+
+
+\section{Putting it altogether using {\tt expresso}}
+
+
+\bibliographystyle{plainnat}
+\bibliography{affy}
+
+\end{document}
