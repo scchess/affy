@@ -72,6 +72,11 @@
  **                routine
  ** Jun 30, 2003 - remove tokenize step from read_cel_intensities. 
  **                aim is to gain more speed.
+ ** Jul 1, 2003  - deal with compressed files.
+ **                To avoid ugly pre-processor constructs code
+ **                for gz functions is seperate from that in
+ **                text files.
+ **                
  **
  *************************************************************/
  
@@ -83,8 +88,21 @@
 #include "stdlib.h"
 #include "stdio.h"
 
+#if defined(HAVE_ZLIB)
+#include <zlib.h>
+#endif
+
 #define BUF_SIZE 200
 
+
+/****************************************************************
+ ****************************************************************
+ **
+ ** Code for spliting strings into tokens. 
+ ** Not heavily used anymore
+ **
+ ***************************************************************
+ ***************************************************************/
 
 /***************************************************************
  **
@@ -106,104 +124,6 @@ typedef struct{
 } tokenset;
 
 
-/****************************************************************
- **
- ** void ReadFileLine(char *buffer, int buffersize, FILE *currentFile)
- **
- ** char *buffer  - place to store contents of the line
- ** int buffersize - size of the buffer
- ** FILE *currentFile - FILE pointer to an opened CEL file.
- **
- ** Read a line from a file, into a buffer of specified size.
- ** otherwise die.
- **
- ***************************************************************/
-
-void ReadFileLine(char *buffer, int buffersize, FILE *currentFile){
-  if (fgets(buffer, buffersize, currentFile) == NULL){
-    error("End of file reached unexpectedly. Perhaps this file is truncated.\n");
-  }  
-}	  
-
-
-/****************************************************************
- **
- ** FILE *open_cel_file(char *filename)
- **
- ** char *filename - name of file to open
- **
- **
- ** RETURNS a file pointer to the open file
- **
- ** this file will open the named file and check to see that the 
- ** first characters agree with "[CEL]" 
- **
- ***************************************************************/
-
-FILE *open_cel_file(char *filename){
-
-  char mode = 'r';
-  FILE *currentFile; 
-  char buffer[BUF_SIZE];
-
-  currentFile = fopen(filename,&mode);
-  if (currentFile == NULL){
-     error("Could not open file %s", filename);
-  } else {
-    /** check to see if first line is [CEL] so looks like a CEL file**/
-    ReadFileLine(buffer, BUF_SIZE, currentFile);
-    if (strncmp("[CEL]", buffer, 4) == 0) {
-      rewind(currentFile);
-    } else {
-      error("The file %s does not look like a CEL file",filename);
-    }
-  }
-  
-  return currentFile;
-
-}
-
-/******************************************************************
- **
- ** void findStartsWith(FILE *my_file,char *starts, char *buffer)
- **
- ** FILE *my_file - an open file to read from
- ** char *starts - the string to search for at the start of each line
- ** char *buffer - where to place the line that has been read.
- **
- **
- ** Find a line that starts with the specified character string.
- ** At exit buffer should contain that line
- **
- *****************************************************************/
-
-
-void  findStartsWith(FILE *my_file,char *starts, char *buffer){
-
-  int starts_len = strlen(starts);
-  int match = 1;
-
-  do {
-    ReadFileLine(buffer, BUF_SIZE, my_file);
-    match = strncmp(starts, buffer, starts_len);
-  } while (match != 0);
-}
-
-
-/******************************************************************
- **
- ** void AdvanceToSection(FILE *my_file,char *sectiontitle, char *buffer)
- **
- ** FILE *my_file - an open file
- ** char *sectiontitle - string we are searching for
- ** char *buffer - return's with line starting with sectiontitle
- **
- **
- *****************************************************************/
-
-void AdvanceToSection(FILE *my_file,char *sectiontitle, char *buffer){
-  findStartsWith(my_file,sectiontitle,buffer);
-}
 
 /******************************************************************
  **
@@ -349,9 +269,117 @@ int token_ends_with(char *token, char *ends_in){
 }
 
 
+/****************************************************************
+ ****************************************************************
+ **
+ ** Code for dealing with text CEL files.
+ **
+ ***************************************************************
+ ***************************************************************/
+
+/****************************************************************
+ **
+ ** void ReadFileLine(char *buffer, int buffersize, FILE *currentFile)
+ **
+ ** char *buffer  - place to store contents of the line
+ ** int buffersize - size of the buffer
+ ** FILE *currentFile - FILE pointer to an opened CEL file.
+ **
+ ** Read a line from a file, into a buffer of specified size.
+ ** otherwise die.
+ **
+ ***************************************************************/
+
+void ReadFileLine(char *buffer, int buffersize, FILE *currentFile){
+  if (fgets(buffer, buffersize, currentFile) == NULL){
+    error("End of file reached unexpectedly. Perhaps this file is truncated.\n");
+  }  
+}	  
+
+
+/****************************************************************
+ **
+ ** FILE *open_cel_file(char *filename)
+ **
+ ** char *filename - name of file to open
+ **
+ **
+ ** RETURNS a file pointer to the open file
+ **
+ ** this file will open the named file and check to see that the 
+ ** first characters agree with "[CEL]" 
+ **
+ ***************************************************************/
+
+FILE *open_cel_file(char *filename){
+
+  char mode = 'r';
+  FILE *currentFile; 
+  char buffer[BUF_SIZE];
+
+  currentFile = fopen(filename,&mode);
+  if (currentFile == NULL){
+     error("Could not open file %s", filename);
+  } else {
+    /** check to see if first line is [CEL] so looks like a CEL file**/
+    ReadFileLine(buffer, BUF_SIZE, currentFile);
+    if (strncmp("[CEL]", buffer, 4) == 0) {
+      rewind(currentFile);
+    } else {
+      error("The file %s does not look like a CEL file",filename);
+    }
+  }
+  
+  return currentFile;
+
+}
+
+/******************************************************************
+ **
+ ** void findStartsWith(FILE *my_file,char *starts, char *buffer)
+ **
+ ** FILE *my_file - an open file to read from
+ ** char *starts - the string to search for at the start of each line
+ ** char *buffer - where to place the line that has been read.
+ **
+ **
+ ** Find a line that starts with the specified character string.
+ ** At exit buffer should contain that line
+ **
+ *****************************************************************/
+
+
+void  findStartsWith(FILE *my_file,char *starts, char *buffer){
+
+  int starts_len = strlen(starts);
+  int match = 1;
+
+  do {
+    ReadFileLine(buffer, BUF_SIZE, my_file);
+    match = strncmp(starts, buffer, starts_len);
+  } while (match != 0);
+}
+
+
+/******************************************************************
+ **
+ ** void AdvanceToSection(FILE *my_file,char *sectiontitle, char *buffer)
+ **
+ ** FILE *my_file - an open file
+ ** char *sectiontitle - string we are searching for
+ ** char *buffer - return's with line starting with sectiontitle
+ **
+ **
+ *****************************************************************/
+
+void AdvanceToSection(FILE *my_file,char *sectiontitle, char *buffer){
+  findStartsWith(my_file,sectiontitle,buffer);
+}
+
+
 /******************************************************************
  ** 
- ** int checkCelfile(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim_2)
+ ** int check_cel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim_2)
  **
  ** char *filename - the file to read
  ** char *ref_cdfName - the reference CDF filename
@@ -554,109 +582,6 @@ void apply_masks(char *filename, double *intensity, int chip_num, int rows, int 
 
 
 
-/************************************************************************
- **
- **  SEXP read_abatch(SEXP filenames, SEXP compress,  
- **                   SEXP rm_mask, SEXP rm_outliers, SEXP rm_extra, 
- **                   SEXP ref_cdfName)
- **
- ** SEXP filenames - an R list of filenames to read
- ** SEXP compress  - logical flag TRUE means files are *.gz
- ** SEXP rm_mask   - if true set MASKS  to NA
- ** SEXP rm_outliers - if true set OUTLIERS to NA
- ** SEXP rm_extra    - if true  overrides rm_mask and rm_outliers settings
- ** SEXP ref_cdfName - the reference CDF name to check each CEL file against
- **
- ** RETURNS an intensity matrix with cel file intensities from
- ** each chip in columns
- **
- ** this function will read in all the cel files in a affybatch.
- ** this function will stop on possible errors with an error() call.
- **
- ** The intensity matrix will be allocated here. It will be given
- ** column names here. the column names that it will be given here are the 
- ** filenames.
- **
- *************************************************************************/
-
-SEXP read_abatch(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm_outliers, SEXP rm_extra, SEXP ref_cdfName, SEXP ref_dim, SEXP verbose){
-  
-  int i; 
-  
-  int n_files;
-  int ref_dim_1, ref_dim_2;
-
-  char *cur_file_name;
-  char *cdfName;
-  double *intensityMatrix;
-
-  SEXP intensity,names,dimnames;
-
-  if (asInteger(compress)){
-    error("Compress option not supported in this version of ReadAffy\n");
-  }
-  
-  ref_dim_1 = INTEGER(ref_dim)[0];
-  ref_dim_2 = INTEGER(ref_dim)[1];
-  
-  n_files = GET_LENGTH(filenames);
-  
-  PROTECT(intensity = allocMatrix(REALSXP, ref_dim_1*ref_dim_2, n_files));
-  
-  cdfName = CHAR(STRING_ELT(ref_cdfName,0));
-  intensityMatrix = NUMERIC_POINTER(AS_NUMERIC(intensity));
-  
-  
-  /* first pass through all the files checking that they are correct cdf file (ie all of the same one)  
-     and have the same x, y dimensions. If they don't then stop else keep going */
-  
-  for (i =0; i < n_files; i++){
-    cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
-
-
-    if (check_cel_file(cur_file_name,cdfName, ref_dim_1, ref_dim_2)){
-      error("File %s does not seem to have correct dimension or is not of %s chip type.", cur_file_name, cdfName);
-    }
-  }
-  
-  /* Now read in each of the cel files, one by one, filling out the columns of the intensity matrix.
-   */
-
-  for (i=0; i < n_files; i++){ 
-    cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
-    if (asInteger(verbose)){
-      Rprintf("Reading in : %s\n",cur_file_name);
-    }
-    read_cel_file_intensities(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1);
-
-    if (asInteger(rm_mask) || asInteger(rm_outliers) || asInteger(rm_extra)){
-      
-      if (asInteger(rm_extra)){
-	apply_masks(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1,1,1);
-      } else {
-	apply_masks(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1,asInteger(rm_mask),asInteger(rm_outliers));
-      }
-    }
-
-  }
-
-  PROTECT(dimnames = allocVector(VECSXP,2));
-  PROTECT(names = allocVector(STRSXP,n_files));
-  for ( i =0; i < n_files; i++){
-    cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
-    SET_VECTOR_ELT(names,i,mkChar(cur_file_name));
-  }
-  SET_VECTOR_ELT(dimnames,1,names);
-  setAttrib(intensity, R_DimNamesSymbol, dimnames);
-  
-
-  UNPROTECT(3);
-  
-  return intensity;
-  
-}
-
-
 /*************************************************************************
  **
  ** char *get_header_info(char *filename, int *dim1, int *dim2)
@@ -715,6 +640,529 @@ char *get_header_info(char *filename, int *dim1, int *dim2){
   return(cdfName);
 }
 
+/****************************************************************
+ ****************************************************************
+ **
+ ** Code for GZ files starts here.
+ **
+ ***************************************************************
+ ***************************************************************/
+
+/****************************************************************
+ **
+ ** void ReadgzFileLine(char *buffer, int buffersize, FILE *currentFile)
+ **
+ ** char *buffer  - place to store contents of the line
+ ** int buffersize - size of the buffer
+ ** FILE *currentFile - FILE pointer to an opened CEL file.
+ **
+ ** Read a line from a gzipped file, into a buffer of specified size.
+ ** otherwise die.
+ **
+ ***************************************************************/
+
+void ReadgzFileLine(char *buffer, int buffersize, gzFile currentFile){
+  if (gzgets( currentFile,buffer, buffersize) == NULL){
+    error("End of file reached unexpectedly. Perhaps this file is truncated.\n");
+  }  
+}
+
+
+/****************************************************************
+ **
+ ** FILE *open_gz_cel_file(char *filename)
+ **
+ ** char *filename - name of file to open
+ **
+ **
+ ** RETURNS a file pointer to the open file
+ **
+ ** this file will open the named file and check to see that the 
+ ** first characters agree with "[CEL]" 
+ **
+ ***************************************************************/
+
+gzFile open_gz_cel_file(char *filename){
+
+  char mode = 'r';
+  gzFile currentFile; 
+  char buffer[BUF_SIZE];
+
+  currentFile = gzopen(filename,&mode);
+  if (currentFile == NULL){
+     error("Could not open file %s", filename);
+  } else {
+    /** check to see if first line is [CEL] so looks like a CEL file**/
+    ReadgzFileLine(buffer, BUF_SIZE, currentFile);
+    if (strncmp("[CEL]", buffer, 4) == 0) {
+      gzrewind(currentFile);
+    } else {
+      error("The file %s does not look like a CEL file",filename);
+    }
+  }
+  
+  return currentFile;
+
+}
+
+
+
+/******************************************************************
+ **
+ ** void gzfindStartsWith(gzFile *my_file,char *starts, char *buffer)
+ **
+ ** FILE *my_file - an open file to read from
+ ** char *starts - the string to search for at the start of each line
+ ** char *buffer - where to place the line that has been read.
+ **
+ **
+ ** Find a line that starts with the specified character string.
+ ** At exit buffer should contain that line
+ **
+ *****************************************************************/
+
+
+void  gzfindStartsWith(gzFile my_file,char *starts, char *buffer){
+
+  int starts_len = strlen(starts);
+  int match = 1;
+
+  do {
+    ReadgzFileLine(buffer, BUF_SIZE, my_file);
+    match = strncmp(starts, buffer, starts_len);
+  } while (match != 0);
+}
+
+
+/******************************************************************
+ **
+ ** void gzAdvanceToSection(gzFile my_file,char *sectiontitle, char *buffer)
+ **
+ ** FILE *my_file - an open file
+ ** char *sectiontitle - string we are searching for
+ ** char *buffer - return's with line starting with sectiontitle
+ **
+ **
+ *****************************************************************/
+
+void gzAdvanceToSection(gzFile my_file,char *sectiontitle, char *buffer){
+  gzfindStartsWith(my_file,sectiontitle,buffer);
+}
+
+
+
+/******************************************************************
+ ** 
+ ** int check_gzcel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim_2)
+ **
+ ** char *filename - the file to read
+ ** char *ref_cdfName - the reference CDF filename
+ ** int ref_dim_1 - 1st dimension of reference cel file
+ ** int ref_dim_2 - 2nd dimension of reference cel file
+ **
+ ** returns 0 if no problem, 1 otherwise
+ **
+ ** The aim of this function is to read the header of the CEL file
+ ** in particular we will look for the rows beginning "Cols="  and "Rows="
+ ** and then for the line DatHeader=  to scope out the appropriate cdf
+ ** file. An error() will be flagged if the appropriate conditions
+ ** are not met.
+ **
+ **
+ ******************************************************************/
+
+int check_gzcel_file(char *filename, char *ref_cdfName, int ref_dim_1, int ref_dim_2){
+
+  int i;
+  int dim1,dim2;
+
+  gzFile currentFile; 
+  char buffer[BUF_SIZE];
+  tokenset *cur_tokenset;
+
+  currentFile = open_gz_cel_file(filename);
+  
+
+  gzAdvanceToSection(currentFile,"[HEADER]",buffer);
+  gzfindStartsWith(currentFile,"Cols",buffer);  
+  cur_tokenset = tokenize(buffer,"=");
+  dim1 = atoi(get_token(cur_tokenset,1));
+  delete_tokens(cur_tokenset);
+
+  gzfindStartsWith(currentFile,"Rows",buffer);
+  cur_tokenset = tokenize(buffer,"=");
+  dim2 = atoi(get_token(cur_tokenset,1));
+  delete_tokens(cur_tokenset);
+  if ((dim1 != ref_dim_1) || (dim2 != ref_dim_2)){
+    error("Cel file %s does not seem to have the correct dimensions",filename);
+  }
+  
+  
+  gzfindStartsWith(currentFile,"DatHeader",buffer);
+  cur_tokenset = tokenize(buffer," ");
+  for (i =0; i < tokenset_size(cur_tokenset);i++){
+    if (strncmp(get_token(cur_tokenset,i),ref_cdfName,strlen(ref_cdfName)) != 0){
+      break;
+    }
+    if (i == (tokenset_size(cur_tokenset) - 1)){
+      error("Cel file %s does not seem to be of %s type",filename,ref_cdfName);
+    }
+  }
+  delete_tokens(cur_tokenset);
+  gzclose(currentFile);
+
+  return 0;
+}
+
+
+
+/************************************************************************
+ **
+ ** int read_gzcel_file_intensities(char *filename, double *intensity, int chip_num, int rows, int cols)
+ **
+ ** char *filename - the name of the cel file to read
+ ** double *intensity  - the intensity matrix to fill
+ ** int chip_num - the column of the intensity matrix that we will be filling
+ ** int rows - dimension of intensity matrix
+ ** int cols - dimension of intensity matrix
+ **
+ ** returns 0 if successful, non zero if unsuccessful
+ **
+ ** This function reads from the specified file the cel intensities for that
+ ** array and fills a column of the intensity matrix.
+ **
+ ************************************************************************/
+
+int read_gzcel_file_intensities(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows){
+  
+  int i, cur_x,cur_y,cur_index;
+  double cur_mean;
+  gzFile currentFile; 
+  char buffer[BUF_SIZE];
+  /* tokenset *cur_tokenset;*/
+  char *current_token;
+
+  currentFile = open_gz_cel_file(filename);
+  
+  gzAdvanceToSection(currentFile,"[INTENSITY]",buffer);
+  gzfindStartsWith(currentFile,"CellHeader=",buffer);  
+  
+  for (i=0; i < rows; i++){
+    ReadgzFileLine(buffer, BUF_SIZE,  currentFile);
+    /* cur_tokenset = tokenize(buffer," \t");
+    cur_x = atoi(get_token(cur_tokenset,0));
+    cur_y = atoi(get_token(cur_tokenset,1));
+    cur_mean = atof(get_token(cur_tokenset,2)); */
+    
+    current_token = strtok(buffer," \t");
+    cur_x = atoi(current_token);
+    current_token = strtok(NULL," \t");
+    cur_y = atoi(current_token);
+    current_token = strtok(NULL," \t");
+    cur_mean = atof(current_token);
+
+    cur_index = cur_x + chip_dim_rows*(cur_y);
+    intensity[chip_num*rows + cur_index] = cur_mean;
+    /* delete_tokens(cur_tokenset); */
+  }
+
+  gzclose(currentFile);
+
+  return 0;
+}
+
+
+
+
+/****************************************************************
+ **
+ ** void gz_apply_masks(char *filename, double *intensity, int chip_num, 
+ **                   int rows, int cols,int chip_dim_rows, 
+ **                   int rm_mask, int rm_outliers)
+ **
+ ** char *filename    - name of file to open
+ ** double *intensity - matrix of probe intensities
+ ** int chip_num - the index 0 ...n-1 of the chip we are dealing with
+ ** int rows - dimension of the intensity matrix
+ ** int cols - dimension of the intensity matrix
+ ** int chip_dim_rows - a dimension of the chip
+ ** int rm_mask - if true locations in the MASKS section are set NA
+ ** int rm_outliers - if true locations in the OUTLIERS section are set NA
+ **
+ ** This function sets the MASK and OUTLIER probes to NA
+ ** 
+ **
+ ****************************************************************/
+
+void gz_apply_masks(char *filename, double *intensity, int chip_num, int rows, int cols,int chip_dim_rows, int rm_mask, int rm_outliers){
+  
+  int i;
+  int numcells, cur_x, cur_y, cur_index;
+  gzFile currentFile;
+  char buffer[BUF_SIZE];
+  tokenset *cur_tokenset;
+
+  if ((!rm_mask) && (!rm_outliers)){
+    /* no masking or outliers */
+    return;
+  }
+  
+  currentFile = open_gz_cel_file(filename);
+  /* read masks section */
+  if (rm_mask){
+
+    gzAdvanceToSection(currentFile,"[MASKS]",buffer);
+    gzfindStartsWith(currentFile,"NumberCells=",buffer); 
+    cur_tokenset = tokenize(buffer,"=");
+    numcells = atoi(get_token(cur_tokenset,1));
+    delete_tokens(cur_tokenset);
+    gzfindStartsWith(currentFile,"CellHeader=",buffer); 
+
+
+     for (i =0; i < numcells; i++){
+       ReadgzFileLine(buffer, BUF_SIZE, currentFile);
+       
+       
+       cur_tokenset = tokenize(buffer," \t");
+       cur_x = atoi(get_token(cur_tokenset,0));
+       cur_y = atoi(get_token(cur_tokenset,1));
+       
+       cur_index = cur_x + chip_dim_rows*(cur_y);
+       intensity[chip_num*rows + cur_index] = R_NaN;
+       delete_tokens(cur_tokenset); 
+     }
+  }
+
+  /* read outliers section */
+
+  if (rm_outliers){
+    
+    gzAdvanceToSection(currentFile,"[OUTLIERS]",buffer);
+    gzfindStartsWith(currentFile,"NumberCells=",buffer);
+    cur_tokenset = tokenize(buffer,"=");
+    numcells = atoi(get_token(cur_tokenset,1));
+    delete_tokens(cur_tokenset);
+    gzfindStartsWith(currentFile,"CellHeader=",buffer); 
+    for (i = 0; i < numcells; i++){
+      ReadgzFileLine(buffer, BUF_SIZE, currentFile);      
+      cur_tokenset = tokenize(buffer," \t");
+      cur_x = atoi(get_token(cur_tokenset,0));
+      cur_y = atoi(get_token(cur_tokenset,1));
+      
+      cur_index = cur_x + chip_dim_rows*(cur_y);
+      intensity[chip_num*rows + cur_index] = R_NaReal;
+      delete_tokens(cur_tokenset); 
+    }
+  }
+  
+  gzclose(currentFile);
+
+}
+
+
+/*************************************************************************
+ **
+ ** char *gz_get_header_info(char *filename, int *dim1, int *dim2)
+ **
+ ** char *filename - file to open
+ ** int *dim1 - place to store Cols
+ ** int *dim2 - place to store Rows
+ **
+ ** returns a character string containing the CDF name.
+ **
+ ** gets the header information (cols, rows and cdfname)
+ **
+ ************************************************************************/
+
+char *gz_get_header_info(char *filename, int *dim1, int *dim2){
+  
+  int i,endpos;
+  char *cdfName = NULL;
+  gzFile currentFile; 
+  char buffer[BUF_SIZE];
+  tokenset *cur_tokenset;
+
+  currentFile = open_gz_cel_file(filename);
+
+  gzAdvanceToSection(currentFile,"[HEADER]",buffer);
+  gzfindStartsWith(currentFile,"Cols",buffer);  
+  cur_tokenset = tokenize(buffer,"=");
+  *dim1 = atoi(get_token(cur_tokenset,1));
+  delete_tokens(cur_tokenset);
+
+  gzfindStartsWith(currentFile,"Rows",buffer);
+  cur_tokenset = tokenize(buffer,"=");
+  *dim2 = atoi(get_token(cur_tokenset,1));
+  delete_tokens(cur_tokenset);
+  
+  gzfindStartsWith(currentFile,"DatHeader",buffer);
+  cur_tokenset = tokenize(buffer," ");
+  for (i =0; i < tokenset_size(cur_tokenset);i++){
+    /* look for a token ending in ".1sq" */
+    endpos=token_ends_with(get_token(cur_tokenset,i),".1sq");
+    if(endpos > 0){
+      /* Found the likely CDF name, now chop of .1sq and store it */
+      
+      cdfName= Calloc(endpos+1,char);
+      strncpy(cdfName,get_token(cur_tokenset,i),endpos);
+      cdfName[endpos+1] = '\0';
+
+      break;
+    }
+    if (i == (tokenset_size(cur_tokenset) - 1)){
+      error("Cel file %s does not seem to be have cdf information",filename);
+    }
+  }
+  delete_tokens(cur_tokenset);
+  gzclose(currentFile);
+  return(cdfName);
+}
+
+
+/****************************************************************
+ ****************************************************************
+ **
+ ** This is the code that interfaces with R
+ **
+ ***************************************************************
+ ***************************************************************/
+
+/************************************************************************
+ **
+ **  SEXP read_abatch(SEXP filenames, SEXP compress,  
+ **                   SEXP rm_mask, SEXP rm_outliers, SEXP rm_extra, 
+ **                   SEXP ref_cdfName)
+ **
+ ** SEXP filenames - an R list of filenames to read
+ ** SEXP compress  - logical flag TRUE means files are *.gz
+ ** SEXP rm_mask   - if true set MASKS  to NA
+ ** SEXP rm_outliers - if true set OUTLIERS to NA
+ ** SEXP rm_extra    - if true  overrides rm_mask and rm_outliers settings
+ ** SEXP ref_cdfName - the reference CDF name to check each CEL file against
+ **
+ ** RETURNS an intensity matrix with cel file intensities from
+ ** each chip in columns
+ **
+ ** this function will read in all the cel files in a affybatch.
+ ** this function will stop on possible errors with an error() call.
+ **
+ ** The intensity matrix will be allocated here. It will be given
+ ** column names here. the column names that it will be given here are the 
+ ** filenames.
+ **
+ *************************************************************************/
+
+SEXP read_abatch(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm_outliers, SEXP rm_extra, SEXP ref_cdfName, SEXP ref_dim, SEXP verbose){
+  
+  int i; 
+  
+  int n_files;
+  int ref_dim_1, ref_dim_2;
+
+  char *cur_file_name;
+  char *cdfName;
+  double *intensityMatrix;
+
+  SEXP intensity,names,dimnames;
+
+  ref_dim_1 = INTEGER(ref_dim)[0];
+  ref_dim_2 = INTEGER(ref_dim)[1];
+  
+  n_files = GET_LENGTH(filenames);
+  
+  PROTECT(intensity = allocMatrix(REALSXP, ref_dim_1*ref_dim_2, n_files));
+  
+  cdfName = CHAR(STRING_ELT(ref_cdfName,0));
+  intensityMatrix = NUMERIC_POINTER(AS_NUMERIC(intensity));
+    
+  if (asInteger(compress)){
+#if defined HAVE_ZLIB
+    /* first pass through all the files checking that they are correct cdf file (ie all of the same one) 
+       and have the same x, y dimensions. If they don't then stop else keep going */
+    
+    for (i =0; i < n_files; i++){
+      cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+      
+      if (check_gzcel_file(cur_file_name,cdfName, ref_dim_1, ref_dim_2)){
+	error("File %s does not seem to have correct dimension or is not of %s chip type.", cur_file_name, cdfName);
+      }
+    }
+  
+    /* Now read in each of the cel files, one by one, filling out the columns of the intensity matrix.
+     */
+
+    for (i=0; i < n_files; i++){ 
+      cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+      if (asInteger(verbose)){
+	Rprintf("Reading in : %s\n",cur_file_name);
+      }
+      read_gzcel_file_intensities(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1);
+      
+      if (asInteger(rm_mask) || asInteger(rm_outliers) || asInteger(rm_extra)){
+	
+	if (asInteger(rm_extra)){
+	  gz_apply_masks(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1,1,1);
+	} else {
+	  gz_apply_masks(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1,asInteger(rm_mask),asInteger(rm_outliers));
+	}
+      }
+      
+    }
+#else
+    error("Compress option not supported on your platform\n");
+#endif
+  } else {
+  
+
+    /* first pass through all the files checking that they are correct cdf file (ie all of the same one)  
+       and have the same x, y dimensions. If they don't then stop else keep going */
+  
+    for (i =0; i < n_files; i++){
+      cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+      
+
+      if (check_cel_file(cur_file_name,cdfName, ref_dim_1, ref_dim_2)){
+	error("File %s does not seem to have correct dimension or is not of %s chip type.", cur_file_name, cdfName);
+      }
+    }
+  
+    /* Now read in each of the cel files, one by one, filling out the columns of the intensity matrix.
+     */
+
+    for (i=0; i < n_files; i++){ 
+      cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+      if (asInteger(verbose)){
+	Rprintf("Reading in : %s\n",cur_file_name);
+      }
+      read_cel_file_intensities(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1);
+      
+      if (asInteger(rm_mask) || asInteger(rm_outliers) || asInteger(rm_extra)){
+	
+	if (asInteger(rm_extra)){
+	  apply_masks(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1,1,1);
+	} else {
+	  apply_masks(cur_file_name,intensityMatrix, i, ref_dim_1*ref_dim_2, n_files,ref_dim_1,asInteger(rm_mask),asInteger(rm_outliers));
+	}
+      }
+      
+    }
+  }
+  
+  PROTECT(dimnames = allocVector(VECSXP,2));
+  PROTECT(names = allocVector(STRSXP,n_files));
+  for ( i =0; i < n_files; i++){
+    cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+    SET_VECTOR_ELT(names,i,mkChar(cur_file_name));
+  }
+  SET_VECTOR_ELT(dimnames,1,names);
+  setAttrib(intensity, R_DimNamesSymbol, dimnames);
+  
+
+  UNPROTECT(3);
+  
+  return intensity;
+  
+}
 
 /*************************************************************************
  **
@@ -727,7 +1175,7 @@ char *get_header_info(char *filename, int *dim1, int *dim2){
  **
  *************************************************************************/
 
-SEXP ReadHeader(SEXP filename){
+SEXP ReadHeader(SEXP filename,SEXP compress){
 
   int ref_dim_1, ref_dim_2;
 
@@ -742,9 +1190,18 @@ SEXP ReadHeader(SEXP filename){
   PROTECT(headInfo = allocVector(VECSXP,2));
 
   cur_file_name = CHAR(VECTOR_ELT(filename,0));
- 
-  cdfName = get_header_info(cur_file_name, &ref_dim_1,&ref_dim_2);
+  
+  
+  if (asInteger(compress)){
+#if defined HAVE_ZLIB
+    cdfName = gz_get_header_info(cur_file_name, &ref_dim_1,&ref_dim_2);
+#else
+    error("Compress option not supported on your platform\n");
+#endif
 
+  } else {
+    cdfName = get_header_info(cur_file_name, &ref_dim_1,&ref_dim_2);
+  }
   PROTECT(name = allocVector(STRSXP,1));
   SET_VECTOR_ELT(name,0,mkChar(cdfName));
 
@@ -759,4 +1216,3 @@ SEXP ReadHeader(SEXP filename){
   return headInfo;
 
 }
-
