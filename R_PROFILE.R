@@ -1,3 +1,5 @@
+  require("methods", quietly=TRUE)
+  require("utils", quietly=TRUE)
   require("Biobase", quietly=TRUE)
 
   ## DEBUG flag
