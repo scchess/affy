@@ -11,16 +11,16 @@ opar <- par(ask= (interactive() &&
 
 ## load the data
 
-data(listcel)
 data(CDF.example)
-
+data(affybatch.example)
 
 ## display the image of the data in the CEL file
 
-image(listcel[[1]],transfo=log)
+cel <- affybatch.example[[1]]
 
+image(cel,transfo=log)
 
-image(listcel[[1]],transfo=log)
+image(cel,transfo=log)
 
 ## find the locations for probes corresponding to a given ID
 
@@ -42,7 +42,7 @@ rm(l.pm, l.mm)
 
 namesspot <- c("AFFX-BioC-5_at","AFFX-BioC-3_at")
 
-p <- lapply(namesspot, get.PPSet, CDF.example, listcel[[1]])
+p <- lapply(namesspot, get.PPSet, CDF.example, cel)
 
 ylimi <- range(unlist(lapply(p, function(x) x@probes)), 0)
 
@@ -65,37 +65,31 @@ par(mfrow=c(2,2))
 
 nat <- pmormm(CDF.example)
 
-plot(intensity(listcel[[1]]), intensity(listcel[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted",type="n")
-points(intensity(listcel[[1]])[nat], intensity(listcel[[2]])[nat], col="red")
-points(intensity(listcel[[1]])[!nat], intensity(listcel[[2]])[!nat], col="blue")
-points(intensity(listcel[[1]])[is.na(nat)], intensity(listcel[[2]])[is.na(nat)], pch="+")
+cel2 <- affybatch.example[[2]]
+plot(intensity(cel), intensity(cel2), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted",type="n")
+points(intensity(cel)[nat], intensity(cel2)[nat], col="red")
+points(intensity(cel)[!nat], intensity(cel2)[!nat], col="blue")
+points(intensity(cel)[is.na(nat)], intensity(cel2)[is.na(nat)], pch="+")
 legend(25000, 15000, c("PM","MM","Unknown","identity line"), c("red","blue","black","grey"), bg="white")
-lim <- range(par()$usr)
-points(lim,lim,type="l",col="gray")
+abline(0, 1, type="l", col="gray")
 rm(nat)
 
-listcel.n <- normalize(listcel, f.cdf=CDF.example, method="constant", refindex=2)
-plot(intensity(listcel.n[[1]]), intensity(listcel.n[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="normalized by constant",sub="all probes plotted")
-lim <- range(par()$usr)
-points(lim,lim,type="l",col="gray")
+abatch.n <- normalize(affybatch.example, method="constant", refindex=2)
+plot(intensity(abatch.n[[1]]), intensity(abatch.n[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="normalized by constant",sub="all probes plotted")
+abline(0, 1, type="l", col="gray")
 
 
-listcel.n <- normalize(listcel, f.cdf=CDF.example, method="invariantset")
-i.set <- history(listcel.n[[2]])$invariantset
+abatch.n <- normalize(affybatch.example, method="invariantset")
+i.set <- history(abatch.n[[1]])$invariantset
 
-plot(intensity(listcel[[1]]), intensity(listcel[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted")
-points(intensity(listcel[[1]])[i.set], intensity(listcel[[2]])[i.set], col="orange",pch=16)
-lim <- range(par()$usr)
-points(lim,lim,type="l",col="gray")
-points(smooth.spline(intensity(listcel[[1]])[i.set], intensity(listcel[[2]])[i.set]),type="l",col="red")
-lim <- range(par()$usr)
-points(lim,lim,type="l",col="gray")
+plot(intensity(cel), intensity(cel2), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted")
+
+abline(0, 1, type="l", col="gray")
 legend(25000,15000,c("invariant set","identity line","spline through the invariant set"),c("orange","grey","red"),bg="white")
 
-plot(intensity(listcel.n[[1]]), intensity(listcel.n[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="normalized by invariant set",sub="all probes plotted")
-points(intensity(listcel.n[[1]])[i.set], intensity(listcel.n[[2]])[i.set], col="orange",pch=16)
-lim <- range(par()$usr)
-points(lim,lim,type="l",col="gray")
+plot(intensity(abatch.n[[1]]), intensity(abatch.n[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="normalized by invariant set",sub="all probes plotted")
+points(intensity(abatch.n[[1]])[i.set], intensity(abatch.n[[2]])[i.set], col="orange",pch=16)
+abline(0, 1, type="l", col="gray")
 legend(20000,10000,c("invariant set","identity line"),c("orange","grey"),bg="white")
 
 ##
