@@ -28,7 +28,7 @@
   .initPPSet.container(where)
   if (debug.affy123) cat("-->initPlob\n")
   .initPlob(where)
-
+  
   if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
   ## this could move into the respective methods of Plob and Cel.container later
   assign("normalize.Cel.container.methods", substr(ls(where)[grep("normalize\.Cel\.container\.*", ls(where))],
@@ -58,6 +58,9 @@
 
 }
 
+#.Last.lib <- function() {
+#  dyn.unload()
+#}
 
 
 
