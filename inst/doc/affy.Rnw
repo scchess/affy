@@ -741,7 +741,8 @@ contain \verb+Cel+ instances sharing the same \verb+Cdf+. The
 
 The following useful methods are available.
 \begin{description}
-  \item[generateExprSet] Compute expression values and return them in an \verb+exprSet+ object.
+  \item[generateExprSet] Compute expression values (for all the {\it affyIDs} on the chip, or for a specified
+  subset of them) and return them in an \verb+exprSet+ object.
   \item[normalize] A \verb+Cel.container+ can be {\it normalized},
   which means its \verb+Cel+ elements will be scaled to be
   comparable. More details about normalization can be found in the
@@ -815,8 +816,8 @@ intensities <- intensity(listcel[[1]])
 %$
 
 The generation of an expression value from the probe set intensities
-is straight forward. Two lines give us a naive version of Affymetrix's
-average difference measure.
+is straight forward. Two lines give us a naive version\footnote{here we do not consider trim or outliers removal}
+of Affymetrix's average difference measure.
 
 <<>>=
 difference <- mypps$probes$pm - mypps$probes$mm
@@ -943,10 +944,10 @@ quite similar to \verb+apply(mat,2,mean,trim=.9)+.
 Much can be learned  by looking at the function \verb+express+.
 
 Expression values can also be obtained for some other classes.
-A way to include new approaches is to go through the \verb+PPSet+
-objects,                             
-or more precisely \verb+PPSset.container+ objects.
- As described above, a container is used to bundle several
+A way to include new approaches is to go through the \verb+Cel+ and \verb+PPSet+
+objects, or more precisely through \verb+Cel.container+ and \verb+PPSset.container+ objects.
+
+As described above, a \verb+PPSet.container+ is used to bundle several
 \verb+PPSet+  
 objects and it                                                                      
 used here to collect the {\it PPSet} for a given gene in different 
@@ -957,7 +958,8 @@ The method \verb+express.summary.stat+ is defined for objects of class
 The parameter \verb+method+ will indicate how to compute the expression
 value, and the parameter \verb+bg.correct+ how to perform the {\it background correction}.
 
-Methods that generate expression values accept a matrix of probe intensities (one row per probe in the set, one column per experiment (or oligonucleotide array).
+Methods that generate expression values accept a matrix of probe intensities (one row per probe in the set,
+ one column per experiment (or oligonucleotide array).
 They as first parameter a matrix
  of $PM$s values and as second parameter a matrix of $MM$s values. 
 The method can then accept other optional parameters, but default must
@@ -968,7 +970,8 @@ The mechanism is not unlike the one used for \verb+normalize+.
 As an illustrative example, we present a method called
 {\it outlieraverage}, that generates expression values in two
 steps. In a first step, identical {\it pm} probes across the probes
-sets from the different hybridizations are processed.                                   Probe values that are more than  2 times away from the median absolute
+sets from the different hybridizations are processed.
+Probe values that are more than  2 times away from the median absolute
 deviation (mad) are replaced by the median value  for these probes. In
 a second step the average of all the probes in the set is calculated
 for each hyridization experiment. 
@@ -982,17 +985,24 @@ generateExprVal.method.outlieraverage <- function(probes) {
   probes[abs(probes - probes.med) > 2 * probes.mad)] <- probes.med                                                                                                     
   r <- apply(probes, 1, mean, na.rm=TRUE)                                                                                                       
   return(r)                                                                             }                                                                         
-
 ## register the method
 express.summary.stats..methods <- c(generateExprSet.methods, "outlieraverage")
-
 \end{verbatim}                                                                                        
+
 The background correction methods differ slightly from the ones used with \verb+Plob+.
 They must have as first parameter a matrix of $PM$ values and as a second parameter
  a matrix of the corresponding $MM$s. These are the values for the probes relating to
-one {\it affyID} across different arrays ({\it i.e.} the values contained in a \verb+PPSet.container+)\footnote{{\it Plob} work on all the $PM$s and $MM$s on the array in one acall (note: So looping through all the affyIDs will be slower, but offers more 
+one {\it affyID} across different arrays ({\it i.e.} the values contained in a
+\verb+PPSet.container+)\footnote{{\it Plob} work on all the $PM$s and $MM$s on the array
+in one call (note: So looping through all the affyIDs will be slower, but offers more 
 flexibility... but we may unify all that in the future...)}. The \verb+bg.correct+
  methods available in the package are stored in the variable \verb+bg.correct.methods+.
+
+When calling the method \verb+generateExpSet+ on an object of class \verb+Cel.container+,
+the program will loop through all the {\it affyIDs} on the array (or through a specified subset,
+if any), extracting the \verb+PPSet.container+ for each of them and performing background
+correction followed by the computation of the expression value that summarizes the probes intensities.
+An object of class \verb+exprSet+\footnote{defined in the package Biobase} is returned.
 
 \bibliographystyle{plainnat} 
 \bibliography{affy} 
