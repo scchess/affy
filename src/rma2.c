@@ -45,6 +45,7 @@
  ** Nov 2, 2002 - modify so that it will work efficently with affy2
  ** Nov 3, 2002 - More modifications, remove cruft from old version
  ** Nov 4, 2002 - testing, check docs etc
+ ** Nov 10,2002 - remove pesky debug printf()
  **
  ************************************************************************/
 
@@ -552,7 +553,7 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   nprobesets=INTEGER(N_probes)[0];
   
   //  printf("%i\n",nprobesets);
-  printf("%d ",INTEGER(norm_flag)[0]);
+  //printf("%d ",INTEGER(norm_flag)[0]);
   if (INTEGER(norm_flag)[0]){
   /* normalize PM using quantile normalization */
     printf("Normalizing\n");
