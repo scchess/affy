@@ -117,9 +117,11 @@ important ones:
 \end{itemize}
 
 
-In this version, we have implemented various of the procedures
-described in the MAS 5.0 manual. Throughout the package we use
-\verb+mas+ to denote the procedures described in the MAS 5.0 software.
+In this version, we have implemented some procedures
+described in the MAS 5.0 manual the best we could\footnote{Differences can still
+be observed (see Ben Bolstad's webpage). Precise comments on how these differences are
+affecting you, or even better, on how you think our code could be improved are welcome} .
+ Throughout the package we use \verb+mas+ to denote the procedures described in the MAS 5.0 software.
 
 The main difference between Version 1.0 and this version is that the
 user no longer needs to provide the {\it CDF} files. We now provide a more

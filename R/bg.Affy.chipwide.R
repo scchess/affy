@@ -12,10 +12,13 @@ bg.correct.mas <- function(object, griddim=16)
 
    # note that the indexing is +1 more than you'd expect because
    # the c code expects it that way
+   ## (note about the remark above: R indexing starts at 1 and not at 0,
+   ## that's why the indexing is done this way. The package is primarily done to
+   ## be used with R...)
    
    allx <- c(pm.index, mm.index) %% nrow(object) 
    allx[allx == 0] <- rows
-   ally <- c(pm.index, mm.index) %/% nrow(object) +1
+   ally <- c(pm.index, mm.index) %/% nrow(object) + 1
    
    nprobes <- length(allx)
    

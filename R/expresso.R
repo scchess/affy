@@ -1,12 +1,16 @@
 expresso <- function(afbatch,
+                     ## --
                      bg.correct=TRUE,
                      bgcorrect.method = NULL,
                      bgcorrect.param = list(),
+                     ## --
                      normalize = TRUE,
                      normalize.method = NULL,
                      normalize.param=list(),
+                     ## --
                      pmcorrect.method = NULL,
                      pmcorrect.param = list(),
+                     ## --
                      summary.method = NULL,
                      summary.param = list(),
                      summary.subset = NULL,
