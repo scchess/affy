@@ -1,0 +1,52 @@
+
+version 1.2 [under development]:
+
+  o Autoload of cdfenvs on demand [to be done. Use of getBioC and
+  friends planed]
+
+  o slot 'preprocessing' of the MIAME attribute used to store
+  normalization step information [not finished, list returned
+  "constant" and "invariantset" for the moment. Need for a class
+  and check compliance with MIAME standards]
+  
+  o default methods for normalization, bg correction, pm correction
+  and summary now in the package options [options exist for all, but
+  only used by normalize for the moment].
+
+  o tuning of the MAS5.0 methods implemented (bgcorrect.mas, ...)
+  [Ben for details. add URL for the comparison he made]
+
+  o method plot.ProbeSet, an alternative to barplot, to plot probe
+  level information.
+
+  o parameter 'scale' in the method barplot for ProbeSet. All the
+  barplots are scaled to eachothers.
+
+  o bug in the parser fixed (infinite loop reported with apparently
+  non-standard CEL files).
+
+  o bug in the parser fixed (the 'sd' data returned were not correct).
+
+  o missing slot in the dataset SpikeIn fixed.
+
+
+version 1.1.x:
+
+  o 'image(cel)' scales to the size (# rows and # cols) of a chip.
+  locations can be plotted over directly ('plotLocations' was fixed
+  accordiginly).
+
+  o 'write.celfile(cel)' to write Cel objects into .CEL files
+
+  o 'getInfoInAffyFile' to snoop in CEL and CDF files
+
+  o 'whatcdf' to get the name of the CDF from the CEL
+
+  o one more slot in class 'Cdf': cdfName (will match with what is 
+  returned by 'whatcdf')
+
+  o one more slot in class 'Cel': cdfName (returned by whatcdf)
+
+  o new class 'AffyBatch': cdfName (returned by whatcdf)
+
+  o extensive set of tests in the directory 'tests/'
