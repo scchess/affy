@@ -649,9 +649,10 @@ SEXP read_abatch(SEXP filenames, SEXP compress,  SEXP rm_mask, SEXP rm_outliers,
 
   PROTECT(dimnames = allocVector(VECSXP,2));
   PROTECT(names = allocVector(STRSXP,n_files));
-  for ( i =0; i < n_files; i++)
-    SET_VECTOR_ELT(names,i,VECTOR_ELT(VECTOR_ELT(filenames,i),0));
-  
+  for ( i =0; i < n_files; i++){
+    cur_file_name = CHAR(VECTOR_ELT(VECTOR_ELT(filenames,i),0));
+    SET_VECTOR_ELT(names,i,mkChar(cur_file_name));
+  }
   SET_VECTOR_ELT(dimnames,1,names);
   setAttrib(intensity, R_DimNamesSymbol, dimnames);
   
