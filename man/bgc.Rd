@@ -17,21 +17,26 @@ bgc(object, bg = bg.adjust)
     done. The default is \code{\link{bg.adjust}}.}
 }
 \details{
- The function that performs the actual background correction must take
- as an argument a matrix of dimension 2\code{nprobes(object)} x
- \code{nchips(object)}. The intention is to have the PMs in the upper
- half of the matrix and the MMs in the lower half of the matrix and
- returns a \code{nprobes(object)} x \code{nchips(object)} with the
- background corrected PMs. The \code{\link{Plob}} it returns has the
- background corrected PMs in the \code{pm} slot.
-}
+  The function that performs the actual background correction is an
+  arbitrary functio. It take
+  as an argument a matrix of dimension 2\code{nprobes(object)} x
+  \code{nchips(object)}. The intention is to have the PMs in the upper
+  half of the matrix and the MMs in the lower half of the matrix and
+  returns a \code{nprobes(object)} x \code{nchips(object)} with the
+  background corrected PMs. The \code{\link{Plob}} it returns has the
+  background corrected PMs in the \code{pm} slot.
+
+  The default function is \code{\link{bg.adjust}} is supplied by the
+  package. The function \code{subtractmm} is also supplied and returns
+  $PM-MM$
+}  
 \value{
-  A \code{\link{Plob}}}
+  A \code{\link{Plob}}
+}
 \references{Irizarry et al. (2002)}
 \author{Rafael A. Irizarry}
 
 \seealso{ \code{\link{bg.adjust}}}
-
 \examples{
      data(Dilution)
      tmp <- bgc(Dilution)
@@ -39,3 +44,4 @@ bgc(object, bg = bg.adjust)
 	  main="PMs before and after background correction")
 }
 \keyword{manip}
+

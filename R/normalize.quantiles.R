@@ -30,7 +30,7 @@ normalize.Cel.container.quantiles <- function(listcel) {
   return(listcel)
 }
 
-normalize.Plob.quantiles <- function(object) {
+normalize.Plob.quantiles <- function(object,...) {
 
   x <- normalize.quantiles(rbind(pm(object),mm(object)))
   n <- dim(x)[1]/2

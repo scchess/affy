@@ -32,7 +32,10 @@ bg.adjust <- function(pmmm,n.pts=2^14){
   a + b*((1./sqrt(2*pi))*exp((-1./2.)*((a/b)^2)))/pnorm(a/b)
 }
 
-subtractmm <- function(pmmm) pmmm[1:n.probes] - pmmm[(n.probes+1):(2*n.probes)]
+subtractmm <- function(pmmm){
+  n.probes <- length(pmmm)/2
+  pmmm[1:n.probes] - pmmm[(n.probes+1):(2*n.probes)]
+}
 
 bgc <- function(object,bg=bg.adjust){
   pm(object) <- apply(rbind(pm(object),mm(object)),2,bg)
