@@ -16,11 +16,7 @@ normalize.AffyBatch.constant <- function(abatch, refindex=1, FUN=mean, na.rm=TRU
     intensity(abatch)[, i] <- m
     normhisto[[i]] <- myhistory
   }
-  preproc <- c(description(abatch)@preprocessing,
-               list(normalization = normhisto))
-  MIAME <- description(abatch)
-  MIAME@preprocessing <- preproc
-  description(abatch) <- MIAME
+  attr(abatch, "normalization") <- normhisto
   return(abatch)
 }       
 

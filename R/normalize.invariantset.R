@@ -46,12 +46,8 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), prog
     if (progress) cat("done.\n")
     
   }
-  preproc <- c(description(abatch)@preprocessing,
-               list(normalization = normhisto))
-  MIAME <- description(abatch)
-  MIAME@preprocessing <- preproc
-  description(abatch) <- MIAME
   
+  attr(abatch, "normalization") <- normhisto
   return(abatch)
 }
 

@@ -7,12 +7,8 @@ normalize.AffyBatch.qspline <- function(abatch, ...) {
   for (i in 1:length(abatch)) {
     normhisto[[i]] <- list(name="normalized by qspline")
   }
-                                
-  preproc <- c(description(abatch)@preprocessing,
-               list(normalization = normhisto))
-  MIAME <- description(abatch)
-  MIAME@preprocessing <- preproc
-  description(abatch) <- MIAME
+  
+  attr(abatch, "normalization") <- normhisto
   
   return(abatch)
 }

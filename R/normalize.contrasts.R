@@ -16,7 +16,8 @@ normalize.AffyBatch.contrasts <- function(abatch,span=2/3,choose.subset=TRUE,sub
   aux <-   maffy.normalise(alldata,subset=subset1,verbose=verbose,span=span,family=family)
   
   intensity(abatch)[Index,] <- aux
-  
+
+  ##attr(abatch, "normalization") <- normhisto
   return(abatch)
 }
 
