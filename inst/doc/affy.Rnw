@@ -94,8 +94,9 @@ locations to probe set membership. Section \ref{configure.options} describes how
 {\bf What's new?}
 \begin{itemize}
 \item \verb+Cel+ class no longer supported. Function \verb+read.celfile+ and other \verb+Cel+ related methods and functions removed.
-\item Speedn and memory improvement of \verb+ReadAffy+ and \verb+read.affybatch+.
-\item Package no longer depends on \verb+affydata+ package. For this reasone many examples have been moved from this vignette to the \verb+affydata+ vignette.
+\item Speed and memory improvement of \verb+ReadAffy+ and \verb+read.affybatch+.
+\item Function \verb+read.probematrix+ added. It reads CEL files and returns a matrix of PM, MM, or both. 
+\item Package no longer depends on \verb+affydata+ package. For this reasone some examples have been moved from this vignette to the \verb+affydata+ vignette.
 \end{itemize}
 
 There are some minor differences in what you can do but little
