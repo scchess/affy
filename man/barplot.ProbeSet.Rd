@@ -28,7 +28,7 @@ data(affybatch.example)
 gn <- geneNames(affybatch.example)
 pps <- probeset(affybatch.example, gn[1])[[1]]
 
-barplot(pps)
+barplot.ProbeSet(pps)
 }
 \keyword{hplot}
 

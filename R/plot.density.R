@@ -1,10 +1,10 @@
-plot.density <- function(x,col=rainbow(dim(x)[2]),ylab="density",xlab="x",lwd=rep(2,dim(x)[2]),lty=rep(1,dim(x)[2]),xlim=range(x),ylim=c(0,1),...){
+plotDensity <- function(mat,col=rainbow(dim(mat)[2]),ylab="density",xlab="x",lwd=rep(2,dim(mat)[2]),lty=rep(1,dim(mat)[2]),xlim=range(mat),ylim=c(0,1),...){
 
   max.y <- function(dens){
 	max(dens$y)
   }
 	
-  x.density <- apply(x,2,density)
+  x.density <- apply(mat,2,density)
   
   if ((min(ylim) == 0) & (max(ylim) == 1)){
   	max.ylim <-lapply(x.density,max.y)
@@ -18,7 +18,7 @@ plot.density <- function(x,col=rainbow(dim(x)[2]),ylab="density",xlab="x",lwd=re
 }
  
 
-plot.density.AffyBatch <- function(x,col=rainbow(length(x)),log=TRUE,
+plotDensity.AffyBatch <- function(x,col=rainbow(length(x)),log=TRUE,
                                    which=c("pm","mm","both"),
                                    ylab="density",xlab=NULL,
                                    lwd=rep(2,length(x)),

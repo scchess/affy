@@ -10,13 +10,15 @@
   information. The set of expression is returned as an exprSet object.
 }
 \usage{
-  computeExprSet(x, summary.method, ...)
+  computeExprSet(x, pmcorrect.method, summary.method, ...)
 
   generateExprSet.methods
 }
 \arguments{
   \item{x}{a \code{\link{AffyBatch}} holding the probe level
     informations to generate the expression values.}
+  \item{pmcorrect.method}{the method used to correct PM values (see
+    section 'details').}
   \item{summary.method}{the method used to generate the expression value (see
     section 'details').}
   \item{...}{any of the options of the normalization you would like to modify}

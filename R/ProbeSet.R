@@ -121,6 +121,13 @@
               return(r)
             },
             where=where)
+  ##barplot... to pass check
+   if (debug.affy123) cat("--->probeset barplot\n")
+
+  if( !isGeneric("barplot") )
+    setGeneric("barplot",where=where)
+  setMethod("barplot",signature(height="ProbeSet"),function(height,...) barplot.ProbeSet(height,...),where=where)
+ 
 } 
 
 ###this is now in AffyBatch.R cause background must be performed on array

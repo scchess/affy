@@ -13,12 +13,13 @@
 \usage{
 generateExprVal.methods # vector of names of methods
 
-express.summary.stat(x, method, ...)
+express.summary.stat(x, pmcorrect, method, ...)
 express.summary.stat.methods # vector of names of methods
 }
 \arguments{
-  \item{x}{a \code{\link[Biobase]{container-class}} (\code{PPSet.container} for
-    now.. .a \code{Plob} in the future ?..)}
+  \item{x}{a (\code{ProbeSet}}
+  \item{pmcorrect}{the method used to correct the PM values before
+    summarizing to an expression value.}
   \item{method}{the method used to generate the expression value.}
   \item{...}{other parameters the method might need... (see the
     corresponding methods below...)}

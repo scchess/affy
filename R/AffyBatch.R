@@ -433,11 +433,11 @@
   if (debug.affy123) cat("--->bg.correct\n")
 
   if( !isGeneric("bg.correct") )
-    setGeneric("bg.correct", function(x, method, ...)
+    setGeneric("bg.correct", function(object, method, ...)
                standardGeneric("bg.correct"), where=where)
   
-  setMethod("bg.correct", signature(x="AffyBatch", method="character"),
-            function(x, method, ...) {
+  setMethod("bg.correct", signature(object="AffyBatch", method="character"),
+            function(object, method, ...) {
 
               ## simple for system to let one add background correction methods
               ## relies on naming convention
@@ -449,7 +449,7 @@
               if (! exists(methodname))
                 stop(paste("Unknown method (cannot find function", methodname, ")"))
               
-              r <- do.call(methodname, alist(x, ...))
+              r <- do.call(methodname, alist(object, ...))
               
               return(r)
             }, where=where)
@@ -482,19 +482,18 @@
   ## --- expression value computation
   if (debug.affy123) cat("--->computeExprSet\n")
   if( !isGeneric("computeExprSet") )
-    setGeneric("computeExprSet", function(x, pmcorrect.method, summary.method, ...)
+    setGeneric("computeExprSet",
+               function(x, pmcorrect.method, summary.method, ...)
                standardGeneric("computeExprSet"),
                where=where)
   
-  setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character",
-                                        summary.method="character"),
-            function(x,
-                     pmcorrect.method, summary.method, ids=NULL, verbose=TRUE,
-                                        #bg.param=list(),
-                     summary.param=list(), pmcorrect.param=list(), warnings=TRUE) {
+  setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character", summary.method="character"),
+            function(x, pmcorrect.method, summary.method, ids=NULL,
+                     verbose=TRUE, summary.param=list(),
+                     pmcorrect.param=list(), warnings=TRUE)
+            {
               
-              
-              pmcorrect.method <- match.arg(pmcorrect.method, pmcorrect.methods)
+              pmcorrect.method<- match.arg(pmcorrect.method, pmcorrect.methods)
               summary.method <- match.arg(summary.method, express.summary.stat.methods)
               
               n <- length(x)
@@ -634,12 +633,12 @@
               boxplot(data.frame(log2(intensity(x)[unlist(indexProbes(x,which)),])),main=main,range=0, ...)
             },where=where)
 
-
-
 ###hist
+  if (debug.affy123) cat("--->hist\n")
+
   if( !isGeneric("hist") )
     setGeneric("hist",where=where)
-  setMethod("hist",signature(x="AffyBatch"),plot.density.AffyBatch,where=where)
+  setMethod("hist",signature(x="AffyBatch"),function(x,...) plotDensity.AffyBatch(x,...),where=where)
   
 }
 

@@ -2,9 +2,11 @@
 \alias{bg.correct}
 \alias{bg.correct-methods}
 \alias{bg.correct.methods}
+\alias{bgcorrect.methods}
 \alias{bg.correct.none} %took out .pmonly casue rma is pm-only
 %\alias{bg.correct.subtractmm}
 \alias{bg.correct.rma}
+\alias{bg.correct.mas}
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{Background Correction}
 \description{
@@ -12,19 +14,22 @@ Background corrects the probe values in an object of class
 \code{\link{AffyBatch}}.
 }
 \usage{
-bg.correct(object, method)
+bg.correct(object, method, ...)
 
 %bg.correct.subtractmm(object)
-bg.correct.Affy.chipwide
+bg.correct.rma(object,...)
 
-bg.correct.rma(object)
+bg.correct.mas(object, griddim)
 
-bg.correct.none(object)}
+bg.correct.none(object, ...)}
 %- maybe also `usage' for other objects documented here.
 \arguments{
   \item{object}{An object of class \code{\link{AffyBatch}}.}
   \item{method}{An element of mode \code{character} defining one of the
     methods defined in \code{bg.correct.methods}. }
+  \item{griddim}{grid dimension used for background estimate. The array
+    is divided into griddm equal parts. Default is 16.}
+  \item{...}{arguments to pass along to the engine function.}
 }
 \details{
   The name of the method to apply must be double-quoted.
