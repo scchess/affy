@@ -2,6 +2,13 @@ version 1.3 [under development]
 
 
 Things done:
+
+  0 (wh:) moved everything related to Cdf-class from 'affy' to 'makecdfenv':
+    R/Cdf.R, R/getLocationsData.Cdf.R, locate.name.R, pmormm.R
+    R/read.cdffile.R, data/cdf.example.rda, man/Cdf-class.Rd
+    man/getLocationsData.Cdf.Rd, man/locate.name.Rd, man/pmormm.Rd
+    man/read.cdffile.Rd, src/read_cdffile.c
+
   o read.affybatch2 reads all cel files together in one big hit
     into an affybatch
 
