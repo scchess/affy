@@ -139,6 +139,10 @@ setMethod("MAplot",signature("AffyBatch"),
               x <- intensity(object)[pms, ]
             }
 
+            if (is.null(which)){
+              which <- 1:dim(object@exprs)[2]
+            }
+            
 
             if (is.null(subset)){
               if (is.null(ref)){
