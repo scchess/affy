@@ -3,6 +3,7 @@
 
   ## DEBUG flag
   assign("debug.affy123", T, envir=.GlobalEnv)
+  
   if (debug.affy123) {
     cat(rep("*",13),"\n",sep="")
     cat("affy: development version (...this is usable...)\n")
@@ -46,17 +47,17 @@
          envir=as.environment(where))
          
   
-  if (debug.affy123) cat("-->initCdf\n")
+  ##if (debug.affy123) cat("-->initCdf\n")
   .initCdf(where)
-  if (debug.affy123) cat("-->initCel\n")
+  ##if (debug.affy123) cat("-->initCel\n")
   .initCel(where)
-  if (debug.affy123) cat("-->initCel.container\n")
+  ##if (debug.affy123) cat("-->initCel.container\n")
   .initCel.container(where)
-  if (debug.affy123) cat("-->initPPSet\n")
+  ##if (debug.affy123) cat("-->initPPSet\n")
   .initPPSet(where)
-  if (debug.affy123) cat("-->initPPSet.container\n")
+  ##if (debug.affy123) cat("-->initPPSet.container\n")
   .initPPSet.container(where)
-  if (debug.affy123) cat("-->initPlob\n")
+  ##if (debug.affy123) cat("-->initPlob\n")
   .initPlob(where)
   
   cacheMetaData(as.environment(where))
