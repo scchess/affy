@@ -631,7 +631,10 @@
               tmp <- description(x)
               if(class(tmp)=="MIAME") main <- tmp@title
 
-              boxplot(data.frame(log2(intensity(x)[unlist(indexProbes(x,which)),])),main=main,range=0, ...)
+              tmp <- unlist(indexProbes(x,which))
+              tmp <- tmp[seq(1,length(tmp),len=5000)]
+
+              boxplot(data.frame(log2(intensity(x)[tmp,])),main=main,range=0, ...)
             },where=where)
 
 ###hist
