@@ -24,7 +24,7 @@ read.affybatch <- function(..., filenames=character(0),
     warning("Incompatible phenoData object. Created a new one.\n")
     
     samplenames <- sub("^/?([^/]*/)*", "", unlist(filenames), extended=TRUE)
-    pdata <- data.frame(sample=1:n,row.names=samplenames)
+    pdata <- data.frame(sample=1:n, row.names=samplenames)
     phenoData <- new("phenoData",pData=pdata,varLabels=list(sample="arbitrary numbering"))
   }
   else samplenames <- rownames(pdata)
@@ -60,7 +60,7 @@ read.affybatch <- function(..., filenames=character(0),
     cat(paste("instanciating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
 
   if (insitu)
-    conty <- new("AffyBatchUnique",
+    conty <- new("AffyBatchEnvPtr",
                  exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
                  ##se.exprs = array(NaN, dim=dim.sd),
                  cdfName    = cel@cdfName,
