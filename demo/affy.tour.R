@@ -93,7 +93,7 @@ points(lim,lim,type="l",col="gray")
 legend(25000,15000,c("invariant set","identity line","spline through the invariant set"),c("orange","grey","red"),bg="white")
 
 plot(intensity(listcel.n[[1]]), intensity(listcel.n[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="normalized by invariant set",sub="all probes plotted")
-points(intensity(listcel.n[[1]])[i.set], intesnity(listcel.n[[2]])[i.set], col="orange",pch=16)
+points(intensity(listcel.n[[1]])[i.set], intensity(listcel.n[[2]])[i.set], col="orange",pch=16)
 lim <- range(par()$usr)
 points(lim,lim,type="l",col="gray")
 legend(20000,10000,c("invariant set","identity line"),c("orange","grey"),bg="white")
@@ -132,7 +132,7 @@ layout(matrix(c(1:4,rep(5:(5+nmet-1), times=rep(4,nmet))),4,1+nmet), width=c(4,r
 for (i in 1:4) barplot(p[[i]],ylim=ylimi, main=paste(p[[i]]@name, " - hybridization ", i))
 
 for (i in 1:nmet) {
-  ev <- generateExprVal.PPSet.container(p,method=mymethods[i])
+  ev <- generateExprVal.PPSet.container(p,method=mymethods[i],bg.correct="bg.correct.pmonly")
   barplot(rev(c(ev)),main=paste("expression values using\n",mymethods[i], sep=""),
           names.arg=rev(paste("hybrid. ",1:4)), horiz=TRUE)
 }
