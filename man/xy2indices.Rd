@@ -6,14 +6,13 @@
   Functions to convert indices to x/y (and reverse)
 }
 \usage{
-xy2indices(x, y, nc = NULL, cel = NULL, abatch = NULL)
+xy2indices(x, y, nr = NULL, cel = NULL, abatch = NULL)
 indices2xy(i, nr = NULL, cel = NULL, abatch = NULL)
 }
 \arguments{
   \item{x}{ \code{X} position for the probes }
   \item{y}{ \code{Y} position for the probes }
   \item{i}{ indices in the \code{AffyBatch} for the probes }
-  \item{nc}{ total number of \code{Ys} on the chip }
   \item{nr}{ total number of \code{Xs} on the chip }
   \item{cel}{ a corresponding object of class \code{\link[affy:Cel-class]{Cel}} }
   \item{abatch}{ a corresponding object of class \code{\link[affy:AffyBatch-class]{AffyBatch}} }
