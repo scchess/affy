@@ -1126,7 +1126,8 @@ element {\it what} can be one of {\it package}, {\it environment}.
 
 There are several other vignettes addressing more specialised topics related to the {\tt affy} package.
 \begin{itemize}
-\item {\bf affy: Custom Processing Methods (HowTo)}: A description of how to use custom preprocessing methods with the package.
+\item {\bf affy: Custom Processing Methods (HowTo)}: A description of how to use custom preprocessing methods with the package. This document gives examples of how you might write your own preprocessing method and use it with the packae.
+\item {\bf affy: Built-in Processing Methods}: A document giving fuller descriptions of each of the preprocessing methods that are available within the {\tt affy} package.
 \item {\bf affy: Import Methods (HowTo)}: A discussion of the data structures used and how you might import non standard data into the package.
 \item {\bf affy: Loading Affymetrix Data (HowTo)}: A quick guide to loading Affymetrix data into R.
 \item {\bf affy: Automatic downloading of cdfenvs (HowTo)}: How you can configure the automatic downloading of the appropriate {\it cdfenv} for your analysis.
