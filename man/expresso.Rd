@@ -8,12 +8,17 @@
 \usage{
 expresso(
         afbatch,
+    # background correction
+        bg.correct = TRUE,
+        bgcorrect.method = NULL,
+        bgcorrect.param = list(),
     # normalize
         normalize = TRUE,
         normalize.method = NULL,
         normalize.param = list(),
-    # background correction
-        bg.method = NULL,
+    # pm correction
+        pmcorrect.method = NULL,
+        pmcorrect.param = list(),
     # expression values
         summary.method = NULL,
         summary.param = list(),
@@ -25,11 +30,16 @@ expresso(
 
 \arguments{
   \item{afbatch}{ An \code{\link{AffyBatch}} object }
+  \item{bg.correct}{a boolean to express whether background correction
+    is wanted or not.}
+  \item{bgcorrect.method}{the name of the background adjustment method}
+  \item{bgcorrect.param}{a list of parameters for bgcorrect.method (if needed/wanted)}
   \item{normalize}{ normalization step wished or not.}
   \item{normalize.method}{the normalization method to use}
   \item{normalize.param}{a list of parameters to be passed to the
     normalization method (if wanted).}
-  \item{bg.method}{a background adjustment function}
+  \item{pmcorrect.method}{the name of the PM adjustement method}
+  \item{pmcorrect.param}{a list of parameters for pmcorrect.method (if needed/wanted)}
   \item{summary.method}{the method used for the computation of expression values}
   \item{summary.param}{ a list of parameters to be passed to the
     \code{summary.method} (if wanted).}
@@ -43,11 +53,12 @@ expresso(
     Some arguments can be left to \code{NULL} if the \code{widget=TRUE}.
   In this case, a widget pops up and let the user choose with the mouse.
   The arguments are: \code{AffyBatch},
-  \code{normalize.method}, \code{bg.method} and \code{summary.method}.
+  \code{bgcorrect.method}, \code{normalize.method}, \code{pmcorrect.method} and \code{summary.method}.
 }
 \value{
   An object of class \code{\link[Biobase]{exprsSet}}
 }
+%\seealso{\code{\link{}}, \code{\link{}}, \code{\link{}}}
 \examples{
 data(affybatch.example)
 
