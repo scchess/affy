@@ -53,9 +53,9 @@ for(i in 1:k){
     curve <- loess(c(mini,scaled[,i],maxi)~c(mini,unscaled[,i],maxi),weights=w,span=span)
 
     if(log.it) 
-         temp <-  exp(predict.loess(curve,log(data[,i])))
+         temp <-  exp(predict(curve,log(data[,i])))
     else
-         temp <-      predict.loess(curve,data[,i])
+         temp <-      predict(curve,data[,i])
 
     data.scaled <- cbind(data.scaled,temp) 
 }

@@ -49,7 +49,7 @@ normalize.loess <- function(mat, subset=sample(1:(dim(mat)[1]), min(c(5000, nrow
         xx <- x[index]
         yy <- y[index]
         aux <-loess(yy~xx, span=span, degree=1, weights=w, family=family.loess)
-        aux <- predict.loess(aux, data.frame(xx=x)) / J
+        aux <- predict(aux, data.frame(xx=x)) / J
         means[, j] <- means[, j] + aux 
         means[, k] <- means[, k] - aux
         if (verbose)
