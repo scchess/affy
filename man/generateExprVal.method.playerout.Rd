@@ -9,12 +9,12 @@
   generateExprVal.method.playerout(probes, weights=FALSE)
 }
 \arguments{
-  \item{probes}{XXX}
+  \item{probes}{a list of \code{probes} slots from \code{PPSet.container}}
   \item{weights}{Should the resulting weights be returned ?}
 }
 \value{
-  XXX
-  }
+  A vector of expression values.
+}
 \details{
 A non-parametrical method to weight each perfect match
   probe in the set and to compute a weighted mean of the perfect match
@@ -33,4 +33,5 @@ A non-parametrical method to weight each perfect match
   arrays.
 }
 \keyword{manip}
+
 
