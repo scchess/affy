@@ -14,10 +14,10 @@ normalize.Cel.container.qspline <- function(listcel, ...) {
 }
 
 
-normalize.Plob.qspline <- function(plob, ...) {
-  
-  stop("NOT YET IMPLEMENTED")
-}
+#normalize.Plob.qspline <- function(plob, ...) {
+#  
+#  stop("NOT YET IMPLEMENTED")
+#}
 
 
 normalize.qspline <- function(x,
