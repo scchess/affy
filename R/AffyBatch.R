@@ -191,7 +191,7 @@
                          "Solution:  Try again once you connect to the Internet.\n\n",
                          "Problem 2: You do not have the necessary permissions to install packages.\n",
                          "Solution:  Ask your system administrator to install ",cleancdfname(object@cdfName), " package from:\n",
-                         "           http://www.bioconductor.org/data/cdfenvs/cdfenvs.html\n\n",
+                         "           http://www.bioconductor.org/data/metaData.html\n\n",
                          "Problem 3: Necessary package not available from Bioconductor.\n",
                          "Solution:  Use makecdfenv package to create environment from CDF file.\n\n",
                          "NOTE: IF you install ",cleancdfname(object@cdfName)," you should not have this problem again.\nSee the dealing_with_cdfenvs vignette for more details\n",

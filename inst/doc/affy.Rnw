@@ -162,7 +162,7 @@ R> library(affy) ##load the affy package
 <<echo=F,results=hide>>=
 library(affy)
 @
-This release of the \Rpackage{affy} pacakge will automatically download the appropriate cdf environment when you require it. However, if you wish you may download and install the cdf environment you need from \url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html} manually. If there is no cdf environment currently built for your particular chip and you have access to the CDF file then you may use the \Rpackage{makecdfenv} package to create one yourself.
+This release of the \Rpackage{affy} pacakge will automatically download the appropriate cdf environment when you require it. However, if you wish you may download and install the cdf environment you need from \url{http://www.bioconductor.org/data/metaData.html} manually. If there is no cdf environment currently built for your particular chip and you have access to the CDF file then you may use the \Rpackage{makecdfenv} package to create one yourself.
 
 \subsection{Quick start}
 If all you want is to go from probe level data ({\it Cel} files) to
@@ -1043,7 +1043,7 @@ can be found in the {\it CDF} files. The {\it cdfenvs} are sufficient
 to perform
 the numerical processing methods included in the package. For each
 {\it CDF} file there is package, available from
-\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}, that contains
+\url{http://www.bioconductor.org/data/metaData.html}, that contains
 exactly one of these environments. The {\it cdfenvs} we store the $x$
 and $y$ coordinates as one number (see above).
 
@@ -1231,7 +1231,7 @@ important ones:
 \item Unless you are using the HG-U95Av2 chip or the HGU133A chip you
   need to download and install a package for each chip type. They can
   be obtained from  
-\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}
+\url{http://www.bioconductor.org/data/metaData.html}
 \item You need the latest version of Biobase
 \item To get RMA you no longer use \verb+express+, you use \verb+rma+
 \item \verb+ReadAffy+ uses the argument \verb+filenames+ instead of \verb+CELS+ for denoting cel files.
@@ -1243,7 +1243,7 @@ The main difference between Version 1.0 and this version (1.1) is that the
 user no longer needs to provide the {\it CDF} files. We now provide a more
 efficient way of obtaining this information. Data packages containing the
 necessary CDF information can be obtained from
-\url{http://www.bioconductor.org/data/cdfenvs/cdfenvs.html}.
+\url{http://www.bioconductor.org/data/metaData.html}.
 Simply download as many of these {\it cdf environments} as you need and install
 them. The affy package will know where to look.
 If you are using the {\bf HGU95Av2} or {\bf HGU133A} chip the
