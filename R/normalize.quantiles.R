@@ -1,15 +1,15 @@
 normalize.AffyBatch.quantiles <- function(abatch,pmonly=FALSE) {
 
   pms <- unlist(pmindex(abatch))
-  noNA <- apply(intensity(abatch)[pms,],1,function(x) all(!is.na(x)))
+  noNA <- apply(intensity(abatch)[pms,,drop=FALSE],1,function(x) all(!is.na(x)))
   pms <- pms[noNA]
-  intensity(abatch)[pms,] <- normalize.quantiles(intensity(abatch)[pms, ])
+  intensity(abatch)[pms,] <- normalize.quantiles(intensity(abatch)[pms,,drop=FALSE ])
   if(!pmonly){ 
     mms <- unlist(mmindex(abatch))
-    noNA <- apply(intensity(abatch)[mms,],1,function(x) all(!is.na(x)))
+    noNA <- apply(intensity(abatch)[mms,,drop=FALSE],1,function(x) all(!is.na(x)))
     mms <- mms[noNA]
 
-    intensity(abatch)[mms,] <- normalize.quantiles(intensity(abatch)[mms, ])
+    intensity(abatch)[mms,] <- normalize.quantiles(intensity(abatch)[mms,,drop=FALSE ])
   }
   
   ##this is MIAME we need to decide how to do this properly.
