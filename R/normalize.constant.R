@@ -1,6 +1,6 @@
 ## (see normalize.invariantset.R to know more....)
 
-normalize.Cel.constant <- function(container, refindex=1) {
+normalize.Cel.constant <- function(container, refindex=1, FUN=mean, na.rm=TRUE) {
   if (! inherits(container, "Cel.container"))
     stop("container must be a 'Cel.container'")
   
@@ -8,10 +8,10 @@ normalize.Cel.constant <- function(container, refindex=1) {
   
   if (! (refindex %in% 1:n)) stop("invalid reference index for normalization")
   
-  refmean <- container[[refindex]]@intensity
+  refconstant <- FUN(container[[refindex]]@intensity, na.rm=na.rm)
   
   for (i in 1:n) {
-    container[[i]]@intensity <- normalize.constant(container[[i]]@intensity, refmean)
+    container[[i]]@intensity <- normalize.constant(container[[i]]@intensity, refconstant, FUN=FUN, na.rm=na.rm)
     container[[i]]@history <- list(name="normalized by constant",
                                  constant=attr(container[[i]]@intensity,"constant"))
     container[[i]]@sd <- NULL
@@ -21,8 +21,29 @@ normalize.Cel.constant <- function(container, refindex=1) {
 }       
 
 
-normalize.constant <- function(data, refmean) {
-  thismean <- mean(data)
-  r <- data / thismean * refmean
-  attr(r,"constant") <- thismean * refmean
+normalize.Plob.constant <- function(plob, refindex=1, FUN=mean, na.rm=TRUE) {
+  ## extract the vector that will be used as a reference
+  ## and apply the function FUN to generate a value
+  refconstant <- FUN(c(plob@pm[, refindex], plob@mm[, refindex]), na.rm=na.rm)
+
+  ## loop over the arrays (excluding the reference)
+  for (i in (1:plob@nchips)[-refindex]) {
+    ## only using the PM -- this is an example
+    plob@pm[,i] <- normalize.constant(plob@pm[,i], refconstant, FUN=FUN, na.rm=na.rm)
+    plob@mm[,i] <- normalize.constant(plob@mm[,i], refconstant, FUN=FUN, na.rm=na.rm)
+  }
+  ## state somewhere in a slot of the Plob that it has been normalized ?
+  return(plob)
 }
+
+
+normalize.constant <- function(idata, refconstant, FUN=mean, na.rm=TRUE) {
+  thisconstant <- FUN(idata, na.rm=na.rm)
+  r <- idata / thisconstant * refconstant
+  attr(r,"constant") <- thisconstant * refconstant
+  return(r)
+}
+
+
+
+

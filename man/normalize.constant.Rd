@@ -2,10 +2,10 @@
 \alias{normalize.constant}
 \title{Scale microarray data}
 \description{
-  normalizes two microarray data to each others.
+  normalize two microarray data to each others.
 }
 \usage{
-normalize.constant(data, refmean)
+normalize.constant(data, refconstant, FUN=mean, na.rm=TRUE)
 }
 \arguments{
   \item{data}{a vector of intensities on a chip (to normalize to the reference).}

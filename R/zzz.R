@@ -1,5 +1,5 @@
 .First.lib <- function(libname, pkgname, where) {
-  debug.affy123 <- F #DEBUG
+  debug.affy123 <- T #DEBUG
   library.dynam("affy", pkgname, libname)
   require(methods)
   require(modreg)

@@ -12,7 +12,7 @@ normalize.Cel.loess <- function(listcel, ...) {
 
   x <- normalize.loess(x, ...)
 
-  cat(cols,rows)
+  ##cat(cols,rows)
   for (i in 1:cols) {
     listcel[[i]]@intensity  <- matrix(x[,i],chipdim[1], chipdim[2])
     listcel[[i]]@history$name <- "normalized by quantiles"
@@ -23,11 +23,34 @@ normalize.Cel.loess <- function(listcel, ...) {
 }
 
 
+## note for Rafael:
+## The principle is:
+## the normalize.XYZ.ABC methods only do data structure conversion and call the methods normalize.ABC in turn
+##            -- Laurent
+
+normalize.Plob.loess <- function(plob, ...) {
+
+  x <-  matrix(0, plob@nprobes*2, plob@nchips)
+  for (i in 1:plob@nchips) {
+    x[1:plob@nprobes, i] <- plob@pm[,i]
+    x[plob@nprobes+1:plob@nprobes*2, i] <- plob@mm[,i]
+  }
+
+  x <- normalize.loess(x, ...)
+
+  for (i in 1:plob@nchips) {
+    plob@pm[,i] <- x[1:plob@nprobes, i]
+    plob@mm[,i] <- x[plob@nprobes+1:plob@nprobes*2, i]
+  }
+  
+  return(plob)
+}
+
 
 normalize.loess <- function(mat,subset=sample(1:(dim(mat)[2]),5000),
                             epsilon=10^-2,maxit=1,log.it=T,verbose=T,span=2/3,
                             family.loess="symmetric"){
-
+  
   J <- dim(mat)[2]
   II <- dim(mat)[1]
   newData <- mat
