@@ -88,7 +88,6 @@
   .initCel(match(paste("package:", pkgname, sep=""), search()))
   .initAffyBatch(match(paste("package:", pkgname, sep=""), search()))
   .initProbeSet(match(paste("package:", pkgname, sep=""), search()))
-  .initAffyBatchEnvPtr(match(paste("package:", pkgname, sep=""), search()))
 
   ## add affy specific options
   ## (not unlike what is done in 'Biobase')

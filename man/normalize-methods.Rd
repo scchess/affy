@@ -11,20 +11,16 @@
   Normalize chips intensity data.
 }
 \usage{
-normalize(object, ...)
+normalize(object, method, ...)
 
 normalize.methods(object)
 }
 \arguments{
   \item{object}{An \code{AffyBatch}}
+  \item{method}{the method used to scale. Different methods will be
+    available for the different type of array data.}
   \item{...}{Optional arguments for the normalization funtion. See the
     details below.}
-%  \item{method}{the method used to scale. Different methods will be
-%    available for the different type of array data.}
-%  \item{...}{other parameters the normalizing function might need...}
-%}
-%\value{
-%A \code{\link[Biobase]{container-class}} of normalized objects.
 }
 \details{
   Generic methods related to array data normalization. Currently defined for

@@ -5,7 +5,6 @@ read.affybatch <- function(..., filenames=character(0),
                            notes="",
                            compress = getOption("BioC")$affy$compress.cel,
                            rm.mask = FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-                           insitu = FALSE,
                            verbose = FALSE) {
   
   auxnames <- as.list(substitute(list(...)))[-1]
@@ -59,29 +58,17 @@ read.affybatch <- function(..., filenames=character(0),
   if (verbose)
     cat(paste("instanciating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
 
-  if (insitu)
-    conty <- new("AffyBatchEnvPtr",
-                 exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
-                 ##se.exprs = array(NaN, dim=dim.sd),
-                 cdfName    = cel@cdfName,
-                 phenoData  = phenoData,
-                 nrow       = dim.intensity[1],
-                 ncol       = dim.intensity[2],
-                 annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
-                 description= description,
-                 notes      = notes)
-  ##           history    = vector("list", length=n)) we need to put this in MIAME
-  else
-    conty <- new("AffyBatch",
-                 exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
-                 ##se.exprs = array(NaN, dim=dim.sd),
-                 cdfName    = cel@cdfName,
-                 phenoData  = phenoData,
-                 nrow       = dim.intensity[1],
-                 ncol       = dim.intensity[2],
-                 annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
-                 description= description,
-                 notes      = notes)
+
+  conty <- new("AffyBatch",
+               exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
+               ##se.exprs = array(NaN, dim=dim.sd),
+               cdfName    = cel@cdfName,
+               phenoData  = phenoData,
+               nrow       = dim.intensity[1],
+               ncol       = dim.intensity[2],
+               annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
+               description= description,
+               notes      = notes)
   ##           history    = vector("list", length=n)) we need to put this in MIAME
   
   if (verbose)
@@ -108,9 +95,7 @@ read.affybatch <- function(..., filenames=character(0),
     if (verbose) cat("done.\n")
     
     if (cel@cdfName != ref.cdfName)
-      warning(paste("\n***\nDetected a mismatch of the cdfName: found ", cel@cdfName,
-              ", expected ", ref.cdfName, "\nin file number ", i, " (", filenames[[i]], ")\n",
-              "Please make sure all cel files belong to the same chip type!\n***\n", sep=""))
+      warning(paste("cdfName mismatch !\n(", filenames[[i]], ")"))
 
     intensity(conty)[, i] <- c(intensity(cel))
     
@@ -122,7 +107,6 @@ read.affybatch <- function(..., filenames=character(0),
     ##history(conty)[[i]] <- history(cel) now through MIAME
   }
   
-  colnames(intensity(conty)) = filenames
   return(conty)
 }
 
