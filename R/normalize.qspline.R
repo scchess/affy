@@ -6,8 +6,8 @@ normalize.Cel.container.qspline <- function(listcel, ...) {
   dimcel <- dim(intensity(listcel[[1]]))
   y <- normalize.qspline(x, ...)
   for (i in 1:length(listcel)) {
-    sdspot(listcel[[i]]) <- matrix()
-    intensity(listcel[[i]]) <- array(fx[,i], dimcel)
+    spotsd(listcel[[i]]) <- matrix()
+    intensity(listcel[[i]]) <- array(y[,i], dimcel)
     history(listcel[[i]])$name <- "normalize by qspline"
   }
   return(listcel)
@@ -59,7 +59,7 @@ normalize.qspline <- function(x,
   y.offset <- c(0, array(y.offset, (k-1)))
   y.order <- order(target)
 
-  fx <- matrix(0, x.n,m)
+  fx <- matrix(0, x.n, m)
   if(verbose==TRUE)
     print(paste("samples=",samples, "k=", k, "first=", py.inds[1]))
   
@@ -111,5 +111,5 @@ normalize.qspline <- function(x,
       fx[invalid,i] <- NA
     }
    }
-  return(x)
+  return(fx)
 }
