@@ -9,6 +9,21 @@ version 1.2.1:
 locations can be plotted over directly ('plotLocations' was fixed
 accordiginly).
 
+- 'write.celfile(cel)' to write Cel objects into .CEL files
+
+- 'getInfoInAffyFile' to snoop in CEL and CDF files
+
+- 'whatcdf' to torture CEL files until they give the name of the
+matching CDF file
+
+- one more slot in class 'Cdf': cdfName (will match with what is 
+returned by 'whatcdf')
+
+- one more slot in class 'Cel': cdfName (returned by whatcdf)
+
+- one more slot in class 'Cel.container': cdfName (returned by whatcdf)
+
+
 version 1.2.0:
 
  - use of hdf5 possible to store 'Cel.container' objects
