@@ -49,7 +49,8 @@ normalize.methods(object)
   The \emph{nicknames} are stored in \code{normalize.Cel.container.methods} and in
   \code{normalize.Plob.methods} respectively. See the general documentation of the
   package to know more (like how to add your own methods).
-  
+  (if you do not know how to use Sweave to generate the documentation,
+  you can get from http://www.cbs.dtu/laurent/download#affy.html).
   
 }
 \seealso{
