@@ -83,6 +83,8 @@
  ** Feb 25, 2003 - try to reduce or eliminate compiler warnings (from gcc -Wall) 
  ** Apr 4, 2003 - fix up so that the number of probes in a probeset is allowed to be more dynamic
  ** Dec 9, 2003 - fix a bug in do_RMA (max_nrows in Calloc)
+ ** Mar 6, 2004 - all mallocs/frees are now Calloc/Frees. Removed
+ **               the function R_median_polish
  **
  ************************************************************************/
 
@@ -119,7 +121,7 @@ double  median(double *x, int length){
   int i;
   int half;
   double med;
-  double *buffer = malloc(length*sizeof(double));
+  double *buffer = Calloc(length,double);
   
   for (i = 0; i < length; i++)
     buffer[i] = x[i];
@@ -132,7 +134,7 @@ double  median(double *x, int length){
     med = (buffer[half] + buffer[half-1])/2.0;
   }
   
-  free(buffer);
+  Free(buffer);
   return med;
 }
 
@@ -174,7 +176,7 @@ double sum_abs(double *z, int rows, int cols){
 
 void get_row_median(double *z, double *rdelta, int rows, int cols){
   int i,j;
-  double *buffer = malloc(cols*sizeof(double));
+  double *buffer = Calloc(cols,double);
 
   for (i = 0; i < rows; i++){ 
     for (j = 0; j < cols; j++){
@@ -183,7 +185,7 @@ void get_row_median(double *z, double *rdelta, int rows, int cols){
     rdelta[i] = median(buffer,cols);
   }
   
-  free(buffer);
+  Free(buffer);
 }
 
 /********************************************************************************
@@ -202,7 +204,7 @@ void get_col_median(double *z, double *cdelta, int rows, int cols){
   
   int i, j;
   
-  double *buffer = malloc(rows*sizeof(double));
+  double *buffer = Calloc(rows,double);
   for (j = 0; j < cols; j++){
     for (i = 0; i < rows; i++){  
       buffer[i] = z[j*rows + i];
@@ -210,7 +212,7 @@ void get_col_median(double *z, double *cdelta, int rows, int cols){
     cdelta[j] = median(buffer,rows);
   }
   
-  free(buffer);
+  Free(buffer);
 
 }
 
@@ -300,106 +302,6 @@ void cmod(double *c, double *cdelta, int cols){
   for (j = 0; j < cols; j++){
     c[j]= c[j] + cdelta[j];
   }
-}
-
-
-/*************************************************************************************
- **
- ** void R_median_polish(double *data, int *rs, int *cs)
- **
- ** a function to do median polish that can be called from R. Main reason is to test 
- ** that c implementation of median polish is correct. This code is not called
- ** by the c implementation and should be removed at a latter date.
- **
- *************************************************************************************/
-
-void R_median_polish(double *data, int *rs, int *cs){
-  
-  int cols = *cs, nprobes=*rs; /* rows = *rs, */
-
-  int i,j,iter;
-  int maxiter = 10;
-  double eps=0.01;
-  double oldsum = 0.0,newsum = 0.0;
-  double t = 0.0;
-  double delta;
-  double *rdelta = calloc(nprobes,sizeof(double));
-  double *cdelta = calloc(cols,sizeof(double));
-  
-  double *r = calloc(nprobes,sizeof(double));
-  double *c = calloc(cols,sizeof(double));
-
-  double *data_matrix = malloc(nprobes*cols*sizeof(double));
-  double *z = malloc(nprobes*cols*sizeof(double));
-  double *results = malloc(cols*sizeof(double));
-
-  /*   for (i=0; i < nprobes; i++){
-    r[i] = 0.0;
-  }
-
-  for (j=0; j < nprobes; j++){
-    c[j] = 0.0;
-    } */
-
-
-  for (j = 0; j < cols; j++){
-    for (i =0; i < nprobes; i++){
-      z[j*nprobes + i] =  log(data[j*nprobes + i])/log(2.0);
-      printf("%f ",z[j*nprobes +i]);
-    }
-    printf("\n");
-  } 
-  
-  
-  for (iter = 1; iter <= maxiter; iter++){
-    get_row_median(z,rdelta,nprobes,cols);
-    subtract_by_row(z,rdelta,nprobes,cols);
-    rmod(r,rdelta,nprobes);
-    delta = median(c,cols);
-    for (j = 0; j < cols; j++){
-      c[j] = c[j] - delta;
-    }
-    t = t + delta;
-
-    get_col_median(z,cdelta,nprobes,cols);
-    subtract_by_col(z,cdelta,nprobes,cols);
-    cmod(c,cdelta,cols);
-    delta = median(r,nprobes);
-    for (i =0; i < nprobes; i ++){
-      r[i] = r[i] - delta;
-    }
-    t = t+delta;
-    newsum = sum_abs(z,nprobes,cols);
-    if (newsum == 0.0 || fabs(1.0 - oldsum/newsum) < eps)
-      break;
-    oldsum = newsum;
-  }
-
-  printf("%f ",t);
-  for (j=0; j < cols; j++){
-    results[j] = c[j]; 
-    printf("%f ",results[j]);
-  }
-  
-  printf("\n");
-
-   for (j = 0; j < cols; j++){
-    for (i =0; i < nprobes; i++){
-      printf("%f ",z[j*nprobes +i]);
-    }
-    printf("\n");
-  } 
-
-
-
-  free(rdelta);
-  free(r);
-  free(cdelta);
-  free(c);
-  free(z);
-  free(data_matrix);
-
-
 }
 
 
@@ -611,12 +513,13 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
     qnorm_c(PM,&rows,&cols);
   }
 
-  ProbeNames =malloc(rows*(sizeof(char *)));
+  ProbeNames = Calloc(rows,char *);
 
   for (i =0; i < rows; i++)
     ProbeNames[i] = CHAR(VECTOR_ELT(ProbeNamesVec,i));
   
-  outnames = malloc(nprobesets*sizeof(char *));
+  
+  outnames = Calloc(nprobesets,char *);
 
   /* PROTECT(outvec = NEW_NUMERIC(nprobesets*cols)); */
   
@@ -644,7 +547,7 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   SET_VECTOR_ELT(dimnames,0,names);
   setAttrib(outvec, R_DimNamesSymbol, dimnames);
   UNPROTECT(2);
-
+  Free(ProbeNames);
   return outvec;
 }
 

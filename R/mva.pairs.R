@@ -1,3 +1,44 @@
+###
+###
+### Code for M and MvA plots
+###
+### Mar 6, 2004 - added the generic Mbox. It performs
+###               the equivalent of Mbox in affyPLM
+###               added a generic MAplot. Similar
+###               functionality is implemented in
+###               affyPLM
+###               a function ma.plot now does the actual plotting
+###               for mva.pairs
+###
+###
+
+ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,...){
+  sigma <- IQR(M)
+  mean <- median(M)
+  xloc <- max(A) - 1
+  yloc <- max(M) - 1
+  aux <- loess(M[subset]~A[subset],degree=1,span=span,family=family.loess)$fitted
+  
+  plot(A,M,...)
+  o <- order(A[subset])
+  A <- A[subset][o]
+  M <- aux[o]
+  o <-which(!duplicated(A))
+  lines(approx(A[o],M[o]),col="red")
+  abline(0,0,col="blue")
+
+  # write IQR and Median on to plot
+  if (show.statistics){
+    txt <- format(sigma,digits=3)
+    txt2 <- format(mean,digits=3)
+    text(xloc ,yloc,paste(paste("Median:",txt2),paste("IQR:",txt),sep="\n"),cex=cex)
+  }
+
+  
+}
+
+
+
 mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="gaussian",digits=3,line.col=2,main="MVA plot",...){
   if(log.it) x <-log2(x)
   J <- dim(x)[2]
@@ -13,15 +54,8 @@ mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="ga
       xx <-(x[,j]+x[,k])/2
       sigma <- IQR(yy)
       mean <- median(yy)
-      subset <- sample(1:(dim(x)[1]),min(c(10000, nrow(x))))
-      
-      aux <- loess(yy[subset]~xx[subset],degree=1,span=span,family=family.loess)$fitted
-      plot(xx,yy,pch=".",xlab="",ylab="",tck=0,...)
-      o <- order(xx[subset])
-      xx <- xx[subset][o]
-      yy <- aux[o]
-      o <-which(!duplicated(xx))
-      lines(approx(xx[o],yy[o]),col=line.col)
+      subset<-sample(1:length(x),min(c(10000, length(x))))
+      ma.plot(xx,yy,tck=0,subset=subset,show.statistics=FALSE,pch=".",xlab="",ylab="",tck=0,...)
       par(mfg=c(k,j))
       #sigma <- IQR(yy)
       txt <- format(sigma,digits=digits)
@@ -37,3 +71,76 @@ mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="ga
   mtext(main,3,outer=TRUE,cex=1.5)
   invisible()
 }
+
+
+
+
+
+
+
+
+
+if (!isGeneric("Mbox"))
+  setGeneric("Mbox",function(object,...)
+             standardGeneric("Mbox"))
+
+
+setMethod("Mbox",signature("AffyBatch"),
+          function(object,log=TRUE,type=c("both","pm","mm"),...){
+             type <- match.arg(type)
+             if (type == "both"){
+              pms <- unlist(indexProbes(object, "both"))
+            } else if (type == "pm"){
+              pms <- unlist(pmindex(object))
+            } else if (type == "mm"){
+              mms <- unlist(mmindex(object))
+            }
+            if(log){
+              x <- log2(intensity(object)[pms, ])
+            } else {
+              x <- intensity(object)[pms, ]
+            }
+            medianchip <- apply(x, 1, median)
+            M <- sweep(x,1,medianchip,FUN='-')
+            boxplot(data.frame(M),...)
+          })
+
+if (!isGeneric("MAplot"))
+  setGeneric("MAplot",function(object,...)
+             standardGeneric("MAplot"))
+
+
+setMethod("MAplot",signature("AffyBatch"),
+          function(object,log=TRUE,type=c("both","pm","mm"),ref=NULL,...){
+            type <- match.arg(type)
+            if (type == "both"){
+              pms <- unlist(indexProbes(object, "both"))
+            } else if (type == "pm"){
+              pms <- unlist(pmindex(object))
+            } else if (type == "mm"){
+              pms <- unlist(mmindex(object))
+            }
+            if(log){
+              x <- log2(intensity(object)[pms, ])
+            } else {
+              x <- intensity(object)[pms, ]
+            }
+            if (is.null(ref)){
+              medianchip <- apply(x, 1, median)
+            } else {
+              medianchip <- x[,ref]
+            }
+            M <- sweep(x,1,medianchip,FUN='-')
+            A <- 1/2*sweep(x,1,medianchip,FUN='+')
+            if (is.null(ref)){
+              for (i in 1:dim(x)[2]){
+                title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
+                ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+              }
+            } else {
+              for (i in (1:dim(x)[2])[-ref]){
+                title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
+                ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+              }
+            }  
+          })
