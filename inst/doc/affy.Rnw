@@ -1,7 +1,7 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{"affy primer"}
-%\VignetteKeyword{oligonucleotide arrays/Affymetrix, preprocessing/normalization, graphics/plotting}
-%\VignetteDepends{modreg, Biobase, eda}
+%\VignetteIndexEntry{affy primer}
+%\VignetteKeyword{Preprocessing, Affymetrix}
+%\VignetteDepends{affy}
 \documentclass[12pt]{article}
 
 \usepackage{amsmath,pstricks}
