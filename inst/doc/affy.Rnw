@@ -552,7 +552,7 @@ included in the package
 \begin{figure}[htbp]
 \begin{center}
 <<fig=TRUE>>=
-hist(affybatch.example[1:2]) ##PM histogram of arrays 1 and 2
+hist(affybatch.example[,1:2]) ##PM histogram of arrays 1 and 2
 @
 \caption{\label{f3} Histogram of $PM$ intensities for 1st and 2nd array}
 \end{center}
