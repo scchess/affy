@@ -373,10 +373,17 @@ if (debug.affy123) cat("--->[[\n")
 
 ##[ subseting. can only happen by sample. for now not by gene
 setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
-  if( !missing(i) ) {
+  if( !missing(i) & missing(j)) {
+    warning("The use of abatch[i,] and abatch[i] is decrepit. Please us abatch[,i] instead.\n")
     phenoData(x) <- phenoData(x)[i, , ..., drop=FALSE]
     intensity(x) <- intensity(x)[ ,i, ..., drop=FALSE]
   }
+
+  if( !missing(j)) {
+    phenoData(x) <- phenoData(x)[j, , ..., drop=FALSE]
+    intensity(x) <- intensity(x)[ ,j, ..., drop=FALSE]
+  }
+
   return(x)
 })
 
