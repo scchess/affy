@@ -34,3 +34,4 @@ normalize.AffyBatch.contrasts(abatch,span=2/3,choose.subset=TRUE,
 %  
 %}
 \keyword{manip}
+

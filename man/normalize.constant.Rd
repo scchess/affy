@@ -10,7 +10,7 @@ normalize.AffyBatch.constant(abatch, refindex=1, FUN=mean, na.rm=TRUE)
 normalize.constant(x, refconstant, FUN=mean, na.rm=TRUE)
 }
 \arguments{
-  \item{abatch}{ a \code{\link{AffyBatch-class}}}
+  \item{abatch}{ an instance of the \code{\link{AffyBatch-class}}.}
   \item{x}{a vector of intensities on a chip (to normalize to the reference).}
   \item{refindex}{the index of the array used as a reference.}
   \item{refconstant}{the constant used as a reference}
