@@ -1,8 +1,10 @@
 .initAffyBatch <- function(where){
   
   if (debug.affy123) cat("-->initAffyBatch\n")
-  
-  setClass("AffyBatch", ##keep it very simple and like exprSet
+
+  ## Inherits from Affybatch
+  ## The accessor 'intensity' gets what is in the slot 'exprs'
+  setClass("AffyBatch",
            representation(cdfName="character",
                           nrow="numeric",
                           ncol="numeric"),
@@ -57,9 +59,6 @@
 #######################################################
   
   
-  ##sample Names now comes from Biobase
-  
-  if (debug.affy123) cat("--->getCdfInfo\n")
   if( !isGeneric("getCdfInfo") )
     setGeneric("getCdfInfo", function(object, ...)
                standardGeneric("getCdfInfo"), where=where)
@@ -74,19 +73,18 @@
               cdfname <- cleancdfname(object@cdfName)
               
               for (i in 1:length(how)) {
-
                 what <- how[[i]]$what
                 where <- how[[i]]$where
 
                 if (what == "data") {
                   ##if we can get it from data dir. otherwise load package
-                  if(cdfname%in%data(package=affy)$results[,3]){
+                  if(cdfname %in% data(package = affy)$results[, 3]){
                     ##RI: package="affy" doesnt work it has to be package=affy
                     ##    fix if you can
-                    where <- as.environment(match(paste("package:", where, sep = ""),search()))
-                    if(!exists(cdfname,where=where,inherits=FALSE)){
+                    where <- as.environment(match(paste("package:", where, sep = ""), search()))
+                    if(!exists(cdfname, where = where, inherits = FALSE)){
                       path <- .path.package("affy")
-                      filename <- paste(cdfname,".rda",sep="")
+                      filename <- paste(cdfname, ".rda", sep="")
                       load(file.path(path, "data", filename) ,
                            envir = where)
                     }
@@ -97,20 +95,32 @@
                 if (what == "package") {
                   loc <- .find.package(cdfname, lib.loc=where, quiet=TRUE)
                   
-                  if (identical(loc, character(0)))
+                  if (identical(loc, character(0))) {
+                    ## before jumping to the next option, check the possibility to
+                    ## download the missing cdfenv pack
+                    
+                    if (how[[i]]$autoload) {
+                      if (! require(reposTools))
+                        stop("The package reposTools is required to download environments.")
+                      
+                      if (is.null(how[[i]]$installdir))
+                        install.packages2(cdfname, how[[i]]$repository)
+                      else
+                        install.packages2(cdfname, how[[i]]$repository, how[[i]]$installdir)
+                      
+                      detach("package:reposTools")
+                      ## rewind the iterator i and try again
+                      i <- i-1
+                    }
+                    ## jump to next way to get the cdfenv
                     next
-                  ##stop(paste("AffyBatch: Looked for probes information in the package ", cdfname, "but could not find it.\n"))
-                  
-                  ##may be an option to try to autoload the package from
-                  ##the bioconductor website woud be nice here
-                  ## there is already a "how[[i]]$autoload" available
-                  
+                  }
                   if (length(loc) > 1)
                     warning(paste("several packages with a matching name. Using the one at", loc[1]))
                   
                   do.call("library", list(cdfname, lib.loc=dirname(loc[1])))
+                  
                   return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
-                  ##object@cdfInfo <<- get(name, envir=as.environment(paste("package:",name, sep="")))
                 }
                 
                 
@@ -159,11 +169,7 @@
   if (debug.affy123) cat("--->show\n")
   setMethod("show", "AffyBatch",
             function(object) {
-              
-              cat("AffyBatch object\n")
-              cat("size of arrays=", nrow(object), "x", ncol(object),
-                  " features (", object.size(object) %/% 1024, " kb)\n", sep="")
-              
+
               ## Location from cdf env
               try( cdf.env <- getCdfInfo(object) )
               if (! inherits(cdf.env, "try-error")) {
@@ -173,6 +179,9 @@
                 num.ids <- "???"
               }
               
+              cat("AffyBatch object\n")
+              cat("size of arrays=", nrow(object), "x", ncol(object),
+                  " features (", object.size(object) %/% 1024, " kb)\n", sep="")
               cat("cdf=", object@cdfName,
                   " (", num.ids, " affyids)\n",
                   sep="")
@@ -180,7 +189,6 @@
               cat("number of genes=", length(geneNames(object)), "\n",sep="")
               cat("annotation=",object@annotation,"\n",sep="")
               cat("notes=",object@notes,"\n",sep="")
-              ##cat("sample names=",sampleNames(object),"\n",sep="\n")
             },
             where=where)
 
@@ -232,7 +240,7 @@
                 
                 
                 if (xy) {
-                  warning("flag 'xy' is deprecated")
+                  warning("flag 'xy' is deprecated (because confusing)")
                   x <- tmp %% nrow(object)
                   x[x == 0] <- nrow(object)
                   y <- tmp %/% nrow(object) + 1
@@ -248,7 +256,6 @@
   
   
   ##pmindex method
-  if (debug.affy123) cat("--->pmindex\n")
   if( !isGeneric("pmindex") )
     setGeneric("pmindex", function(object,...)
                standardGeneric("pmindex"), where=where)
@@ -274,7 +281,6 @@
 
   
   ##probeNames method
-  if (debug.affy123) cat("--->probeNames\n")
   if( !isGeneric("probeNames") )
     setGeneric("probeNames", function(object, ...)
                standardGeneric("probeNames"), where=where)
@@ -288,7 +294,6 @@
             },where=where)
 
 
-  if (debug.affy123) cat("--->probes\n")
   if( !isGeneric("probes") )
     setGeneric("probes", function(object, ...)
                standardGeneric("probes"), where=where)
@@ -315,7 +320,6 @@
             where=where)
   
   ##pm method
-  if (debug.affy123) cat("--->pm\n")
   if( !isGeneric("pm") )
     setGeneric("pm", function(object, ...)
                standardGeneric("pm"), where=where)
@@ -361,8 +365,6 @@
   }, where=where)
 
 ###probeset
-  if (debug.affy123) cat("--->probeset\n")
-  
   if( !isGeneric("probeset") )
     setGeneric("probeset", function(object, ...)
                standardGeneric("probeset"), where=where)
