@@ -58,34 +58,42 @@ read.affybatch <- function(..., filenames=character(0),
 
   if (verbose)
     cat(paste("instanciating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
-  conty <- new("AffyBatch",
-               exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
-               ##se.exprs = array(NaN, dim=dim.sd),
-               cdfName    = cel@cdfName,
-               phenoData  = phenoData,
-               nrow       = dim.intensity[1],
-               ncol       = dim.intensity[2],
-               annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
-               description= description,
-               notes      = notes)
+
+  if (insitu)
+    conty <- new("AffyBatchUnique",
+                 exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
+                 ##se.exprs = array(NaN, dim=dim.sd),
+                 cdfName    = cel@cdfName,
+                 phenoData  = phenoData,
+                 nrow       = dim.intensity[1],
+                 ncol       = dim.intensity[2],
+                 annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
+                 description= description,
+                 notes      = notes)
   ##           history    = vector("list", length=n)) we need to put this in MIAME
-  ##we have to use phenoData here: dimnames(intensity(conty)) <- list(NULL, NULL, rep("", n))
+  else
+    conty <- new("AffyBatch",
+                 exprs  = array(NaN, dim=c(prod(dim.intensity), n), dimnames=list(NULL, samplenames)),
+                 ##se.exprs = array(NaN, dim=dim.sd),
+                 cdfName    = cel@cdfName,
+                 phenoData  = phenoData,
+                 nrow       = dim.intensity[1],
+                 ncol       = dim.intensity[2],
+                 annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
+                 description= description,
+                 notes      = notes)
+  ##           history    = vector("list", length=n)) we need to put this in MIAME
+  
   if (verbose)
     cat("done.\n")
-  
+
+  intensity(conty)[, 1] <- c(intensity(cel))
   ##if (sd)
   ##  spotsd(conty)[, , 1] <- spotsd(cel)
   
-  ##We need to get names from phenoData
-  ##c.names <- rep("", n)
-  ##c.names[1] <- cel@name
   ##outliers(conty)[[1]] <- outliers(cel)
   ##masks(conty)[[1]] <- masks(cel)
   ##history(conty)[[1]] <- history(cel) ###this must be done through MIAME
-  
-  ## finish if only one file.. we have to make phenoData agree. cant return just yet
-  ##if (n == 1)
-  ##  return(conty)
   
   for (i in (1:n)[-1]) {
     
@@ -102,6 +110,8 @@ read.affybatch <- function(..., filenames=character(0),
     if (cel@cdfName != ref.cdfName)
       warning(paste("cdfName mismatch !\n(", filenames[[i]], ")"))
 
+    intensity(conty)[, i] <- c(intensity(cel))
+    
     ##if (sd)
     ##  spotsd(conty)[, , i] <- spotsd(cel)
     
