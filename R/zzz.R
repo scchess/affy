@@ -144,7 +144,7 @@
   .setAffyOptions()  
   cacheMetaData(as.environment(where))
 
-  require(affydata,quietly=TRUE)
+  
 }
 
 .Last.lib <- function(libpath) {
