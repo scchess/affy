@@ -405,6 +405,18 @@ An important issue in microarray data analysis is to adjust the signal obtained 
 comparable. The technical particularities of the different approaches will only be outlined here.
 The reader will refer to XXX (ref!) for more details.
 
+The normalization of arrays object is as simple as \verb+normalize(object)+. The lines below present a view of the
+effect of normalization.
+
+<<fig=TRUE>>=
+par(mfrow=c(2,2))
+
+data(Dilution)
+
+boxplot(Dilution)
+boxplot(normalize(Dilution))
+@
+
 Individual help files for the normalization methods can be accessed with \verb+normalize?<method nickname>+.
 For example, if one wants to know more about the {\it quantiles} methods, the command \verb+normalize?quantiles+
 will display the corresponding help file.
@@ -424,7 +436,8 @@ as they have default values./
  (a vector of mode {\it character}).
 \end{itemize}
 
-The following example shows how to create a normalization methods that does... absolutely nothing:
+The following example shows how to create a normalization methods for \verb+Cel.container+
+that does... absolutely nothing:
 
 %\begin{vignette}
 <<>>=
@@ -510,8 +523,10 @@ XXX
 ## ------------------ 
 
 ## GUI ?
-CDF <- read.cdffile(XXX)
-cels <- read.Cel.container(XXX)
+CDF <- read.cdffile("path/to/my/cdffile.CDF")
+filenames <- dir(path="path/to/my/celfiles/", pattern="*\.CEL", full.names=TRUE)
+
+cels <- read.Cel.container(list=filenames)
 
 
 ## ------------------
