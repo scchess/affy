@@ -14,7 +14,7 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL)
   \item{y}{ \code{Y} position for the probes }
   \item{i}{ indices in the \code{AffyBatch} for the probes }
   \item{nc}{ total number of \code{Ys} on the chip }
-  \item{nR}{ total number of \code{Xs} on the chip }
+  \item{nr}{ total number of \code{Xs} on the chip }
   \item{cel}{ a corresponding object of class \code{\link{Cel}} }
   \item{abatch}{ a corresponding object of class \code{\link{AffyBatch}} }
 }
@@ -30,8 +30,9 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL)
 \warnings{  The X/Y values stored in {\it Affymetrix} CDF and probe sequence files
   start their indexing at zero. One should be careful and add one
   to these values\ldots a unified scheme with \code{oligochips} might
-  come in the future (release 1.3), and make that unnecessary\ldots~~ }
-\seealso{\code{\link{locate.name}}}
+  come in the future (release 1.3), and make the (dangerous) juggling
+  with zero-offset/one-offset unnecessary\ldots~~ }
+\seealso{\code{\link{locate.name}}, \code{\link{indexProbes}}}
 \examples{
 data(affybatch.example)
 
