@@ -87,6 +87,7 @@
  **               the function R_median_polish
  ** Jul 27, 2004 - fix a small memory leak
  ** Aug 4, 2004 - move the "Background correcting" message. 
+ ** Nov 8, 2004 - change how things are structured in do_RMA()
  **
  ************************************************************************/
 
@@ -418,29 +419,21 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
 
   first = ProbeNames[0];
   first_ind = 0;
-  i =0;
-  nprobes = 1;
-  for (j = 1; j < *rows; j++){
-    if ((strcmp(first,ProbeNames[j]) != 0) | (j == (*rows -1))){
-      if (j == (*rows -1)){
-	nprobes++;
-       	for (k = 0; k < nprobes; k++){ 
-	  if (k >= max_nrows){
-	    max_nrows = 2*max_nrows;
-	    cur_rows = Realloc(cur_rows, max_nrows, int);
-	  }
-	  cur_rows[k] = (j+1 - nprobes)+k; 
-	}
-      } else {
-	for (k = 0; k < nprobes; k++){
-	  if (k >= max_nrows){
-	    max_nrows = 2*max_nrows;
-	    cur_rows = Realloc(cur_rows, max_nrows, int);
-	  } 
-	  cur_rows[k] = (j - nprobes)+k; 
-	}
+  i = 0;     /* indexes current probeset */
+  j = 0;    /* indexes current row in PM matrix */
+  k = 0;    /* indexes current probe in probeset */
+  while ( j < *rows){
+    if (strcmp(first,ProbeNames[j]) == 0){
+      if (k >= max_nrows){
+	max_nrows = 2*max_nrows;
+	cur_rows = Realloc(cur_rows, max_nrows, int);
       }
-      /* printf("%d \n", nprobes); */
+      cur_rows[k] = j;
+      k++;
+      j++;
+      
+    } else {
+      nprobes = k;
       median_polish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes);
       for (k =0; k < *cols; k++){
 	results[k*nps + i] = cur_exprs[k];
@@ -450,11 +443,18 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
       strcpy(outNames[i],first);
       i++;
       first = ProbeNames[j];
-      first_ind = j;
-      nprobes = 0;
+      k = 0;
     }
-    nprobes++;
   }
+  nprobes = k;
+  median_polish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes);
+  for (k =0; k < *cols; k++){
+    results[k*nps + i] = cur_exprs[k];
+  } 
+  size = strlen(first);
+  outNames[i] = Calloc(size+1,char);
+  strcpy(outNames[i],first);
+  
 
   Free(cur_exprs);
   Free(cur_rows);
