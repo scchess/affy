@@ -1,0 +1,14 @@
+avdiff <- function(x,verbose=F){
+  if(missing(x)) stop("Argument x missing, with no default\n")
+  cat("Computing average difference for",dim(x$pm)[2],"columns")
+  avdiff <- apply(as.matrix(x$pm-x$mm),2,function(y){
+    cat(".")
+    tapply(y,x$id,function(z){
+      o <- order(z)
+      zz <- z[-c(o[1],o[length(z)])] #take out biggest and smallest
+      mean(z[abs(z-mean(zz))<3*sd(zz)])
+    })
+  })
+  dimnames(avdiff) <- list(x$names,x$chip.names)
+  return(avdiff)
+}

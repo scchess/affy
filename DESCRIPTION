@@ -1,0 +1,15 @@
+Package: affy
+Version: 0.6.2
+Date: 2002-2-4
+Title: Statistical Oligonucleotide (Affymetrics) Array Analysis
+Author: Rafael A. Irizarry <rafa@jhu.edu>,  
+	Laurent Gautier <laurent@cbs.dtu.dk>, with contributions from
+	Benjamin Milo BOLSTAD <bolstad@stat.Berkeley.EDU>	
+	Magnus Åstrand <Magnus.Astrand@astrazeneca.com>,
+	Christopher Workman <workman@cbs.dtu.dk>
+Maintainer: Rafael A. Irizarry <rafa@jhu.edu>
+Depends: R (>= 0.99), modreg
+Description: The package contains some simple functions for exploratory oligonucleotide array analysis.  
+License: GPL version 2 or newer
+URL: http://biosun01.biostat.jhsph.edu/~ririzarr/Raffy/index.html
+
