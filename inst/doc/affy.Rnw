@@ -555,7 +555,6 @@ included in the package
 \begin{figure}[htbp]
 \begin{center}
 <<fig=TRUE>>=
-data(affybatch.example)
 hist(affybatch.example[1:2]) ##PM histogram of arrays 1 and 2
 @     
 \caption{\label{f3} Histogram of $PM$ intensities for 1st and 2nd array}
@@ -577,7 +576,6 @@ log transformed intensities. This can be changed through the
 \begin{figure}[htbp]
 \begin{center}
 <<fig=TRUE>>=
-data(affybatch.example)
 par(mfrow=c(2,2))
 image(affybatch.example) 
 @     
@@ -1016,18 +1014,18 @@ The call to \verb+data+ loads an \verb+AffyBatch+ and also an
 environment that corresponds to a small corner of the HG6800 chip,
 which we created. 
 <<>>=
-data(affybatch.example)
 print(affybatch.example@cdfName)
 myenv <- getCdfInfo(affybatch.example)
 ls(myenv)[1:5]
 @ 
-
+Notice \verb+affybatch.example+ must be loaded (see above).
 Now lets look at \verb+Dilution+
 <<>>=
 print(Dilution@cdfName)
 myenv <- getCdfInfo(Dilution)
 ls(myenv)[1:5]
 @ 
+Notice \verb+Dilution+ should be loaded already as abouve.
 
 By default we search for the environment first in the global
 environment, then in a packages named \verb+cleancdfname(x@cdfName)+, 
