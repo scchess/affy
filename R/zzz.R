@@ -26,11 +26,15 @@
   ## this could move into the respective methods of Plob and Cel.container later
   assign("normalize.Cel.container.methods", substr(ls(where)[grep("normalize\.Cel\.container\.*", ls(where))],
                                                    25, 100),
-                                                   envir=as.environment(where))
+         envir=as.environment(where))
   assign("normalize.Plob.methods", substr(ls(where)[grep("normalize\.Plob\.*", ls(where))],
                                           25,100),
-                                          envir=as.environment(where))
-  
+         envir=as.environment(where))
+
+  if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
+  assign("genrerateExprSet.methods", substr(ls(where)[grep("generateExprSet\.method\.*", ls(where))],
+                                            23,100),
+         envir=as.environment(where))
   cacheMetaData(as.environment(where))
 }
 

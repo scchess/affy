@@ -25,9 +25,9 @@ image(listcel[[1]],transfo=log)
 ## find the locations for probes corresponding to a given ID
 
 l.pm <- locate.name("AFFX-BioC-5_at", CDF.example, type="pm")
-plot.location(l.pm, CDF.example, col="red", pch=16)
+plotLocation(l.pm, CDF.example, col="red", pch=16)
 l.mm <- locate.name("AFFX-BioC-5_at", CDF.example, type="mm")
-plot.location(l.mm, CDF.example, col="blue", pch=16)
+plotLocation(l.mm, CDF.example, col="blue", pch=16)
 
 #legend(0.4,0,c("perfect match","mismatch"),c("red","blue"),bg="white")
 

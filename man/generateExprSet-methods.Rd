@@ -2,6 +2,7 @@
 \docType{methods}
 \alias{generateExprSet}
 \alias{generateExprSet-methods}
+\alias{generateExprSet.methods}
 \title{generate a set of expression values}
 \description{
   Generate a set of expression values from the probe pair
@@ -9,6 +10,8 @@
 }
 \usage{
   generateExprSet(x, cdf, method, ...)
+
+  generateExprSet.methods
 }
 \arguments{
   \item{x}{a \code{\link{Cel.container}} holding the probe level
@@ -18,11 +21,14 @@
   \item{...}{any of the options of normalize.loess you would like to modify}
 }
 \details{
-  If the parameter \code{ids} is set to \code{NULL} all the known names
-  are taken from \code{cdf@name.levels}.
+  The different methods available through this mecanism are stored in
+  the variable \code{generateExprSet.methods}.
 }
 \author{
   Laurent
+}
+\seealso{
+  method \code{generateExprSet} of the class \code{\link{Cel.container}}
 }
 \examples{
   data(CDF.example)
@@ -30,7 +36,7 @@
 
   ids <- c("AFFX-BioC-5_at","AFFX-BioC-3_at")
   
-  eset <- generateExprSet(listcel, CDF.example, "avgdiff", ids=ids)
+  #eset <- generateExprSet(listcel, CDF.example, "avgdiff", ids=ids)
 }
 \keyword{manip}
 
