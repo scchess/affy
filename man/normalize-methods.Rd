@@ -29,7 +29,7 @@ normalize.methods(object)
 %}
 %\value{
 %A \code{\link[Biobase]{container-class}} of normalized objects.
-%}
+}
 \details{
   Generic methods related to array data normalization. Currently defined for
   \code{Plob} and \code{Cel.container} objects...

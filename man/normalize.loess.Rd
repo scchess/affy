@@ -14,17 +14,23 @@ normalize.Cel.container.loess(listcel, ...)
 normalize.Plob.loess(plob, ...)
 }
 \arguments{
-  \item{mat}{}
-  \item{subset}{}
-  \item{epsilon}{}
-  \item{maxit}{}
-  \item{log.it}{}
-  \item{verbose}{}
-  \item{span}{}
-  \item{family.loess}{}
+  \item{mat}{a matrix with columns containing the values of the chips
+    to normalize.}
+  \item{subset}{a subset of the data to fit a loess to.}
+  \item{epsilon}{a tolerance value (supposed to be a small value - used
+    as a stopping criterium).}
+  \item{maxit}{maximum number of iterations.}
+  \item{log.it}{logical. If \code{TRUE} it takes the log2 of \code{mat}}
+  \item{verbose}{logical. If \code{TRUE} displays current pair of chip being
+    worked on.}
+  \item{span}{parameter to be passed the function \code{\link[modreg]{loess}}}
+  \item{family.loess}{parameter to be passed the function
+    \code{\link[modreg]{loess}}. \code{"gaussian"} or \code{"symmetric"}
+    are acceptable values for this parameter.}
   \item{listcel}{a \code{\link{Cel.container}} object}
   \item{plob}{a \code{\link{Plob}} object}
-  \item{...}{any of the options of normalize.loess you would like to modify}
+  \item{...}{any of the options of normalize.loess you would like to
+    modify (described above).}
 }
 \details{
   While a unifired scheme is on its way, please see
@@ -32,7 +38,8 @@ normalize.Plob.loess(plob, ...)
 }
 \author{
   Rafael\cr
-  (if there is a problem it must be because I (LG) butchered his nice code...)
+  (if there is a problem it must be because I (LG) butchered his nice
+  code... )
 }
 \seealso{
   \code{\link{probe.profile}}
