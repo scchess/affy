@@ -50,7 +50,7 @@ normalize.AffyBatch.quantiles.robust <- function(abatch, pmonly=FALSE) {
   return(abatch)
 }
 
-normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,approx.meth = FALSE,...){
+normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,approx.meth = FALSE,use.median=FALSE,...){
   
   calc.var.ratios <- function(x){
     cols <- dim(x)[2]
@@ -115,9 +115,9 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
   }
   cat("Chip weights are ",weights,"\n") 
   if (approx.meth == FALSE){
-    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols))[[1]],rows,cols)
+    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median))[[1]],rows,cols)
   } else {
     cat("Approximation currently not implemented \nFalling back to standard Quantile method\n")
-    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols))[[1]],rows,cols)
+    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median))[[1]],rows,cols)
   }
 }

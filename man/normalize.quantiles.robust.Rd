@@ -7,7 +7,7 @@
 \usage{
       normalize.quantiles.robust(x,weights=NULL,
                 remove.extreme=c("variance","mean","both","none"),
-                n.remove=1,approx.meth = FALSE,...)
+                n.remove=1,approx.meth = FALSE,use.median=FALSE,...)
 }
 
 \arguments{
@@ -19,6 +19,8 @@
   \item{n.remove}{number of chips to remove}
   \item{approx.meth}{Use the approximation method. Not currently
     implememnted}
+  \item{use.median}{if TRUE use the median to compute normalization
+    chip, otherwise use a weighted median}
   \item{...}{addtional parameters for the approximation method}
 }
 \details{This method is based upon the concept of a quantile-quantile 

@@ -27,13 +27,14 @@
  ** Feb 17, 2003 - add in a free(datvec) to qnorm(). clean up freeing of dimat
  ** Feb 25, 2003 - try to reduce or eliminate compiler warnings (with gcc -Wall)
  ** Feb 28, 2003 - update reference to normalization paper in comments
+ ** Mar 25, 2003 - ability to use median, rather than mean in so called "robust" method
  **
  ***********************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-/*#include "rma_common.c"*/
+#include "rma_common.h"
 
 /*************************************************************
  **
@@ -213,17 +214,25 @@ void qnorm_c(double *data, int *rows, int *cols){
 
 /*********************************************************
  **
- ** void qnorm_robust_c(double *data, int *rows, int *cols)
+ ** void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use_median)
+ **
+ ** double *data - datamatrix
+ ** double *weights - weights to give each chip when computing normalization chip
+ ** int *rows, *cols - matrix dimensions
+ ** int *use_median - 0 if using weighted mean, otherwise use median.
+ **
  **
  ** this is the function that actually implements the 
  ** quantile normalization algorithm. It is called from R. 
  ** this function allows the user to downweight particular
- ** chips, in the calculation of the mean.
+ ** chips, in the calculation of the mean or to use the median
+ ** rather than the mean. If median is used weights are ignored.
  **
  ********************************************************/
 
-void qnorm_robust_c(double *data,double *weights, int *rows, int *cols){
+void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use_median){
   int i,j,ind;
+  int half, length;
   dataitem **dimat;
   double sum,sumweights;
   double *row_mean = malloc((*rows)*sizeof(double));
@@ -241,28 +250,43 @@ void qnorm_robust_c(double *data,double *weights, int *rows, int *cols){
     for (j=0; j < *cols; j++)
       datvec[j] = dimat[j][i].data;
     /* qsort(datvec,*cols,sizeof(double),(int(*)(const void*, const void*))sort_double); */
-    for (j=0; j < (*cols); j++){
-      sum +=weights[j]*datvec[j];
+    if (!use_median){
+      for (j=0; j < (*cols); j++){
+	sum +=weights[j]*datvec[j];
+      }
+      sumweights = 0.0;
+      for (j=0; j < (*cols); j++){
+	sumweights = sumweights + weights[j];
+      }
+      row_mean[i] = sum/sumweights;
+    } else {
+       qsort(datvec,*cols,sizeof(double),(int(*)(const void*, const void*))sort_double);
+       half = (*cols + 1)/2;
+       if (length % 2 == 1){
+	 row_mean[i] = datvec[half - 1];
+       } else {
+	 row_mean[i] = (datvec[half] + datvec[half-1])/2.0;
+       }
     }
-    sumweights = 0.0;
-    for (j=0; j < (*cols); j++){
-      sumweights = sumweights + weights[j];
-    }
-    row_mean[i] = sum/sumweights;
+
   }
   
   /*# unsort mean columns */
   for (j =0; j < *cols; j++){
     get_ranks(ranks,dimat[j],*rows);
 
-
     for (i =0; i < *rows; i++){
       ind = dimat[j][i].rank;
       data[j*(*rows) + ind] = row_mean[(int)floor(ranks[i])-1];
     }
   }
-  free(ranks);
+  free(datvec);
+  free(ranks); 
+
+  for (j=0; j < *cols; j++){
+    free(dimat[j]);
+  }
+
   free(dimat);
   free(row_mean); 
-
 }
