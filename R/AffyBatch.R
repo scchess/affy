@@ -102,7 +102,7 @@
                     ## download the missing cdfenv pack
                     
                     if (how[[i]]$autoload) {
-                      
+                      cat(paste("Trying to download the package '", cdfname, "'...\n", sep=""))
                       if (! "package:reposTools" %in% search()) {
                         on.exit(detach("package:reposTools"))
                       }

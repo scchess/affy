@@ -1,12 +1,18 @@
 normalize.AffyBatch.qspline <- function(abatch, ...) {
-  intensity(abatch) <- normalize.qspline(t(intensity(abatch)), ...)
+  intensity(abatch) <- normalize.qspline(intensity(abatch), ...)
   
   #set.na.spotsd(listcel)
-  
+  normhisto <- vector("list", length=ncol(intensity(abatch)))
   ##need to use MIAME for this
-  ##  for (i in 1:length(abatch)) {
-  ##    history(abatch)[[i]] <- list(name="normalized by qspline")
-  ## }
+  for (i in 1:length(abatch)) {
+    normhisto[[i]] <- list(name="normalized by qspline")
+  }
+                                
+  preproc <- c(description(abatch)@preprocessing,
+               list(normalization = normhisto))
+  MIAME <- description(abatch)
+  MIAME@preprocessing <- preproc
+  description(abatch) <- MIAME
   
   return(abatch)
 }
@@ -27,7 +33,7 @@ normalize.qspline <- function(x,
                               na.rm         = FALSE
                               ){
 
-  require(modreg)
+  require(modreg, quietly=TRUE) || error("library modreg is required !")
   
   if (is.null(target))
     target <- exp(apply(log(x), 1, mean))
@@ -41,7 +47,7 @@ normalize.qspline <- function(x,
     if (samples < 1)
       samples <- round(samples * x.n)
   
-  p <- 1:samples / samples
+  p <- (1:samples) / samples
   p <- p[ which(p <= p.max) & which(p >= p.min) ]
   samples <- length(p)
   

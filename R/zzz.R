@@ -95,11 +95,17 @@
   }
 
   probesloc.first <- list(what="environment", where=.GlobalEnv)
+  ## no autoload in the first place, to give 'data' a chance
   probesloc.second <- list(what="package", where=NULL,
-                           autoload=TRUE,
+                           autoload=FALSE,
                            installdir=NULL,
                            repository="http://www.bioconductor.org/data/cdfenvs/repos/")
   probesloc.third <- list(what="data", where="affy")
+  ## still no available cdfenvs... give autoload a try...
+  probesloc.forth <- list(what="package", where=NULL,
+                          autoload=TRUE,
+                          installdir=NULL,
+                          repository="http://www.bioconductor.org/data/cdfenvs/repos/")
 
   ## default for the methods
   bgcorrect.method <- "mas"
