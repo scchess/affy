@@ -50,9 +50,9 @@ pps.pmonly <- pmcorrect.pmonly(pps)
 pps.subtractmm <- pmcorrect.subtractmm(pps)
 pps.mas5 <- pmcorrect.mas(pps)
 par(mfrow=c(2,2))
-plot(pm(pps.pmonly),pm(pps.subtractmm))
-plot(pm(pps.pmonly),pm(pps.mas5))
-plot(pm(pps.subtractmm),pm(pps.mas5))
+#plot(pm(pps.pmonly), pm(pps.subtractmm))
+#plot(pm(pps.pmonly),pm(pps.mas5))
+#plot(pm(pps.subtractmm),pm(pps.mas5))
 }
 \keyword{manip}
 
