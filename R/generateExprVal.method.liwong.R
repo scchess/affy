@@ -1,9 +1,9 @@
-generateExprVal.method.liwong <- function(matos, ...) {
-  matos <- t(matos)
-  if (nrow(matos) == 1) {
+generateExprVal.method.liwong <- function(probes, ...) {
+  probes <- t(probes)
+  if (nrow(probes) == 1) {
     warning("method liwong unsuitable when only one probe pair")
-    matos
+    probes
   } else {
-    fit.li.wong(matos, ...)$theta
+    fit.li.wong(probes, ...)$theta
   }
 }

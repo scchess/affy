@@ -8,12 +8,11 @@ normalize.Cel.container.constant <- function(container, refindex=1, FUN=mean, na
   refconstant <- FUN(intensity(container[[refindex]]), na.rm=na.rm)
   spotsd(container) <- array()
   for (i in (1:n)[-refindex]) {
-    cat(i,"\n")
     m <- normalize.constant(intensity(container[[i]]), refconstant, FUN=FUN, na.rm=na.rm)
     myhistory <- list(name="normalized by constant",
                       constant=attr(m,"constant"))
     attr(m,"constant") <- NULL
-    intensity(container)[i, , ] <- m
+    intensity(container)[, , i] <- m
     history(listcel)[[i]] <- myhistory
   }
   return(container)

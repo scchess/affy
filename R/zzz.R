@@ -5,7 +5,7 @@
   assign("debug.affy123", T, envir=.GlobalEnv)
   if (debug.affy123) {
     cat(rep("*",13),"\n",sep="")
-    cat("affy: development version (might be unstable)\n")
+    cat("affy: development version (...this is usable...)\n")
     cat(rep("*",13),"\n",sep="")
     cat("demo(affy.tour) will eventually work and give an overview...\n")
   }

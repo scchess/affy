@@ -65,17 +65,17 @@ normalize.Plob.invariantset <- function(container, prd.td=c(0.003,0.007), progre
     if (progress) cat("normalizing array", attr(container[[i]], "name"), "...")
     
     ##temporary
-    tmp <- normalize.invariantset(pm(container)[,i],
-                                  pm(container)[,refindex],
+    tmp <- normalize.invariantset(pm(container)[, i],
+                                  pm(container)[, refindex],
                                   prd.td)
                          
     
     # pm first...
-    pm(container)[,i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                          xout=container@pm[,i])$y)
+    pm(container)[, i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                                          xout=container@pm[,i])$y, rule=2)
     # then mm... (note: I am not quite sure whether MMs should be 'normalized' or discarded...)
-    mm(container)[,i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                          xout=mm(container)[,i])$y)
+    mm(container)[, i] <- as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
+                                           xout=mm(container)[,i])$y, rule=2)
     
     ##container@notes <- list(name="normalized by invariant set", invariantset=tmp$i.set)
     container@notes <- "normalized by invariant set"
@@ -104,7 +104,7 @@ normalize.Cel.container.invariantset <- function(cel.container, f.cdf, prd.td=c(
   # take as a reference the array having the median overall intensity
   m <- vector("numeric", length=nc)
   for (i in 1:nc)
-    m[i] <- mean(cel.container@intensity[i, , ][i.pm])
+    m[i] <- mean(intensity(cel.container)[, , i][i.pm])
   refindex <- trunc(median(rank(m)))
   rm(m)           
 
@@ -115,28 +115,28 @@ normalize.Cel.container.invariantset <- function(cel.container, f.cdf, prd.td=c(
   
     if (progress) cat("normalizing array", cel.container@name[i], "...")
 
-    cel.container@sd <- array()
-    mydim <- dim(cel.container@intensity[i, , ])
+    spotsd(cel.container) <- array()
+    mydim <- dim(intensity(cel.container)[, , i])
     
     ##temporary
-    tmp <- normalize.invariantset(c(cel.container@intensity[i, , ][i.pm]),
-                                  c(cel.container@intensity[refindex, , ][i.pm]),
+    tmp <- normalize.invariantset(c(intensity(cel.container)[, , i])[i.pm],
+                                  c(intensity(cel.container)[, , refindex])[i.pm],
                                   prd.td)
     i.set <- which(i.pm)[tmp$i.set]
     tmp <- array(as.numeric(approx(tmp$n.curve$y, tmp$n.curve$x,
-                                   xout=cel.container@intensity[i, , ])$y),
+                                   xout=intensity(cel.container)[, , i], rule=2)$y),
                  mydim)
     attr(tmp,"invariant.set") <- NULL
-    cel.container@intensity[i, , ] <- tmp
+    intensity(cel.container)[, , i] <- tmp
 
     ## storing information about what has been done
-    cel.container@history[[i]] <- list(name="normalized by invariant set",
+    history(cel.container)[[i]] <- list(name="normalized by invariant set",
                                        invariantset=i.set)
     
     if (progress) cat("done.\n")
     
   }
-  cel.container@history[[refindex]] <- list(name="reference for the invariant set")
+  history(cel.container)[[refindex]] <- list(name="reference for the invariant set")
   
   return(cel.container)
 }

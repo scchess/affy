@@ -1,10 +1,10 @@
-generateExprVal.method.playerout <- function(matos, weights=F){
+generateExprVal.method.playerout <- function(probes, weights=F){
   
-  matos <- t(matos)
-  nprobes <- ncol(matos)
+  probes <- t(probes)
+  nprobes <- ncol(probes)
   
   ## skip if only one probe
-  if (nprobes == 1) return(t(matos))
+  if (nprobes == 1) return(t(probes))
   
   ## I do not know to which extend the use of optim
   ## is really equivalent to the use of nlminb in S-plus
@@ -12,9 +12,9 @@ generateExprVal.method.playerout <- function(matos, weights=F){
               playerout.costfunction,
               method="L-BFGS-B",
               control=list(maxit=500),
-              y=matos)
+              y=probes)
   ##S1 <- nlm(playerout,runif(20),iterlim=500,y=t(y))
-  r <- c(matos %*% S1$par / sum(S1$par))
+  r <- c(probes %*% S1$par / sum(S1$par))
   if (weights)
     attr(r,"weights") <- S1$par
   return(r)

@@ -15,35 +15,36 @@ normalize.Cel.container.loess <- function(listcel, ...) {
   ##cat(cols,rows)
   for (i in 1:cols) {
     intensity(listcel[[i]])  <- matrix(x[,i],chipdim[1], chipdim[2])
-    history(listcel[[i]])$name <- "normalized by quantiles"
+    history(listcel)[[i]] <- list(name="normalized by loess")
     spotsd(listcel[[i]]) <- matrix() # set 'sd' to nothing (meaningless after normalization)
   }
 
   return(listcel)
 }
 
-normalize.Plob.loess <- function(plob,...){
+normalize.Plob.loess <- function(plob, ...){
 
-  x <-  matrix(0, nrow(plob)*2, ncol(plob))
-  for (i in 1:ncol(plob)) {
-    x[1:nrow(plob), i] <- pm(plob)[,i]
-    x[nrow(plob)+1:nrow(plob)*2, i] <- mm(plob)[,i]
-  }
-
-  x <- normalize.loess(x, ...)
+  x <-  matrix(0, nprobes(plob)*2, nchips(plob))
   
-  for (i in 1:plob@nchips) {
-    pm(plob)[,i] <- x[1:nrow(plob), i]
-    mm(plob)[,i] <- x[nrow(plob)+1:nrow(plob)*2, i]
+  for (i in 1:nchips(plob)) {
+    x[1:nprobes(plob), i] <- pm(plob)[, i]
+    x[(nprobes(plob)+1):(nprobes(plob)*2), i] <- mm(plob)[, i]
   }
 
+  y <- normalize.loess(x, ...)
+  
+  for (i in 1:nchips(plob)) {
+    pm(plob)[, i] <- y[1:nprobes(plob), i]
+    mm(plob)[, i] <- y[(nprobes(plob)+1):(nprobes(plob)*2), i]
+  }
   
   return(plob)
+  
 }
 
 
-normalize.loess <- function(mat,subset=sample(1:(dim(mat)[2]),5000),
-                            epsilon=10^-2,maxit=1,log.it=T,verbose=T,span=2/3,
+normalize.loess <- function(mat, subset=sample(1:(dim(mat)[1]), min(c(5000, nrow(mat)))),
+                            epsilon=10^-2, maxit=1, log.it=T, verbose=T, span=2/3,
                             family.loess="symmetric"){
   
   J <- dim(mat)[2]
@@ -55,37 +56,47 @@ normalize.loess <- function(mat,subset=sample(1:(dim(mat)[2]),5000),
   }
   
   change <- epsilon +1
-  fs <- matrix(0,II,J)##contains what we substract
+  fs <- matrix(0, II, J)##contains what we substract
   iter <- 0
-  w <- c(0,rep(1,length(subset)),0) ##this way we give 0 weight to the
-  ##extremes added so that we can interpolate
+  w <- c(0, rep(1,length(subset)), 0) ##this way we give 0 weight to the
+                                      ##extremes added so that we can interpolate
+  
   while(iter < maxit){
-    iter <- iter+1
+    iter <- iter + 1
     means <- matrix(0,II,J) ##contains temp of what we substract
-    for(j in 1:(J-1)){
-      for(k in (j+1):J){
-        y <- newData[,j]-newData[,k]
-        x <-(newData[,j]+newData[,k])/2
-        index <- c(order(x)[1],subset,order(-x)[1])
+    
+    for (j in 1:(J-1)){
+      for (k in (j+1):J){
+        y <- newData[,j] - newData[,k]
+        x <- (newData[,j] + newData[,k]) / 2
+        index <- c(order(x)[1], subset, order(-x)[1])
         ##put endpoints in so we can interpolate
         xx <- x[index]
         yy <- y[index]
-        aux <-loess(yy~xx,span=span,degree=1,weights=w,family=family.loess)
-        aux <- predict.loess(aux,data.frame(xx=x))/J
-        means[,j] <- means[,j] + aux 
-        means[,k] <- means[,k] - aux
-        if(verbose) cat("Done with",j,"vs",k," in iteration ",iter,"\n")
+        aux <-loess(yy~xx, span=span, degree=1, weights=w, family=family.loess)
+        aux <- predict.loess(aux, data.frame(xx=x)) / J
+        means[, j] <- means[, j] + aux 
+        means[, k] <- means[, k] - aux
+        if (verbose)
+          cat("Done with",j,"vs",k," in iteration ",iter,"\n")
       }
     }
-    fs <- fs+means
-    newData <- mat-fs
-    change <- max(apply((means[subset,])^2,2,mean))
-    if(verbose) cat(iter,change,"\n")
+    fs <- fs + means
+    newData <- mat - fs
+    change <- max(apply((means[subset,])^2, 2, mean))
+    
+    if(verbose)
+      cat(iter, change,"\n")
+    
     oldfs <- fs
+    
   }
-  if(change>epsilon & maxit>1) warning(paste("No convergence after",maxit,"iterations.\n"))
-  if(log.it) return(2^newData)
-  else return(newData)
+  
+  if ((change > epsilon) & (maxit > 1))
+    warning(paste("No convergence after", maxit, "iterations.\n"))
+  
+  if(log.it) {
+    return(2^newData)
+  } else
+    return(newData)
 }
-
-
