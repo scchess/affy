@@ -28,7 +28,7 @@ expresso <- function(afbatch,
   ###background stuff must be added before normalization!
   
   ## -- background correction method
-  if (is.null(bgcorrect.method)) {
+  if (bg.correct && is.null(bgcorrect.method)) {
     if (widget) {
       bgcorrect.method <- pwidget.selector(bgcorrect.methods,
                                     title = "Method for background correction")

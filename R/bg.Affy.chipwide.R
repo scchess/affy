@@ -21,7 +21,7 @@ bg.correct.mas <- function(object, griddim=16)
                           as.integer(nprobes), as.integer(nchips), as.integer(rows), as.integer(cols),
                           as.integer(griddim))[[1]], nprobes, nchips)
    
-   intensity(object)[pm.index, ] <- corrected
+   intensity(object)[c(pm.index, mm.index), ] <- corrected
    ## and what with the 'non pm or mm' probes ?
    
    return(object)
