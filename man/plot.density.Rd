@@ -12,7 +12,7 @@ columns of a matrix.
 \usage{
 %matdensity(mat, ylab = "density", xlab="x", type="l", ...)
 
-plotDensity(mat, ylab = "density", xlab="x", type="l", ...)
+plotDensity(mat, ylab = "density", xlab="x", type="l", col=1:6,...)
 
 plotDensity.AffyBatch(x, col = rainbow(dim(x)[2]), log=TRUE,
 which=c("pm","mm","both"), ylab = "density", xlab = NULL, ...)
