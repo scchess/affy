@@ -8,6 +8,10 @@ fit.li.wong <- function(data.matrix, remove.outliers=TRUE,
   if(missing(data.matrix)) stop("Argument data.matrix missing, with no default")
   II <- dim(data.matrix)[1] ##II instrad of I cause I is a fuction in R
   J <- dim(data.matrix)[2]
+  if(J==1){
+    warning("Li and Wong's algorithm is not suitable when only one probe pair")
+    return(list(theta = as.vector(data.matrix), phi = 1, sigma.eps = NA, sigma.theta = NA, sigma.phi=NA, theta.outliers=NA, phi.outliers=NA, single.outliers=NA,convergence1=NA,convergence2=NA,iter = NA, delta = NA)) 
+  }
   cI <- II ##current I
   cJ <- J ##current J
   theta.outliers.old <- rep(FALSE, II) ##ith entry will be true if theta_i is an outlier
