@@ -67,7 +67,7 @@
   if( !isGeneric("pm") )
     setGeneric("pm", function(object) standardGeneric("pm"), where=where)
   
-  setMethod("pm", "ProbeSet", function(object) object@pm)
+  setMethod("pm", "ProbeSet", function(object) object@pm, where=where)
   
   if( !isGeneric("pm<-") )
    setGeneric("pm<-", function(object, value) standardGeneric("pm<-"), where=where)
@@ -77,12 +77,12 @@
                      if (sum(dim(value) != dim(object@mm)) != 2)
                        stop("dimension mismatch between 'pm' and 'mm'")
                      object@pm <- value
-                   })
+                   }, where=where)
 
   ## mm
   if( !isGeneric("mm") )
     setGeneric("mm", function(object) standardGeneric("mm"), where=where)
-  setMethod("mm", "ProbeSet", function(object) object@mm)
+  setMethod("mm", "ProbeSet", function(object) object@mm, where=where)
   
   if( !isGeneric("mm<-") )
    setGeneric("mm<-", function(object, value) standardGeneric("mm<-"), where=where)
@@ -92,7 +92,7 @@
                      if (sum(dim(value) == dim(object@mm)) != 2)
                        stop("dimension mismatch between 'pm' and 'mm'")
                      object@mm <- value
-                   })
+                   }, where=where)
 
   ## method express.summary.stat
   if( !isGeneric("express.summary.stat"))
