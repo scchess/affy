@@ -5,6 +5,10 @@
 ## ex: CEL says 'ecoli' while CDF says 'ecoligenome'
 ## or: CEL says '' while CDF says hu6800.1sq
 cleancdfname <- function(cdfname, addcdf=TRUE) {
+  if( !is.character(cdfname) )
+                stop(paste("invalid CDF name:", cdfname))
+  if ( nchar(cdfname)[1] == 0 )
+               stop("supplied cdf name has zero length")
   i <- match(cdfname, mapCdfName$inCDF)
   if (is.na(i)) {
     tmp <- tolower(cdfname) #make lower case
