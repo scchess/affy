@@ -29,6 +29,9 @@ rma(object,subset=NULL, verbose=TRUE, destructive = FALSE,normalize=TRUE,backgro
 This function computes the RMA (Robust Multichip Average) expression measure described in Irizarry et al
 Biostatistics (2003).
 
+Note that this expression measure is given to you in log base 2
+scale. This differs from most of the other expression measure methods.
+
 Please note that the default background adjustment method was changed during the lead up
 to the bioconductor 1.2 release. This means that this function and
 \code{\link{expresso}} should give results that directly agree.
