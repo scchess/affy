@@ -523,7 +523,7 @@
               }
               
               ## loop over the ids
-              mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character")),
+              mycall <- as.call(c(getMethod("express.summary.stat", signature=c("ProbeSet","character", "character")),
                                   list(c.pps, method=summary.method, pmcorrect=pmcorrect.method, pmcorrect.param=pmcorrect.param, param.method=summary.param)))
               ##only one character cause no more bg correct
 ###bg.correct=bg.method, param.bg.correct=bg.param,
