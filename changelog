@@ -171,7 +171,57 @@
 
 *"normalize.Raffy.Rd"
 	+changed to Normalize.Rd
-	
+
+
+###Laurent's moves (reported here for the first since I just discovered the existence of this file)
+*"affy.tour.R"
+	+created in demo/. This a demo for the package.
+
+*"Cel.R"
+	+commented out setMethod $	
+
+*"Cdf.R"
+	+commented out setMethod $	
+
+*"PPSet.R"
+	+commented out setMethod $	
+
+*"image.Cel.R"
+	+put a grey scale as a default for the parameter col of image (to be evaluated... just found the the 'heat' scale too flashy... I will surrender to the opnion of the majority)	
+
+*"Cel.R"
+	+fixed the method 'normalize' for Cel.container
+
+*"Plob.R"
+	+fixed the method 'normalize'
+
+*"zzz.R"
+	+added a debug flag ('debug.affy123')
+
+*"generateExprSet.Cel.container.R"
+	+fixed it (it was not working at all). Added a parameter 'ids'.
+
+*"generateExprSet.Cel.container.man"
+	+added an example
+
+*"generateExprVal.PPSet.container.R"
+	+fixed it (was not quite working the way it should)
+
+*"Cel.R"
+	+fixed the method names.PPSet.container
+
+*"names.PPSet.R"
+	+commented out 
+
+*"names.Cel.R"
+	+commented out 
+
+*"names.Cdf.R"
+	+commented out 
+
+*"affy.Rnw"
+	+created in /inst/doc/. Far from being complete...
+
 ###TO FIX  
 
 "barplot.PPSet" 
@@ -180,6 +230,15 @@
 
 "Normalize" make normalize work with Plobs. 
 	
+".hist.Plob.R"
+	+should it stay ? Rafa? Leslie? 
+
+*"generateExprSet.Cel.container.R"
+	+slow, slow, slooooooooowwwwwwwww....
+
+*"normalize.loess.R"
+	+running into problems with some data
+
 ###to ADD
 
 "Rd files": Normalize, plot.Plob, hist.Plob, probably more
