@@ -124,26 +124,21 @@ p[[4]]@probes$pm[c(3,7)] <- p[[4]]@probes$pm[c(3,7)] + runif(2,10,2000)
 ylimi <- range(unlist(lapply(p@x, function(y) y@probes)), 0)
 
 #par(mfcol=c(4,2))
-nmet <- 2
+mymethods <- c("avgdiff", "playerout", "liwong")
+nmet <- length(mymethods)
 
 layout(matrix(c(1:4,rep(5:(5+nmet-1), times=rep(4,nmet))),4,1+nmet), width=c(4,rep(1,nmet)))
 
 for (i in 1:4) barplot(p[[i]],ylim=ylimi, main=paste(p[[i]]@name, " - hybridization ", i))
 
-ev <- generateExprVal.PPSet.container(p,method="playerout")
-barplot(rev(c(ev)),main="expression values using\nplayerout",
-        names.arg=rev(paste("hybrid. ",1:4)), horiz=TRUE)
-ev <- generateExprVal.PPSet.container(p,method="avgdiff")
-barplot(rev(c(ev)),main="expression values using\navgdiff",
-        names.arg=rev(paste("hybrid. ",1:4)), horiz=TRUE)
-#ev <- generateExprVal(p,method="affy")
-#barplot(c(ev),main="expression values using\nAffymetrix truncated average difference")
-#ev <- generateExprVal(p,method="liwong.reduced")
-#barplot(c(ev),main="expression values using\nLi and Wong reduced model")
-
+for (i in 1:nmet) {
+  ev <- generateExprVal.PPSet.container(p,method=mymethods[i])
+  barplot(rev(c(ev)),main=paste("expression values using\n",mymethods[i], sep=""),
+          names.arg=rev(paste("hybrid. ",1:4)), horiz=TRUE)
+}
 par(opar)
 rm(opar)
-
+  
 
 
 
