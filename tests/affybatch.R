@@ -26,7 +26,8 @@ cel <- new("Cel", intensity=z, sd=z/10, name="", cdfName="dummy.1sq",
 write.celfile(cel, tmpfile)
 
 cat("---> read.affybatch...\n")
-afbatch <- read.affybatch(filenames=c(tmpfile, tmpfile))
+pd <- read.phenoData(sampleNames=c("file1","file2"))
+afbatch <- read.affybatch(filenames=c(tmpfile, tmpfile),phenoData=pd)
 cat("done.\n")
 
 unlink(tmpfile)
