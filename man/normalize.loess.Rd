@@ -42,7 +42,7 @@ normalize.Plob.loess(plob, ...)
   code... )
 }
 \seealso{
-  \code{\link{probe.profile}}}
+  \code{\link{normalize}}}
 \examples{
      data(Dilution)
      x <- pm(Dilution[,1:3])
