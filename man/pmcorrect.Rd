@@ -15,7 +15,7 @@ pmcorrect.pmonly(object)
 
 pmcorrect.subtractmm(object)
 
-pmcorrect.mas(object, contrast.tau=0.03, scale.tau=10, delta=2.0e-20)
+pmcorrect.mas(object, contrast.tau=0.03, scale.tau=10, delta=2^(-20))
 }
 \arguments{
   \item{object}{An object of class \code{\link[affy:ProbeSet-class]{ProbeSet}}.}

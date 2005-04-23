@@ -1,6 +1,6 @@
 ############################
 ##MPM Changed delta, Affy SADD states delta as 2e-20
-pmcorrect.mas <- function (object, contrast.tau = 0.03, scale.tau = 10, delta = 2.0e-20)
+pmcorrect.mas <- function (object, contrast.tau = 0.03, scale.tau = 10, delta = 2^(-20))
 #function (object, contrast.tau = 0.03, scale.tau = 10, delta = 9.536743e-07) 
 ###########################
 {
