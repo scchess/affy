@@ -6,11 +6,12 @@ Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier <laurent@cbs.dtu.dk>,
 	with contributions from
 	Magnus Astrand <Magnus.Astrand@astrazeneca.com>,	
 	Leslie M. Cope <cope@mts.jhu.edu>, 	
-	Robert Gentleman	
-	Jeff Gentry
-	Wolfgang Huber
-	James MacDonald <jmacdon@med.umich.edu>	
-	Benjamin I. P. Rubinstein	
+	Robert Gentleman,	
+	Jeff Gentry,
+	Conrad Halling <challing@agilixcorp.com>,
+	Wolfgang Huber,
+	James MacDonald <jmacdon@med.umich.edu>,	
+	Benjamin I. P. Rubinstein,	
 	Christopher Workman <workman@cbs.dtu.dk>,	
 	John Zhang	
 Maintainer: Rafael A. Irizarry <rafa@jhu.edu>
