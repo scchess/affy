@@ -14,7 +14,7 @@ Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier <laurent@cbs.dtu.dk>,
 	Christopher Workman <workman@cbs.dtu.dk>,	
 	John Zhang	
 Maintainer: Rafael A. Irizarry <rafa@jhu.edu>
-Depends: R (>= 1.9.0), Biobase (>= 1.4.22), reposTools
+Depends: R (>= 2.1.0), Biobase (>= 1.5.0), reposTools
 Suggests: tkWidgets (>= 1.2.2), affydata
 Description: The package contains functions for exploratory oligonucleotide array analysis. The dependance to tkWidgets only concerns few convenience functions. 'affy' is fully functional without it.
 License: LGPL version 2 or newer
