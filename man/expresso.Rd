@@ -1,5 +1,7 @@
 \name{expresso}
 \alias{expresso}
+\alias{bg.correct.methods}
+\alias{bgcorrect}
 
 %- Also NEED an `\alias' for EACH other topic documented here.
 \title{ From raw probe intensities to expression values }

@@ -1,8 +1,5 @@
 \name{bg.correct}
 \alias{bg.correct}
-\alias{bg.correct-methods}
-\alias{bg.correct.methods}
-\alias{bgcorrect.methods}
 \alias{bg.correct.none} %took out .pmonly casue rma is pm-only
 %\alias{bg.correct.subtractmm}
 \alias{bg.correct.rma}
