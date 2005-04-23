@@ -72,7 +72,7 @@ read.affybatch <- function(..., filenames=character(0),
   ref.cdfName <- headdetails[[1]]   #cel@cdfName
 
   if (verbose)
-    cat(paste("instanciating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
+    cat(paste("instantiating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
 
 
 
@@ -109,10 +109,10 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
   auxnames <- as.list(substitute(list(...)))[-1]
   filenames <- .Primitive("c")(filenames, auxnames)
 
-  match.arg(which,c("pm","mm","both"))
+  which <- match.arg(which,c("pm","mm","both"))
 
   if (verbose)
-        cat(1, "reading", filenames[[1]], "to get header informatio")
+        cat(1, "reading", filenames[[1]], "to get header information")
     headdetails <- .Call("ReadHeader", filenames[[1]], compress, PACKAGE="affy")
     dim.intensity <- headdetails[[2]]
     ref.cdfName <- headdetails[[1]]
@@ -211,7 +211,10 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
   if(exists("tksn")) description@samples$description <- tksn[,2]
   description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
 
-  return(list(filenames=filenames,phenoData=phenoData,sampleNames=sampleNames))
+  return(list(filenames   = filenames,
+              phenoData   = phenoData,
+              sampleNames = sampleNames,
+              description = description))
 }
 
 ###this is user friendly wrapper for read.affybatch
