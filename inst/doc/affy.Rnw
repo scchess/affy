@@ -77,8 +77,8 @@ to locations on the array.
 \end{description}
 
 Section \ref{whatsnew} describes the main differences between version
-1.3 and 
-this version (1.4). Section \ref{sec:get.started} describes a quick
+1.5 and 
+this version (1.6). Section \ref{sec:get.started} describes a quick
 way of getting started and getting expression measures. Section
 \ref{qc} describes some quality control tools. Section \ref{s1.4}
 describes normalization 
@@ -92,13 +92,13 @@ describes how to change the package's default options. Section
 {\bf Note:} If you use this package please cite
 \cite{gaut:cope:bols:iriz:2003} and/or \cite{iriz:gaut:cope:2003}.
 
-\section{Changes in versions 1.5.x}
+\section{Changes in versions 1.6.x}
 \label{whatsnew}
-There are some minor differences in what you can do but little
-functionality has disappeared. Memory efficiency and speed have improved.
+Very few changes. 
 
 \begin{itemize}
-\item The widgets used by ReadAffy have changed.
+\item The function \verb+MAplot+ has been added. It works on instances of AffyBatch.  You can decide if you want to make all pairwise MA plots or compare to a reference array using the pairs argument.
+\item Minor bugs fixed in the parsers.
 \item The path of celfiles is now removed by ReadAffy.
 \end{itemize}
 
@@ -460,16 +460,23 @@ for \Robject{AffyBatch} objects.  Each of these functions presents
 side-by-side graphical summaries of intensity information from each
 array.  Important differences in the distribution of intensities are
 often evident in these plots. The function
-\Rfunction{mva.pairs} (applied, for example, to \verb+pm(affybatch.example)+), 
+\Rfunction{MAplot} (applied, for example, to \verb+pm(affybatch.example)+), 
 offers pairwise 
-graphical comparison of intensity data.  These plots can be particularly
+graphical comparison of intensity data. The option \verb+pairs+ permits you to chose between all pairwise comparisons (when \verb+TRUE+) or compared to a reference array (the default). 
+These plots can be particularly
 useful in diagnosing problems in replicate sets of arrays.
 
-For the users convenience we have included a sample data set:
 
-<<results=hide>>=
+\begin{figure}[htbp]
+\begin{center}
+<<fig=TRUE>>=
 data(affybatch.example)
-@
+MAplot(affybatch.example,pairs=TRUE)
+@ 
+\end{center}
+\end{figure}
+
+For the users convenience we have included the \verb+affybatch.example+ sample data set: 
 
 <<>>=
 affybatch.example
@@ -941,8 +948,16 @@ There are several other vignettes addressing more specialised topics related to 
 
 \section{Previous Release Notes}
 
-\section{Changes in versions 1.4.x}
-\label{whatsnew}
+\subsection{Changes in versions 1.5.x}
+There are some minor differences in what you can do but little
+functionality has disappeared. Memory efficiency and speed have improved.
+
+\begin{itemize}
+\item The widgets used by ReadAffy have changed.
+\item The path of celfiles is now removed by ReadAffy.
+\end{itemize}
+
+\subsection{Changes in versions 1.4.x}
 There are some minor differences in what you can do but little
 functionality has disappeared. Memory efficiency and speed have improved.
 
@@ -959,7 +974,7 @@ functionality has disappeared. Memory efficiency and speed have improved.
   average, about 2-3 times faster than in version 1.3.
 \end{itemize}
 
-\section{Changes in Version 1.3.x}
+\subsection{Changes in Version 1.3.x}
 
 {\bf What's new?}
 \begin{itemize}
@@ -987,7 +1002,7 @@ functionality has disappeared. Memory efficiency and speed have improved.
 
 \end{itemize}
 
-\section{Changes in Version 1.2.x}
+\subsection{Changes in Version 1.2.x}
 {\bf What's new?}
 \begin{itemize}
 \item slot 'preprocessing' of the MIAME attribute used to store

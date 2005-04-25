@@ -86,7 +86,7 @@ character is given it tries to read the file with that name to obtain a
 
 
 The arguments \code{rm.masks}, \code{rm.outliers}, \code{rm.extra} are
-passed along to the function \code{\link{read.celfile}}.
+passed along to the function \code{read.celfile}.
 
 }
 \value{

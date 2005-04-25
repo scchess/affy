@@ -67,8 +67,7 @@ mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="ga
       xx <-(x[,j]+x[,k])/2
       sigma <- IQR(yy)
       mean <- median(yy)
-      subset<-sample(1:length(x),min(c(10000, length(x))))
-      ma.plot(xx,yy,tck=0,subset=subset,show.statistics=FALSE,pch=".",xlab="",ylab="",tck=0,...)
+      ma.plot(xx,yy,tck=0,show.statistics=FALSE,pch=".",xlab="",ylab="",tck=0,span=span,...)
       par(mfg=c(k,j))
       #sigma <- IQR(yy)
       txt <- format(sigma,digits=digits)
@@ -124,7 +123,7 @@ if (!isGeneric("MAplot"))
 
 
 setMethod("MAplot",signature("AffyBatch"),
-          function(object,log=TRUE,type=c("both","pm","mm"),ref=NULL,subset=NULL,which=NULL,...){
+          function(object,log=TRUE,type=c("both","pm","mm"),ref=NULL,subset=NULL,which=NULL,pairs=FALSE,...){
             type <- match.arg(type)
             if (type == "both"){
               pms <- unlist(indexProbes(object, "both"))
@@ -143,55 +142,60 @@ setMethod("MAplot",signature("AffyBatch"),
               which <- 1:dim(object@exprs)[2]
             }
             
-
-            if (is.null(subset)){
-              if (is.null(ref)){
-                medianchip <- rowMedians(x)
-              } else {
-                medianchip <- x[,ref]
-              }
-              M <- sweep(x,1,medianchip,FUN='-')
-              A <- 1/2*sweep(x,1,medianchip,FUN='+')
-              if (is.null(ref)){
-                for (i in which){
-                  title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
-                  ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
-                }
-              } else {
-                for (i in which){
-                  if (which != ref){
-                    title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
-                    ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
-                  }
-                }
-              }
-            } else {
-              if (is.null(ref)){
-                medianchip <- rowMedians(x[,subset])
-              } else {
-                if (is.element(ref,subset)){
-                  medianchip <- x[,ref]
+            if(!pairs){
+              if (is.null(subset)){
+                if (is.null(ref)){
+                  medianchip <- rowMedians(x)
                 } else {
-                  stop("Ref ",ref, "is not part of the subset")
+                  medianchip <- x[,ref]
                 }
-              }
-              if (!all(is.element(which,subset))){
-                stop("Specified arrays not part of subset")
-              }
-              M <- sweep(x,1,medianchip,FUN='-')
-              A <- 1/2*sweep(x,1,medianchip,FUN='+')
-              if (is.null(ref)){
-                for (i in which){
-                  title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
-                  ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                M <- sweep(x,1,medianchip,FUN='-')
+                A <- 1/2*sweep(x,1,medianchip,FUN='+')
+                if (is.null(ref)){
+                  for (i in which){
+                    title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
+                    ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                  }
+                } else {
+                  for (i in which){
+                    if (i != ref){ ##changed which to i
+                      title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
+                      ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                    }
+                  }
                 }
               } else {
-                for (i in which){
-                  if (i != ref){
-                    title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
+                if (is.null(ref)){
+                  medianchip <- rowMedians(x[,subset])
+                } else {
+                  if (is.element(ref,subset)){
+                    medianchip <- x[,ref]
+                  } else {
+                    stop("Ref ",ref, "is not part of the subset")
+                  }
+                }
+                if (!all(is.element(which,subset))){
+                  stop("Specified arrays not part of subset")
+                }
+                M <- sweep(x,1,medianchip,FUN='-')
+                A <- 1/2*sweep(x,1,medianchip,FUN='+')
+                if (is.null(ref)){
+                  for (i in which){
+                    title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
                     ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                  }
+                } else {
+                  for (i in which){
+                    if (i != ref){
+                      title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
+                      ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                    }
                   }
                 }
               }
+            }
+            else{
+              if(is.null(subset)) subset <- 1:ncol(x)
+              mva.pairs(x[,subset],...)
             }
           })
