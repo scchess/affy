@@ -42,7 +42,7 @@ void rank(double *x, int nx, double *r) {
   int prev    = 0;
   r[0] = 1.0;
   for(i = 1; i < nx; i++) {
-    if(x[i] == x[prev]) { 
+    if(x[i] == x[prev]) {
       ntie++;
       rank++;
       ranksum += rank;
@@ -61,6 +61,13 @@ void rank(double *x, int nx, double *r) {
       ntie = 1;
     }
   }
+  if(ntie > 1) {
+    while(prev < i) {
+      r[prev] = (double) ranksum/ (double) ntie;
+      prev++;
+    }
+  }
+ 
 }
 
 /* a straight translation of relevant bits of the wilcox.test method
