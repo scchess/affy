@@ -352,7 +352,7 @@ void qnorm_robust_c(double *data,double *weights, int *rows, int *cols, int *use
 int qnorm_c(double *data, int *rows, int *cols){
   int i,j,ind;
   dataitem **dimat;
-  double sum;
+  /*  double sum; */
   double *row_mean = (double *)Calloc((*rows),double);
   double *datvec; // = (double *)Calloc(*cols,double);
   double *ranks = (double *)Calloc((*rows),double);
