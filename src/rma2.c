@@ -496,6 +496,8 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   SEXP dim1;
   SEXP outvec; /* ,outnamesvec; */
   SEXP dimnames,names;
+
+  SEXP temp;
   
   PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol)); 
   rows = INTEGER(dim1)[0];
@@ -543,9 +545,11 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   PROTECT(dimnames = allocVector(VECSXP,2));
   PROTECT(names = allocVector(STRSXP,nprobesets));
   
-  for ( i =0; i < nprobesets; i++)
-    SET_VECTOR_ELT(names,i,mkChar(outnames[i]));
-  
+  for ( i =0; i < nprobesets; i++){
+    PROTECT(temp = mkChar(outnames[i]));
+    SET_VECTOR_ELT(names,i,temp); /* was a direct mkChar prior to Sep 2, 2005*/
+    UNPROTECT(1);
+  }
   SET_VECTOR_ELT(dimnames,0,names);
   setAttrib(outvec, R_DimNamesSymbol, dimnames);
   UNPROTECT(2);
