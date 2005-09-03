@@ -88,6 +88,11 @@
  ** Jul 27, 2004 - fix a small memory leak
  ** Aug 4, 2004 - move the "Background correcting" message. 
  ** Nov 8, 2004 - change how things are structured in do_RMA()
+ ** Sep 3, 2005 - In extremely high memory usage situations
+ **               R was garbage collecting something that shouldn't have
+ **               been. This was leading to a seg fault. Fixed by
+ **               moving an UNPROTECT.
+ **  
  **
  ************************************************************************/
 
@@ -538,7 +543,7 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
 
   do_RMA(PM, ProbeNames, &rows, &cols,outexpr,outnames,nprobesets);
 
-  UNPROTECT(2);
+  
 
   /* now lets put names on the matrix */
 
@@ -558,6 +563,7 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   
   Free(outnames);
   Free(ProbeNames);
+  UNPROTECT(2);
   return outvec;
 }
 
