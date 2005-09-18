@@ -25,7 +25,7 @@ justRMA(..., filenames=character(0),
               rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
               hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE,
               normalize=TRUE, background=TRUE, 
-              bgversion=2, destructive=FALSE))
+              bgversion=2, destructive=FALSE)
 }
 \arguments{
   \item{\dots}{ file names separated by comma.}
