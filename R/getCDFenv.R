@@ -111,18 +111,18 @@ cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
                 }
             }
 
-            z <- install.packages2(cdfname, lib=lib)
-            if(! cdfname %in% updatedPkgs(z)) {
+            z <- try(install.packages(cdfname, lib=lib,
+                                      repos=Biobase:::biocReposList(),
+                                      dependencies=TRUE))
+            if (inherits(z, "try-error")) {
                 if (verbose)
-                    print(paste("Environment",cdfname,
-                                "was not found in the Bioconductor",
-                                "repository."))
+                  print(paste("Environment",cdfname,
+                              "was not found in the Bioconductor",
+                              "repository."))
                 return(list(paste("Bioconductor -",cdfname,"not available")))
-            }
-            else
-                if (verbose)
-                    print(paste("Installation of environment",
-                                cdfname, "was succesful."))
+            } else if (verbose)
+              print(paste("Installation of environment",
+                          cdfname, "was succesful."))
         }
         else {
             if (verbose)
