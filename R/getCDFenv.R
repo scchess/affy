@@ -67,31 +67,31 @@ cdfFromEnvironment <- function(cdfname, where, verbose=TRUE) {
 }
 
 cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
-  cdfname <- cleancdfname(cdfname)
-  require(reposTools) || stop("Package 'reposTools' is required",
+    cdfname <- cleancdfname(cdfname)
+    require(reposTools) || stop("Package 'reposTools' is required",
                                 " for this operation.")
 
     if (verbose)
-        print(paste("Attempting to obtain",cdfname,"from Bioconductor website"))
+      print(paste("Attempting to obtain",cdfname,"from Bioconductor website"))
 
     ## First search the user's libPaths to see if it is installed
     if (verbose)
-        print(paste("Checking to see if the environment",
-                    cdfname,"is already installed ..."))
+      print(paste("Checking to see if the environment",
+                  cdfname,"is already installed ..."))
     if (is.installed(cdfname)) {
         if (verbose)
-            print(paste("The environment",cdfname,"is already installed."))
+          print(paste("The environment",cdfname,"is already installed."))
     }
     else {
         if (verbose)
-            print(paste("The environment ",cdfname," was not found in",
-                        " these directories: ",
-                        paste(.libPaths(), collapse=", "),
-                        ".  Now searching the internet repository.",
-                        sep=""))
+          print(paste("The environment ",cdfname," was not found in",
+                      " these directories: ",
+                      paste(.libPaths(), collapse=", "),
+                      ".  Now searching the internet repository.",
+                      sep=""))
         if (verbose)
-            print(paste("Checking to see if your internet",
-                        "connection works ..."))
+          print(paste("Checking to see if your internet",
+                      "connection works ..."))
         if (testBioCConnection()) {
             ## Check for file permissions
             if (file.access(lib, mode=0) < 0) {
@@ -105,8 +105,8 @@ cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
             if (file.access(lib,mode=2) < 0) {
                 if (verbose) {
                     print(paste("You do not have write access to",lib,
-                               "\nPlease check your permissions or provide",
-                               "a different 'lib' parameter"))
+                                "\nPlease check your permissions or provide",
+                                "a different 'lib' parameter"))
                     return(list("Bioconductor - lib is not writeable"))
                 }
             }
@@ -126,11 +126,11 @@ cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
         }
         else {
             if (verbose)
-                print(paste("The current operation could not access",
-                            "the Bioconductor repository.  Please",
-                            "check your internet connection, and",
-                            "report further problems to",
-                            "bioconductor@stat.math.ethz.ch"))
+              print(paste("The current operation could not access",
+                          "the Bioconductor repository.  Please",
+                          "check your internet connection, and",
+                          "report further problems to",
+                          "bioconductor@stat.math.ethz.ch"))
             return(list("Bioconductor - could not connect"))
         }
     }
@@ -141,44 +141,44 @@ cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
     if (! cdfname %in% .packages()) {
         ## package was not properly loaded
         if (verbose)
-            print(paste("The package", cdfname,
-                        "could not be loaded"))
+          print(paste("The package", cdfname,
+                      "could not be loaded"))
         return(list("Bioconductor - package downloaded but not loadable"))
     }
     else
-        return(get(cdfname,
-                   envir=as.environment(paste("package:", cdfname, sep=""))))
+      return(get(cdfname,
+                 envir=as.environment(paste("package:", cdfname, sep=""))))
 }
 
 cdfFromLibPath <- function(cdfname, lib = NULL, verbose=TRUE) {
-  cdfname <- cleancdfname(cdfname)
-  ## First check to see if package is installed
-  if (verbose)
-    print(paste("Checking to see if package",cdfname,
-                "is already installed"))
-
-  if (length(.find.package(cdfname, lib.loc=lib, quiet=TRUE)) == 0)
-    return(list(paste("Library - package",cdfname,"not installed")))
-
-  ## See if package is already loaded
-  if (cdfname %in% .packages()) {
+    cdfname <- cleancdfname(cdfname)
+    ## First check to see if package is installed
     if (verbose)
-      print(paste("The package", cdfname, "is already loaded"))
-  }
-  else {
-    if (verbose)
-      print(paste("Attempting to load package", cdfname))
-    ## Attempt to load the library requested
-    do.call("library", list(cdfname, lib.loc=lib))
+      print(paste("Checking to see if package",cdfname,
+                  "is already installed"))
 
-    ## Check to see if it got loaded
-    if (! cdfname %in% .packages()) {
-      ## package didn't get loaded
-      if (verbose)
-        print(paste("The package", cdfname, "could not be loaded"))
-      return(list(paste("Library - package",cdfname,"is not loadable")))
+    if (length(.find.package(cdfname, lib.loc=lib, quiet=TRUE)) == 0)
+      return(list(paste("Library - package",cdfname,"not installed")))
+
+    ## See if package is already loaded
+    if (cdfname %in% .packages()) {
+        if (verbose)
+          print(paste("The package", cdfname, "is already loaded"))
     }
-  }
+    else {
+        if (verbose)
+          print(paste("Attempting to load package", cdfname))
+        ## Attempt to load the library requested
+        do.call("library", list(cdfname, lib.loc=lib))
+
+        ## Check to see if it got loaded
+        if (! cdfname %in% .packages()) {
+            ## package didn't get loaded
+            if (verbose)
+              print(paste("The package", cdfname, "could not be loaded"))
+            return(list(paste("Library - package",cdfname,"is not loadable")))
+        }
+    }
 
     return(get(cdfname, envir=as.environment(paste("package:", cdfname, sep=""))))
 }
