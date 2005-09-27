@@ -17,7 +17,12 @@ cleancdfname <- function(cdfname, addcdf=TRUE) {
     tmp <- gsub("_", "", tmp) #take out underscore
     tmp <- gsub("-", "", tmp) #take out underscore
     tmp <- gsub("\ ", "", tmp) ##take out spaces
-    if(addcdf) tmp <- paste(tmp, "cdf", sep="")
+    if (addcdf) {
+        ## make sure we haven't already added "cdf"
+        endsWith <- substr(tmp, nchar(tmp)-2, nchar(tmp))
+        if (endsWith != "cdf")
+          tmp <- paste(tmp, "cdf", sep="")
+    }
   } else {
     tmp <- mapCdfName$inBioC[1]
   }
