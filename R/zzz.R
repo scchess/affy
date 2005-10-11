@@ -96,9 +96,8 @@
   ## ---
 }
 
-.First.lib <- function(libname, pkgname, where) {
-
-
+.First.lib <- function(libname, pkgname) {
+    
   where <- match(paste("package:", pkgname, sep=""), search())
   all.affy <- ls(where)
  message <- FALSE
