@@ -741,7 +741,7 @@ static int isTextCelFile(char *filename){
 
 static void ReadgzFileLine(char *buffer, int buffersize, gzFile currentFile){
   if (gzgets( currentFile,buffer, buffersize) == NULL){
-    error("End of file reached unexpectedly. Perhaps this file is truncated.\n");
+    error("End of gz file reached unexpectedly. Perhaps this file is truncated.\n");
   }  
 }
 
@@ -762,7 +762,7 @@ static void ReadgzFileLine(char *buffer, int buffersize, gzFile currentFile){
 
 static gzFile open_gz_cel_file(char *filename){
   
-  const char *mode = "r";
+  const char *mode = "rb";
 
   gzFile currentFile= NULL; 
   char buffer[BUF_SIZE];
@@ -1113,7 +1113,7 @@ static char *gz_get_header_info(char *filename, int *dim1, int *dim2){
 static int isgzTextCelFile(char *filename){
   
 #if defined HAVE_ZLIB
-  const char *mode = "r"; 
+  const char *mode = "rb"; 
  gzFile currentFile = NULL; 
  char buffer[BUF_SIZE];
  currentFile = gzopen(filename,mode);
