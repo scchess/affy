@@ -42,8 +42,8 @@ mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
   if(alpha2 > 1)      {stop("alpha2 must be  <1 "); }
 
   if(verbose) cat("Getting probe level data...\n");
-  pms <-pm(object);
-  mms <-mm(object);
+  pms <-as.matrix(pm(object));
+  mms <-as.matrix(mm(object));
 
   # Saturation:
   # shouldn't be a problem with new scanners
@@ -52,7 +52,11 @@ mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
   else { sat <- -1; }
 
   pns <- probeNames(object);
-  unique.pns <- unique(pns)
+  o <- order(pns)
+  pns <- pns[o]
+  pms <- pms[o,,drop=FALSE]
+  mms <- mms[o,,drop=FALSE]
+  unique.pns <- sort(unique(pns));
 
   if(verbose) cat("Computing p-values\n");
   p<-sapply(1:length(pms[1,]),function(x) {

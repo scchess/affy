@@ -72,7 +72,7 @@ void rank(double *x, int nx, double *r) {
 
 /* a straight translation of relevant bits of the wilcox.test method
    in the R base library */
-double wilcox(double *x, int nx, double mu) {
+double wilcox(double *x, int n, double mu) {
   int i = 0;
   int j = 0;
   double *r    = 0;  
@@ -85,6 +85,8 @@ double wilcox(double *x, int nx, double mu) {
   double z         = 0;
   double SIGMA     = 0;
   double PVAL      = 0; 
+  double nx        = n;
+
   for(i = 0; i < nx; i++) {
     x[j] = x[i] - mu;
     if(x[j] != 0) j++; /* eliminate zeros */
@@ -122,9 +124,11 @@ double wilcox(double *x, int nx, double mu) {
       prev = i;
     }
   }
-  z     = STATISTIC - nx * (nx + 1)/4;
-  SIGMA = sqrt(nx * (nx + 1) * (2 * nx + 1) / 24
-	       - NTIES_SUM / 48);
+
+  NTIES_SUM += ntie * ntie * ntie - ntie; /* added by Crispin Noc 2005 */
+
+  z     = STATISTIC - (nx * (nx + 1))/4;
+  SIGMA = sqrt((nx * (nx + 1) * (2 * nx + 1)) / 24 - (NTIES_SUM / 48));
   PVAL  = pnorm_approx(z / SIGMA);
   PVAL    = 1 - PVAL;
   return(PVAL);
@@ -145,7 +149,7 @@ double pma(double *pms, double*mms, int n, double tao,double sat) {
   double p     = 0;
   if(sat >= 0) {
     ignore = (int *) R_alloc(n, sizeof(int));
-    /*dodgy saturation correction from the paper*/
+    /* saturation correction from the paper*/
     totalSat = 0;
     for(i = 0; i < n; i++) {
       if(mms[i] > sat) {
@@ -188,7 +192,7 @@ void DetectionPValue (double *pm, double *mm, char **names, int *nprobes, double
   int j = 0;
   for(i = 1; i < *nprobes; i++) {
     if(strcmp(names[i],names[start]) != 0) {
-	dpval[j] = pma(&(pm[start]),&(mm[start]),i-start,*tao,*sat);
+      dpval[j] = pma(&(pm[start]),&(mm[start]),i-start,*tao,*sat);
       start = i;
       j++;
       if(j > *nprobesets) { error("Expecting %d unique probesets, found %d\n",*nprobesets,j); }
