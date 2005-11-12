@@ -38,7 +38,7 @@
 }
 \note{This function is still experimental.}
 \value{a matrix of normalized intensites}
-\author{Ben Bolstad, \email{bolstad@stat.berkeley.edu}}
+\author{Ben Bolstad, \email{bmb@bmbolstad.com}}
 
 \seealso{\code{\link{normalize}}, \code{\link{normalize.quantiles}}}
 \keyword{manip}

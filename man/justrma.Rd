@@ -94,7 +94,7 @@ passed along to the function \code{read.celfile}.
 }
 
 \author{In the beginning: James MacDonald <jmacdon@med.umich.edu>
-Supporting routines, maintainence and just.rma: Ben Bolstad <bolstad@stat.berkeley.edu>}
+Supporting routines, maintainence and just.rma: Ben Bolstad <bmb@bmbolstad.com>}
 \seealso{\code{\link[affy]{rma}},\code{\link[affy]{ReadAffy}}}
 
 \examples{

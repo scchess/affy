@@ -41,7 +41,7 @@ to the bioconductor 1.2 release. This means that this function and
 An \code{\link[affy:exprSet-class]{exprSet}}
 }
 
-\author{Ben Bolstad \email{bolstad@stat.berkeley.edu}}
+\author{Ben Bolstad \email{bmb@bmbolstad.com}}
 
 \references{
   Rafael. A. Irizarry, Benjamin M. Bolstad, Francois Collin, Leslie M. Cope, Bridget Hobbs and Terence P. Speed (2003), Summaries of Affymetrix GeneChip probe level data Nucleic Acids Research 31(4):e15

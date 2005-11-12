@@ -83,7 +83,7 @@ character is given it tries to read the file with that name to obtain a
 \value{
   An \code{AffyBatch} object.
 }
-\author{Ben Bolstad \email{bolstad@stat.berkeley.edu} (read.affybatch),
+\author{Ben Bolstad \email{bmb@bmbolstad.com} (read.affybatch),
   Laurent Gautier,
   and Rafael A. Irizarry (ReadAffy)}
 
