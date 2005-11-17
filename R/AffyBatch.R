@@ -581,18 +581,33 @@ if( is.null(getGeneric("image")))
   setGeneric("image")
 
 setMethod("image",signature(x="AffyBatch"),
-          function(x, transfo=log, col=gray(c(0:64)/64),xlab="",ylab="", ...){
+          function(x, transfo=log, col=gray(c(0:64)/64),xlab="",ylab="",type=c("exprs","se.exprs"), ...){
             scn <- prod(par("mfrow"))
             ask <- dev.interactive()
             which.plot <- 0
 
+            type <- match.arg(type)
+
+            if (type == "se.exprs" && all(!dim(x@se.exprs))){
+              stop("no se.exprs in object")
+            }
+
+            
+            
             x.pos <- (1:nrow(x)) - (1 + getOption("BioC")$affy$xy.offset)
             y.pos <- (1:ncol(x)) - (1 + getOption("BioC")$affy$xy.offset)
 
             for(i in 1:length(sampleNames(x))){
               which.plot <- which.plot+1;
               if(trunc((which.plot-1)/scn)==(which.plot-1)/scn && which.plot>1 && ask)  par(ask=TRUE)
-              m <- x@exprs[,i]
+
+              if (type == "exprs"){
+                m <- x@exprs[,i]
+              } else {
+                m <- x@se.exprs[,i]
+              }
+                
+                
               if (is.function(transfo)) {
                 m <- transfo(m)
               }

@@ -13,7 +13,7 @@ read.affybatch(..., filenames = character(0),
                notes = "",
                compress = getOption("BioC")$affy$compress.cel,
                rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE,
-               verbose = FALSE)
+               verbose = FALSE,sd=FALSE)
 
 ReadAffy(..., filenames=character(0),
               widget=getOption("BioC")$affy$use.widgets,
@@ -24,7 +24,7 @@ ReadAffy(..., filenames=character(0),
               description=NULL,
               notes="",
               rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-              verbose=FALSE)
+              verbose=FALSE,sd=FALSE)
 }
 \arguments{
   \item{\dots}{ file names separated by comma.}
@@ -42,6 +42,9 @@ ReadAffy(..., filenames=character(0),
     should look for cel files}
   \item{sampleNames}{a character vector of sample names to be used in
     the \code{AffyBatch}}
+  \item{sd}{should the standard deviation values in the CEL file be read
+    in. Since these are typically not used default is not to read them
+    in. This also save lots of memory.}
 }
 
 \details{
