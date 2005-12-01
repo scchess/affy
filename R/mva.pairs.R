@@ -12,6 +12,9 @@
 ###
 ### Aug 23, 2004 - change the placement location of statistics in
 ###                ma.plot
+### Nov 30, 2005 - fix double logging when pairs=TRUE in MAplot
+
+
 
 ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,...){
 
@@ -196,6 +199,6 @@ setMethod("MAplot",signature("AffyBatch"),
             }
             else{
               if(is.null(subset)) subset <- 1:ncol(x)
-              mva.pairs(x[,subset],...)
+              mva.pairs(x[,subset],log.it=FALSE,...)
             }
           })
