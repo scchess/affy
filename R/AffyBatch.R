@@ -625,15 +625,18 @@ setMethod("image",signature(x="AffyBatch"),
 if( is.null(getGeneric("boxplot")))
   setGeneric("boxplot")
 
+##some special handling of main is needed
 setMethod("boxplot",signature(x="AffyBatch"),
-          function(x,which="both",range=0,...){
+          function(x, which="both", range=0, main, ...){
             tmp <- description(x)
-            if (is(tmp, "MIAME")) main <- tmp@title
+            if( missing(main) && (is(tmp, "MIAME")) 
+                main <- tmp@title
 
             tmp <- unlist(indexProbes(x,which))
             tmp <- tmp[seq(1,length(tmp),len=5000)]
 
-            boxplot(data.frame(log2(intensity(x)[tmp,])),main=main,range=range, ...)
+            boxplot(data.frame(log2(intensity(x)[tmp,])), main=main,
+                      range=range, ...)
           })
 
 ###hist
@@ -642,7 +645,8 @@ if (debug.affy123) cat("--->hist\n")
 if( is.null(getGeneric("hist")) )
   setGeneric("hist")
 
-setMethod("hist",signature(x="AffyBatch"), function(x,...) plotDensity.AffyBatch(x,...))
+setMethod("hist",signature(x="AffyBatch"), 
+    function(x,...) plotDensity.AffyBatch(x,...))
 
 
 if( is.null(getGeneric("mas5calls")) )
