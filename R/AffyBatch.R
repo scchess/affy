@@ -581,7 +581,8 @@ if( is.null(getGeneric("image")))
   setGeneric("image")
 
 setMethod("image",signature(x="AffyBatch"),
-          function(x, transfo=log, col=gray(c(0:64)/64),xlab="",ylab="",type=c("exprs","se.exprs"), ...){
+          function(x, transfo=log, col=gray(c(0:64)/64), xlab="",
+            ylab="",type=c("exprs","se.exprs"), main, ...){
             scn <- prod(par("mfrow"))
             ask <- dev.interactive()
             which.plot <- 0
@@ -612,8 +613,10 @@ setMethod("image",signature(x="AffyBatch"),
                 m <- transfo(m)
               }
               m <- as.matrix(rev(as.data.frame(matrix(m, nrow=length(x.pos), ncol=length(y.pos)))))
+              if( missing(main) )
+                 main = sampleNames(x)[i]
               image(x.pos, y.pos, m,
-                    col=col, main=sampleNames(x)[i],
+                    col=col, main=main,
                     xlab=xlab, ylab=ylab,,xaxt='n',
                       yaxt='n', ...)
               par(ask=FALSE)
