@@ -53,23 +53,23 @@ user to read in phenoData, MIAME information, and CEL files using
 widgets. One can also define files where to read phenoData and MIAME
 information.
 
-If the function is call with no arguments \code{ReadAffy()} all the CEL
+If the function is called with no arguments \code{ReadAffy()} all the CEL
 files in the working directory are read and put into an
 \code{AffyBatch}.
 However, the arguments give the user great flexibility.
   
-\code{phenoData} is read using \code{link[Biobase]{read.phenoData}}. If a
+\code{phenoData} is read using \code{\link[Biobase]{read.phenoData}}. If a
 character is given it tries to read the file with that name
 to obtain the phenoData
-object as described in \code{link[Biobase]{read.phenoData}}. If left
+object as described in \code{\link[Biobase]{read.phenoData}}. If left
 \code{NULL} but \code{widget=TRUE} then widgets are used. If left
 \code{NULL} and \code{widget=FALSE} then a default object is created.
-It will be a data frame with
+It will be a data.frame with
    \code{new("phenoData",pData=data.frame(x=1:length(CELfiles)),varLabels=list(x="arbitrary number"))}
 
 
  \code{AllButCelsForReadAffy} is an internal function that gets called
- by \code{ReadAffy}. It gets all the information expect the cel intencities.
+ by \code{ReadAffy}. It gets all the information except the cel intensities.
 
 
 \code{description} is read using \code{\link[Biobase]{read.MIAME}}. If a
