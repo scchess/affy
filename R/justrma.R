@@ -2,16 +2,17 @@
 ### A user friendly wrapper for just.rma
 justRMA <- function(..., filenames=character(0),
                      widget=getOption("BioC")$affy$use.widgets,
-                     compress=getOption("BioC")$affy$compress.cel,
-                     celfile.path=getwd(),
-                     sampleNames=NULL,
-                     phenoData=NULL,
-                     description=NULL,
-                     notes="",
-                     rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-                     hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE,
-                     normalize=TRUE, background=TRUE,
-                     bgversion=2, destructive=FALSE){
+                    compress=getOption("BioC")$affy$compress.cel,
+                    celfile.path=getwd(),
+                    sampleNames=NULL,
+                    phenoData=NULL,
+                    description=NULL,
+                    notes="",
+                    rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
+                    hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE,
+                    normalize=TRUE, background=TRUE,
+                    bgversion=2, destructive=FALSE,
+                    cdfname = NULL){
 
   l <- AllButCelsForReadAffy(..., filenames=filenames,
                              widget=widget,
@@ -24,17 +25,18 @@ justRMA <- function(..., filenames=character(0),
   ##and now we are ready to read cel files
  ret<- just.rma(filenames=l$filenames,
                   phenoData=l$phenoData,
-                  description=l$description,
-                  notes=notes,
-                  compress=compress,
-                  rm.mask=rm.mask,
-                  rm.outliers=rm.outliers,
-                  rm.extra=rm.extra,
-                  verbose=verbose,
-                  normalize=normalize,
-                  background=background,
-                  bgversion=bgversion,
-                  destructive=destructive)
+                description=l$description,
+                notes=notes,
+                compress=compress,
+                rm.mask=rm.mask,
+                rm.outliers=rm.outliers,
+                rm.extra=rm.extra,
+                verbose=verbose,
+                normalize=normalize,
+                background=background,
+                bgversion=bgversion,
+                destructive=destructive,
+                cdfname = cdfname)
   sampleNames(ret) <- l$sampleNames
   return(ret)
 
@@ -57,7 +59,7 @@ just.rma <- function(..., filenames=character(0),
                      compress=getOption("BioC")$affy$compress.cel,
                      rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                      verbose=FALSE, background=TRUE, normalize=TRUE,
-                     bgversion=2, destructive=FALSE) {
+                     bgversion=2, destructive=FALSE, cdfname = NULL) {
 
   auxnames <- as.list(substitute(list(...)))[-1]
   filenames <- .Primitive("c")(filenames, auxnames)
@@ -92,8 +94,8 @@ just.rma <- function(..., filenames=character(0),
 
   headdetails <- .Call("ReadHeader", filenames[[1]], compress, PACKAGE="affy")
   dim.intensity <- headdetails[[2]]
-  cdfname <- headdetails[[1]]
-
+  if(is.null(cdfname))
+    cdfname <- headdetails[[1]]
   tmp <- new("AffyBatch",
              cdfName=cdfname,
              annotation=cleancdfname(cdfname, addcdf=FALSE))
@@ -103,7 +105,7 @@ just.rma <- function(..., filenames=character(0),
 
   ## read pm data into matrix
 
-  probeintensities <- read.probematrix(filenames=filenames)
+  probeintensities <- read.probematrix(filenames=filenames, cdfname = cdfname)
 
   ##pass matrix of pm values to rma
 

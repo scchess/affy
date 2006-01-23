@@ -123,8 +123,9 @@ read.affybatch <- function(..., filenames=character(0),
 ######################################################################################
 
 read.probematrix <- function(..., filenames = character(0), phenoData = new("phenoData"),
-    description = NULL, notes = "", compress = getOption("BioC")$affy$compress.cel,
-    rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE, verbose = FALSE,which="pm"){
+                             description = NULL, notes = "", compress = getOption("BioC")$affy$compress.cel,
+                             rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE, verbose = FALSE,which="pm",
+                             cdfname = NULL){
 
   auxnames <- as.list(substitute(list(...)))[-1]
   filenames <- .Primitive("c")(filenames, auxnames)
@@ -132,14 +133,17 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
   which <- match.arg(which,c("pm","mm","both"))
 
   if (verbose)
-        cat(1, "reading", filenames[[1]], "to get header information")
-    headdetails <- .Call("ReadHeader", filenames[[1]], compress, PACKAGE="affy")
-    dim.intensity <- headdetails[[2]]
-    ref.cdfName <- headdetails[[1]]
-
-  Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
-
-  cdfInfo<- as.list(getCdfInfo(Data))
+    cat(1, "reading", filenames[[1]], "to get header information")
+  headdetails <- .Call("ReadHeader", filenames[[1]], compress, PACKAGE="affy")
+  dim.intensity <- headdetails[[2]]
+  ref.cdfName <- headdetails[[1]]
+  ## Allow for usage of alternative cdfs
+  if(is.null(cdfname))
+    Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
+  else
+    Data <- new("AffyBatch", cdfName = cdfname, annotation = cleancdfname(ref.cdfName, addcdf = FALSE))
+  
+  cdfInfo <- as.list(getCdfInfo(Data))
   cdfInfo <- cdfInfo[order(names(cdfInfo))]
 
 

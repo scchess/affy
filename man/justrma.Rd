@@ -12,7 +12,7 @@ just.rma(..., filenames = character(0),
                compress = getOption("BioC")$affy$compress.cel,
                rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE,
                verbose=FALSE, background=TRUE, normalize=TRUE,
-               bgversion=2, destructive=FALSE)
+               bgversion=2, destructive=FALSE, cdfname = NULL)
 
 justRMA(..., filenames=character(0),
               widget=getOption("BioC")$affy$use.widgets,
@@ -25,7 +25,7 @@ justRMA(..., filenames=character(0),
               rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
               hdf5=FALSE, hdf5FilePath=NULL,verbose=FALSE,
               normalize=TRUE, background=TRUE, 
-              bgversion=2, destructive=FALSE)
+              bgversion=2, destructive=FALSE, cdfname = NULL)
 }
 \arguments{
   \item{\dots}{ file names separated by comma.}
@@ -53,7 +53,9 @@ justRMA(..., filenames=character(0),
     1: use background similar to pure R rma background given in affy version 1.0 - 1.0.2
     2: use background similar to pure R rma background given in affy version 1.1 and above}
    \item{destructive}{logical value. If \code{TRUE} works on the PM matrix in place as much as possible, good for large datasets.}
-
+   \item{cdfname}{Used to specify the name of an alternative cdf package. If set to
+     \code{NULL}, the usual cdf package based on Affymetrix' mappings
+     will be used.}
 }
 
 \details{

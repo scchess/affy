@@ -11,7 +11,7 @@ read.probematrix(..., filenames = character(0),
                notes = "",
                compress = getOption("BioC")$affy$compress.cel,
                rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE,
-               verbose = FALSE,which="pm")
+               verbose = FALSE,which="pm", cdfname = NULL)
 
 }
 \arguments{
@@ -26,6 +26,10 @@ read.probematrix(..., filenames = character(0),
   \item{rm.extra}{ if \code{TRUE}, overrides what is in \code{rm.mask} and \code{rm.oultiers} }
   \item{verbose}{ verbosity flag }
   \item{which}{should be either "pm", "mm" or "both"}
+  \item{cdfname}{Used to specify the name of an alternative cdf package. If set to
+     \code{NULL}, the usual cdf package based on Affymetrix' mappings
+     will be used.}
+  
 }
 
 \details{
