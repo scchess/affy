@@ -20,6 +20,8 @@
 ## Nov 15, 2005 - add functionality to read the
 ##                stddev values into the se.exprs slot (non-default behaviour)
 ##
+## Jan 24, 2006 - JWM: added cdfname to allow for the use of non-standard mappings
+##
 #############################################################
 
 
@@ -29,7 +31,7 @@ read.affybatch <- function(..., filenames=character(0),
                            notes="",
                            compress = getOption("BioC")$affy$compress.cel,
                            rm.mask = FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-                           verbose = FALSE,sd=FALSE) {
+                           verbose = FALSE,sd=FALSE, cdfname = NULL) {
 
   auxnames <- as.list(substitute(list(...)))[-1]
   filenames <- .Primitive("c")(filenames, auxnames)
@@ -72,6 +74,10 @@ read.affybatch <- function(..., filenames=character(0),
   ##and the cdfname as ref
   ref.cdfName <- headdetails[[1]]   #cel@cdfName
 
+  ## allow for non-standard cdfs
+  if(is.null(cdfname))
+    cdfname <- ref.cdfName
+  
   if (verbose)
     cat(paste("instantiating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
 
@@ -88,11 +94,11 @@ read.affybatch <- function(..., filenames=character(0),
                rm.outliers, rm.extra, ref.cdfName,
                dim.intensity,verbose, PACKAGE="affy"),
                ##se.exprs = array(NaN, dim=dim.sd),
-               cdfName    = ref.cdfName,   ##cel@cdfName,
+               cdfName    = cdfname,   ##cel@cdfName,
                phenoData  = phenoData,
                nrow       = dim.intensity[1],
                ncol       = dim.intensity[2],
-               annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
+               annotation = cleancdfname(cdfname, addcdf=FALSE),
                description= description,
                notes      = notes))
   } else {
@@ -103,11 +109,11 @@ read.affybatch <- function(..., filenames=character(0),
                se.exprs = .Call("read_abatch_stddev",filenames,compress, rm.mask,
                rm.outliers, rm.extra, ref.cdfName,
                dim.intensity,verbose, PACKAGE="affy"),
-               cdfName    = ref.cdfName,   ##cel@cdfName,
+               cdfName    = cdfname,   ##cel@cdfName,
                phenoData  = phenoData,
                nrow       = dim.intensity[1],
                ncol       = dim.intensity[2],
-               annotation = cleancdfname(ref.cdfName, addcdf=FALSE),
+               annotation = cleancdfname(cdfname, addcdf=FALSE),
                description= description,
                notes      = notes))
   }
@@ -251,7 +257,7 @@ ReadAffy <- function(..., filenames=character(0),
                      description=NULL,
                      notes="",
                      rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-                     verbose=FALSE,sd=FALSE) {
+                     verbose=FALSE,sd=FALSE, cdfname = NULL) {
 
   l <- AllButCelsForReadAffy(..., filenames=filenames,
                              widget=widget,
@@ -269,7 +275,7 @@ ReadAffy <- function(..., filenames=character(0),
                         rm.mask=rm.mask,
                         rm.outliers=rm.outliers,
                         rm.extra=rm.extra,
-                        verbose=verbose,sd=sd)
+                        verbose=verbose,sd=sd,cdfname=cdfname)
 
   sampleNames(ret) <- l$sampleNames
   return(ret)
