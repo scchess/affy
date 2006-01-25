@@ -13,7 +13,7 @@ read.affybatch(..., filenames = character(0),
                notes = "",
                compress = getOption("BioC")$affy$compress.cel,
                rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE,
-               verbose = FALSE,sd=FALSE)
+               verbose = FALSE,sd=FALSE, cdfname = NULL)
 
 ReadAffy(..., filenames=character(0),
               widget=getOption("BioC")$affy$use.widgets,
@@ -24,7 +24,7 @@ ReadAffy(..., filenames=character(0),
               description=NULL,
               notes="",
               rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
-              verbose=FALSE,sd=FALSE)
+              verbose=FALSE,sd=FALSE, cdfname = NULL)
 }
 \arguments{
   \item{\dots}{ file names separated by comma.}
@@ -45,6 +45,9 @@ ReadAffy(..., filenames=character(0),
   \item{sd}{should the standard deviation values in the CEL file be read
     in. Since these are typically not used default is not to read them
     in. This also save lots of memory.}
+   \item{cdfname}{Used to specify the name of an alternative cdf package. If set to
+     \code{NULL}, the usual cdf package based on Affymetrix' mappings
+     will be used.}
 }
 
 \details{
