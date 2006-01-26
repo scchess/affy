@@ -34,7 +34,7 @@ expresso <- function(afbatch,
             if(is.null(normalize.method)){
                 normMethods <- normalize.methods(afbatch)
             }else{
-                normMethods <- normalizer.method
+                normMethods <- normalize.method   ## was normalizer.method, but think this is typo (BMB)
             }
         }else{
             normMethods <- "None"
