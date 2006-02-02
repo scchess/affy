@@ -86,13 +86,18 @@ read.affybatch <- function(..., filenames=character(0),
   if (verbose)
     cat("done.\n")
 
+  ## Change sampleNames to be consistent with row.names of phenoData object
+
+  exprs <- .Call("read_abatch",filenames,compress, rm.mask,
+               rm.outliers, rm.extra, ref.cdfName,
+               dim.intensity,verbose, PACKAGE="affy")
+  colnames(exprs) <- samplenames
+  
   #### this is where the code changes from the original read.affybatch.
   #### what we will do here is read in from the 1st to the nth CEL file
   if (!sd){
     return(new("AffyBatch",
-               exprs  = .Call("read_abatch",filenames,compress, rm.mask,
-               rm.outliers, rm.extra, ref.cdfName,
-               dim.intensity,verbose, PACKAGE="affy"),
+               exprs  = exprs,
                ##se.exprs = array(NaN, dim=dim.sd),
                cdfName    = cdfname,   ##cel@cdfName,
                phenoData  = phenoData,
@@ -103,9 +108,7 @@ read.affybatch <- function(..., filenames=character(0),
                notes      = notes))
   } else {
     return(new("AffyBatch",
-               exprs  = .Call("read_abatch",filenames,compress, rm.mask,
-               rm.outliers, rm.extra, ref.cdfName,
-               dim.intensity,verbose, PACKAGE="affy"),
+               exprs  = exprs,
                se.exprs = .Call("read_abatch_stddev",filenames,compress, rm.mask,
                rm.outliers, rm.extra, ref.cdfName,
                dim.intensity,verbose, PACKAGE="affy"),
