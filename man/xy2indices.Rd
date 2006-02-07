@@ -36,7 +36,7 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, xy.offset = NULL)
   A vector of indices or a two-columns matrix of Xs and Ys. 
 }
 \author{ L. }
-\warnings{ Even if one _really_ knows what is going on, playing with the
+\section{Warning}{ Even if one really knows what is going on, playing with the
   parameter \code{xy.offset} could be risky. Changing the package-wide
   option \code{xy.offset} appears much more sane.}
 \seealso{\code{\link{indexProbes}}}

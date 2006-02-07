@@ -30,7 +30,8 @@ merge.AffyBatch(x, y, annotation = paste(annotation(x),
 
 \examples{
 data(affybatch.example)
-m.abatch <- merge(affybatch.example, affybatch.example)
+data(affybatch.example2)
+m.abatch <- merge(affybatch.example, affybatch.example2)
 }
 \keyword{ manip }
 
