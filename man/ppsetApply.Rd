@@ -43,7 +43,6 @@ ppset.ttest <- function(ppset, covariate, pmcorrect.fun = pmcorrect.pmonly, ...)
 
 ## create a dataset
 data(affybatch.example)
-data(affybatch.example2)
 abatch <- merge(affybatch.example, affybatch.example2)
 intensity(abatch) <- 2^jitter(log2(intensity(abatch)),1,1)
 chip.variate <- c("a", "b", "a", "a", "b", "a", "a")
