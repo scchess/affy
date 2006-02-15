@@ -13,6 +13,7 @@
 ### Aug 23, 2004 - change the placement location of statistics in
 ###                ma.plot
 ### Nov 30, 2005 - fix double logging when pairs=TRUE in MAplot
+### Feb 15, 2006 - fixed passing of cex variable into mva.pairs
 
 
 
@@ -55,7 +56,8 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
 
 
 
-mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="gaussian",digits=3,line.col=2,main="MVA plot",...){
+mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="gaussian",
+                      digits=3,line.col=2,main="MVA plot", cex = 2, ...){
   if(log.it) x <-log2(x)
   J <- dim(x)[2]
   frame()
@@ -63,7 +65,9 @@ mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="ga
   on.exit(par(old.par))
   par(mfrow=c(J,J),mgp=c(0,.2,0),mar=c(1,1,1,1),oma=c(1,1.4,2,1))
   for(j in 1:(J-1)){
-    par(mfg=c(j,j));plot(1,1,type="n",xaxt="n",yaxt="n",xlab="",ylab="");text(1,1,labels[j],cex=2)
+    par(mfg=c(j,j))
+    plot(1,1,type="n",xaxt="n",yaxt="n",xlab="",ylab="")
+    text(1,1,labels[j],cex=cex)
     for(k in (j+1):J){
       par(mfg=c(j,k))
       yy <- x[,j]-x[,k]
@@ -76,11 +80,11 @@ mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="ga
       txt <- format(sigma,digits=digits)
       txt2 <- format(mean,digits=digits)
       plot(c(0,1),c(0,1),type="n",ylab="",xlab="",xaxt="n",yaxt="n")
-      text(0.5,0.5,paste(paste("Median:",txt2),paste("IQR:",txt),sep="\n"),cex=2)
+      text(0.5,0.5,paste(paste("Median:",txt2),paste("IQR:",txt),sep="\n"),cex=cex)
     }
   }
   par(mfg=c(J,J));plot(1,1,type="n",xaxt="n",yaxt="n",xlab="",ylab="");
-  text(1,1,labels[J],cex=2)
+  text(1,1,labels[J],cex=cex)
   mtext("A",1,outer=TRUE,cex=1.5)
   mtext("M",2,outer=TRUE,cex=1.5,las=1)
   mtext(main,3,outer=TRUE,cex=1.5)

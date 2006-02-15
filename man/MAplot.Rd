@@ -13,7 +13,8 @@
 \usage{
 MAplot(object,...)
 Mbox(object,...)
-ma.plot(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,...)
+ma.plot(A, M, subset = sample(1:length(M), min(c(10000, length(M)))),
+show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,...)
 }
 
 \arguments{
