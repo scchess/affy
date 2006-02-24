@@ -14,7 +14,7 @@
 ###                ma.plot
 ### Nov 30, 2005 - fix double logging when pairs=TRUE in MAplot
 ### Feb 15, 2006 - fixed passing of cex variable into mva.pairs
-
+### Feb 24, 2006 - add smoothScatter option to ma.plot
 
 
 ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,...){
@@ -33,10 +33,28 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
   } else {
     yloc <- max(fn.call$xlim)
   }
+
+  if (is.element("plot.method",names(fn.call))){
+    if(fn.call$plot.method == "smoothScatter"){
+      require("geneplotter")
+    }
+    plotmethod <- "smoothScatter"
+  } else {
+    plotmethod <- "normal"
+    
+  }
+  
+  
+
   
   aux <- loess(M[subset]~A[subset],degree=1,span=span,family=family.loess)$fitted
-  
-  plot(A,M,...)
+  if (plotmethod == "smoothScatter"){
+    smoothScatter(A,M,...)
+  } else {
+    plot(A,M,...)
+  }
+
+    
   o <- order(A[subset])
   A <- A[subset][o]
   M <- aux[o]
