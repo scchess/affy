@@ -1709,7 +1709,7 @@ static void delete_binary_header(binary_header *my_header){
  **
  *************************************************************/
 
-static binary_header *read_binary_header(char *filename, int return_stream){  //, FILE *infile){
+static binary_header *read_binary_header(char *filename, int return_stream){  /* , FILE *infile){ */
   
   FILE *infile;
 
