@@ -21,6 +21,7 @@
 ##                stddev values into the se.exprs slot (non-default behaviour)
 ##
 ## Jan 24, 2006 - JWM: added cdfname to allow for the use of non-standard mappings
+## Mar 6, 2006 - change .Call to reference affyio. that is new location for parsing code
 ##
 #############################################################
 
@@ -63,7 +64,7 @@ read.affybatch <- function(..., filenames=character(0),
   ## read the first file to see what we have
   if (verbose) cat(1, "reading",filenames[[1]],"...")
 
-  headdetails <- .Call("ReadHeader",filenames[[1]],compress, PACKAGE="affy")
+  headdetails <- .Call("ReadHeader",filenames[[1]], PACKAGE="affyio")
 
   #print(headdetails)
 
@@ -88,9 +89,9 @@ read.affybatch <- function(..., filenames=character(0),
 
   ## Change sampleNames to be consistent with row.names of phenoData object
 
-  exprs <- .Call("read_abatch",filenames,compress, rm.mask,
+  exprs <- .Call("read_abatch",filenames, rm.mask,
                rm.outliers, rm.extra, ref.cdfName,
-               dim.intensity,verbose, PACKAGE="affy")
+               dim.intensity,verbose, PACKAGE="affyio")
   colnames(exprs) <- samplenames
   
   #### this is where the code changes from the original read.affybatch.
@@ -109,9 +110,9 @@ read.affybatch <- function(..., filenames=character(0),
   } else {
     return(new("AffyBatch",
                exprs  = exprs,
-               se.exprs = .Call("read_abatch_stddev",filenames,compress, rm.mask,
+               se.exprs = .Call("read_abatch_stddev",filenames, rm.mask,
                rm.outliers, rm.extra, ref.cdfName,
-               dim.intensity,verbose, PACKAGE="affy"),
+               dim.intensity,verbose, PACKAGE="affyio"),
                cdfName    = cdfname,   ##cel@cdfName,
                phenoData  = phenoData,
                nrow       = dim.intensity[1],
@@ -143,7 +144,7 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
 
   if (verbose)
     cat(1, "reading", filenames[[1]], "to get header information")
-  headdetails <- .Call("ReadHeader", filenames[[1]], compress, PACKAGE="affy")
+  headdetails <- .Call("ReadHeader", filenames[[1]], PACKAGE="affyio")
   dim.intensity <- headdetails[[2]]
   ref.cdfName <- headdetails[[1]]
   ## Allow for usage of alternative cdfs
@@ -157,8 +158,8 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
 
 
   .Call("read_probeintensities", filenames,
-        compress, rm.mask, rm.outliers, rm.extra, ref.cdfName,
-        dim.intensity, verbose, cdfInfo,which, PACKAGE="affy")
+        rm.mask, rm.outliers, rm.extra, ref.cdfName,
+        dim.intensity, verbose, cdfInfo,which, PACKAGE="affyio")
 }
 
 
