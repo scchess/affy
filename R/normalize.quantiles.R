@@ -19,6 +19,9 @@
 ##                the options are pmonly, mmonly, together, separate
 ## Jan 31, 2004 - put a check for an integer matrix and force coercision to
 ##                doubles if required in normalize.quantiles
+## Mar 13, 2005 - Modifications to normalize.quantiles.robust including removing
+##                approx.method which never got implemented. Making it a use a .Call()
+##                rather than a .C()
 ##
 ##
 ##################################################################
@@ -78,21 +81,22 @@ normalize.quantiles <- function(x,copy=TRUE){
 }
 
 
-normalize.AffyBatch.quantiles.robust <- function(abatch, type=c("separate","pmonly","mmonly","together"),weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,approx.meth = FALSE,use.median=FALSE,use.log2=FALSE) {
+normalize.AffyBatch.quantiles.robust <- function(abatch, type=c("separate","pmonly","mmonly","together"),weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,use.median=FALSE,use.log2=FALSE) {
 
   type <- match.arg(type)
 
   if ((type == "pmonly")|(type == "separate")){
     pms <- unlist(pmindex(abatch))
-    intensity(abatch)[pms, ] <- normalize.quantiles.robust(intensity(abatch)[pms, ], weights,remove.extreme,n.remove,approx.meth,use.median,use.log2)
+    intensity(abatch)[pms, ] <- normalize.quantiles.robust(intensity(abatch)[pms, ], copy=FALSE,weights=weights,remove.extreme,n.remove=n.remove,use.median=use.median,use.log2=use.log2)
   }
   if ((type == "mmonly")|(type == "separate")){
     mms <- unlist(mmindex(abatch))
-    intensity(abatch)[mms, ] <- normalize.quantiles.robust(intensity(abatch)[mms, ],weights,remove.extreme,n.remove,approx.meth,use.median,use.log2)
+    intensity(abatch)[mms, ] <- normalize.quantiles.robust(intensity(abatch)[mms, ],copy=FALSE,weights=weights,remove.extreme,n.remove=n.remove,use.median=use.median,use.log2=use.log2)
   }
 
   if (type == "together"){
-    intensity(abatch)  <- normalize.quantiles.robust(intensity(abatch),weights,remove.extreme,n.remove,approx.meth,use.median,use.log2)
+    pms <- unlist(indexProbes(abatch,"both"))
+    intensity(abatch)  <- normalize.quantiles.robust(intensity(abatch)[pms,,drop=FALSE ],copy=FALSE, weights=weights,remove.extreme=remove.extreme,n.remove=n.remove,use.median=use.median,use.log2=use.log2)
   }
 
 
@@ -105,7 +109,7 @@ normalize.AffyBatch.quantiles.robust <- function(abatch, type=c("separate","pmon
   return(abatch)
 }
 
-normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,approx.meth = FALSE,use.median=FALSE,use.log2=FALSE){
+normalize.quantiles.robust <- function(x,copy=TRUE,weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,use.median=FALSE,use.log2=FALSE){
 
   calc.var.ratios <- function(x){
     cols <- dim(x)[2]
@@ -131,7 +135,7 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
     results
   }
 
-
+  use.huber <- FALSE
   remove.extreme <- match.arg(remove.extreme)
 
   rows <- dim(x)[1]
@@ -164,20 +168,41 @@ normalize.quantiles.robust <- function(x,weights=NULL,remove.extreme=c("variance
       remove.order <- order(-means)
       weights[remove.order[1]] <- 0
     }
-  }
-  if (length(weights) != cols){
-    stop("Weights vector incorrect length\n")
-  }
-  if (sum(weights > 0) < 2){
-    stop("Need at least two non negative weights\n")
-  }
-  cat("Chip weights are ",weights,"\n")
-  if (approx.meth == FALSE){
-    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2),
-    PACKAGE="affy")[[1]],rows,cols)
   } else {
-    cat("Approximation currently not implemented \nFalling back to standard Quantile method\n")
-    matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2),
-    PACKAGE="affy")[[1]],rows,cols)
+
+    if (is.numeric(weights)){
+      if (length(weights) != cols){
+        stop("Weights vector incorrect length\n")
+      }
+      if (sum(weights > 0) < 1){
+        stop("Need at least one non negative weights\n")
+      }
+      if (any(weights < 0)){
+        stop("Can't have negative weights")
+      }
+
+      
+    } else {
+      if (weights =="huber"){
+        use.huber <- TRUE
+        weights <- rep(1,cols)
+      } else {
+        stop("Don't recognise weights argument as valid.")
+      }
+
+    }
+
   }
+
+
+      
+  cat("Chip weights are ",weights,"\n")
+  ###matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2),as.integer(use.huber),
+  ####PACKAGE="affy")[[1]],rows,cols)
+  
+  ####R_qnorm_robust_c(SEXP X, SEXP copy, SEXP R_weights, SEXP R_use_median, SEXP R_use_log2, SEXP R_weight_scheme)
+  .Call("R_qnorm_robust_c",x,copy,weights,rows,cols,use.median,as.integer(use.log2),as.integer(use.huber),PACKAGE="affy")
+
+
+  
 }

@@ -25,7 +25,7 @@
   \code{\link{rma}} or \code{\link{expresso}}
   please cite Bolstad et al, Bioinformatics (2003).
 
-  The type arguement should be one of
+  The type argument should be one of
   \code{"separate","pmonly","mmonly","together"} which indicates whether
   to normalize only one probe type (PM,MM) or both together or separately.
   

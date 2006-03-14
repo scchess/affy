@@ -5,22 +5,22 @@
 \description{Using a normalization based upon quantiles, this function
   normalizes a matrix of probe level intensities. Allows weighting of chips}
 \usage{
-      normalize.quantiles.robust(x,weights=NULL,
+      normalize.quantiles.robust(x,copy=TRUE,weights=NULL,
                 remove.extreme=c("variance","mean","both","none"),
-                n.remove=1,approx.meth = FALSE,use.median=FALSE,use.log2=FALSE)
+                n.remove=1,use.median=FALSE,use.log2=FALSE)
 }
 
 \arguments{
   \item{x}{A matrix of intensities, columns are chips, rows are probes}
+  \item{copy}{Make a copy of matrix before normalizing. Usually safer to
+    work with a copy}
   \item{weights}{A vector of weights, one for each chip}
   \item{remove.extreme}{If weights is null, then this will be used for
   determining which chips to remove from the calculation of the
   normalization distribution, See details for more info}
   \item{n.remove}{number of chips to remove}
-  \item{approx.meth}{Use the approximation method. Not currently
-    implememnted}
   \item{use.median}{if TRUE use the median to compute normalization
-    chip, otherwise use a weighted median}
+    chip, otherwise uses a weighted mean}
   \item{use.log2}{work on log2 scale. This means we will be using the
     geometric mean rather than ordinary mean}
 }
