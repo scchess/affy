@@ -92,7 +92,7 @@ just.rma <- function(..., filenames=character(0),
 
   ## get information from cdf environment
 
-  headdetails <- .Call("ReadHeader", filenames[[1]], compress, PACKAGE="affy")
+  headdetails <- .Call("ReadHeader", filenames[[1]], compress, PACKAGE="affyio")
   dim.intensity <- headdetails[[2]]
   if(is.null(cdfname))
     cdfname <- headdetails[[1]]
