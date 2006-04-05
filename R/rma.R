@@ -58,7 +58,7 @@ rma <- function(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=T
   	PACKAGE="affy")
   }
   colnames(exprs) <- sampleNames(object)
-  se.exprs <- array(NA, dim(exprs)) # to be fixed later, besides which don't believe much in nominal se's with medianpolish
+  se.exprs <- matrix(0,0,0)  #array(NA, dim(exprs)) # to be fixed later, besides which don't believe much in nominal se's with medianpolish
 
   phenodata <- phenoData(object)
   annotation <- annotation(object)
