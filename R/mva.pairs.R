@@ -15,10 +15,12 @@
 ### Nov 30, 2005 - fix double logging when pairs=TRUE in MAplot
 ### Feb 15, 2006 - fixed passing of cex variable into mva.pairs
 ### Feb 24, 2006 - add smoothScatter option to ma.plot
+### Apr 11, 2006 - fix problem with smoothScatter option.
 
+ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,plot.method=c("normal","smoothScatter"),...){
 
-ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,...){
-
+  plot.method <- match.arg(plot.method)
+  
   fn.call <- list(...)
 
   sigma <- IQR(M)
@@ -33,15 +35,12 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
   } else {
     yloc <- max(fn.call$xlim)
   }
-
-  if (is.element("plot.method",names(fn.call))){
-    if(fn.call$plot.method == "smoothScatter"){
-      require("geneplotter")
-    }
+  
+  if(plot.method == "smoothScatter"){
+    require("geneplotter")
     plotmethod <- "smoothScatter"
   } else {
     plotmethod <- "normal"
-    
   }
   
   
