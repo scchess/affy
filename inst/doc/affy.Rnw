@@ -92,14 +92,18 @@ describes how to change the package's default options. Section
 {\bf Note:} If you use this package please cite
 \cite{gaut:cope:bols:iriz:2003} and/or \cite{iriz:gaut:cope:2003}.
 
-\section{Changes in versions 1.6.x}
+\section{Changes for affy in BioC 1.8 release}
 \label{whatsnew}
-Very few changes. 
+There were relatively few changes.  
 
 \begin{itemize}
-\item The function \verb+MAplot+ has been added. It works on instances of AffyBatch.  You can decide if you want to make all pairwise MA plots or compare to a reference array using the pairs argument.
-\item Minor bugs fixed in the parsers.
-\item The path of celfiles is now removed by ReadAffy.
+\item MAplot now accepts the argument \Rfunction{plot.method} which can be used to call
+smoothScatter.
+\item \Rfunction{normalize.quantiles.robust} has had minor changes.
+\item \Rfunction{ReadAffy} can optionally return the SD values stored in the cel file.
+\item The C parsing code has been moved to the \Rpackage{affyio} package, which is now a dependency of 
+the affy package. This change should be transparent to users as \Rpackage{affyio} will be automatically loaded when affy is loaded.
+\item Added a cdfname argument to \Rfunction{justRMA} and \Rfunction{ReadAffy} to allow for the use of alternative cdf packages.
 \end{itemize}
 
 \section{Getting Started: From probe level data to expression values}
@@ -452,29 +456,6 @@ future as the RMA method is fine-tuned.
 
 \section{Quality Control through Data Exploration}
 \label{qc}
-Several of the functions for plotting
-summarized probe level data are useful for diagnosing problems with the
-data.  The plotting functions \Rfunction{boxplot} and \Rfunction{hist}
-have methods 
-for \Robject{AffyBatch} objects.  Each of these functions presents
-side-by-side graphical summaries of intensity information from each
-array.  Important differences in the distribution of intensities are
-often evident in these plots. The function
-\Rfunction{MAplot} (applied, for example, to \verb+pm(affybatch.example)+), 
-offers pairwise 
-graphical comparison of intensity data. The option \verb+pairs+ permits you to chose between all pairwise comparisons (when \verb+TRUE+) or compared to a reference array (the default). 
-These plots can be particularly
-useful in diagnosing problems in replicate sets of arrays.
-
-
-\begin{figure}[htbp]
-\begin{center}
-<<fig=TRUE>>=
-data(affybatch.example)
-MAplot(affybatch.example,pairs=TRUE)
-@ 
-\end{center}
-\end{figure}
 
 For the users convenience we have included the \verb+affybatch.example+ sample data set: 
 
@@ -500,6 +481,44 @@ accessed with the \verb+phenoData+ and \verb+pData+ methods:
 phenoData(affybatch.example)
 pData(affybatch.example)
 @
+
+
+
+Several of the functions for plotting
+summarized probe level data are useful for diagnosing problems with the
+data.  The plotting functions \Rfunction{boxplot} and \Rfunction{hist}
+have methods 
+for \Robject{AffyBatch} objects.  Each of these functions presents
+side-by-side graphical summaries of intensity information from each
+array.  Important differences in the distribution of intensities are
+often evident in these plots. The function
+\Rfunction{MAplot} (applied, for example, to \verb+pm(affybatch.example)+), 
+offers pairwise 
+graphical comparison of intensity data. The option \verb+pairs+ permits you to chose between all pairwise comparisons (when \verb+TRUE+) or compared to a reference array (the default). 
+These plots can be particularly
+useful in diagnosing problems in replicate sets of arrays. The function argument \verb+plot.method+ can be used to create a MAplot using a smoothScatter, rather than the default method which is to draw every point. To use this option you will need to the \Rpackage{geneplotter} library installed.
+
+
+\begin{figure}[htbp]
+\begin{center}
+<<fig=TRUE>>=
+library(geneplotter)
+data(affybatch.example)
+MAplot(affybatch.example,pairs=TRUE,plot.method="smoothScatter")
+@ 
+\end{center}
+\caption{Pairwise MA plots}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Accessing $PM$ and $MM$ Data}
 The $PM$ and $MM$  intensities and corresponding {\it affyID} can be 
@@ -947,6 +966,16 @@ There are several other vignettes addressing more specialised topics related to 
 \appendix
 
 \section{Previous Release Notes}
+
+\subsection{Changes in versions 1.6.x}
+There were very few changes. 
+
+\begin{itemize}
+\item The function \verb+MAplot+ has been added. It works on instances of AffyBatch.  You can decide if you want to make all pairwise MA plots or compare to a reference array using the pairs argument.
+\item Minor bugs fixed in the parsers.
+\item The path of celfiles is now removed by ReadAffy.
+\end{itemize}
+
 
 \subsection{Changes in versions 1.5.x}
 There are some minor differences in what you can do but little
