@@ -1,3 +1,5 @@
+debug.affy123 <- FALSE
+
 setClass("ProgressBarText", representation(steps = "integer", barsteps = "integer", internals = "environment"))
 
 setMethod("initialize", "ProgressBarText",
