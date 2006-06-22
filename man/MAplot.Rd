@@ -14,7 +14,7 @@
 MAplot(object,...)
 Mbox(object,...)
 ma.plot(A, M, subset = sample(1:length(M), min(c(10000, length(M)))),
-show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,plot.method=c("normal","smoothScatter"),...)
+show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,plot.method=c("normal","smoothScatter","add"),add.loess = TRUE,lwd = 1, lty = 1, col.loess = "red",...)
 }
 
 \arguments{
@@ -29,8 +29,18 @@ show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,plot.method=c("
   \item{family.loess}{\code{"guassian"} or \code{"symmetric"} as in
     \code{\link[modreg]{loess}}.}
   \item{cex}{Size of text when writing summary statistics on plot}
-  \item{plot.method}{a string specifying how the plot is to be drawn.}
-  }
+  \item{plot.method}{a string specifying how the plot is to be
+    drawn. \code{"normal"} plots points, \code{"smoothScatter"} uses the
+  \code{\link[geneplotter]{smoothScatter}} function. Specifying
+  \code{"add"} means that the MAplot should be added to the current
+  plot}
+\item{add.loess}{add a loess line to the plot}
+\item{lwd}{width of loess line}
+\item{lty}{line type for loess line}
+\item{col.loess}{color for loess line}
+
+
+}
 \examples{
    data(affybatch.example)
    MAplot(affybatch.example)

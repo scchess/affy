@@ -16,9 +16,9 @@
 ### Feb 15, 2006 - fixed passing of cex variable into mva.pairs
 ### Feb 24, 2006 - add smoothScatter option to ma.plot
 ### Apr 11, 2006 - fix problem with smoothScatter option.
-### Jun 22, 2006 - Fix problem with where statistics appear when xlim is set.
+### Jun 22, 2006 - Fix problem with where statistics appear when xlim is set. Add plotmethod="add". move pch to MAplot. Fix it so cex is passed down to plot(). Make adding the loess line optional. Make lwd,lty,col settable for the loess line
 
-ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,plot.method=c("normal","smoothScatter"),...){
+ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,plot.method=c("normal","smoothScatter","add"),add.loess=TRUE,lwd=1,lty=1,col.loess="red",...){
 
   plot.method <- match.arg(plot.method)
   
@@ -40,6 +40,8 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
   if(plot.method == "smoothScatter"){
     require("geneplotter")
     plotmethod <- "smoothScatter"
+  } else if (plot.method == "add"){
+    plotmethod <- "add"
   } else {
     plotmethod <- "normal"
   }
@@ -50,18 +52,23 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
   aux <- loess(M[subset]~A[subset],degree=1,span=span,family=family.loess)$fitted
   if (plotmethod == "smoothScatter"){
     smoothScatter(A,M,...)
+  } else if (plotmethod == "add"){
+    points(A,M,cex=cex,...)
   } else {
-    plot(A,M,...)
+    plot(A,M,cex=cex,...)
   }
 
-    
-  o <- order(A[subset])
-  A <- A[subset][o]
-  M <- aux[o]
-  o <-which(!duplicated(A))
-  lines(approx(A[o],M[o]),col="red")
+  if (add.loess){
+    o <- order(A[subset])
+    A <- A[subset][o]
+    M <- aux[o]
+    o <-which(!duplicated(A))
+    lines(approx(A[o],M[o]),col=col.loess,lwd=lwd,lty=lty)
+  }
   abline(0,0,col="blue")
+  
 
+    
   # write IQR and Median on to plot
   if (show.statistics){
     txt <- format(sigma,digits=3)
@@ -148,7 +155,7 @@ if (!isGeneric("MAplot"))
 
 
 setMethod("MAplot",signature("AffyBatch"),
-          function(object,log=TRUE,type=c("both","pm","mm"),ref=NULL,subset=NULL,which=NULL,pairs=FALSE,...){
+          function(object,log=TRUE,type=c("both","pm","mm"),ref=NULL,subset=NULL,which=NULL,pairs=FALSE,pch=".",...){
             type <- match.arg(type)
             if (type == "both"){
               pms <- unlist(indexProbes(object, "both"))
@@ -179,13 +186,13 @@ setMethod("MAplot",signature("AffyBatch"),
                 if (is.null(ref)){
                   for (i in which){
                     title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
-                    ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                    ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch=pch,...)
                   }
                 } else {
                   for (i in which){
                     if (i != ref){ ##changed which to i
                       title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
-                      ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                      ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch=pch,...)
                     }
                   }
                 }
@@ -207,13 +214,13 @@ setMethod("MAplot",signature("AffyBatch"),
                 if (is.null(ref)){
                   for (i in which){
                     title <- paste(sampleNames(object)[i],"vs pseudo-median reference chip")
-                    ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                    ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch=pch,...)
                   }
                 } else {
                   for (i in which){
                     if (i != ref){
                       title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
-                      ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch='.',...)
+                      ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch=pch,...)
                     }
                   }
                 }
