@@ -14,7 +14,7 @@
 MAplot(object,...)
 Mbox(object,...)
 ma.plot(A, M, subset = sample(1:length(M), min(c(10000, length(M)))),
-show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,plot.method=c("normal","smoothScatter","add"),add.loess = TRUE,lwd = 1, lty = 1, col.loess = "red",...)
+show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,plot.method=c("normal","smoothScatter","add"),add.loess = TRUE,lwd = 1, lty = 1, loess.col = "red",...)
 }
 
 \arguments{
@@ -37,7 +37,7 @@ show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,plot.method=c("
 \item{add.loess}{add a loess line to the plot}
 \item{lwd}{width of loess line}
 \item{lty}{line type for loess line}
-\item{col.loess}{color for loess line}
+\item{loess.col}{color for loess line}
 
 
 }

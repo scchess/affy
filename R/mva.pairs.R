@@ -18,7 +18,7 @@
 ### Apr 11, 2006 - fix problem with smoothScatter option.
 ### Jun 22, 2006 - Fix problem with where statistics appear when xlim is set. Add plotmethod="add". move pch to MAplot. Fix it so cex is passed down to plot(). Make adding the loess line optional. Make lwd,lty,col settable for the loess line
 
-ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,plot.method=c("normal","smoothScatter","add"),add.loess=TRUE,lwd=1,lty=1,col.loess="red",...){
+ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,plot.method=c("normal","smoothScatter","add"),add.loess=TRUE,lwd=1,lty=1,loess.col="red",...){
 
   plot.method <- match.arg(plot.method)
   
@@ -63,7 +63,7 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
     A <- A[subset][o]
     M <- aux[o]
     o <-which(!duplicated(A))
-    lines(approx(A[o],M[o]),col=col.loess,lwd=lwd,lty=lty)
+    lines(approx(A[o],M[o]),col=loess.col,lwd=lwd,lty=lty)
   }
   abline(0,0,col="blue")
   
