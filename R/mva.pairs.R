@@ -16,6 +16,7 @@
 ### Feb 15, 2006 - fixed passing of cex variable into mva.pairs
 ### Feb 24, 2006 - add smoothScatter option to ma.plot
 ### Apr 11, 2006 - fix problem with smoothScatter option.
+### Jun 22, 2006 - Fix problem with where statistics appear when xlim is set.
 
 ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,plot.method=c("normal","smoothScatter"),...){
 
@@ -33,7 +34,7 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
   if (!is.element("xlim",names(fn.call))){
     xloc <- max(A)
   } else {
-    yloc <- max(fn.call$xlim)
+    xloc <- max(fn.call$xlim)
   }
   
   if(plot.method == "smoothScatter"){
