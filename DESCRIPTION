@@ -1,6 +1,6 @@
 Package: affy
-Version: 1.11.3
-Date: 2006-06-22
+Version: 1.11.4
+Date: 2006-07-23
 Title: Methods for Affymetrix Oligonucleotide Arrays
 Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier
         <laurent@cbs.dtu.dk>, Benjamin Milo Bolstad
