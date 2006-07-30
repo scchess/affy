@@ -613,10 +613,13 @@ setMethod("image",signature(x="AffyBatch"),
                 m <- transfo(m)
               }
               m <- as.matrix(rev(as.data.frame(matrix(m, nrow=length(x.pos), ncol=length(y.pos)))))
-              if( missing(main) )
-                 main = sampleNames(x)[i]
+              if( missing(main) ){
+                main.cur=sampleNames(x)[i]
+              } else {
+                main.cur <- main
+              }
               image(x.pos, y.pos, m,
-                    col=col, main=main,
+                    col=col, main=main.cur,
                     xlab=xlab, ylab=ylab,,xaxt='n',
                       yaxt='n', ...)
               par(ask=FALSE)
