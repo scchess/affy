@@ -19,6 +19,7 @@
 ### Jun 22, 2006 - Fix problem with where statistics appear when xlim is set. Add plotmethod="add". move pch to MAplot. Fix it so cex is passed down to plot(). Make adding the loess line optional. Make lwd,lty,col settable for the loess line
 ### Jul 21, 2006 - allow MAplot to have character string sampleName arguments for which,subset,ref. But then removed subset
 ### Jul 23, 2006 - added groups to MAplot for AffyBatch
+### Aug  4, 2006 - fix small bug in how plots are titled.
 
 ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,plot.method=c("normal","smoothScatter","add"),add.loess=TRUE,lwd=1,lty=1,loess.col="red",...){
 
@@ -371,7 +372,7 @@ setMethod("MAplot",signature("AffyBatch"),
                   for (i in which){
                     if (length(ref) == 1){
                       if (i != ref.name){
-                        title <- paste(i,"vs",ref)
+                        title <- paste(i,"vs",ref.name)
                         ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch=pch,...)
                       }
                     } else {
