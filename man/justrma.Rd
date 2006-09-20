@@ -1,9 +1,9 @@
 \name{justRMA}
 \alias{justRMA}
 \alias{just.rma}
-\title{ Read CEL files into an AffyBatch}
+\title{ Read CEL files into an exprSet}
 \description{
-  Read CEL files and compute an expression measure using affybatch.}
+  Read CEL files and compute an expression measure without using an AffyBatch.}
 \usage{
 just.rma(..., filenames = character(0),
                phenoData = new("phenoData"),
@@ -64,7 +64,7 @@ user to read in phenoData, MIAME information, and CEL files using
 widgets. One can also define files where to read phenoData and MIAME
 information.
 
-If the function is call with no arguments \code{justRMA()} then all the CEL
+If the function is called with no arguments \code{justRMA()} then all the CEL
 files in the working directory are read, converted to an expression
 measure using RMA and put into an \code{exprSet}.
 However, the arguments give the user great flexibility.
@@ -92,11 +92,12 @@ passed along to the function \code{read.celfile}.
 
 }
 \value{
-  An \code{exprSet} object.
+  An \code{exprSet} object, containing expression values identical to
+  what one would get from running \code{rma} on an \code{AffyBatch}.
 }
 
 \author{In the beginning: James MacDonald <jmacdon@med.umich.edu>
-Supporting routines, maintainence and just.rma: Ben Bolstad <bmb@bmbolstad.com>}
+Supporting routines, maintenance and just.rma: Ben Bolstad <bmb@bmbolstad.com>}
 \seealso{\code{\link[affy]{rma}},\code{\link[affy]{ReadAffy}}}
 
 \examples{
