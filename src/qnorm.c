@@ -48,6 +48,8 @@
  ** Jun 5, 2006 - Re-organize code blocks
  **               Add normalization within blocks functions
  ** Jun 9, 2006 - change nearbyint to floor(x +0.5) (to fix problems on Sparc Solaris builds)
+ ** Aug 1, 2006 - fix bug in determining/applying target
+ **               some changes in how quantiles are estimated in determining/applyin target
  **
  ***********************************************************/
 
@@ -958,7 +960,7 @@ SEXP R_qnorm_robust_c(SEXP X, SEXP copy, SEXP R_weights, SEXP R_use_median, SEXP
   use_log2 = INTEGER(R_use_log2)[0];
   weight_scheme = INTEGER(R_weight_scheme)[0];
 
-
+  
   qnorm_robust_c(Xptr,weights, &rows, &cols, &use_median, &use_log2, &weight_scheme);
   if (asInteger(copy)){
     UNPROTECT(2);
@@ -1460,7 +1462,8 @@ int qnorm_c_using_target(double *data, int *rows, int *cols, double *target, int
       for (i =0; i < *rows; i++){
 
 	samplepercentile = (double)ranks[i]/(double)(*rows +1);
-	target_ind_double = 1.0/3.0 + ((double)(*targetrows) + 1.0/3.0) * samplepercentile;
+	/* target_ind_double = 1.0/3.0 + ((double)(*targetrows) + 1.0/3.0) * samplepercentile; */
+	target_ind_double = 1.0 + ((double)(*targetrows) - 1.0) * samplepercentile;
 	target_ind_double_floor = floor(target_ind_double + 4*DOUBLE_EPS);
 	
 	target_ind_double = target_ind_double - target_ind_double_floor;
@@ -1484,7 +1487,7 @@ int qnorm_c_using_target(double *data, int *rows, int *cols, double *target, int
 	  if ((target_ind < *targetrows) && (target_ind > 0)){
 	    data[j*(*rows) +ind] = (1.0- target_ind_double)*row_mean[target_ind-1] + target_ind_double*row_mean[target_ind];
 	  } else if (target_ind >= *targetrows){
-	    data[j*(*rows) +ind] = row_mean[*rows-1];
+	    data[j*(*rows) +ind] = row_mean[*targetrows-1];
 	  } else {
 	    data[j*(*rows) +ind] = row_mean[0];
 	  }
@@ -1552,8 +1555,10 @@ int qnorm_c_determine_target(double *data, int *rows, int *cols, double *target,
     /* need to estimate quantiles */
     for (i =0; i < *targetrows; i++){
       samplepercentile = (double)(i+1)/(double)(*targetrows +1);
+      
+      /* row_mean_ind_double = 1.0/3.0 + ((double)(*rows) + 1.0/3.0) * samplepercentile; */
+      row_mean_ind_double = 1.0 + ((double)(*rows) -1.0) * samplepercentile;
 
-      row_mean_ind_double = 1.0/3.0 + ((double)(*rows) + 1.0/3.0) * samplepercentile;
       row_mean_ind_double_floor = floor(row_mean_ind_double + 4*DOUBLE_EPS);
 	
       row_mean_ind_double = row_mean_ind_double - row_mean_ind_double_floor;
@@ -1575,7 +1580,7 @@ int qnorm_c_determine_target(double *data, int *rows, int *cols, double *target,
 	if ((row_mean_ind < *rows) && (row_mean_ind > 0)){
 	  target[i] = (1.0- row_mean_ind_double)*row_mean[row_mean_ind-1] + row_mean_ind_double*row_mean[row_mean_ind];
 	} else if (row_mean_ind >= *rows){
-	  target[i] = row_mean[row_mean_ind-1];
+	  target[i] = row_mean[*rows-1];
 	} else {
 	  target[i] = row_mean[0];
 	}

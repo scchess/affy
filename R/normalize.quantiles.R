@@ -23,6 +23,7 @@
 ##                approx.method which never got implemented. Making it a use a .Call()
 ##                rather than a .C()
 ##
+## Sep 20, 2006 - fix .Call in normalize.quantiles.robust
 ##
 ##################################################################
 
@@ -201,7 +202,7 @@ normalize.quantiles.robust <- function(x,copy=TRUE,weights=NULL,remove.extreme=c
   ####PACKAGE="affy")[[1]],rows,cols)
   
   ####R_qnorm_robust_c(SEXP X, SEXP copy, SEXP R_weights, SEXP R_use_median, SEXP R_use_log2, SEXP R_weight_scheme)
-  .Call("R_qnorm_robust_c",x,copy,weights,rows,cols,use.median,as.integer(use.log2),as.integer(use.huber),PACKAGE="affy")
+  .Call("R_qnorm_robust_c",x,copy,weights,as.integer(use.median),as.integer(use.log2),as.integer(use.huber),PACKAGE="affy")
 
 
   
