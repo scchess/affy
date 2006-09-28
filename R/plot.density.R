@@ -45,7 +45,6 @@ plotDensity.AffyBatch <- function(x, col=1:6, log=TRUE,
   }
   else  if(is.null(xlab)) xlab <- "intensity"
   
-  rv <- plotDensity(x, ylab=ylab, xlab=xlab, col=col, ...)
+  invisible(plotDensity(x, ylab=ylab, xlab=xlab, col=col, ...))
 
-  invisible(rv)
 }

@@ -19,7 +19,7 @@
 \alias{cdfName,AffyBatch-method}
 \alias{probes,AffyBatch-method}
 \alias{geneNames,AffyBatch-method}
-\alias{geneNames<-,AffyBatch-method}
+\alias{geneNames<-,AffyBatch,ANY-method}
 \alias{geneNames<-,AffyBatch,ANY-method}
 \alias{getCdfInfo,AffyBatch-method}
 \alias{image,AffyBatch-method}
