@@ -1,6 +1,7 @@
 \name{AffyBatch-class}
 \docType{class}
 \alias{AffyBatch-class}
+\alias{AffyBatch,ANY}
 \alias{AffyBatch}
 \alias{probes}
 \alias{geneNames}
@@ -19,6 +20,7 @@
 \alias{probes,AffyBatch-method}
 \alias{geneNames,AffyBatch-method}
 \alias{geneNames<-,AffyBatch-method}
+\alias{geneNames<-,AffyBatch,ANY-method}
 \alias{getCdfInfo,AffyBatch-method}
 \alias{image,AffyBatch-method}
 \alias{indexProbes,AffyBatch-method}
@@ -48,7 +50,7 @@
 \title{Class AffyBatch}
 \description{This is a class representation for Affymetrix GeneChip probe
   level data. The main component are the intensities from multiple
-  arrays of the same \code{CDF} type. In extends \code{\link[Biobase]{exprSet-class}}.}
+  arrays of the same \code{CDF} type. It extends \code{\link[Biobase]{exprSet-class}}.}
 \section{Objects from the Class}{
   Objects can be created using the function \code{\link{read.affybatch}}
   or the wrapper \code{\link{ReadAffy}}.}
