@@ -652,7 +652,7 @@ if( is.null(getGeneric("hist")) )
   setGeneric("hist")
 
 setMethod("hist",signature(x="AffyBatch"), 
-    function(x,...) plotDensity(x,...))
+    function(x,...) plotDensity.AffyBatch(x,...))
 
 
 if( is.null(getGeneric("mas5calls")) )
