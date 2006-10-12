@@ -97,7 +97,7 @@ character is given it tries to read the file with that name to obtain a
 
 \examples{
 if(require(affydata)){
-     celpath <- paste(.path.package("affydata"),"celfiles",sep="/")
+     celpath <- system.file("celfiles", package="affydata")
      fns <- list.celfiles(path=celpath,full.names=TRUE)
  
      cat("Reading files:\n",paste(fns,collapse="\n"),"\n")

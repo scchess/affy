@@ -41,7 +41,7 @@
 }
 
 ##.initMapCdfName <- function(where) {
-##  filepath <- file.path(.path.package("affy"), "data", "mapCdfName.rda")
+##  filepath <- system.file("data/apCdfName.rda" package="affy")
 ##  load(filepath, envir=as.environment(where))
 ##}
 

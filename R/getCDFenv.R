@@ -44,7 +44,7 @@ cdfFromData <- function(cdfname, pkg, verbose=TRUE) {
         ## check if the cdfenv is already loaded. If not load it *in* the environment
         ## of the package (where.env)
         if(!exists(cdfname, where = where.env, inherits = FALSE)) {
-            path <- .path.package(pkg)
+            path <- system.file(package=pkg)
             data(list=cdfname, envir=where.env)
         }
         cdfenv <- get(cdfname, envir=where.env)
