@@ -20,6 +20,8 @@
 ### Jul 21, 2006 - allow MAplot to have character string sampleName arguments for which,subset,ref. But then removed subset
 ### Jul 23, 2006 - added groups to MAplot for AffyBatch
 ### Aug  4, 2006 - fix small bug in how plots are titled.
+### Oct 11, 2006 - change some apply(x,1,median) to rowMedians(x)
+###
 
 ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show.statistics=TRUE,span=2/3,family.loess="gaussian",cex=2,plot.method=c("normal","smoothScatter","add"),add.loess=TRUE,lwd=1,lty=1,loess.col="red",...){
 
@@ -220,7 +222,7 @@ setMethod("MAplot",signature("AffyBatch"),
 
               if(!pairs){
                 if (is.null(ref)){
-                  medianchip <- apply(x, 1, median)
+                  medianchip <- rowMedians(x)            ###apply(x, 1, median)
                 }  else if (length(ref) > 1){
                   if (ref.fn == "median"){
                     medianchip <- rowMedians(x[,ref])
@@ -342,7 +344,7 @@ setMethod("MAplot",signature("AffyBatch"),
                 
                 if (is.null(ref)){
                   if (ref.fn == "median"){
-                    medianchip <- apply(grouped.data, 1, median)
+                    medianchip <- rowMedians(grouped.data)    ####apply(grouped.data, 1, median)
                   } else {
                     medianchip <- rowMeans(grouped.data)
                   }
