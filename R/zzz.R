@@ -5,7 +5,7 @@
 
   start <- nchar("normalize.AffyBatch.")
   assign("normalize.AffyBatch.methods",
-         substr(all.affy[grep("normalize\.AffyBatch\.*", all.affy)], start+1, 100),
+         substr(all.affy[grep("normalize\\.AffyBatch\\.*", all.affy)], start+1, 100),
          envir=as.environment(where))
 }
 
@@ -14,21 +14,21 @@
 
   ## the first one is deprecated (well... "should be"...)
   assign("generateExprSet.methods",
-         substr(all.affy[grep("generateExprVal\.method\.*", all.affy)], 24,100),
+         substr(all.affy[grep("generateExprVal\\.method\\.*", all.affy)], 24,100),
          envir=as.environment(where))
   assign("express.summary.stat.methods",
-         substr(all.affy[grep("generateExprVal\.method\.*", all.affy)], 24,100),
+         substr(all.affy[grep("generateExprVal\\.method\\.*", all.affy)], 24,100),
          envir=as.environment(where))
 }
 
 .initBackgroundCorrect <- function(where, all.affy) {
   if (debug.affy123) cat("-->detecting background correction methods from naming convention\n")
   ##assign("bg.correct.methods",
-  ##       substr(ls(where)[grep("bg.correct\.*", ls(where))], 12,100),
+  ##       substr(ls(where)[grep("bg.correct\\.*", ls(where))], 12,100),
   ##       envir=as.environment(where))
   start <- nchar("bg.correct.")
   assign("bgcorrect.methods",
-         substr(all.affy[grep("bg\.correct\.", all.affy)], start+1, 100),
+         substr(all.affy[grep("bg\\.correct\\.", all.affy)], start+1, 100),
          envir=as.environment(where))
        }
 
@@ -36,7 +36,7 @@
   if (debug.affy123) cat("-->detecting pm correction methods from naming convention\n")
   start <- nchar("pmcorrect.")
   assign("pmcorrect.methods",
-         substr(all.affy[grep("pmcorrect\.*", all.affy)], start+1, 100),
+         substr(all.affy[grep("pmcorrect\\.*", all.affy)], start+1, 100),
          envir=as.environment(where))
 }
 

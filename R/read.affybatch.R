@@ -165,7 +165,7 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("phe
 
 list.celfiles <-   function(...){
   files <- list.files(...)
-  return(files[grep("\.[cC][eE][lL]\.gz$|\.[cC][eE][lL]$", files)])
+  return(files[grep("\\.[cC][eE][lL]\\.gz$|\\.[cC][eE][lL]$", files)])
 }
 
 AllButCelsForReadAffy <- function(..., filenames=character(0),
