@@ -92,7 +92,9 @@
  **               R was garbage collecting something that shouldn't have
  **               been. This was leading to a seg fault. Fixed by
  **               moving an UNPROTECT.
- **  
+ ** Nov 9, 2006 - integrate changes suggested/supplied by Paul Gordon (gordonp@ucalgary.ca)
+ **               specifically memcpy, caching log(2.0), and partial sorting for median calculation 
+ ** Nov 13, 2006 - moved median code to rma_common.c
  **
  ************************************************************************/
 
@@ -113,38 +115,6 @@
 
 void do_RMA(double *PM, char **ProbeNames, int *rows, int * cols,double *results,char **outNames,int nps);
 
-
-/**************************************************************************
- **
- ** double median(double *x, int length)
- **
- ** double *x - vector
- ** int length - length of *x
- **
- ** returns the median of *x
- **
- *************************************************************************/
-
-double  median(double *x, int length){
-  int i;
-  int half;
-  double med;
-  double *buffer = Calloc(length,double);
-  
-  for (i = 0; i < length; i++)
-    buffer[i] = x[i];
-  
-  qsort(buffer,length,sizeof(double), (int(*)(const void*, const void*))sort_double);
-  half = (length + 1)/2;
-  if (length % 2 == 1){
-    med = buffer[half - 1];
-  } else {
-    med = (buffer[half] + buffer[half-1])/2.0;
-  }
-  
-  Free(buffer);
-  return med;
-}
 
 /*******************************************************************************
  **
@@ -190,7 +160,7 @@ void get_row_median(double *z, double *rdelta, int rows, int cols){
     for (j = 0; j < cols; j++){
       buffer[j] = z[j*rows + i];
     }
-    rdelta[i] = median(buffer,cols);
+    rdelta[i] = median_nocopy(buffer,cols);
   }
   
   Free(buffer);
@@ -214,10 +184,9 @@ void get_col_median(double *z, double *cdelta, int rows, int cols){
   
   double *buffer = Calloc(rows,double);
   for (j = 0; j < cols; j++){
-    for (i = 0; i < rows; i++){  
-      buffer[i] = z[j*rows + i];
-    }
-    cdelta[j] = median(buffer,rows);
+    memcpy(buffer,z+j*rows,rows*sizeof(double));
+
+    cdelta[j] = median_nocopy(buffer,rows);
   }
   
   Free(buffer);
@@ -343,9 +312,11 @@ void median_polish(double *data, int rows, int cols, int *cur_rows, double *resu
   double *c = Calloc(cols,double);
   double *z = Calloc(nprobes*cols,double);
 
+  double ONE_OVER_LOG2 = 1.0/log(2.0); /* Paul Gordon: calculate the log only once, for efficiency's sake */
+
   for (j = 0; j < cols; j++){
     for (i =0; i < nprobes; i++){
-      z[j*nprobes + i] = log(data[j*rows + cur_rows[i]])/log(2.0);  
+      z[j*nprobes + i] = log(data[j*rows + cur_rows[i]])*ONE_OVER_LOG2;  
     }
   } 
   
