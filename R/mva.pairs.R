@@ -215,7 +215,7 @@ setMethod("MAplot",signature("AffyBatch"),
               
               
               if (is.null(which)){
-                which <- 1:dim(object@exprs)[2]
+                which <- 1:dim(exprs(object))[2]
               }
               
               ref.fn <- match.arg(ref.fn)

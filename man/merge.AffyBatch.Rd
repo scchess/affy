@@ -8,7 +8,7 @@
 \usage{
 merge.AffyBatch(x, y, annotation = paste(annotation(x),
                  annotation(y)), description = NULL, notes =
-                 paste(x@notes, y@notes), ...)
+                 character(0), ...)
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{

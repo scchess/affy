@@ -8,7 +8,7 @@
 }
 \usage{
 read.affybatch(..., filenames = character(0),
-               phenoData = new("phenoData"),
+               phenoData = new("AnnotatedDataFrame"),
                description = NULL,
                notes = "",
                compress = getOption("BioC")$affy$compress.cel,
@@ -29,7 +29,7 @@ ReadAffy(..., filenames=character(0),
 \arguments{
   \item{\dots}{ file names separated by comma.}
   \item{filenames}{ file names in a character vector.}
-  \item{phenoData}{ a \code{\link[Biobase]{phenoData}} object}
+  \item{phenoData}{ a \code{\link[Biobase]{AnnotatedDataFrame}} object}
   \item{description}{ a \code{\link[Biobase]{MIAME}} object }
   \item{notes}{ notes }
   \item{compress}{are the CEL files compressed ?}
@@ -61,15 +61,14 @@ files in the working directory are read and put into an
 \code{AffyBatch}.
 However, the arguments give the user great flexibility.
   
-\code{phenoData} is read using \code{\link[Biobase]{read.phenoData}}. If a
+\code{phenoData} is read using \code{\link[Biobase]{read.AnnotatedDataFrame}}. If a
 character is given it tries to read the file with that name
 to obtain the phenoData
-object as described in \code{\link[Biobase]{read.phenoData}}. If left
-\code{NULL} but \code{widget=TRUE} then widgets are used. If left
-\code{NULL} and \code{widget=FALSE} then a default object is created.
-It will be a data.frame with
-   \code{new("phenoData",pData=data.frame(x=1:length(CELfiles)),varLabels=list(x="arbitrary number"))}
-
+object as described in \code{\link[Biobase]{read.AnnotatedDataFrame}}. If left
+\code{NULL} and \code{widget=FALSE} (\code{widget=TRUE} is not currently
+supported) then a default object is created.
+It will be an object of class \code{\link[Biobase]{AnnotatedDataFrame}} with
+pData a data.frame with column x indexing the CEL files.
 
  \code{AllButCelsForReadAffy} is an internal function that gets called
  by \code{ReadAffy}. It gets all the information except the cel intensities.

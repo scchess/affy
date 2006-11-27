@@ -36,7 +36,6 @@ mas5calls.ProbeSet <- function(object,
 mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
                                 tau=0.015, alpha1=0.04, alpha2=0.06,
                                 ignore.saturated=TRUE) {
-
   if(alpha1 < 0)      {stop("alpha1 must be  > 0 "); }
   if(alpha1 > alpha2) {stop("alpha2 must be  > alpha1 "); }
   if(alpha2 > 1)      {stop("alpha2 must be  <1 "); }
@@ -77,13 +76,14 @@ mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
     p <- p[ids,,drop=FALSE]
   }
 
-  eset <- new("exprSet",
-              exprs=calls,
-              se.exprs=p,
+  eset <- new("ExpressionSet",
               phenoData=phenoData(object),
-              description=description(object),
+              ## featureData picked up from object
+              experimentData=experimentData(object),
               annotation=annotation(object),
-              notes=c(notes(object)))
+              exprs=calls,
+              se.exprs=p
+              )
   return(eset)
 }
 

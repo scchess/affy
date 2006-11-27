@@ -12,23 +12,135 @@ if (debug.affy123) cat("-->initAffyBatch\n")
 ## Inherits from Affybatch
 ## The accessor 'intensity' gets what is in the slot 'exprs'
 setClass("AffyBatch",
-         representation(cdfName="character",
-                        nrow="numeric",
-                        ncol="numeric"),
-         prototype=list(exprs=matrix(nr=0,nc=0),
-         se.exprs = matrix(nr=0,nc=0),
-         description=new("MIAME"),
-         annotation="",
-         notes="",
-         cdfName="",
-         nrow=0,
-         ncol=0), contains="exprSet")
+         representation=representation(
+           cdfName="character",
+           nrow="numeric",
+           ncol="numeric"),
+         contains="eSet",
+         prototype=prototype(
+           new("VersionedBiobase",
+               versions=c(classVersion("eSet"), AffyBatch="1.1.0"))))
+
+## Old class definition
+## Name:            cdfName              nrow              ncol             exprs
+## Class:         character           numeric           numeric        exprMatrix
+                                                                              
+## Name:           se.exprs       description        annotation             notes
+## Class:        exprMatrix  characterORMIAME         character         character
+                                                            
+## Name:       reporterInfo         phenoData .__classVersion__
+## Class:  data.frameOrNULL         phenoData          Versions
+                  
+
+setMethod("initialize",
+          signature(.Object="AffyBatch"),
+          ## provide a signature consistent with the new defintion, but that picks up the (implicit) old
+          function(.Object,
+                   cdfName="", nrow=0, ncol=0,
+                   phenoData, featureData,
+                   experimentData=new("MIAME"),
+                   annotation=character(0),
+                   exprs=matrix(numeric(0), nrow=nrow, ncol=ncol),
+                   ## se.exprs
+                   ...) {
+              .Object@cdfName <- cdfName
+              .Object@nrow <- nrow
+              .Object@ncol <- ncol
+              dots <- list(...)
+              ## remove reporterInfo, description, notes from '...'
+              if ("reporterInfo" %in% names(dots)) {
+                  if (missing(featureData)) {
+                      if (!is.null(dots[["reporterInfo"]])) {
+                          if (is(dots[["reporterInfo"]], "data.frame"))
+                            featureData <- new("AnnotatedDataFrame", data=dots[["reporterInfo"]])
+                          else {
+                              warning("trying to convert reporterInfo (class '", class(dots[["reporterInfo"]]),
+                                      "') to featureData (class 'AnnotatedDataFrame')",
+                                      immediate.=TRUE)
+                              featureData <- as(dots[["reporterInfo"]], "AnnotatedDataFrame")
+                          }
+                      } else stop("use 'featureData' rather than 'reporterInfo' for feature covariates")
+                  }
+              }
+              if ("description" %in% names(dots)) {
+                  if (missing(experimentData)) experimentData <- dots[["description"]]
+                  else stop("use 'experimentData' rather than 'description' for experiment description")
+              }
+              if ("notes" %in% names(dots)) {
+                  warning("addding 'notes' to 'experimentData'")
+                  notes(experimentData) <- c(notes(experimentData), dots[["notes"]])
+              }
+              dots <- dots[!names(dots) %in% c("reporterInfo", "description", "notes")]
+              ## update phenoData to AnnotatedDataFrame, if necessary
+              assayData <- do.call("assayDataNew",
+                                   c(list(exprs=exprs), dots, storage.mode="list"))
+              if (missing(phenoData) || is.null(phenoData))
+                phenoData <- annotatedDataFrameFrom(assayData, byrow=FALSE)
+              else if (!is(phenoData, "AnnotatedDataFrame"))
+                phenoData <- as(phenoData, "AnnotatedDataFrame")
+              if (missing(featureData)) featureData <- annotatedDataFrameFrom(assayData, byrow=TRUE)
+              callNextMethod(.Object,
+                             assayData=assayData,
+                             phenoData=phenoData,
+                             featureData=featureData,
+                             experimentData=experimentData,
+                             annotation=annotation)
+          })
+
+setMethod("updateObject",
+          signature(object="AffyBatch"),
+          function(object, ..., verbose=FALSE) {
+              if (verbose) message("updateObject(object = 'AffyBatch'")
+              if (isVersioned(object) && isCurrent(object)["AffyBatch"])
+                return(callNextMethod())
+              if (!isVersioned(object) | is.null(classVersion(object)[["AffyBatch"]])) {
+                  exprs <- slot(object, "exprs")
+                  se.exprs <- slot(object, "se.exprs")
+                  if (!all(dim(se.exprs) == dim(exprs)))
+                      se.exprs <- matrix(nrow=nrow(exprs), ncol=ncol(exprs))
+                  if ("reporterInfo" %in% names(attributes(object)) && 
+                      any(dim(slot(object, "reporterInfo"))!=0))
+                    warning("reporterInfo data not transfered to 'AffyBatch' object")
+                  experimentData=updateObject(slot(object, "description"))
+                  if ("notes" %in% names(attributes(object)) && length(slot(object, "notes"))!=0) {
+                      warning("addding 'notes' to 'experimentData'")
+                      notes(experimentData) <- c(notes(experimentData), object@notes)
+                  }
+                  new("AffyBatch",
+                      phenoData=as(slot(object, "phenoData"), "AnnotatedDataFrame"),
+                      experimentData=experimentData,
+                      annotation=slot(object, "annotation"),
+                      cdfName=slot(object, "cdfName"),
+                      nrow=slot(object, "nrow"),
+                      ncol=slot(object, "ncol"),
+                      exprs=exprs,
+                      se.exprs=se.exprs)
+              } else if (!isCurrent(object)[["AffyBatch"]]) {
+                  object
+              } else object
+          })
 
 #######################################################
 ### accessors
 #######################################################
 
 if (debug.affy123) cat("--->accessors\n")
+
+setMethod("exprs",
+          signature(object="AffyBatch"),
+          function(object) assayData(object)[["exprs"]])
+
+setReplaceMethod("exprs",
+          signature(object="AffyBatch"),
+          function(object, value) assayDataElementReplace(object, "exprs", value))
+
+setMethod("se.exprs",
+          signature(object="AffyBatch"),
+          function(object) assayData(object)[["se.exprs"]])
+
+setReplaceMethod("se.exprs",
+          signature(object="AffyBatch"),
+          function(object, value) assayDataElementReplace(object, "se.exprs", value))
 
 if (is.null(getGeneric("cdfName")))
     setGeneric("cdfName", function(object)
@@ -46,7 +158,7 @@ cat("intensity is already generic, could be a problem.\n")
 
 
 setMethod("intensity", signature(object="AffyBatch"),
-          function(object) exprs(object))
+          function(object) assayData(object)[["exprs"]])
 
 
 if( !isGeneric("intensity<-") )
@@ -55,9 +167,7 @@ if( !isGeneric("intensity<-") )
 
 setReplaceMethod("intensity", signature(object="AffyBatch"),
                  function(object, value){
-                   exprs(object) <- value
-                   colnames(exprs(object)) <- sampleNames(object)
-                   return(object)
+                     assayDataElementReplace(object, "exprs", value)
                  })
 
 ##for now, there is no accessor for se.exprs. we could use this to store
@@ -105,28 +215,34 @@ if (debug.affy123) cat("--->show\n")
 
 setMethod("show", "AffyBatch",
           function(object) {
+              tryCatch({
+                  ## Location from cdf env
+                  cdf.env <- try( getCdfInfo(object) )
+                  if (! inherits(cdf.env, "try-error")) {
+                      num.ids <- length(ls(env=cdf.env))
+                  } else {
+                      warning("missing cdf environment !")
+                      num.ids <- "???"
+                  }
 
-            ## Location from cdf env
-            cdf.env <- try( getCdfInfo(object) )
-            if (! inherits(cdf.env, "try-error")) {
-              num.ids <- length(ls(env=cdf.env))
-            } else {
-              warning("missing cdf environment !")
-              num.ids <- "???"
-            }
-
-            cat("AffyBatch object\n")
-            cat("size of arrays=", nrow(object), "x", ncol(object),
-                " features (", object.size(object) %/% 1024, " kb)\n", sep="")
-            cat("cdf=", object@cdfName,
-                " (", num.ids, " affyids)\n",
-                sep="")
-            cat("number of samples=",length(object),"\n",sep="")
-            cat("number of genes=", length(geneNames(object)), "\n",sep="")
-            cat("annotation=",object@annotation,"\n",sep="")
-            if(length(object@notes)>0)
-              if(nchar(object@notes)>0)
-                cat("notes=",object@notes,"\n",sep="")
+                  cat("AffyBatch object\n")
+                  cat("size of arrays=", nrow(object), "x", ncol(object),
+                      " features (", object.size(object) %/% 1024, " kb)\n", sep="")
+                  cat("cdf=", object@cdfName,
+                      " (", num.ids, " affyids)\n",
+                      sep="")
+                  cat("number of samples=",length(object),"\n",sep="")
+                  cat("number of genes=", length(geneNames(object)), "\n",sep="")
+                  cat("annotation=",object@annotation,"\n",sep="")
+                  if(length(notes(object))>0)
+                    if(nchar(notes(object))>0)
+                      cat("notes=",paste(notes(object)),"\n",sep="")
+              }, error=function(err) {
+                  if (!isCurrent(object)[["AffyBatch"]])
+                    stop("AffyBatch out-of-date; use 'updateObject(<AffyBatch>)'",
+                         call.=FALSE)
+                  err
+              })
           })
 
 
@@ -560,13 +676,13 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
 
             dimnames(exp.mat) <- list(ids, sampleNames(x))
             dimnames(se.mat) <- list(ids, sampleNames(x))
-            eset <- new("exprSet",
+            eset <- new("ExpressionSet",
+                        phenoData=phenoData(x),
+                        ## featureData picked up from exprs
+                        experimentData=experimentData(x),
                         exprs=exp.mat,
                         se.exprs=se.mat,
-                        phenoData=phenoData(x),
-                        description=description(x),
-                        annotation=annotation(x),
-                        notes=c(notes(x)))
+                        annotation=annotation(x))
             ##if (verbose) cat(".....done.\n")
 
             attr(eset, "pps.warnings") <- pps.warnings
@@ -589,7 +705,7 @@ setMethod("image",signature(x="AffyBatch"),
 
             type <- match.arg(type)
 
-            if (type == "se.exprs" && all(!dim(x@se.exprs))){
+            if (type == "se.exprs" && all(!dim(se.exprs(x)))){
               stop("no se.exprs in object")
             }
 
@@ -603,9 +719,9 @@ setMethod("image",signature(x="AffyBatch"),
               if(trunc((which.plot-1)/scn)==(which.plot-1)/scn && which.plot>1 && ask)  par(ask=TRUE)
 
               if (type == "exprs"){
-                m <- x@exprs[,i]
+                m <- exprs(x)[,i]
               } else {
-                m <- x@se.exprs[,i]
+                m <- se.exprs(x)[,i]
               }
                 
                 

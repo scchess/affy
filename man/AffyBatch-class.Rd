@@ -18,11 +18,16 @@
 \alias{cdfName}
 \alias{cdfName,AffyBatch-method}
 \alias{probes,AffyBatch-method}
+\alias{exprs,AffyBatch-method}
+\alias{exprs<-,AffyBatch,ANY-method}
+\alias{se.exprs,AffyBatch-method}
+\alias{se.exprs<-,AffyBatch-method}
 \alias{geneNames,AffyBatch-method}
 \alias{geneNames<-,AffyBatch,ANY-method}
 \alias{geneNames<-,AffyBatch,ANY-method}
 \alias{getCdfInfo,AffyBatch-method}
 \alias{image,AffyBatch-method}
+\alias{initialize,AffyBatch-method}
 \alias{indexProbes,AffyBatch-method}
 \alias{intensity<-,AffyBatch-method}
 \alias{intensity,AffyBatch-method}
@@ -47,17 +52,20 @@
 \alias{indexProbes,AffyBatch,character-method}
 \alias{computeExprSet,AffyBatch,character,character-method}
 \alias{cdfName,AffyBatch-method}
+\alias{updateObject,AffyBatch-method}
 \title{Class AffyBatch}
 \description{This is a class representation for Affymetrix GeneChip probe
   level data. The main component are the intensities from multiple
   arrays of the same \code{CDF} type. It extends \code{\link[Biobase]{exprSet-class}}.}
 \section{Objects from the Class}{
   Objects can be created using the function \code{\link{read.affybatch}}
-  or the wrapper \code{\link{ReadAffy}}.}
+  or the wrapper \code{\link{ReadAffy}}.
+}
 \section{Slots}{
   \describe{
     \item{\code{cdfName}:}{Object of class \code{"character"} representing the name of
-      \code{CDF} file associated with the arrays in the \code{AffyBatch}.}
+      \code{CDF} file associated with the arrays in the
+      \code{AffyBatch}.}
     \item{\code{nrow}:}{Object of class \code{"numeric"} representing
       the physical number of rows in the arrays.}
     \item{\code{ncol}:}{Object of class \code{"numeric"} representing
@@ -94,6 +102,14 @@ Class \code{"exprSet"}, directly.
     \item{probes}{\code{signature(object = "AffyBatch", which)}: extract the
       perfect match or mismatch probe intensities. Uses which can be "pm"
     and "mm".}
+    \item{exprs}{\code{signature(object = "AffyBatch")}: extracts the
+      expression matrix.}
+    \item{exprs<-}{\code{signature(object = "AffyBatch", value = "matrix")}: replaces the
+      expression matrix.}
+    \item{se.exprs}{\code{signature(object = "AffyBatch")}: extracts the
+      matrix of standard errors of expression values, if available.}
+    \item{se.exprs<-}{\code{signature(object = "AffyBatch", value = "matrix")}: replaces the
+      matrix of standard errors of expression values.}
     \item{[<-}{\code{signature(x = "AffyBatch")}: replaces subsets. }
     \item{[}{\code{signature(x = "AffyBatch")}: subsets by array.}
     \item{[[}{\code{signature(x = "AffyBatch")}: extracts each array as
@@ -153,6 +169,10 @@ Class \code{"exprSet"}, directly.
     \item{bg.correct}{\code{signature(object = "AffyBatch",
 	method="character")}} applies background correction methods
     defined by method.
+    \item{updateObject}{\code{signature(object = "AffyBatch", ...,
+	verbose=FALSE)}: update, if necessary, an object of class
+      AffyBatch to its current class definition. \code{verbose=TRUE}
+      provides details about the conversion process.}
   }
 }
 \note{This class is better described in the vignette.}

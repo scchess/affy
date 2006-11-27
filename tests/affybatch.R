@@ -44,8 +44,8 @@ cat("done.\n")
 ## compute expression values
 cat("---> computing expression values...\n")
 e.set <- computeExprSet(n.afbatch, pmcorrect.method="pmonly", summary.method="avgdiff")
-if (! is(e.set, "exprSet"))
-  stop("eset does not inherit from 'exprSet' !")
+if (! is(e.set, "ExpressionSet"))
+  stop("e.set does not inherit from 'ExpressionSet' !")
 cat("done.\n")
 
 

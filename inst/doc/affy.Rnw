@@ -407,7 +407,7 @@ A detailed comparison between the MAS 5.0 values that are computed by
 \Rpackage{affy} and by {\it Affymetrix}'s software can be found at
 \url{http://stat-www.berkeley.edu/~bolstad/MAS5diff/Mas5difference.html}. 
 
-To obtain MAS 5.0 presnce calls you can use the \verb+mas5calls+ method.
+To obtain MAS 5.0 presence calls you can use the \verb+mas5calls+ method.
 
 <<>>=
 Calls <- mas5calls(affybatch.example)

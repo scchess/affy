@@ -28,7 +28,7 @@ affy.scalevalue.exprSet <- function(eset, sc=500, analysis="absolute")
     slg <- exprs(eset)[, i]
     sf <- sc / mean(slg, trim=0.02)  
     reported.value <- nf * sf * slg
-    eset@exprs[, i] <- reported.value
+    exprs(eset)[, i] <- reported.value
   }
   
   return(eset)

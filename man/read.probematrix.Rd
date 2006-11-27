@@ -6,7 +6,7 @@
 }
 \usage{
 read.probematrix(..., filenames = character(0),
-               phenoData = new("phenoData"),
+               phenoData = new("AnnotatedDataFrame"),
                description = NULL,
                notes = "",
                compress = getOption("BioC")$affy$compress.cel,
@@ -17,7 +17,7 @@ read.probematrix(..., filenames = character(0),
 \arguments{
   \item{\dots}{ file names separated by comma.}
   \item{filenames}{ file names in a character vector.}
-  \item{phenoData}{ a \code{\link[Biobase]{phenoData}} object}
+  \item{phenoData}{ a \code{\link[Biobase]{AnnotatedDataFrame}} object}
   \item{description}{ a \code{\link[Biobase]{MIAME}} object }
   \item{notes}{ notes }
   \item{compress}{are the CEL files compressed ?}

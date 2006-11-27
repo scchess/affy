@@ -1,13 +1,13 @@
 merge.AffyBatch <- function(x, y, annotation=paste(annotation(x), annotation(y)),
                             description=NULL,
-                            notes=paste(x@notes, y@notes), ...) {
+                            notes=character(0), ...) {
 
   adim <- dim(intensity(x))[1]
 
   if ((nrow(x) != nrow(y)) || (ncol(x) != ncol(y)))
     stop("cannot merge chips of different sizes !")
 
-  if (x@cdfName != y@cdfName)
+  if (cdfName(x) != cdfName(y))
     warning("cdfName mismatch (using the cdfName of x)!")
 
   if (is.null(description)){
@@ -20,18 +20,17 @@ merge.AffyBatch <- function(x, y, annotation=paste(annotation(x), annotation(y))
 
   phenodata <- phenoData(x)
   pData(phenodata) <- rbind(pData(x),pData(y))
+  notes(description) <- 
+    if (length(notes)==0) 
+      list(paste("Merge from two AffyBatches with notes: 1)", notes(experimentData(x)), ", and 2)",notes(experimentData(y))))
+    else notes
   return(new("AffyBatch",
              exprs=cbind(intensity(x),intensity(y)),
-             cdfName=x@cdfName,
+             phenoData=phenodata,
+             experimentData=description, ##need to write a merge for MIAME
+             cdfName=cdfName(x),
              nrow=nrow(x),
              ncol=ncol(x),
-             phenoData=phenodata,
-             annotation=x@annotation,
-             description=description, ##need to write a merge for MIAME
-             notes=paste("Merge from two AffyBatches with notes: 1)",
-               x@notes,", and 2)",y@notes))
-         )
+             annotation=x@annotation
+         ))
 }
-
-
-

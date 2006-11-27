@@ -45,7 +45,7 @@ ppset.ttest <- function(ppset, covariate, pmcorrect.fun = pmcorrect.pmonly, ...)
 data(affybatch.example)
 abatch <- merge(affybatch.example, affybatch.example2)
 intensity(abatch) <- 2^jitter(log2(intensity(abatch)),1,1)
-chip.variate <- c("a", "b", "a", "a", "b", "a", "a")
+chip.variate <- c("a", "b", "a", "a", "b", "a")
 pData(abatch) <- data.frame(whatever = chip.variate)
 
 ## run a test over _all_ probes.

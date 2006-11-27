@@ -27,7 +27,7 @@
 
 
 read.affybatch <- function(..., filenames=character(0),
-                           phenoData=new("phenoData"),
+                           phenoData=new("AnnotatedDataFrame"),
                            description=NULL,
                            notes="",
                            compress = getOption("BioC")$affy$compress.cel,
@@ -51,16 +51,21 @@ read.affybatch <- function(..., filenames=character(0),
 
     samplenames <- sub("^/?([^/]*/)*", "", unlist(filenames), extended=TRUE)
     pdata <- data.frame(sample=1:n, row.names=samplenames)
-    phenoData <- new("phenoData",pData=pdata,varLabels=list(sample="arbitrary numbering"))
+    phenoData <- new("AnnotatedDataFrame",
+                     data=pdata,
+                     varMetadata=data.frame(
+                       labelDescription="arbitrary numbering",
+                       row.names="sample"))
   }
   else samplenames <- rownames(pdata)
 
   if (is.null(description))
     {
       description <- new("MIAME")
-      description@preprocessing$filenames <- filenames
-      description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
+      preproc(description)$filenames <- filenames
+      preproc(description)$affyversion <- library(help=affy)$info[[2]][[2]][2]
     }
+  if (length(notes)==0) notes(description) <- notes
   ## read the first file to see what we have
   if (verbose) cat(1, "reading",filenames[[1]],"...")
 
@@ -111,8 +116,8 @@ read.affybatch <- function(..., filenames=character(0),
     return(new("AffyBatch",
                exprs  = exprs,
                se.exprs = .Call("read_abatch_stddev",filenames, rm.mask,
-               rm.outliers, rm.extra, ref.cdfName,
-               dim.intensity,verbose, PACKAGE="affyio"),
+                 rm.outliers, rm.extra, ref.cdfName,
+                 dim.intensity,verbose, PACKAGE="affyio"),
                cdfName    = cdfname,   ##cel@cdfName,
                phenoData  = phenoData,
                nrow       = dim.intensity[1],
@@ -121,9 +126,6 @@ read.affybatch <- function(..., filenames=character(0),
                description= description,
                notes      = notes))
   }
-
-
-    
 }
 
 
@@ -132,7 +134,7 @@ read.affybatch <- function(..., filenames=character(0),
 
 ######################################################################################
 
-read.probematrix <- function(..., filenames = character(0), phenoData = new("phenoData"),
+read.probematrix <- function(..., filenames = character(0), phenoData = new("AnnotatedDataFrame"),
                              description = NULL, notes = "", compress = getOption("BioC")$affy$compress.cel,
                              rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE, verbose = FALSE,which="pm",
                              cdfname = NULL){
@@ -211,15 +213,15 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
   }
 
   if(is.character(phenoData)) ##if character read file
-    phenoData <- read.phenoData(filename=phenoData)
+    phenoData <- read.AnnotatedDataFrame(filename=phenoData)
   else{
-      if (! is(phenoData, "phenoData")) {
+      if (!is(phenoData, "AnnotatedDataFrame")) {
           if(widget){
               require(tkWidgets)
-              phenoData <- read.phenoData(sampleNames=sampleNames,widget=TRUE)
+              phenoData <- read.AnnotatedDataFrame(sampleNames=sampleNames,widget=TRUE)
           }
           else
-              phenoData <- read.phenoData(sampleNames=sampleNames,widget=FALSE)
+              phenoData <- read.AnnotatedDataFrame(sampleNames=sampleNames,widget=FALSE)
       }
   }
 

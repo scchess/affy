@@ -6,7 +6,7 @@
   Read CEL files and compute an expression measure without using an AffyBatch.}
 \usage{
 just.rma(..., filenames = character(0),
-               phenoData = new("phenoData"),
+               phenoData = new("AnnotatedDataFrame"),
                description = NULL,
                notes = "",
                compress = getOption("BioC")$affy$compress.cel,
@@ -30,7 +30,7 @@ justRMA(..., filenames=character(0),
 \arguments{
   \item{\dots}{ file names separated by comma.}
   \item{filenames}{ file names in a character vector.}
-  \item{phenoData}{ a \code{\link[Biobase]{phenoData}} object}
+  \item{phenoData}{ a \code{\link[Biobase]{AnnotatedDataFrame}} object}
   \item{description}{ a \code{\link[Biobase]{MIAME}} object }
   \item{notes}{ notes }
   \item{compress}{are the CEL files compressed ?}
@@ -69,15 +69,14 @@ files in the working directory are read, converted to an expression
 measure using RMA and put into an \code{exprSet}.
 However, the arguments give the user great flexibility.
   
-\code{phenoData} is read using \code{\link[Biobase]{read.phenoData}}. If a
+\code{phenoData} is read using \code{\link[Biobase]{read.AnnotatedDataFrame}}. If a
 character is given it tries to read the file with that name
 to obtain the phenoData
-object as described in \code{\link[Biobase]{read.phenoData}}. If left
-\code{NULL} but \code{widget=TRUE} then widgets are used. If left
-\code{NULL} and \code{widget=FALSE} then a default object is created.
-It will be an object of class \code{\link[Biobase]{phenoData}} with
-   \code{new("phenoData",pData=data.frame(x=1:length(CELfiles)),varLabels=list(x="arbitrary number"))}
-
+object as described in \code{\link[Biobase]{read.AnnotatedDataFrame}}. If left
+\code{NULL} and \code{widget=FALSE} (\code{widget=TRUE} is not currently
+supported) then a default object is created.
+It will be an object of class \code{\link[Biobase]{AnnotatedDataFrame}} with
+pData a data.frame with column x indexing the CEL files.
 
 \code{description} is read using \code{\link[Biobase]{read.MIAME}}. If a
 character is given it tries to read the file with that name to obtain a
