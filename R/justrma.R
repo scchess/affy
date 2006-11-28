@@ -126,11 +126,11 @@ just.rma <- function(..., filenames=character(0),
   #  exprs <- .Call("rma_c_complete_copy",probeintensities$pm,probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
   #}
   colnames(exprs) <- samplenames
-  se.exprs <- array(NA, dim(exprs))
+  se.exprs <- array(NA, dim(exprs),
+                    dimnames=list(rownames(exprs), colnames(exprs)))
 
   annotation <- annotation(tmp)
   notes(description) <- notes
-
   new("ExpressionSet",
       phenoData = phenoData,
       annotation = annotation,

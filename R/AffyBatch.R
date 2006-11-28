@@ -67,7 +67,7 @@ setMethod("initialize",
                   else stop("use 'experimentData' rather than 'description' for experiment description")
               }
               if ("notes" %in% names(dots)) {
-                  warning("addding 'notes' to 'experimentData'")
+##                   warning("addding 'notes' to 'experimentData'")
                   notes(experimentData) <- c(notes(experimentData), dots[["notes"]])
               }
               dots <- dots[!names(dots) %in% c("reporterInfo", "description", "notes")]
@@ -103,7 +103,7 @@ setMethod("updateObject",
                     warning("reporterInfo data not transfered to 'AffyBatch' object")
                   experimentData=updateObject(slot(object, "description"))
                   if ("notes" %in% names(attributes(object)) && length(slot(object, "notes"))!=0) {
-                      warning("addding 'notes' to 'experimentData'")
+                      warning("adding 'notes' to 'experimentData'")
                       notes(experimentData) <- c(notes(experimentData), object@notes)
                   }
                   new("AffyBatch",
@@ -215,34 +215,31 @@ if (debug.affy123) cat("--->show\n")
 
 setMethod("show", "AffyBatch",
           function(object) {
-              tryCatch({
-                  ## Location from cdf env
-                  cdf.env <- try( getCdfInfo(object) )
-                  if (! inherits(cdf.env, "try-error")) {
-                      num.ids <- length(ls(env=cdf.env))
-                  } else {
-                      warning("missing cdf environment !")
-                      num.ids <- "???"
-                  }
+              if (!isCurrent(object)[["AffyBatch"]])
+                stop("AffyBatch out-of-date; use 'updateObject(<AffyBatch>)'",
+                     call.=FALSE)
+              ## Location from cdf env
+              cdf.env <-
+                tryCatch(getCdfInfo(object),
+                         error=function(err) {
+                             warning("missing cdf environment! in show(AffyBatch)", call.=FALSE)
+                             NULL
+                         })
+              num.ids <- 
+                if (!is.null(cdf.env)) length(ls(env=cdf.env))
+                else num.ids <- "???"
 
-                  cat("AffyBatch object\n")
-                  cat("size of arrays=", nrow(object), "x", ncol(object),
-                      " features (", object.size(object) %/% 1024, " kb)\n", sep="")
-                  cat("cdf=", object@cdfName,
-                      " (", num.ids, " affyids)\n",
-                      sep="")
-                  cat("number of samples=",length(object),"\n",sep="")
-                  cat("number of genes=", length(geneNames(object)), "\n",sep="")
-                  cat("annotation=",object@annotation,"\n",sep="")
-                  if(length(notes(object))>0)
-                    if(nchar(notes(object))>0)
-                      cat("notes=",paste(notes(object)),"\n",sep="")
-              }, error=function(err) {
-                  if (!isCurrent(object)[["AffyBatch"]])
-                    stop("AffyBatch out-of-date; use 'updateObject(<AffyBatch>)'",
-                         call.=FALSE)
-                  err
-              })
+              cat("AffyBatch object\n")
+              cat("size of arrays=", nrow(object), "x", ncol(object),
+                  " features (", object.size(object) %/% 1024, " kb)\n", sep="")
+              cat("cdf=", object@cdfName,
+                  " (", num.ids, " affyids)\n",
+                  sep="")
+              cat("number of samples=",length(object),"\n",sep="")
+              cat("number of genes=", length(featureNames(object)), "\n",sep="")
+              cat("annotation=",object@annotation,"\n",sep="")
+              if(length(notes(object))>0)
+                cat("notes=",paste(notes(object),collapse="\n\t"), "\n")
           })
 
 
