@@ -50,6 +50,7 @@
 \alias{length,AffyBatch-method}
 \alias{bg.correct,AffyBatch,character-method}
 \alias{indexProbes,AffyBatch,character-method}
+\alias{indexProbes,AffyBatch,missing-method}
 \alias{computeExprSet,AffyBatch,character,character-method}
 \alias{cdfName,AffyBatch-method}
 \alias{updateObject,AffyBatch-method}
@@ -130,14 +131,20 @@ Class \code{"exprSet"}, directly.
       the environment that defines the location of probes by probe set. }
     \item{image}{\code{signature(x = "AffyBatch")}: creates an image for
       each sample.}
-    \item{indexProbes}{\code{signature(object = "AffyBatch", which =
-	"character")}: returns a list with locations of the probes in
+    \item{indexProbes}{
+      \code{signature(object = "AffyBatch", which = "character")}:
+      returns a  list with locations of the probes in
       each probe set. The affyID corresponding to the probe set to
       retrieve can be specified in an optional parameter
       \code{genenames}. By default, all the affyIDs are retrieved.
       The names of the elements in the list returned are the affyIDs.
       \code{which} can be "pm", "mm", or "both". If "both" then
-      perfect match locations are given followed by mismatch locations.} 
+      perfect match locations are given followed by mismatch locations.
+
+      \code{signature(object = "AffyBatch", which = "missing")} (i.e.,
+      calling \code{indexProbes} without a "which" argument) is the
+      same as setting "which" to "pm".
+    } 
     \item{intensity<-}{\code{signature(object = "AffyBatch")}: a
       replacement method for the \code{exprs} slot, i.e. the intensities. }
     \item{intensity}{\code{signature(object = "AffyBatch")}: extract the

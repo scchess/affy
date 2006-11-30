@@ -254,6 +254,10 @@ if( is.null(getGeneric("indexProbes")))
   setGeneric("indexProbes", function(object, which, ...)
              standardGeneric("indexProbes"))
 
+setMethod("indexProbes",
+          signature=c(object="AffyBatch", which="missing"),
+          function(object, which, ...) indexProbes(object, which="pm", ...))
+
 setMethod("indexProbes", signature("AffyBatch", which="character"),
           function(object, which=c("pm", "mm","both"),
                    genenames=NULL) {
