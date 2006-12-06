@@ -86,7 +86,7 @@ function (rna.deg.obj,transform="shift.scale",cols=NULL, ...)
    }
     plot(-2, -1, pch = "", xlim = range(-1, (dim(mns)[2])),
         ylim = range(min(as.vector(mns)) - 1, max(as.vector(mns)) + 1), xlab = "5' <-----> 3'\n Probe Number ",
-        ylab = ylab, axes = FALSE, main = "RNA digestion plot",
+        ylab = ylab, axes = FALSE, main = "RNA degradation plot",
         ...)
     axis(1)
     axis(2)
