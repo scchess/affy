@@ -64,6 +64,8 @@ just.rma <- function(..., filenames=character(0),
   auxnames <- as.list(substitute(list(...)))[-1]
   filenames <- .Primitive("c")(filenames, auxnames)
 
+  checkCelFiles(filenames)
+  
   n <- length(filenames)
 
   ## error if no file name !

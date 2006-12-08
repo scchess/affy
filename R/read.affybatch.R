@@ -22,6 +22,8 @@
 ##
 ## Jan 24, 2006 - JWM: added cdfname to allow for the use of non-standard mappings
 ## Mar 6, 2006 - change .Call to reference affyio. that is new location for parsing code
+## Dec 12, 2006 - added checkCelFiles() to ensure all filenames are celfiles so unintended
+##                arguments don't get passed in via ...
 ##
 #############################################################
 
@@ -36,6 +38,8 @@ read.affybatch <- function(..., filenames=character(0),
 
   auxnames <- as.list(substitute(list(...)))[-1]
   filenames <- .Primitive("c")(filenames, auxnames)
+
+  checkCelFiles(filenames)
 
   n <- length(filenames)
 
@@ -83,7 +87,7 @@ read.affybatch <- function(..., filenames=character(0),
   ## allow for non-standard cdfs
   if(is.null(cdfname))
     cdfname <- ref.cdfName
-  
+
   if (verbose)
     cat(paste("instantiating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
 
@@ -287,7 +291,21 @@ ReadAffy <- function(..., filenames=character(0),
   return(ret)
 }
 
-
+checkCelFiles <- function(filenames){
+    txt <- paste("does not appear to be a CEL file.\n",
+                 "This can be caused by subtle errors:\n",
+                 "1.) Passing a filename argument without using filename=\n",
+                 "2.) Mis-spelling an argument (e.g., 'samepleNames').\n",
+                 "3.) The obvious - passing a non-CEL file.\n")
+    celClass <- sapply(filenames, class)
+    if(!all(celClass == "character"))
+        stop(paste(unlist(filenames[which(celClass != "character")]),
+                   txt), call. = FALSE)
+    celExt <- sapply(lapply(filenames, function(x) grep("[cC][eE][lL]$", x)), length)
+    if(!all(celExt == 1))
+        stop(paste(unlist(filenames[which(celExt != 1)]),
+                  txt), call. = FALSE)
+}
 
 
 
