@@ -61,16 +61,12 @@ just.rma <- function(..., filenames=character(0),
                      verbose=FALSE, background=TRUE, normalize=TRUE,
                      bgversion=2, destructive=FALSE, cdfname = NULL) {
 
-  auxnames <- as.list(substitute(list(...)))[-1]
-  filenames <- .Primitive("c")(filenames, auxnames)
+  auxnames <- unlist(list(...))
+  filenames <- c(filenames, auxnames)
 
-  checkCelFiles(filenames)
+  checkValidFilenames(filenames)
   
   n <- length(filenames)
-
-  ## error if no file name !
-  if (n == 0)
-    stop("No file name given !")
 
   pdata <- pData(phenoData)
   ##try to read sample names form phenoData. if not there use CEL filenames

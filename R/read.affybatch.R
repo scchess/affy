@@ -36,24 +36,19 @@ read.affybatch <- function(..., filenames=character(0),
                            rm.mask = FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                            verbose = FALSE,sd=FALSE, cdfname = NULL) {
 
-  auxnames <- as.list(substitute(list(...)))[-1]
-  filenames <- .Primitive("c")(filenames, auxnames)
-
-  checkCelFiles(filenames)
+  auxnames <- unlist(list(...))
+  filenames <- c(filenames, auxnames)
+  checkValidFilenames(filenames)
 
   n <- length(filenames)
-
-  ## error if no file name !
-  if (n == 0)
-    stop("No file name given !")
-
   pdata <- pData(phenoData)
-  ##try to read sample names form phenoData. if not there use CEL filenames
+  ## try to read sample names form phenoData. if not there use CEL
+  ## filenames
   if(dim(pdata)[1] != n) {
-    ##if empty pdata filename are samplenames
+    ## if empty pdata filename are samplenames
     warning("Incompatible phenoData object. Created a new one.\n")
 
-    samplenames <- sub("^/?([^/]*/)*", "", unlist(filenames), extended=TRUE)
+    samplenames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
     pdata <- data.frame(sample=1:n, row.names=samplenames)
     phenoData <- new("AnnotatedDataFrame",
                      data=pdata,
@@ -75,10 +70,6 @@ read.affybatch <- function(..., filenames=character(0),
 
   headdetails <- .Call("ReadHeader",filenames[[1]], PACKAGE="affyio")
 
-  #print(headdetails)
-
-
-
   ##now we use the length
   dim.intensity <- headdetails[[2]]   ##dim(intensity(cel))
   ##and the cdfname as ref
@@ -91,12 +82,11 @@ read.affybatch <- function(..., filenames=character(0),
   if (verbose)
     cat(paste("instantiating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
 
-
-
   if (verbose)
     cat("done.\n")
 
-  ## Change sampleNames to be consistent with row.names of phenoData object
+  ## Change sampleNames to be consistent with row.names of phenoData
+  ## object
 
   exprs <- .Call("read_abatch",filenames, rm.mask,
                rm.outliers, rm.extra, ref.cdfName,
@@ -143,8 +133,8 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("Ann
                              rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE, verbose = FALSE,which="pm",
                              cdfname = NULL){
 
-  auxnames <- as.list(substitute(list(...)))[-1]
-  filenames <- .Primitive("c")(filenames, auxnames)
+  auxnames <- unlist(list(...))
+  filenames <- c(filenames, auxnames)
 
   which <- match.arg(which,c("pm","mm","both"))
 
@@ -198,7 +188,7 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
     filenames <- file.path(celfile.path, filenames)
   }
 
-  filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
+  filenames <- c(filenames, auxnames, widgetfiles)
 
   if(length(filenames)==0){
     if(is.null(celfile.path)) celfile.path <- getwd()
@@ -291,20 +281,30 @@ ReadAffy <- function(..., filenames=character(0),
   return(ret)
 }
 
-checkCelFiles <- function(filenames){
-    txt <- paste("does not appear to be a CEL file.\n",
-                 "This can be caused by subtle errors:\n",
-                 "1.) Passing a filename argument without using filename=\n",
-                 "2.) Mis-spelling an argument (e.g., 'samepleNames').\n",
-                 "3.) The obvious - passing a non-CEL file.\n")
-    celClass <- sapply(filenames, class)
-    if(!all(celClass == "character"))
-        stop(paste(unlist(filenames[which(celClass != "character")]),
-                   txt), call. = FALSE)
-    celExt <- sapply(lapply(filenames, function(x) grep("[cC][eE][lL]$", x)), length)
-    if(!all(celExt == 1))
-        stop(paste(unlist(filenames[which(celExt != 1)]),
-                  txt), call. = FALSE)
+checkValidFilenames <- function(filenames) {
+    ## Returns TRUE if filenames is a character vector containing
+    ## paths to files that exist (directories don't count).
+    ## A suitable error message is printed via stop() if invalid
+    ## file names are encountered.
+    if (!is.character(filenames))
+      stop(strwrap(paste("file names must be specified using a character",
+                         "vector, not a", sQuote(typeof(filenames)))),
+           call.=FALSE)
+
+    if (length(filenames) == 0)
+      stop("no file names provided")
+
+    if (any(sapply(filenames, nchar) < 1))
+      stop("empty file names are not allowed")
+
+    finfo <- file.info(filenames)
+    whBad <- sapply(finfo[["isdir"]], function(x) !identical(FALSE, x))
+    if (any(whBad)) {
+        msg <- paste("the following are not valid files:\n",
+                     paste("  ", filenames[whBad], collapse="\n"))
+        stop(msg, call.=FALSE)
+    }
+    TRUE
 }
 
 
