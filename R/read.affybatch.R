@@ -36,90 +36,100 @@ read.affybatch <- function(..., filenames=character(0),
                            rm.mask = FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                            verbose = FALSE,sd=FALSE, cdfname = NULL) {
 
-  auxnames <- unlist(list(...))
-  filenames <- c(filenames, auxnames)
-  checkValidFilenames(filenames)
+    auxnames <- as.list(substitute(list(...)))[-1]
+    filenames <- .Primitive("c")(filenames, auxnames)
 
-  n <- length(filenames)
-  pdata <- pData(phenoData)
-  ## try to read sample names form phenoData. if not there use CEL
-  ## filenames
-  if(dim(pdata)[1] != n) {
-    ## if empty pdata filename are samplenames
-    warning("Incompatible phenoData object. Created a new one.\n")
+    checkCelFiles(filenames)
 
-    samplenames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
-    pdata <- data.frame(sample=1:n, row.names=samplenames)
-    phenoData <- new("AnnotatedDataFrame",
-                     data=pdata,
-                     varMetadata=data.frame(
-                       labelDescription="arbitrary numbering",
-                       row.names="sample"))
-  }
-  else samplenames <- rownames(pdata)
+    n <- length(filenames)
 
-  if (is.null(description))
-    {
-      description <- new("MIAME")
-      preproc(description)$filenames <- filenames
-      preproc(description)$affyversion <- library(help=affy)$info[[2]][[2]][2]
+    ## error if no file name !
+    if (n == 0)
+        stop("No file name given !")
+
+    pdata <- pData(phenoData)
+    ##try to read sample names form phenoData. if not there use CEL filenames
+    if(dim(pdata)[1] != n) {
+        ##if empty pdata filename are samplenames
+        warning("Incompatible phenoData object. Created a new one.\n")
+
+        samplenames <- sub("^/?([^/]*/)*", "", unlist(filenames), extended=TRUE)
+        pdata <- data.frame(sample=1:n, row.names=samplenames)
+        phenoData <- new("AnnotatedDataFrame",
+                         data=pdata,
+                         varMetadata=data.frame(
+                         labelDescription="arbitrary numbering",
+                         row.names="sample"))
     }
-  if (length(notes)==0) notes(description) <- notes
-  ## read the first file to see what we have
-  if (verbose) cat(1, "reading",filenames[[1]],"...")
+    else samplenames <- rownames(pdata)
 
-  headdetails <- .Call("ReadHeader",filenames[[1]], PACKAGE="affyio")
+    if (is.null(description))
+    {
+        description <- new("MIAME")
+        preproc(description)$filenames <- filenames
+        preproc(description)$affyversion <- library(help=affy)$info[[2]][[2]][2]
+    }
+    if (length(notes)==0) notes(description) <- notes
+    ## read the first file to see what we have
+    if (verbose) cat(1, "reading",filenames[[1]],"...")
 
-  ##now we use the length
-  dim.intensity <- headdetails[[2]]   ##dim(intensity(cel))
-  ##and the cdfname as ref
-  ref.cdfName <- headdetails[[1]]   #cel@cdfName
+    headdetails <- .Call("ReadHeader",filenames[[1]], PACKAGE="affyio")
 
-  ## allow for non-standard cdfs
-  if(is.null(cdfname))
-    cdfname <- ref.cdfName
+                                        #print(headdetails)
 
-  if (verbose)
-    cat(paste("instantiating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
 
-  if (verbose)
-    cat("done.\n")
 
-  ## Change sampleNames to be consistent with row.names of phenoData
-  ## object
+    ##now we use the length
+    dim.intensity <- headdetails[[2]]   ##dim(intensity(cel))
+    ##and the cdfname as ref
+    ref.cdfName <- headdetails[[1]]   #cel@cdfName
 
-  exprs <- .Call("read_abatch",filenames, rm.mask,
-               rm.outliers, rm.extra, ref.cdfName,
-               dim.intensity,verbose, PACKAGE="affyio")
-  colnames(exprs) <- samplenames
-  
-  #### this is where the code changes from the original read.affybatch.
-  #### what we will do here is read in from the 1st to the nth CEL file
-  if (!sd){
-    return(new("AffyBatch",
-               exprs  = exprs,
-               ##se.exprs = array(NaN, dim=dim.sd),
-               cdfName    = cdfname,   ##cel@cdfName,
-               phenoData  = phenoData,
-               nrow       = dim.intensity[1],
-               ncol       = dim.intensity[2],
-               annotation = cleancdfname(cdfname, addcdf=FALSE),
-               description= description,
-               notes      = notes))
-  } else {
-    return(new("AffyBatch",
-               exprs  = exprs,
-               se.exprs = .Call("read_abatch_stddev",filenames, rm.mask,
-                 rm.outliers, rm.extra, ref.cdfName,
-                 dim.intensity,verbose, PACKAGE="affyio"),
-               cdfName    = cdfname,   ##cel@cdfName,
-               phenoData  = phenoData,
-               nrow       = dim.intensity[1],
-               ncol       = dim.intensity[2],
-               annotation = cleancdfname(cdfname, addcdf=FALSE),
-               description= description,
-               notes      = notes))
-  }
+    ## allow for non-standard cdfs
+    if(is.null(cdfname))
+        cdfname <- ref.cdfName
+
+    if (verbose)
+        cat(paste("instantiating an AffyBatch (intensity a ", prod(dim.intensity), "x", length(filenames), " matrix)...", sep=""))
+
+
+
+    if (verbose)
+        cat("done.\n")
+
+    ## Change sampleNames to be consistent with row.names of phenoData object
+
+    exprs <- .Call("read_abatch",filenames, rm.mask,
+                   rm.outliers, rm.extra, ref.cdfName,
+                   dim.intensity,verbose, PACKAGE="affyio")
+    colnames(exprs) <- samplenames
+    
+#### this is where the code changes from the original read.affybatch.
+#### what we will do here is read in from the 1st to the nth CEL file
+    if (!sd){
+        return(new("AffyBatch",
+                   exprs  = exprs,
+                   ##se.exprs = array(NaN, dim=dim.sd),
+                   cdfName    = cdfname,   ##cel@cdfName,
+                   phenoData  = phenoData,
+                   nrow       = dim.intensity[1],
+                   ncol       = dim.intensity[2],
+                   annotation = cleancdfname(cdfname, addcdf=FALSE),
+                   description= description,
+                   notes      = notes))
+    } else {
+        return(new("AffyBatch",
+                   exprs  = exprs,
+                   se.exprs = .Call("read_abatch_stddev",filenames, rm.mask,
+                   rm.outliers, rm.extra, ref.cdfName,
+                   dim.intensity,verbose, PACKAGE="affyio"),
+                   cdfName    = cdfname,   ##cel@cdfName,
+                   phenoData  = phenoData,
+                   nrow       = dim.intensity[1],
+                   ncol       = dim.intensity[2],
+                   annotation = cleancdfname(cdfname, addcdf=FALSE),
+                   description= description,
+                   notes      = notes))
+    }
 }
 
 
@@ -133,35 +143,35 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("Ann
                              rm.mask = FALSE, rm.outliers = FALSE, rm.extra = FALSE, verbose = FALSE,which="pm",
                              cdfname = NULL){
 
-  auxnames <- unlist(list(...))
-  filenames <- c(filenames, auxnames)
+    auxnames <- as.list(substitute(list(...)))[-1]
+    filenames <- .Primitive("c")(filenames, auxnames)
 
-  which <- match.arg(which,c("pm","mm","both"))
+    which <- match.arg(which,c("pm","mm","both"))
 
-  if (verbose)
-    cat(1, "reading", filenames[[1]], "to get header information")
-  headdetails <- .Call("ReadHeader", filenames[[1]], PACKAGE="affyio")
-  dim.intensity <- headdetails[[2]]
-  ref.cdfName <- headdetails[[1]]
-  ## Allow for usage of alternative cdfs
-  if(is.null(cdfname))
-    Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
-  else
-    Data <- new("AffyBatch", cdfName = cdfname, annotation = cleancdfname(ref.cdfName, addcdf = FALSE))
-  
-  cdfInfo <- as.list(getCdfInfo(Data))
-  cdfInfo <- cdfInfo[order(names(cdfInfo))]
+    if (verbose)
+        cat(1, "reading", filenames[[1]], "to get header information")
+    headdetails <- .Call("ReadHeader", filenames[[1]], PACKAGE="affyio")
+    dim.intensity <- headdetails[[2]]
+    ref.cdfName <- headdetails[[1]]
+    ## Allow for usage of alternative cdfs
+    if(is.null(cdfname))
+        Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
+    else
+        Data <- new("AffyBatch", cdfName = cdfname, annotation = cleancdfname(ref.cdfName, addcdf = FALSE))
+    
+    cdfInfo <- as.list(getCdfInfo(Data))
+    cdfInfo <- cdfInfo[order(names(cdfInfo))]
 
 
-  .Call("read_probeintensities", filenames,
-        rm.mask, rm.outliers, rm.extra, ref.cdfName,
-        dim.intensity, verbose, cdfInfo,which, PACKAGE="affyio")
+    .Call("read_probeintensities", filenames,
+          rm.mask, rm.outliers, rm.extra, ref.cdfName,
+          dim.intensity, verbose, cdfInfo,which, PACKAGE="affyio")
 }
 
 
 list.celfiles <-   function(...){
-  files <- list.files(...)
-  return(files[grep("\\.[cC][eE][lL]\\.gz$|\\.[cC][eE][lL]$", files)])
+    files <- list.files(...)
+    return(files[grep("\\.[cC][eE][lL]\\.gz$|\\.[cC][eE][lL]$", files)])
 }
 
 AllButCelsForReadAffy <- function(..., filenames=character(0),
@@ -172,79 +182,79 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
                                   description=NULL){
 
     ##first figure out filenames
-  auxnames <- unlist(as.list(substitute(list(...)))[-1])
+    auxnames <- unlist(as.list(substitute(list(...)))[-1])
 
-  if (widget){
-    require(tkWidgets)
-    widgetfiles <- fileBrowser(textToShow="Choose CEL files",
-                               testFun=hasSuffix("[cC][eE][lL]"))
-  }
-  else{
-    widgetfiles <- character(0)
-  }
-
-  if(!is.null(celfile.path)){
-    auxnames <- file.path(celfile.path, auxnames)
-    filenames <- file.path(celfile.path, filenames)
-  }
-
-  filenames <- c(filenames, auxnames, widgetfiles)
-
-  if(length(filenames)==0){
-    if(is.null(celfile.path)) celfile.path <- getwd()
-    filenames <- list.celfiles(celfile.path,full.names=TRUE)
-  }
-  if(length(filenames)==0) stop("No cel filennames specified and no cel files in specified directory:",celfile.path,"\n")
-
-  if(is.null(sampleNames)){
-    sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
-  }
-  else{
-    if(length(sampleNames)!=length(filenames)){
-      warning("sampleNames not same length as filenames. Using filenames as sampleNames instead\n")
-      sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+    if (widget){
+        require(tkWidgets)
+        widgetfiles <- fileBrowser(textToShow="Choose CEL files",
+                                   testFun=hasSuffix("[cC][eE][lL]"))
     }
-  }
+    else{
+        widgetfiles <- character(0)
+    }
 
-  if(is.character(phenoData)) ##if character read file
-    phenoData <- read.AnnotatedDataFrame(filename=phenoData)
-  else{
-      if (!is(phenoData, "AnnotatedDataFrame")) {
-          if(widget){
-              require(tkWidgets)
-              phenoData <- read.AnnotatedDataFrame(sampleNames=sampleNames,widget=TRUE)
-          }
-          else
-              phenoData <- read.AnnotatedDataFrame(sampleNames=sampleNames,widget=FALSE)
-      }
-  }
+    if(!is.null(celfile.path)){
+        auxnames <- file.path(celfile.path, auxnames)
+        filenames <- file.path(celfile.path, filenames)
+    }
 
-  sampleNames <- rownames(pData(phenoData))
+    filenames <- .Primitive("c")(filenames, auxnames, widgetfiles)
 
-  ##get MIAME information
-  if(is.character(description)){
-    description <- read.MIAME(filename=description,widget=FALSE)
-  }
-  else{
-      if (! is(description, "MIAME")) {
-          if(widget){
-              require(tkWidgets)
-              description <- read.MIAME(widget=TRUE)
-          }
-          else
-              description <- new("MIAME")
-      }
-  }
+    if(length(filenames)==0){
+        if(is.null(celfile.path)) celfile.path <- getwd()
+        filenames <- list.celfiles(celfile.path,full.names=TRUE)
+    }
+    if(length(filenames)==0) stop("No cel filennames specified and no cel files in specified directory:",celfile.path,"\n")
 
-  ##MIAME stuff
-  description@preprocessing$filenames <- filenames
-  if(exists("tksn")) description@samples$description <- tksn[,2]
-  description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
+    if(is.null(sampleNames)){
+        sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+    }
+    else{
+        if(length(sampleNames)!=length(filenames)){
+            warning("sampleNames not same length as filenames. Using filenames as sampleNames instead\n")
+            sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+        }
+    }
 
-  return(list(filenames   = filenames,
-              phenoData   = phenoData,
-              sampleNames = sampleNames,
-              description = description))
+    if(is.character(phenoData)) ##if character read file
+        phenoData <- read.AnnotatedDataFrame(filename=phenoData)
+    else{
+        if (!is(phenoData, "AnnotatedDataFrame")) {
+            if(widget){
+                require(tkWidgets)
+                phenoData <- read.AnnotatedDataFrame(sampleNames=sampleNames,widget=TRUE)
+            }
+            else
+                phenoData <- read.AnnotatedDataFrame(sampleNames=sampleNames,widget=FALSE)
+        }
+    }
+
+    sampleNames <- rownames(pData(phenoData))
+
+    ##get MIAME information
+    if(is.character(description)){
+        description <- read.MIAME(filename=description,widget=FALSE)
+    }
+    else{
+        if (! is(description, "MIAME")) {
+            if(widget){
+                require(tkWidgets)
+                description <- read.MIAME(widget=TRUE)
+            }
+            else
+                description <- new("MIAME")
+        }
+    }
+
+    ##MIAME stuff
+    description@preprocessing$filenames <- filenames
+    if(exists("tksn")) description@samples$description <- tksn[,2]
+    description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
+
+    return(list(filenames   = filenames,
+                phenoData   = phenoData,
+                sampleNames = sampleNames,
+                description = description))
 }
 
 ###this is user friendly wrapper for read.affybatch
@@ -259,52 +269,45 @@ ReadAffy <- function(..., filenames=character(0),
                      rm.mask=FALSE, rm.outliers=FALSE, rm.extra=FALSE,
                      verbose=FALSE,sd=FALSE, cdfname = NULL) {
 
-  l <- AllButCelsForReadAffy(..., filenames=filenames,
-                             widget=widget,
-                             celfile.path=celfile.path,
-                             sampleNames=sampleNames,
-                             phenoData=phenoData,
-                             description=description)
+    l <- AllButCelsForReadAffy(..., filenames=filenames,
+                               widget=widget,
+                               celfile.path=celfile.path,
+                               sampleNames=sampleNames,
+                               phenoData=phenoData,
+                               description=description)
 
-  ##and now we are ready to read cel files
-  ret <- read.affybatch(filenames=l$filenames,
-                        phenoData=l$phenoData,
-                        description=l$description,
-                        notes=notes,
-                        compress=compress,
-                        rm.mask=rm.mask,
-                        rm.outliers=rm.outliers,
-                        rm.extra=rm.extra,
-                        verbose=verbose,sd=sd,cdfname=cdfname)
+    ##and now we are ready to read cel files
+    ret <- read.affybatch(filenames=l$filenames,
+                          phenoData=l$phenoData,
+                          description=l$description,
+                          notes=notes,
+                          compress=compress,
+                          rm.mask=rm.mask,
+                          rm.outliers=rm.outliers,
+                          rm.extra=rm.extra,
+                          verbose=verbose,sd=sd,cdfname=cdfname)
 
-  sampleNames(ret) <- l$sampleNames
-  return(ret)
+    sampleNames(ret) <- l$sampleNames
+    return(ret)
 }
 
-checkValidFilenames <- function(filenames) {
-    ## Returns TRUE if filenames is a character vector containing
-    ## paths to files that exist (directories don't count).
-    ## A suitable error message is printed via stop() if invalid
-    ## file names are encountered.
-    if (!is.character(filenames))
-      stop(strwrap(paste("file names must be specified using a character",
-                         "vector, not a", sQuote(typeof(filenames)))),
-           call.=FALSE)
-
-    if (length(filenames) == 0)
-      stop("no file names provided")
-
-    if (any(sapply(filenames, nchar) < 1))
-      stop("empty file names are not allowed")
-
-    finfo <- file.info(filenames)
-    whBad <- sapply(finfo[["isdir"]], function(x) !identical(FALSE, x))
-    if (any(whBad)) {
-        msg <- paste("the following are not valid files:\n",
-                     paste("  ", filenames[whBad], collapse="\n"))
-        stop(msg, call.=FALSE)
-    }
-    TRUE
+checkCelFiles <- function(filenames){
+    txt <- paste("This can be caused by subtle errors:\n",
+                 "1.) Passing a filename argument without using filename=\n",
+                 "2.) Mis-spelling an argument (e.g., 'samepleNames').\n")
+    if(length(filenames) < 1)
+        stop("No celfiles found!", call. = FALSE)
+    celClass <- sapply(filenames, class)
+    if(!all(celClass == "character"))
+        stop(paste(unlist(filenames[which(celClass != "character")]),
+                   "doesn't appear to be a cel file.\n", txt), call. = FALSE)
+    if(!all(sapply(filenames, nchar) > 0))
+        stop(paste("A zero-length filename has been passed in.\n", txt),
+             call. = FALSE)
+    celFileInfo <- sapply(filenames, file.info)
+    if(any(is.na(celFileInfo[1,])))
+        stop(paste(unlist(filenames[which(is.na(celFileInfo[1,]))]),
+             "doesn't appear to be a file.\n", txt), call. = FALSE)
 }
 
 
