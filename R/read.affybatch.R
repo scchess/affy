@@ -68,7 +68,7 @@ read.affybatch <- function(..., filenames=character(0),
   ## read the first file to see what we have
   if (verbose) cat(1, "reading",filenames[[1]],"...")
 
-  headdetails <- .Call("ReadHeader",filenames[[1]], PACKAGE="affyio")
+  headdetails <- .Call("ReadHeader",as.character(filenames[[1]]), PACKAGE="affyio")
 
   ##now we use the length
   dim.intensity <- headdetails[[2]]   ##dim(intensity(cel))
@@ -140,7 +140,7 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("Ann
 
   if (verbose)
     cat(1, "reading", filenames[[1]], "to get header information")
-  headdetails <- .Call("ReadHeader", filenames[[1]], PACKAGE="affyio")
+  headdetails <- .Call("ReadHeader", as.character(filenames[[1]]), PACKAGE="affyio")
   dim.intensity <- headdetails[[2]]
   ref.cdfName <- headdetails[[1]]
   ## Allow for usage of alternative cdfs
