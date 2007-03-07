@@ -139,7 +139,7 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("Ann
   which <- match.arg(which,c("pm","mm","both"))
 
   if (verbose)
-    cat(1, "reading", filenames[[1]], "to get header information")
+    cat(1, "reading", filenames[[1]], "to get header information\n")
   headdetails <- .Call("ReadHeader", as.character(filenames[[1]]), PACKAGE="affyio")
   dim.intensity <- headdetails[[2]]
   ref.cdfName <- headdetails[[1]]
