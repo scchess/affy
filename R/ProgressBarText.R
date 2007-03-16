@@ -17,9 +17,6 @@ setMethod("initialize", "ProgressBarText",
             return(.Object)
           })
 
-if ( ! isGeneric("open") )
-  setGeneric("open", function(con, ...) standardGeneric("open"))
-
 setMethod("open", "ProgressBarText",
           function(con, header = TRUE) {
             if (header) {
@@ -35,10 +32,6 @@ setMethod("open", "ProgressBarText",
             if (.Platform$OS.type == "windows")
             flush.console()
           })
-
-if ( ! isGeneric("update") )
-  setGeneric("update", function(object, ...) standardGeneric("update"),
-             useAsDefault = TRUE)
 
 ## to avoid 'loosing' the default update.
 ## (not sure this is the most elegant way to do this)
@@ -66,8 +59,6 @@ setMethod("update", "ProgressBarText",
             assign("i", i, , envir = object@internals)
           })
 
-if ( ! isGeneric("close") )
-  setGeneric("close", function(con, ...) standardGeneric("close"))
 
 setMethod("close", "ProgressBarText",
           function(con) {

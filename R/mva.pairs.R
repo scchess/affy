@@ -129,9 +129,8 @@ mva.pairs <- function(x,labels=colnames(x),log.it=TRUE,span=2/3,family.loess="ga
 
 
 
-if (!isGeneric("Mbox"))
-  setGeneric("Mbox",function(object,...)
-             standardGeneric("Mbox"))
+setGeneric("Mbox",function(object,...)
+           standardGeneric("Mbox"))
 
 
 setMethod("Mbox",signature("AffyBatch"),
@@ -154,9 +153,8 @@ setMethod("Mbox",signature("AffyBatch"),
             boxplot(data.frame(M),...)
           })
 
-if (!isGeneric("MAplot"))
-  setGeneric("MAplot",function(object,...)
-             standardGeneric("MAplot"))
+setGeneric("MAplot",function(object,...)
+           standardGeneric("MAplot"))
 
 
 setMethod("MAplot",signature("AffyBatch"),
