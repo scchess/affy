@@ -150,20 +150,16 @@ setMethod("cdfName", "AffyBatch", function(object)
           object@cdfName)
 
 ##intensity
-if ( !isGeneric("intensity") ) {
-  setGeneric("intensity", function(object)
-             standardGeneric("intensity"))
-} else
-cat("intensity is already generic, could be a problem.\n")
+setGeneric("intensity", function(object)
+           standardGeneric("intensity"))
 
 
 setMethod("intensity", signature(object="AffyBatch"),
           function(object) assayData(object)[["exprs"]])
 
 
-if( !isGeneric("intensity<-") )
-  setGeneric("intensity<-", function(object, value)
-             standardGeneric("intensity<-"))
+setGeneric("intensity<-", function(object, value)
+           standardGeneric("intensity<-"))
 
 setReplaceMethod("intensity", signature(object="AffyBatch"),
                  function(object, value){
