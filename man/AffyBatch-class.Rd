@@ -17,6 +17,7 @@
 \alias{$.AffyBatch}
 \alias{cdfName}
 \alias{cdfName,AffyBatch-method}
+\alias{checkValidFilenames}
 \alias{probes,AffyBatch-method}
 \alias{exprs,AffyBatch-method}
 \alias{exprs<-,AffyBatch,ANY-method}
