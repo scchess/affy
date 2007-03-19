@@ -158,7 +158,14 @@ setReplaceMethod("exprs",
 
 setMethod("se.exprs",
           signature(object="AffyBatch"),
-          function(object) assayData(object)[["se.exprs"]])
+          function(object) {
+              obj <- assayData(object)[["se.exprs"]]
+              if (is.null(obj))
+                new("matrix")
+              else
+                obj
+          })
+          
 
 setReplaceMethod("se.exprs",
           signature(object="AffyBatch"),
