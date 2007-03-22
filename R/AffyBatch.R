@@ -24,13 +24,13 @@ setClass("AffyBatch",
 ## Old class definition
 ## Name:            cdfName              nrow              ncol             exprs
 ## Class:         character           numeric           numeric        exprMatrix
-                                                                              
+
 ## Name:           se.exprs       description        annotation             notes
 ## Class:        exprMatrix  characterORMIAME         character         character
-                                                            
+
 ## Name:       reporterInfo         phenoData .__classVersion__
 ## Class:  data.frameOrNULL         phenoData          Versions
-                  
+
 
 setMethod("initialize",
           signature(.Object="AffyBatch"),
@@ -101,7 +101,7 @@ setMethod("updateObject",
                         warning("removing 'se.exprs' with dimensions different from 'exprs'")
                       se.exprs <- NULL
                   }
-                  if ("reporterInfo" %in% names(attributes(object)) && 
+                  if ("reporterInfo" %in% names(attributes(object)) &&
                       any(dim(slot(object, "reporterInfo"))!=0))
                     warning("reporterInfo data not transfered to 'AffyBatch' object")
                   experimentData=updateObject(slot(object, "description"))
@@ -120,7 +120,7 @@ setMethod("updateObject",
                         ncol=slot(object, "ncol"),
                         exprs=exprs,
                         se.exprs=se.exprs)
-                  else 
+                  else
                     new("AffyBatch",
                         phenoData=as(slot(object, "phenoData"), "AnnotatedDataFrame"),
                         experimentData=experimentData,
@@ -165,7 +165,7 @@ setMethod("se.exprs",
               else
                 obj
           })
-          
+
 
 setReplaceMethod("se.exprs",
           signature(object="AffyBatch"),
@@ -199,18 +199,9 @@ setReplaceMethod("intensity", signature(object="AffyBatch"),
 setMethod("length",signature(x="AffyBatch"),
           function(x) ncol(exprs(x))) ##RI: assumes matrices
 
-if(is.null(getGeneric("ncol")))
-  setGeneric("ncol")
-
-setMethod("ncol",signature(x="AffyBatch"),
-          function(x) x@ncol) ##RI: assumes matrices
-
-if( is.null(getGeneric("nrow")))
-  setGeneric("nrow")
-
-  setMethod("nrow",signature(x="AffyBatch"),
-            function(x) x@nrow) ##RI: assumes matrices
-
+setMethod("dim",
+          signature=signature(x="AffyBatch"),
+          function(x) c(x@nrow, x@ncol))
 
 #######################################################
 ### methods
@@ -251,7 +242,7 @@ setMethod("show", "AffyBatch",
                              warning("missing cdf environment! in show(AffyBatch)", call.=FALSE)
                              NULL
                          })
-              num.ids <- 
+              num.ids <-
                 if (!is.null(cdf.env)) length(ls(env=cdf.env))
                 else num.ids <- "???"
 
@@ -736,8 +727,8 @@ setMethod("image",signature(x="AffyBatch"),
               stop("no se.exprs in object")
             }
 
-            
-            
+
+
             x.pos <- (1:nrow(x)) - (1 + getOption("BioC")$affy$xy.offset)
             y.pos <- (1:ncol(x)) - (1 + getOption("BioC")$affy$xy.offset)
 
@@ -750,8 +741,8 @@ setMethod("image",signature(x="AffyBatch"),
               } else {
                 m <- se.exprs(x)[,i]
               }
-                
-                
+
+
               if (is.function(transfo)) {
                 m <- transfo(m)
               }
@@ -794,7 +785,7 @@ if (debug.affy123) cat("--->hist\n")
 if( is.null(getGeneric("hist")) )
   setGeneric("hist")
 
-setMethod("hist",signature(x="AffyBatch"), 
+setMethod("hist",signature(x="AffyBatch"),
     function(x,...) plotDensity.AffyBatch(x,...))
 
 
