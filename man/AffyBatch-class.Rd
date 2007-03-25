@@ -36,8 +36,9 @@
 \alias{mmindex,AffyBatch-method}
 \alias{probeset,AffyBatch-method}
 \alias{boxplot,AffyBatch-method}
-\alias{nrow,AffyBatch-method}
-\alias{ncol,AffyBatch-method}
+\alias{dim,AffyBatch-method}
+\alias{row,AffyBatch-method}
+\alias{col,AffyBatch-method}
 \alias{show,AffyBatch-method}
 \alias{pm,AffyBatch-method}
 \alias{pm<-,AffyBatch,ANY-method}
@@ -156,6 +157,7 @@ Class \code{"exprSet"}, directly.
       location of perfect matches in the intensity matrix.}
     \item{mmindex}{\code{signature(object = "AffyBatch")}: return the
       location of the mismatch intensities. }
+    \item{dim}{\code{signature(x = "AffyBatch")}: Row and column dimensions.}
     \item{ncol}{\code{signature(x = "AffyBatch")}: An accessor function
       for \code{ncol}.}
     \item{nrow}{\code{signature(x = "AffyBatch")}: an accessor function
