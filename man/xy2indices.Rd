@@ -6,8 +6,8 @@
   Functions to convert indices to x/y (and reverse)
 }
 \usage{
-xy2indices(x, y, nr = NULL, cel = NULL, abatch = NULL, xy.offset = NULL)
-indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, xy.offset = NULL)
+xy2indices(x, y, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL)
+indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL)
 }
 \arguments{
   \item{x}{ \code{X} position for the probes }
@@ -17,6 +17,7 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, xy.offset = NULL)
   \item{cel}{ a corresponding object of class \code{\link[affy:Cel-class]{Cel}} }
   \item{abatch}{ a corresponding object of class
     \code{\link[affy:AffyBatch-class]{AffyBatch}} }
+  \item{cdf}{ character - the name of the corresponding cdf package}
   \item{xy.offset}{an eventual offset for the XY coordinates. See Details}
 }
 \details{
