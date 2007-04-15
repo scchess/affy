@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{affy: Automatic downloading of cdfenvs (HowTo):}
+%\VignetteIndexEntry{5. Automatic downloading of CDF packages}
 %\VignetteKeywords{Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
@@ -29,9 +29,9 @@
 
 \bibliographystyle{plainnat}
 
-\author{Laurent}
+\author{Laurent Gautier}
 \begin{document}
-\title{cdfenvs and oligonucleotides arrays}
+\title{cdfenvs and oligonucleotide arrays}
 
 \maketitle
 \tableofcontents

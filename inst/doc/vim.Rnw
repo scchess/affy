@@ -1,5 +1,5 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
-%\VignetteIndexEntry{affy: Import Methods (HowTo)}
+%\VignetteIndexEntry{4. Import Methods}
 %\VignetteKeywords{Preprocessing, Affymetrix}
 %\VignetteDepends{affy}
 %\VignettePackage{affy}
