@@ -187,9 +187,8 @@ Class \code{"eSet"}, directly.
 }
 \note{This class is better described in the vignette.}
 \seealso{  related methods \code{\link{merge.AffyBatch}},
-  \code{\link{pairs.AffyBatch}}, and related classes \code{\link[affy:Cel-class]{Cel}},
-  \code{\link[affy:Cdf-class]{Cdf}} and 
-  \code{\link[Biobase]{eSet-class}}} 
+  \code{\link{pairs.AffyBatch}}, and
+  \code{\link[Biobase:class.eSet]{eSet-class}}} 
 
 \examples{
 ## load example
