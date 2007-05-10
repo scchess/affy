@@ -78,7 +78,7 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), verb
     pms <- unlist(mmindex(abatch))
     do.normalize.Affybatch.invariantset(abatch, pms, prd.td, baseline.type)
   } else if (type == "together"){
-    pms <- nunlist(indexProbes(abatch,"both"))
+    pms <- unlist(indexProbes(abatch,"both"))
     do.normalize.Affybatch.invariantset(abatch, pms, prd.td, baseline.type)
   } else if (type == "separate"){
     pms <- unlist(pmindex(abatch))
