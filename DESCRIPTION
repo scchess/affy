@@ -33,4 +33,4 @@ Collate: ProgressBarText.R ppset.ttest.R ppsetApply.R expressoWidget.R
         mva.pairs.R ProbeSet.R read.affybatch.R rma.R summary.R
         tukey.biweight.R whatcdf.R xy2indices.R zzz.R
 biocViews: Microarray, OneChannel, Preprocessing
-SaveImage: yes
+LazyLoad: yes
