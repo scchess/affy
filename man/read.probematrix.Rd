@@ -17,8 +17,8 @@ read.probematrix(..., filenames = character(0),
 \arguments{
   \item{\dots}{ file names separated by comma.}
   \item{filenames}{ file names in a character vector.}
-  \item{phenoData}{ a \code{\link[Biobase]{AnnotatedDataFrame}} object}
-  \item{description}{ a \code{\link[Biobase]{MIAME}} object }
+  \item{phenoData}{ a \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}} object}
+  \item{description}{ a \code{\link[Biobase:class.MIAME]{MIAME}} object }
   \item{notes}{ notes }
   \item{compress}{are the CEL files compressed ?}
   \item{rm.mask}{ should the spots marked as 'MASKS' set to \code{NA} ? }

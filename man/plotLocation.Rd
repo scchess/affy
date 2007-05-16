@@ -17,8 +17,8 @@ plotLocation(x, col="green", pch=22, ...)
   \item{col}{colors for the plot}
   \item{pch}{plotting type (see function \code{plot})}
   \item{...}{Other parameters passed to the function \code{points}}
-  }
 }
+
 \author{
   Laurent
 }

@@ -14,7 +14,7 @@
 
 \title{Class ProbeSet}
 \description{A simple class that contains the PM and MM data for a probe
-  set from one or more samples} }
+  set from one or more samples}
 \section{Objects from the Class}{
 Objects can be created by applying the method \code{\link{probeset}} to
 instances of AffyBatch.}

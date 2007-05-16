@@ -51,6 +51,4 @@ normalize.invariantset(data, ref, prd.td=c(0.003,0.007))
 \seealso{
   \code{\link{normalize}} to normalize \code{\link[affy:AffyBatch-class]{AffyBatch}} objects.
 }
-
-}
 \keyword{manip}

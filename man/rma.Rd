@@ -3,7 +3,7 @@
 \title{Robust Multi-Array Average expression measure}
 \description{
   This function converts an \code{\link[affy:AffyBatch-class]{AffyBatch}} into an
-  \code{\link[Biobase]{exprSet}} using
+  \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}} using
 the robust multi-array average (RMA) expression measure.
 }
 \usage{
@@ -38,7 +38,7 @@ to the bioconductor 1.2 release. This means that this function and
 
 }
 \value{
-An \code{\link[affy:exprSet-class]{exprSet}}
+An \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}
 }
 
 \author{Ben Bolstad \email{bmb@bmbolstad.com}}

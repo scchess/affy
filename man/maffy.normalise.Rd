@@ -18,8 +18,6 @@ maffy.normalize(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TR
 \details{
 Please refer to references.
 }
-
-}
 \value{
 The normalized intensities.
 }

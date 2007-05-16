@@ -4,7 +4,7 @@
 \title{M vs. A Matrix}
 \description{
  A matrix of M vs. A plots is produced. Plots are made on the upper
- triangle and the IQR of the Ms are displayed in the lower triangle}
+ triangle and the IQR of the Ms are displayed in the lower triangle
 }
 \usage{
 mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="gaussian",

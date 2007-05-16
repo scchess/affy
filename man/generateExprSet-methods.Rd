@@ -7,7 +7,7 @@
 \title{generate a set of expression values}
 \description{
   Generate a set of expression values from the probe pair
-  information. The set of expression is returned as an exprSet object.
+  information. The set of expression is returned as an \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}} object.
 }
 \usage{
   computeExprSet(x, pmcorrect.method, summary.method, ...)
@@ -15,7 +15,7 @@
   generateExprSet.methods
 }
 \arguments{
-  \item{x}{a \code{\link[affy:AffyBatch-class]{AffyBatch}} holding the probe level
+  \item{x}{a \code{\link[=AffyBatch-class]{AffyBatch}} holding the probe level
     informations to generate the expression values.}
   \item{pmcorrect.method}{the method used to correct PM values (see
     section 'details').}
@@ -41,7 +41,7 @@
 }
 \seealso{
   method \code{generateExprSet} of the class
-  \code{\link[affy:AffyBatch-class]{AffyBatch}}\cr
+  \code{\link[=AffyBatch-class]{AffyBatch}}\cr
   \code{\link{expresso}} 
 }
 \examples{

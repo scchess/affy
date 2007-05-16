@@ -8,7 +8,7 @@
 \alias{normalize.methods,AffyBatch-method}
 
 \description{
-  Method for normalizing Affymetrix Probe Level Data}
+  Method for normalizing Affymetrix Probe Level Data
 }
 \usage{
 normalize.methods(object)

@@ -78,7 +78,7 @@ expresso(
 
 }
 \value{
-  An object of class \code{\link[Biobase]{exprsSet}}, with an attribute
+  An object of class \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}, with an attribute
   \code{pps.warnings} as returned by the method \code{\link{computeExprSet}}.
 }
 \seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}

@@ -21,7 +21,8 @@ tukey.biweight(x, c = 5, epsilon = 1e-04)
 }
 \references{ Statistical Algorithms Description Document, 2002, Affymetrix. }
 
-\seealso{ \code{\link{pmcorrect.mas}} and \code{\link{generateExprVal.method.mas}} }
+\seealso{
+  \code{\link{pmcorrect.mas}} and \code{\link{generateExprVal.method.mas}} 
 }
 \keyword{ manip }
 

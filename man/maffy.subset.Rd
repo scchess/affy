@@ -16,13 +16,11 @@ maffy.subset(data,subset.size=5000,maxit=100,
 \details{
 Please refer to references.
 }
-
-}
 \value{ 
-A list with component
-\item{subset}{the indexes for subset.}
+  A list with component
+  \code{subset}, the indexes for subset.
 }
-\references{Åstrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}}
+\references{Åstrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
 \author{Magnus Åstrand}
 \seealso{ \code{\link{maffy.normalize}}}
 \examples{

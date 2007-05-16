@@ -13,12 +13,10 @@ multiloess(formula, data=NULL, weights, subset, na.action, model = FALSE,
 }
 %- maybe also `usage' for other objects documented here.
 \arguments{
-See \code{\link[modreg]{loess}}.}
+See \code{\link[modreg]{loess}}.
 }
 \details{
 Please refer to \code{\link[modreg]{loess}}.
-}
-
 }
 \value{
   See \code{\link[modreg]{loess}}.

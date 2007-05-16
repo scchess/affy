@@ -4,7 +4,7 @@
 
 \title{Fit Li and Wong Model to a Probe Set}
 \description{Fits the model described in Li and Wong (2001) to a probe
-  set with I chips and J probes.}
+  set with I chips and J probes.
 }
 \usage{
 fit.li.wong(data.matrix, remove.outliers=TRUE, normal.array.quantile=0.5,

@@ -29,8 +29,8 @@ ReadAffy(..., filenames=character(0),
 \arguments{
   \item{\dots}{ file names separated by comma.}
   \item{filenames}{ file names in a character vector.}
-  \item{phenoData}{ a \code{\link[Biobase]{AnnotatedDataFrame}} object}
-  \item{description}{ a \code{\link[Biobase]{MIAME}} object }
+  \item{phenoData}{ a \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}} object}
+  \item{description}{ a \code{\link[Biobase:class.MIAME]{MIAME}} object }
   \item{notes}{ notes }
   \item{compress}{are the CEL files compressed ?}
   \item{rm.mask}{ should the spots marked as 'MASKS' set to \code{NA} ? }
@@ -67,7 +67,7 @@ to obtain the phenoData
 object as described in \code{\link[Biobase]{read.AnnotatedDataFrame}}. If left
 \code{NULL} and \code{widget=FALSE} (\code{widget=TRUE} is not currently
 supported) then a default object is created.
-It will be an object of class \code{\link[Biobase]{AnnotatedDataFrame}} with
+It will be an object of class \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}} with
 pData a data.frame with column x indexing the CEL files.
 
  \code{AllButCelsForReadAffy} is an internal function that gets called

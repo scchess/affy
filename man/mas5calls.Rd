@@ -89,8 +89,9 @@ Currently exact.pvals=TRUE is not supported, and cont.correct=TRUE works but
  
 The function \code{mas5.detect} is no longer the engine function for the
 others. C code is no available that computes the wilcox test faster. THe
-function is kept so that people can look at the R code (instead of C)}
+function is kept so that people can look at the R code (instead of C)
 }
+
 \value{\code{mas5.detect} returns a list containing the following components:
   \item{pval}{	a real p-value in [0,1] equal to the probability of
     observing probe-level intensities that are more present looking than
@@ -101,7 +102,7 @@ function is kept so that people can look at the R code (instead of C)}
     alpha1 and} 
 
   The \code{mas5calls} method for \code{AffyBatch} returns an
-  \code{exprSet} with calls in the \code{exprs} slot and p-values in the
+  \code{ExpressionSet} with calls in the \code{exprs} slot and p-values in the
   \code{se.exprs}. The code{mas5calls} for \code{ProbeSet} returns a
   list with vectors of calls and pvalues.
 }

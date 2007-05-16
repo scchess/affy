@@ -15,7 +15,7 @@
 }
 \details{
   See the vignettes to know more. This function could disappear in favor
-  of a more general one the package Biobase}
+  of a more general one the package Biobase
 }
 \value{
   The function is used for its side effect. Nothing is returned.
@@ -28,4 +28,3 @@ affy.opt <- getOption("BioC")$affy
 
 }
 \keyword{ manip }
-

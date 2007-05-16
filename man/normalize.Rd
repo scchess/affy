@@ -22,8 +22,8 @@ normalize(object, ...)
   object. For example, for the main class in the \code{affy} package use \code{?normalize.AffyBatch}.
 
   Other Bioconductor packages include some related generic functions:
-  \code{\link[LIMMA]{normalizeWithinArrays}}, and 
-  \code{\link[LIMMA]{normalizeBetweenArrays}}, in the LIMMA package, and 
+  \code{\link[limma]{normalizeWithinArrays}}, and 
+  \code{\link[limma]{normalizeBetweenArrays}}, in the LIMMA package, and 
   \code{\link[marrayNorm]{maNorm}} in the marrayNorm package.
 }
 \keyword{models}
