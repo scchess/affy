@@ -1,5 +1,4 @@
 \name{normalize.quantiles}
-\alias{normalize.quantiles}
 \alias{normalize.AffyBatch.quantiles}
 \title{Quantile Normalization}
 \description{
@@ -7,14 +6,9 @@
   normalizes a matrix of probe level intensities.
 }
 \usage{
-  normalize.quantiles(x,copy=TRUE)
   normalize.AffyBatch.quantiles(abatch, type=c("separate","pmonly","mmonly","together"))
 }
 \arguments{
-  \item{x}{A matrix of intensities where each column corresponds to a
-    chip and each row is a probe.}
-  \item{copy}{Make a copy of matrix before normalizing. Usually safer to
-    work with a copy}
   \item{abatch}{An \code{\link[affy:AffyBatch-class]{AffyBatch}}}
   \item{type}{A string specifying how the normalization should be
     applied. See details for more.}

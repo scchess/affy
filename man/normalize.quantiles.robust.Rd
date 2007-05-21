@@ -1,19 +1,19 @@
 \name{normalize.quantiles.robust}
-\alias{normalize.quantiles.robust}
 \alias{normalize.AffyBatch.quantiles.robust}
 \title{Robust Quantile Normalization}
 \description{Using a normalization based upon quantiles, this function
   normalizes a matrix of probe level intensities. Allows weighting of chips}
 \usage{
-      normalize.quantiles.robust(x,copy=TRUE,weights=NULL,
-                remove.extreme=c("variance","mean","both","none"),
-                n.remove=1,use.median=FALSE,use.log2=FALSE)
+    normalize.AffyBatch.quantiles.robust(abatch,
+type=c("separate","pmonly","mmonly","together"),
+weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,use.median=FALSE,use.log2=FALSE)
+
 }
 
 \arguments{
-  \item{x}{A matrix of intensities, columns are chips, rows are probes}
-  \item{copy}{Make a copy of matrix before normalizing. Usually safer to
-    work with a copy}
+  \item{abatch}{An \code{\link[affy:AffyBatch-class]{AffyBatch}}}
+  \item{type}{A string specifying how the normalization should be
+    applied. See details for more.}
   \item{weights}{A vector of weights, one for each chip}
   \item{remove.extreme}{If weights is null, then this will be used for
   determining which chips to remove from the calculation of the
@@ -34,13 +34,17 @@
   most different from all the other means, \bold{both} removes first
   extreme variance and then an extreme mean. The option \bold{none} does
   not remove any chips, but will assign equal weights to all chips.
-  
+ 
+  The type argument should be one of
+  \code{"separate","pmonly","mmonly","together"} which indicates whether
+  to normalize only one probe type (PM,MM) or both together or separately.
+ 
 }
 \note{This function is still experimental.}
 \value{a matrix of normalized intensites}
 \author{Ben Bolstad, \email{bmb@bmbolstad.com}}
 
-\seealso{\code{\link{normalize}}, \code{\link{normalize.quantiles}}}
+\seealso{\code{\link{normalize}}, \code{\link[preprocessCore:normalize.quantiles]{normalize.quantiles}}}
 \keyword{manip}
 
 

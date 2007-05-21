@@ -24,6 +24,7 @@
 ##                rather than a .C()
 ##
 ## Sep 20, 2006 - fix .Call in normalize.quantiles.robust
+## May 20, 2007 - remove the functions that have been moved to preprocessCore
 ##
 ##################################################################
 
@@ -62,26 +63,6 @@ normalize.AffyBatch.quantiles <- function(abatch,type=c("separate","pmonly","mmo
   return(abatch)
 }
 
-normalize.quantiles <- function(x,copy=TRUE){
-
-  rows <- dim(x)[1]
-  cols <- dim(x)[2]
-
-  if (!is.matrix(x)){
-    stop("Matrix expected in normalize.quantiles")
-  }
-
-  if (is.integer(x)){
-    x <- matrix(as.double(x),rows,cols)
-    copy <- FALSE
-  }
-
-  #matrix(.C("qnorm_c", as.double(as.vector(x)), as.integer(rows), as.integer(cols))[[1]], rows, cols)
-
-  .Call("R_qnorm_c",x,copy, PACKAGE="affy");
-}
-
-
 normalize.AffyBatch.quantiles.robust <- function(abatch, type=c("separate","pmonly","mmonly","together"),weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,use.median=FALSE,use.log2=FALSE) {
 
   type <- match.arg(type)
@@ -110,100 +91,3 @@ normalize.AffyBatch.quantiles.robust <- function(abatch, type=c("separate","pmon
   return(abatch)
 }
 
-normalize.quantiles.robust <- function(x,copy=TRUE,weights=NULL,remove.extreme=c("variance","mean","both","none"),n.remove=1,use.median=FALSE,use.log2=FALSE){
-
-  calc.var.ratios <- function(x){
-    cols <- dim(x)[2]
-    vars <- apply(x,2,var)
-    results <- matrix(0,cols,cols)
-    for (i in 1:cols-1)
-      for (j in (i+1):cols){
-        results[i,j] <- vars[i]/vars[j]
-        results[j,i] <- vars[j]/vars[i]
-      }
-    results
-  }
-
-  calc.mean.dists <- function(x){
-    cols <- dim(x)[2]
-    means <- colMeans(x)
-    results <- matrix(0,cols,cols)
-    for (i in 1:cols-1)
-      for (j in (i+1):cols){
-        results[i,j] <- means[i] - means[j]
-        results[j,i] <- means[j] - means[i]
-      }
-    results
-  }
-
-  use.huber <- FALSE
-  remove.extreme <- match.arg(remove.extreme)
-
-  rows <- dim(x)[1]
-  cols <- dim(x)[2]
-
-  if (is.null(weights)){
-    weights <- rep(1,cols)
-    if (remove.extreme == "variance"){
-      var.ratios <- calc.var.ratios(x)
-      vars.big <- rowSums(var.ratios)
-      vars.small <- colSums(var.ratios)
-      var.adj <- vars.big + vars.small
-      remove.order <- order(-var.adj)
-      weights[remove.order[1:n.remove]] <- 0
-    }
-    if (remove.extreme == "mean"){
-        means <- abs(colSums(calc.mean.dists(x)))
-      remove.order <- order(-means)
-      weights[remove.order[1:n.remove]] <- 0
-    }
-    if (remove.extreme == "both"){
-      var.ratios <- calc.var.ratios(x)
-      vars.big <- rowSums(var.ratios)
-      vars.small <- colSums(var.ratios)
-      var.adj <- vars.big + vars.small
-      means <- abs(colSums(calc.mean.dists(x)))
-      # by convention we will remove first the most extreme variance, then the most extreme mean
-      remove.order <- order(-var.adj)
-      weights[remove.order[1]] <- 0
-      remove.order <- order(-means)
-      weights[remove.order[1]] <- 0
-    }
-  } else {
-
-    if (is.numeric(weights)){
-      if (length(weights) != cols){
-        stop("Weights vector incorrect length\n")
-      }
-      if (sum(weights > 0) < 1){
-        stop("Need at least one non negative weights\n")
-      }
-      if (any(weights < 0)){
-        stop("Can't have negative weights")
-      }
-
-      
-    } else {
-      if (weights =="huber"){
-        use.huber <- TRUE
-        weights <- rep(1,cols)
-      } else {
-        stop("Don't recognise weights argument as valid.")
-      }
-
-    }
-
-  }
-
-
-      
-  cat("Chip weights are ",weights,"\n")
-  ###matrix(.C("qnorm_robust_c",as.double(as.vector(x)),as.double(weights),as.integer(rows),as.integer(cols),as.integer(use.median),as.integer(use.log2),as.integer(use.huber),
-  ####PACKAGE="affy")[[1]],rows,cols)
-  
-  ####R_qnorm_robust_c(SEXP X, SEXP copy, SEXP R_weights, SEXP R_use_median, SEXP R_use_log2, SEXP R_weight_scheme)
-  .Call("R_qnorm_robust_c",x,copy,weights,as.integer(use.median),as.integer(use.log2),as.integer(use.huber),PACKAGE="affy")
-
-
-  
-}

@@ -33,12 +33,12 @@ make it faster, loess is fit to a sample of the data which we then use to
 predict the curve for all the data. By setting
 \code{family.loess="gaussian"} the function is faster, but you risk
 losing information on differentially expressed genes. The function
-\code{\link{normalize.quantiles}} is faster. 
+\code{\link[preprocessCore:normalize.quantiles]{normalize.quantiles}} is faster. 
 }
 
 \value{A matrix with normalized values for chips in columns.}
 
-\seealso{\code{\link{normalize.quantiles}}, \code{\link{maffy.normalize}},
+\seealso{\code{\link[preprocessCore:normalize.quantiles]{normalize.quantiles}}, \code{\link{maffy.normalize}},
   \code{\link{maffy.subset}}}
 \author{Rafael A. Irizarry}
 \keyword{smooth}

@@ -102,7 +102,7 @@
 /* #include "rma_structures.h" */
 #include "rma_common.h"
 #include "rma_background2.h"
-#include "qnorm.h" 
+//#include "qnorm.h" 
 
 #include <R.h> 
 #include <Rdefines.h>
@@ -112,6 +112,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+#include "preprocessCore_normalization_stubs.c"
+
+
+
 
 void do_RMA(double *PM, char **ProbeNames, int *rows, int * cols,double *results,char **outNames,int nps);
 
