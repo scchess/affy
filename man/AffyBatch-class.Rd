@@ -23,8 +23,9 @@
 \alias{exprs<-,AffyBatch,ANY-method}
 \alias{se.exprs,AffyBatch-method}
 \alias{se.exprs<-,AffyBatch-method}
+\alias{featureNames,AffyBatch-method}
+\alias{featureNames<-,AffyBatch-method}
 \alias{geneNames,AffyBatch-method}
-\alias{geneNames<-,AffyBatch,ANY-method}
 \alias{geneNames<-,AffyBatch,ANY-method}
 \alias{getCdfInfo,AffyBatch-method}
 \alias{image,AffyBatch-method}
@@ -123,10 +124,12 @@ Class \code{"eSet"}, directly.
      \item{computeExprSet}{\code{signature(x = "AffyBatch",
 	summary.method = "character")}: For each probe set computes an
       expression value using \code{summary.method}. }
-    \item{geneNames}{\code{signature(object = "AffyBatch")}: return the
+    \item{featureNames}{\code{signature(object = "AffyBatch")}: return the
       probe set names also referred to as the Affymetrix IDs. Notice
-      that one can not assign geneNames. You must do this by changing
+      that one can not assign \code{featureNames}. You must do this by changing
       the cdfenvs.}
+    \item{geneNames}{\code{signature(object="AffyBatch'")}: deprecated,
+      use \code{featureNames}}
     \item{getCdfInfo}{\code{signature(object = "AffyBatch")}: retrieve
       the environment that defines the location of probes by probe set. }
     \item{image}{\code{signature(x = "AffyBatch")}: creates an image for

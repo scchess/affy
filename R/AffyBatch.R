@@ -207,6 +207,20 @@ setMethod("dim",
 ### methods
 #######################################################
 
+setMethod("featureNames",
+          signature=signature(object="AffyBatch"),
+          function(object) {
+              cdf.envir <- getCdfInfo(object)
+              ls(env=cdf.envir)
+          })
+
+setReplaceMethod("featureNames",
+                 signature=signature(
+                   object="AffyBatch",
+                   value="ANY"),
+                 function(object, value)
+                 stop("Cannot change featureNames of AffyBatch"))
+
 ##geneNames method
 if (debug.affy123) cat("--->geneNames\n")
 
