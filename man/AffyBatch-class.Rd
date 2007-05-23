@@ -67,23 +67,26 @@
 }
 \section{Slots}{
   \describe{
-    \item{\code{cdfName}:}{Object of class \code{"character"} representing the name of
+    \item{\code{cdfName}:}{Object of class \code{character} representing the name of
       \code{CDF} file associated with the arrays in the
       \code{AffyBatch}.}
-    \item{\code{nrow}:}{Object of class \code{"numeric"} representing
+    \item{\code{nrow}:}{Object of class \code{integer} representing
       the physical number of rows in the arrays.}
-    \item{\code{ncol}:}{Object of class \code{"numeric"} representing
+    \item{\code{ncol}:}{Object of class \code{integer} representing
       the physical number of columns in the arrays.}
-    \item{\code{exprs}:}{Object of class "matrix". The matrix contains one probe per row and one chip
-    per column.}
-    \item{\code{se.exprs}:}{Object of class "matrix".}
-    \item{\code{phenoData}:}{Object of class "AnnotatedDataFrame".}
+    \item{\code(assayData):}{Object of class \code{AssayData}
+      containing the raw data, which will be at minimum a matrix of
+      intensity values. This slot can also hold a matrix of standard
+      errors if the 'sd' argument is set to \code{TRUE} in the call to \code{ReadAffy}.} 
+    \item{\code{phenoData}:}{Object of class \code{AnnotatedDataFrame}
+      containing phenotypic data for the samples.}
     \item{\code{annotation}}{A character string identifying the
-      annotation that may be used for the \code{eSet} instance.}
-    \item{\code{description}:}{Object of class "MIAME". For
-      compatibility with previous version of this class description can
-      also be a "character". The class \code{characterOrMIAME} has been
-      defined just for this.} 
+      annotation that may be used for the \code{ExpressionSet}
+      instance.}
+    \item{\code{featureData}}{Object of class \code{AnnotatedDataFrame}
+      containing feature-level (e.g., probeset-level) information.}
+    \item{\code{experimentData}:}{Object of class "MIAME" containing
+      experiment-level information.} 
     \item{\code{notes}:}{Object of class "character" Vector of
       explanatory text }
   }
@@ -114,8 +117,6 @@ Class \code{"eSet"}, directly.
       matrix of standard errors of expression values.}
     \item{[<-}{\code{signature(x = "AffyBatch")}: replaces subsets. }
     \item{[}{\code{signature(x = "AffyBatch")}: subsets by array.}
-    \item{[[}{\code{signature(x = "AffyBatch")}: extracts each array as
-      an \code{\link[affy:Cel-class]{Cel}} instance.}
     \item{boxplot}{\code{signature(x = "AffyBatch")}:  creates a
       \code{\link{boxplot}s of log base 2 intensities. }
       \item{hist}{\code{signature(x = "AffyBatch")}:  creates a

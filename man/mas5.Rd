@@ -2,7 +2,7 @@
 \alias{mas5}
 \title{MAS 5.0 expression measure}
 \description{
-  This function converts an instance of \code{\link{AffyBatch-class}}
+  This function converts an instance of \code{\link{AffyBatch}}
   into an instance of \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}} using
   our implementation of Affymetrix's MAS 5.0 expression measure.
 }
@@ -11,9 +11,9 @@ mas5(object, normalize = TRUE, sc = 500, analysis = "absolute", ...)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{an instance of \code{\link{AffyBatch-class}}}
+  \item{object}{an instance of \code{\link{AffyBatch}}}
   \item{normalize}{logical. If \code{TRUE} scale normalization is used
-    after we obtain an instance of \code{\link[Biobase:class.ExpressionSet]{exprSet}}}
+    after we obtain an instance of \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}}
   \item{sc}{Value at which all arrays will be scaled to.}
   \item{analysis}{should we do absolute or comparison analysis, although
     "comparison" is still not implemented.}
@@ -23,6 +23,7 @@ mas5(object, normalize = TRUE, sc = 500, analysis = "absolute", ...)
   This function is a wrapper for  \code{\link{expresso}} and \code{\link{affy.scalevalue.exprSet}}.}
 \value{
   \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}} 
+
 
   The methods used by this function
   were implemented based upon available documentation. In

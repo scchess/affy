@@ -4,7 +4,7 @@
 \description{
   This function converts an \code{\link[affy:AffyBatch-class]{AffyBatch}} into an
   \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}} using
-the robust multi-array average (RMA) expression measure.
+  the robust multi-array average (RMA) expression measure.
 }
 \usage{
 rma(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=TRUE,background=TRUE,bgversion=2,...)
