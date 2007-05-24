@@ -74,7 +74,7 @@
       the physical number of rows in the arrays.}
     \item{\code{ncol}:}{Object of class \code{integer} representing
       the physical number of columns in the arrays.}
-    \item{\code(assayData):}{Object of class \code{AssayData}
+    \item{\code{assayData}:}{Object of class \code{AssayData}
       containing the raw data, which will be at minimum a matrix of
       intensity values. This slot can also hold a matrix of standard
       errors if the 'sd' argument is set to \code{TRUE} in the call to \code{ReadAffy}.} 
