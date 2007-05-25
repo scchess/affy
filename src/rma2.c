@@ -2,9 +2,9 @@
  **
  ** file: rma.c
  **
- ** Copyright (C) 2002 - 2003   B. M. Bolstad
+ ** Copyright (C) 2002 - 2007   B. M. Bolstad
  **
- ** created by: B. M. Bolstad   <bolstad@stat.berkeley.edu>
+ ** created by: B. M. Bolstad   <bmb@bmbolstad.com>
  ** created on: June 26, 2002
  **
  ** last modified: January 6, 2003
@@ -95,6 +95,7 @@
  ** Nov 9, 2006 - integrate changes suggested/supplied by Paul Gordon (gordonp@ucalgary.ca)
  **               specifically memcpy, caching log(2.0), and partial sorting for median calculation 
  ** Nov 13, 2006 - moved median code to rma_common.c
+ ** May 24, 2007 - median_polish code is now from preprocessCore package
  **
  ************************************************************************/
 
@@ -114,251 +115,12 @@
 #include <math.h>
 
 #include "preprocessCore_normalization_stubs.c"
-
+#include "preprocessCore_summarization_stubs.c"
 
 
 
 void do_RMA(double *PM, char **ProbeNames, int *rows, int * cols,double *results,char **outNames,int nps);
 
-
-/*******************************************************************************
- **
- ** double sum_abs(double *z, int rows, int cols)
- **
- ** double *z - matrix of doubles
- ** int rows - dimension of matrix
- ** int cols - dimension of matrix
- **
- ** returns the sum of the absolute values of elements of the matrix *z
- **
- ******************************************************************************/
-
-double sum_abs(double *z, int rows, int cols){
- 
-  int i, j;
-  double sum = 0.0;
-
-  for (i=0; i < rows; i++)
-    for (j=0; j < cols; j++)
-      sum+=fabs(z[j*rows+i]);
-
-  return sum;
-}
-
-/********************************************************************************
- **
- ** void get_row_median(double *z, double *rdelta, int rows, int cols)
- **
- ** double *z - matrix of dimension  rows*cols
- ** double *rdelta - on output will contain row medians (vector of length rows)
- ** int rows, cols - dimesion of matrix
- **
- ** get the row medians of a matrix 
- **
- ********************************************************************************/
-
-void get_row_median(double *z, double *rdelta, int rows, int cols){
-  int i,j;
-  double *buffer = Calloc(cols,double);
-
-  for (i = 0; i < rows; i++){ 
-    for (j = 0; j < cols; j++){
-      buffer[j] = z[j*rows + i];
-    }
-    rdelta[i] = median_nocopy(buffer,cols);
-  }
-  
-  Free(buffer);
-}
-
-/********************************************************************************
- **
- ** void get_col_median(double *z, double *cdelta, int rows, int cols)
- **
- ** double *z - matrix of dimension  rows*cols
- ** double *cdelta - on output will contain col medians (vector of length cols)
- ** int rows, cols - dimesion of matrix
- **
- ** get the col medians of a matrix 
- **
- ********************************************************************************/
-
-void get_col_median(double *z, double *cdelta, int rows, int cols){
-  
-  int i, j;
-  
-  double *buffer = Calloc(rows,double);
-  for (j = 0; j < cols; j++){
-    memcpy(buffer,z+j*rows,rows*sizeof(double));
-
-    cdelta[j] = median_nocopy(buffer,rows);
-  }
-  
-  Free(buffer);
-
-}
-
-/***********************************************************************************
- **
- ** void subtract_by_row(double *z, double *rdelta, int rows, int cols)
- ** 
- ** double *z - matrix of dimension rows by cols
- ** double *rdelta - vector of length rows
- ** int rows, cols dimensions of matrix
- **
- ** subtract the elements of *rdelta off each row of *z
- **
- ***********************************************************************************/
-
-void subtract_by_row(double *z, double *rdelta, int rows, int cols){
-  
-  int i,j;
-
-  for (i = 0; i < rows; i++){
-    for (j = 0; j < cols; j++){
-      z[j*rows +i]-= rdelta[i];
-    }
-  }
-}
-
-
-/***********************************************************************************
- **
- ** void subtract_by_col(double *z, double *cdelta, int rows, int cols)
- ** 
- ** double *z - matrix of dimension rows by cols
- ** double *cdelta - vector of length rows
- ** int rows, cols dimensions of matrix
- **
- ** subtract the elements of *cdelta off each col of *z
- **
- ***********************************************************************************/
-
-void subtract_by_col(double *z, double *cdelta, int rows, int cols){
-  
-  int i,j;
-  for (j = 0; j < cols; j++){
-    for (i = 0; i < rows; i++){
-      z[j*rows +i]-= cdelta[j];
-    }
-  }
-
-}
-
-/***********************************************************************************
- **
- ** void rmod(double *r, double *rdelta, int rows)
- ** 
- ** double *r - vector of length rows
- ** double *rdelta - vector of length rows
- ** int rows, cols dimensions of matrix
- **
- ** add elementwise *rdelta to *r
- **
- ***********************************************************************************/
-
-
-void rmod(double *r, double *rdelta, int rows){
-  int i;
-
-  for (i = 0; i < rows; i++){
-    r[i]= r[i] + rdelta[i];
-  }
-}
-
-/***********************************************************************************
- **
- ** void cmod(double *c, double *cdelta, int cols)
- ** 
- ** double *c - vector of length rows
- ** double *cdelta - vector of length rows
- ** int cols length of vector
- **
- ** add elementwise *cdelta to *c
- **
- ***********************************************************************************/
-
-void cmod(double *c, double *cdelta, int cols){
-  int j;
-
-  for (j = 0; j < cols; j++){
-    c[j]= c[j] + cdelta[j];
-  }
-}
-
-
-/*************************************************************************************
- **
- ** void median_polish(double *data, int rows, int cols, int *cur_rows, double *results, int nprobes)
- **
- ** double *data - a data matrix of dimension rows by cols (the entire PM matrix)
- ** int rows, cols - rows and columns dimensions of matrix
- ** int cur_rows - vector of length nprobes containg row indicies of *data matrix which apply for a 
- **                particular probeset
- ** double *results - a vector of length cols already allocated. on output contains expression values
- ** int nprobes - number of probes in current probeset.
- **
- ** a function to do median polish.
- **
- *************************************************************************************/
-
-void median_polish(double *data, int rows, int cols, int *cur_rows, double *results, int nprobes){
-
-  int i,j,iter;
-  int maxiter = 10;
-  double eps=0.01;
-  double oldsum = 0.0,newsum = 0.0;
-  double t = 0.0;
-  double delta;
-  double *rdelta = Calloc(nprobes,double);
-  double *cdelta = Calloc(cols,double);
-  
-  double *r = Calloc(nprobes,double);
-  double *c = Calloc(cols,double);
-  double *z = Calloc(nprobes*cols,double);
-
-  double ONE_OVER_LOG2 = 1.0/log(2.0); /* Paul Gordon: calculate the log only once, for efficiency's sake */
-
-  for (j = 0; j < cols; j++){
-    for (i =0; i < nprobes; i++){
-      z[j*nprobes + i] = log(data[j*rows + cur_rows[i]])*ONE_OVER_LOG2;  
-    }
-  } 
-  
-  
-  for (iter = 1; iter <= maxiter; iter++){
-    get_row_median(z,rdelta,nprobes,cols);
-    subtract_by_row(z,rdelta,nprobes,cols);
-    rmod(r,rdelta,nprobes);
-    delta = median(c,cols);
-    for (j = 0; j < cols; j++){
-      c[j] = c[j] - delta;
-    }
-    t = t + delta;
-    get_col_median(z,cdelta,nprobes,cols);
-    subtract_by_col(z,cdelta,nprobes,cols);
-    cmod(c,cdelta,cols);
-    delta = median(r,nprobes);
-    for (i =0; i < nprobes; i ++){
-      r[i] = r[i] - delta;
-    }
-    t = t+delta;
-    newsum = sum_abs(z,nprobes,cols);
-    if (newsum == 0.0 || fabs(1.0 - oldsum/newsum) < eps)
-      break;
-    oldsum = newsum;
-  }
-  
-  for (j=0; j < cols; j++){
-    results[j] =  t + c[j]; 
-  }
-  
-  Free(rdelta);
-  Free(cdelta);
-  Free(r);
-  Free(c);
-  Free(z); 
-}
 
 /************************************************************************************
  **
@@ -395,7 +157,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
   int nprobes=0;
 
   double *cur_exprs = Calloc(*cols,double);
-
+  double *cur_se_exprs = Calloc(*cols,double);
   /* double *OLDPM = NULL; */
 
   first = ProbeNames[0];
@@ -415,7 +177,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
       
     } else {
       nprobes = k;
-      median_polish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes);
+      MedianPolish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes, cur_se_exprs);
       for (k =0; k < *cols; k++){
 	results[k*nps + i] = cur_exprs[k];
       } 
@@ -428,7 +190,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
     }
   }
   nprobes = k;
-  median_polish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes);
+  MedianPolish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes, cur_se_exprs);
   for (k =0; k < *cols; k++){
     results[k*nps + i] = cur_exprs[k];
   } 
@@ -436,7 +198,7 @@ void do_RMA(double *PM, char **ProbeNames, int *rows, int *cols, double *results
   outNames[i] = Calloc(size+1,char);
   strcpy(outNames[i],first);
   
-
+  Free(cur_se_exprs);
   Free(cur_exprs);
   Free(cur_rows);
 }
