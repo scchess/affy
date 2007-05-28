@@ -92,20 +92,23 @@ others. C code is no available that computes the wilcox test faster. THe
 function is kept so that people can look at the R code (instead of C)
 }
 
-\value{\code{mas5.detect} returns a list containing the following components:
+\value{
+  \code{mas5.detect} returns a list containing the following components:
   \item{pval}{	a real p-value in [0,1] equal to the probability of
     observing probe-level intensities that are more present looking than
     data assuming the data represents an absent transcript; that is a
     transcript is more likely to be present for p-values closer 0.} 
   \item{call}{either "P", "M" or "A" representing a call of present,
     marginal or absent; computed by simply thresholding pval using
-    alpha1 and} 
+    alpha1 and}
 
   The \code{mas5calls} method for \code{AffyBatch} returns an
-  \code{ExpressionSet} with calls in the \code{exprs} slot and p-values in the
-  \code{se.exprs}. The code{mas5calls} for \code{ProbeSet} returns a
-  list with vectors of calls and pvalues.
+  \code{ExpressionSet} with calls accessible with \code{exprs(obj)}
+  and p-values available with \code{assayData(obj)[["se.exprs"]]}. The
+  code{mas5calls} for \code{ProbeSet} returns a list with vectors of calls
+  and pvalues.
 }
+
 \references{
 
 Liu, W. M. and Mei, R. and Di, X. and Ryder, T. B. and Hubbell, E. and Dee,
