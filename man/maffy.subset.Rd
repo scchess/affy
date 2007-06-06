@@ -20,8 +20,8 @@ Please refer to references.
   A list with component
   \code{subset}, the indexes for subset.
 }
-\references{Åstrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
-\author{Magnus Åstrand}
+\references{Astrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
+\author{Magnus Astrand}
 \seealso{ \code{\link{maffy.normalize}}}
 \examples{
      #data(Dilution)
@@ -30,5 +30,3 @@ Please refer to references.
      #mva.pairs(x[Index,])
 }
 \keyword{internal}
-
-

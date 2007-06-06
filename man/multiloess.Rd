@@ -21,8 +21,8 @@ Please refer to \code{\link[modreg]{loess}}.
 \value{
   See \code{\link[modreg]{loess}}.
  }
-\references{Åstrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
-\author{Magnus Åstrand}
+\references{Astrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
+\author{Magnus Astrand}
 \seealso{ \code{\link{loess}}}
 \keyword{internal}
 

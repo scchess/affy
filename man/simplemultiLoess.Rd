@@ -19,8 +19,8 @@ simplemultiLoess(y, x, weights, span = 0.75, degree = 2,
 \value{
   See  \code{\link[modreg]{loess}}.
 }
-\references{Åstrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
-\author{Magnus Åstrand}
+\references{Astrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
+\author{Magnus Astrand}
 \seealso{ \code{\link[modreg]{loess}}}
 \keyword{internal}
 

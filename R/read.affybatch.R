@@ -206,20 +206,28 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
     }
   }
 
-  if(is.character(phenoData)) ##if character read file
-    phenoData <- read.AnnotatedDataFrame(filename=phenoData)
-  else{
+  if(is.character(phenoData)) { ##if character read file 
+      phenoData <- read.AnnotatedDataFrame(filename=phenoData)
+      sampleNames <- sampleNames(phenoData)
+  } else{
       if (!is(phenoData, "AnnotatedDataFrame")) {
           if(widget){
               require(tkWidgets)
-              phenoData <- read.AnnotatedDataFrame(sampleNames=sampleNames,widget=TRUE)
+              phenoData <- read.AnnotatedDataFrame(widget=TRUE)
+              sampleNames <- sampleNames(phenoData)
           }
-          else
-              phenoData <- read.AnnotatedDataFrame(sampleNames=sampleNames,widget=FALSE)
+          else {
+              pData <- data.frame(sample=seq(1, length(sampleNames)),
+                                  row.names=sampleNames)
+              varMetadata <- data.frame(labelDescription="arbitrary nubmering",
+                                        row.names=names(pData))
+              phenoData <- new("AnnotatedDataFrame",
+                               data=pData,
+                               varMetadata=varMetadata)
+          }
       }
   }
 
-  sampleNames <- rownames(pData(phenoData))
 
   ##get MIAME information
   if(is.character(description)){
