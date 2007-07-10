@@ -219,7 +219,7 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
           else {
               pData <- data.frame(sample=seq(1, length(sampleNames)),
                                   row.names=sampleNames)
-              varMetadata <- data.frame(labelDescription="arbitrary nubmering",
+              varMetadata <- data.frame(labelDescription="arbitrary numbering",
                                         row.names=names(pData))
               phenoData <- new("AnnotatedDataFrame",
                                data=pData,
