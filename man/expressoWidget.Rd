@@ -47,8 +47,6 @@ normDefault, PMDefault, expDefault)
 }
 \references{Documentations of affy package}
 \author{Jianhua Zhang}
-\note{The functions are part of the Bioconductor project at Dana-Farber
-  Cancer Institute to provide Bioinformatic functionalities through R}
 
 \seealso{\code{\link{expresso}}}
 \examples{
