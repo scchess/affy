@@ -296,7 +296,9 @@ We detail what we believe is a good way to proceed below.
 As mentioned the function \Rfunction{expresso} provides many
 options. For example, 
 \begin{Sinput}
-R> eset <- expresso(affybatch, normalize.method="qspline", bg.method="rma",pmcorrect.method="pmonly",summary.method="liwong")
+R> eset <- expresso(affybatch, normalize.method="qspline", 
+               bgcorrect.method="rma",pmcorrect.method="pmonly",
+               summary.method="liwong")
 \end{Sinput}
 
 This will store expression values, in the object \Robject{eset}, as an
