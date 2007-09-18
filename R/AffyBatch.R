@@ -623,6 +623,8 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
             pmcorrect.method<- match.arg(pmcorrect.method, pmcorrect.methods)
             summary.method <- match.arg(summary.method, express.summary.stat.methods)
 
+            ids <- unname(ids)
+            
             n <- length(x)
 
             ## if 'ids' is NULL compute for all ids
