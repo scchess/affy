@@ -629,7 +629,7 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
 
             ## if 'ids' is NULL compute for all ids
             if (is.null(ids))
-              ids <- geneNames(x)
+              ids <- featureNames(x)
 
             m <- length(ids)
             pps.warnings <- vector("list", length=m)
