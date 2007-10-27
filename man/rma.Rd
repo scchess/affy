@@ -14,7 +14,8 @@ rma(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=TRUE,backgrou
   \item{object}{an \code{\link[affy:AffyBatch-class]{AffyBatch}}}
   \item{subset}{a character vector with the the names of the probesets
     to be used in expression calculation.}
-  \item{verbose}{logical value. If \code{TRUE} it writes out some messages. (Curently ignored)}
+  \item{verbose}{logical value. If \code{TRUE} it writes out some
+    messages indicating progress. If \code{FALSE} nothing should be printed.}
   \item{destructive}{logical value. If \code{TRUE} works on the PM matrix in place as much as possible, good for large datasets.}
   \item{normalize}{logical value. If \code{TRUE} normalize data using
     quantile normalization}

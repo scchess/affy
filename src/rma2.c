@@ -96,6 +96,7 @@
  **               specifically memcpy, caching log(2.0), and partial sorting for median calculation 
  ** Nov 13, 2006 - moved median code to rma_common.c
  ** May 24, 2007 - median_polish code is now from preprocessCore package
+ ** Oct 26, 2007 - add verbose flag
  **
  ************************************************************************/
 
@@ -212,6 +213,7 @@ void do_RMA(double *PM, const char **ProbeNames, int *rows, int *cols, double *r
  ** SEXP ProbeNamesVec - vector containing names of probeset for each probe
  ** SEXP N_probes - number of PM/MM probes on an array
  ** SEXP norm_flag  - non zero for use quantile normalization, 0 for no normalization
+ ** SEXP verbose - TRUE/FALSE or 1/0 for be verbose or not
  **
  ** a function to actually carry out the RMA method taking the R objects and manipulating
  ** into C data structures.
@@ -225,7 +227,7 @@ void do_RMA(double *PM, const char **ProbeNames, int *rows, int *cols, double *r
  **
  *******************************************************************************************/
 
-SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag){
+SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag, SEXP verbose){
   
   int rows, cols;
   double *outexpr;
@@ -256,7 +258,9 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   if (INTEGER(norm_flag)[0]){
   /* normalize PM using quantile normalization */
   /*  printf("Normalizing\n"); */
-    Rprintf("Normalizing\n");
+    if (INTEGER(verbose)[0]){
+      Rprintf("Normalizing\n");
+    }
     qnorm_c(PM,&rows,&cols);
   }
 
@@ -276,8 +280,9 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   outexpr = NUMERIC_POINTER(outvec);
  	    
   /* printf("Calculating Expression\n"); */
-  Rprintf("Calculating Expression\n");
-
+  if (INTEGER(verbose)[0]){
+    Rprintf("Calculating Expression\n");
+  }
 
   do_RMA(PM, ProbeNames, &rows, &cols,outexpr,outnames,nprobesets);
 
@@ -319,6 +324,7 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
  ** SEXP bg_flag - TRUE/FALSE  or 1/0 for background correct/not
  ** SEXP bg_type - integer indicating "RMA" background to use. 2 is equivalent to bg.correct.rma in affy 1.1.1
  **                all other values default to 1.0.2 "RMA" background
+ ** SEXP verbose - TRUE/FALSE or 1/0 for be verbose or not
  ** 
  ** Main function to be called from R. Modifies the PM matrix from the parent environment. More dangerous than the
  ** function below, but less memory intensive. This is a function that implements the complete RMA method. ie
@@ -326,12 +332,14 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
  **
  *******************************************************************************************************************/
 
-SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type){
-  if (INTEGER(bg_flag)[0]){
-    Rprintf("Background correcting\n");
+SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
+  if (INTEGER(bg_flag)[0]){ 
+    if (INTEGER(verbose)[0]){
+      Rprintf("Background correcting\n");
+    }
     PMmat = bg_correct_c(PMmat,MMmat,densfunc,rho,bg_type);
   }
-  return rma_c_call(PMmat, MMmat, ProbeNamesVec,N_probes,norm_flag);
+  return rma_c_call(PMmat, MMmat, ProbeNamesVec,N_probes,norm_flag,verbose);
 }
 
 /********************************************************************************************************************
@@ -348,6 +356,7 @@ SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEX
  ** SEXP bg_flag - TRUE/FALSE  or 1/0 for background correct/not
  ** SEXP bg_type - integer indicating "RMA" background to use. 2 is equivalent to bg.correct.rma in affy 1.1.1
  **                all other values default to 1.0.2 "RMA" background
+ ** SEXP verbose - TRUE/FALSE or 1/0 for be verbose or not
  *
  ** Main function to be called from R. Makes a copy of the PM matrix and then works with that. Safer than the 
  ** other function above, but more memory intensive. This is the function that implements the complete RMA method.
@@ -355,21 +364,23 @@ SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEX
  **
  ********************************************************************************************************************/
 
-SEXP rma_c_complete_copy(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type){
+SEXP rma_c_complete_copy(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
  SEXP dim1,PMcopy,exprs;
  int rows,cols;
 
  if (INTEGER(bg_flag)[0]){
-   Rprintf("Background correcting\n");
+   if (INTEGER(verbose)[0]){
+     Rprintf("Background correcting\n");
+   }
    PMmat = bg_correct_c_copy(PMmat,MMmat,densfunc,rho, bg_type); 
-   return rma_c_call(PMmat, MMmat, ProbeNamesVec,N_probes,norm_flag);
+   return rma_c_call(PMmat, MMmat, ProbeNamesVec, N_probes, norm_flag, verbose);
   } else {
     PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol));
     rows = INTEGER(dim1)[0];
     cols = INTEGER(dim1)[1];
     PROTECT(PMcopy = allocMatrix(REALSXP,rows,cols));
     copyMatrix(PMcopy,PMmat,0);
-    exprs = rma_c_call(PMcopy, MMmat, ProbeNamesVec,N_probes,norm_flag);
+    exprs = rma_c_call(PMcopy, MMmat, ProbeNamesVec, N_probes, norm_flag, verbose);
     UNPROTECT(2);
     return exprs;
   }
