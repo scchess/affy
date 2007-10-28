@@ -118,7 +118,7 @@ just.rma <- function(..., filenames=character(0),
 
   #if(destructive){
     exprs <-
-    .Call("rma_c_complete",probeintensities$pm,probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion, verbose,
+    .Call("rma_c_complete",probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion, verbose,
     PACKAGE="affy")
   #}else{
   #  exprs <- .Call("rma_c_complete_copy",probeintensities$pm,probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion)

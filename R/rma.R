@@ -27,7 +27,7 @@
 #
 # Oct 26, 2007 = makesure verbosity flag is correctly passed down to C-level routines
 #
-#
+# OCt 28, 2007 MM are no longer passed to the C code
 #
 #
 ########################################################
@@ -48,12 +48,11 @@ rma <- function(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=T
 
   if (destructive){
   	exprs <-
-  	.Call("rma_c_complete",pm(object,subset),mm(object,subset),probeNames(object,subset),ngenes,body(bg.dens),new.env(),normalize,background,bgversion, verbose,
+  	.Call("rma_c_complete",pm(object,subset), probeNames(object,subset),ngenes,body(bg.dens),new.env(),normalize,background,bgversion, verbose,
   	PACKAGE="affy")
   } else {
 	exprs <-
-  	.Call("rma_c_complete_copy", pm(object,subset),
-  	mm(object,subset), probeNames(object,subset), ngenes,
+  	.Call("rma_c_complete_copy", pm(object,subset), probeNames(object,subset), ngenes,
   	body(bg.dens), new.env(), normalize, background, bgversion, verbose,
   	PACKAGE="affy")
   }

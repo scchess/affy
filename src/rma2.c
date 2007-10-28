@@ -97,6 +97,7 @@
  ** Nov 13, 2006 - moved median code to rma_common.c
  ** May 24, 2007 - median_polish code is now from preprocessCore package
  ** Oct 26, 2007 - add verbose flag
+ ** Oct 28, 2007 - remove any vestigial references to MM
  **
  ************************************************************************/
 
@@ -206,10 +207,9 @@ void do_RMA(double *PM, const char **ProbeNames, int *rows, int *cols, double *r
 
 /********************************************************************************************
  **
- ** void rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag)
+ ** void rma_c_call(SEXP PMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag)
  **
  ** SEXP PMmat - matrix of Perfect-match values
- ** SEXP MMmat - matrix of Mismatch values
  ** SEXP ProbeNamesVec - vector containing names of probeset for each probe
  ** SEXP N_probes - number of PM/MM probes on an array
  ** SEXP norm_flag  - non zero for use quantile normalization, 0 for no normalization
@@ -227,11 +227,11 @@ void do_RMA(double *PM, const char **ProbeNames, int *rows, int *cols, double *r
  **
  *******************************************************************************************/
 
-SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag, SEXP verbose){
+SEXP rma_c_call(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag, SEXP verbose){
   
   int rows, cols;
   double *outexpr;
-  double *PM,*MM;
+  double *PM;
   char **outnames;
   const char **ProbeNames;
   int i,nprobesets;
@@ -249,7 +249,6 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
   cols = INTEGER(dim1)[1]; 
 
   PM = NUMERIC_POINTER(AS_NUMERIC(PMmat));
-  MM = NUMERIC_POINTER(AS_NUMERIC(MMmat));
   
   nprobesets=INTEGER(N_probes)[0];
   
@@ -332,14 +331,14 @@ SEXP rma_c_call(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP no
  **
  *******************************************************************************************************************/
 
-SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
+SEXP rma_c_complete(SEXP PMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
   if (INTEGER(bg_flag)[0]){ 
     if (INTEGER(verbose)[0]){
       Rprintf("Background correcting\n");
     }
-    PMmat = bg_correct_c(PMmat,MMmat,densfunc,rho,bg_type);
+    PMmat = bg_correct_c(PMmat,PMmat,densfunc,rho,bg_type);
   }
-  return rma_c_call(PMmat, MMmat, ProbeNamesVec,N_probes,norm_flag,verbose);
+  return rma_c_call(PMmat, ProbeNamesVec,N_probes,norm_flag,verbose);
 }
 
 /********************************************************************************************************************
@@ -347,7 +346,6 @@ SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEX
  ** SEXP rma_c_complete_copy(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag)
  **
  ** SEXP PMmat   - PM's
- ** SEXP MMmat   - MM's
  ** SEXP ProbeNamesVec - names of probeset for each row
  ** SEXP N_probes  - number of probesets
  ** SEXP densfunc - density function to use in computation of background
@@ -364,7 +362,7 @@ SEXP rma_c_complete(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEX
  **
  ********************************************************************************************************************/
 
-SEXP rma_c_complete_copy(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
+SEXP rma_c_complete_copy(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
  SEXP dim1,PMcopy,exprs;
  int rows,cols;
 
@@ -372,15 +370,15 @@ SEXP rma_c_complete_copy(SEXP PMmat, SEXP MMmat, SEXP ProbeNamesVec,SEXP N_probe
    if (INTEGER(verbose)[0]){
      Rprintf("Background correcting\n");
    }
-   PMmat = bg_correct_c_copy(PMmat,MMmat,densfunc,rho, bg_type); 
-   return rma_c_call(PMmat, MMmat, ProbeNamesVec, N_probes, norm_flag, verbose);
+   PMmat = bg_correct_c_copy(PMmat,PMmat,densfunc,rho, bg_type); 
+   return rma_c_call(PMmat, ProbeNamesVec, N_probes, norm_flag, verbose);
   } else {
     PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol));
     rows = INTEGER(dim1)[0];
     cols = INTEGER(dim1)[1];
     PROTECT(PMcopy = allocMatrix(REALSXP,rows,cols));
     copyMatrix(PMcopy,PMmat,0);
-    exprs = rma_c_call(PMcopy, MMmat, ProbeNamesVec, N_probes, norm_flag, verbose);
+    exprs = rma_c_call(PMcopy, ProbeNamesVec, N_probes, norm_flag, verbose);
     UNPROTECT(2);
     return exprs;
   }
