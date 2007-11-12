@@ -44,7 +44,7 @@ normalize.AffyBatch.invariantset <- function(abatch, prd.td=c(0.003,0.007), verb
 
     for (i in (1:nc)) {
       if (i != refindex){
-        if (verbose) cat("normalizing array", chipNames(abatch)[i], "...")
+        if (verbose) cat("normalizing array", sampleNames(abatch)[i], "...")
 
         ##temporary
         tmp <- normalize.invariantset(c(intensity(abatch)[pms, i]),
