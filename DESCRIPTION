@@ -18,7 +18,7 @@ Description: The package contains functions for exploratory
         oligonucleotide array analysis. The dependance to tkWidgets
         only concerns few convenience functions. 'affy' is fully
         functional without it.
-License: LGPL version 2 or newer
+License: LGPL (>= 2.0)
 Collate: ProgressBarText.R ppset.ttest.R ppsetApply.R expressoWidget.R
         getCDFenv.R AffyRNAdeg.R avdiff.R barplot.ProbeSet.R
         bg.Affy.chipwide.R bg.R expresso.R fit.li.wong.R
