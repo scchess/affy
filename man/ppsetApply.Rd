@@ -20,9 +20,6 @@ ppset.ttest(ppset, covariate, pmcorrect.fun = pmcorrect.pmonly, ...)
   probe set ids used when \code{NULL}.}
   \item{\dots}{ Optional parameters to the function \code{FUN} }
 }
-\details{
-  
-}
 \value{
   Returns a \code{list} of objects, or values, as returned by the
   function \code{FUN}

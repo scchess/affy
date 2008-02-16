@@ -81,10 +81,4 @@ normalize.qspline(x, target = NULL, samples = NULL,
      ization method for reducing variability in dna microarray experiments.
      Genome Biology, accepted, 2002
 }
-%\seealso{
-%}
-%\examples{
-%
-%  ## TO DO...  
-%}
-\keyword{}
+\keyword{manip}

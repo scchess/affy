@@ -29,7 +29,4 @@ normalize.constant(x, refconstant, FUN=mean, na.rm=TRUE)
 \seealso{
   \code{\link[affy:AffyBatch-class]{AffyBatch}}
 }
-%\examples{
-%  
-%}
 \keyword{manip}

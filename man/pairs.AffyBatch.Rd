@@ -5,7 +5,7 @@
   Plot intensities using the function 'pairs'
 }
 \usage{
-  pairs.AffyBatch(x, panel=points, ..., transfo=I, main=NULL, oma=NULL,
+\method{pairs}{AffyBatch}(x, panel=points, ..., transfo=I, main=NULL, oma=NULL,
                   font.main = par("font.main"),
                   cex.main = par("cex.main"), cex.labels = NULL, 
                   lower.panel=panel, upper.panel=NULL, diag.panel=NULL,
@@ -36,8 +36,6 @@ triangle (see \code{\link{pairs}}).}
 a lot of memory and can be very slow to be displayed. You may want to
 try to split of the plots, or to plot them in a device like 'png' or
 'jpeg'. 
-}
-\examples{
 }
 \keyword{hplot}
 

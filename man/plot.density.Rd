@@ -31,14 +31,6 @@ which=c("pm","mm","both"), ylab = "density", xlab = NULL, ...)
   \item{type}{ type for the plot.}
   \item{\dots}{graphical parameters can be given as arguments to \code{\link{plot}}}
 }
-%\details{
-%  The function \code{plotDensity} is being deprecated.
-%  The function \code{matdensity} should be preferred. It is felt to belong to the same family
-%  than the functions \code{matplot} and \code{matlines}. It returns
-%  invisibly a list of two matrices `x' and `y'.
-%  This can be convenient for large
-%  input matrices (the computation of the densities can take some time).
-%}
 \author{Ben Bolstad and Laurent}
 \examples{
 data(affybatch.example)

@@ -1,12 +1,12 @@
 \name{merge.AffyBatch}
 \alias{merge.AffyBatch}
 
-\title{ merge two AffyBatch objects }
+\title{merge two AffyBatch objects}
 \description{
   merge two AffyBatch objects into one.
 }
 \usage{
-merge.AffyBatch(x, y, annotation = paste(annotation(x),
+\method{merge}{AffyBatch}(x, y, annotation = paste(annotation(x),
                  annotation(y)), description = NULL, notes =
                  character(0), ...)
 }

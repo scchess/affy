@@ -34,6 +34,4 @@ cdfFromEnvironment(cdfname, where, verbose=TRUE)
   The CDF environment or a list detailing the failed locations.
 }
 \author{Jeff Gentry}
-\examples{
-}
 \keyword{utilities}

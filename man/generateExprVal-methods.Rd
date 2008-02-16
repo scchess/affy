@@ -56,4 +56,4 @@ for (i in 1:nmet) {
 dotchart(results, labels=paste("sample", 1:nc))
 
 }
-\keyword{}
+\keyword{manip}

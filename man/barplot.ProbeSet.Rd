@@ -5,7 +5,7 @@
   displays the probe intensities in a ProbeSet as a barplots
 }
 \usage{
-barplot.ProbeSet(height, xlab = "Probe pair", ylab = "Intensity", main =
+\method{barplot}{ProbeSet}(height, xlab = "Probe pair", ylab = "Intensity", main =
 NA, col.pm = "red", col.mm = "blue", beside = TRUE, names.arg = "pp",
 ask = TRUE, scale, ...)
 }
@@ -22,9 +22,6 @@ ask = TRUE, scale, ...)
   \item{ask}{ ask before ploting the next barplot }
   \item{scale}{ put all the barplot to the same scale }
   \item{\dots}{ extra parameters to be passed to \code{\link{barplot}} }
-}
-\details{
-  
 }
 \examples{
 data(affybatch.example)

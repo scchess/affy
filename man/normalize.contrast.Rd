@@ -25,14 +25,8 @@ normalize.AffyBatch.contrasts(abatch,span=2/3,choose.subset=TRUE,
 \value{
   An object of the same class as the one passed.
 }
-\examples{
-}
-
 \seealso{
   \code{\link{maffy.normalize}}
   }
-%\examples{
-%  
-%}
 \keyword{manip}
 

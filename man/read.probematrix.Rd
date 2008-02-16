@@ -32,8 +32,6 @@ read.probematrix(..., filenames = character(0),
   
 }
 
-\details{
-}
 \value{
   A list of one or two matrices. Each matrix is either PM or MM data. No
   \code{\link[affy:AffyBatch-class]{AffyBatch}} is created.
@@ -43,7 +41,4 @@ read.probematrix(..., filenames = character(0),
 
 \seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}, \code{\link[affy:read.affybatch]{read.affybatch}}}
 
-\examples{
-
-}
 \keyword{manip}

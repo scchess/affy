@@ -99,8 +99,5 @@ passed along to the function \code{read.celfile}.
 Supporting routines, maintenance and just.rma: Ben Bolstad <bmb@bmbolstad.com>}
 \seealso{\code{\link[affy]{rma}},\code{\link[affy]{ReadAffy}}}
 
-\examples{
-
-}
 \keyword{manip}
 
