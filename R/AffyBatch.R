@@ -528,11 +528,17 @@ setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
     warning("The use of abatch[i,] and abatch[i] is decrepit. Please us abatch[,i] instead.\n")
     phenoData(x) <- phenoData(x)[i, , ..., drop=FALSE]
     intensity(x) <- intensity(x)[ ,i, ..., drop=FALSE]
+    if (! identical(se.exprs(x), new("matrix")))  {
+      se.exprs(x) <- se.exprs[ ,i, ..., drop=FALSE]
+    }
   }
 
   if( !missing(j)) {
     phenoData(x) <- phenoData(x)[j, , ..., drop=FALSE]
     intensity(x) <- intensity(x)[ ,j, ..., drop=FALSE]
+    if (! identical(se.exprs(x), new("matrix"))) { 
+      se.exprs(x) <- se.exprs(x)[ ,j, ..., drop=FALSE]
+    }
   }
 
   return(x)
