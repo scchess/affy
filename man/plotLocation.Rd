@@ -30,7 +30,7 @@ plotLocation(x, col="green", pch=22, ...)
   data(affybatch.example)
 
   ## image of the celfile
-  image(affybatch.example[1])
+  image(affybatch.example[, 1])
 
   ## genenames, arbitrarily pick the 101th
   n <- geneNames(affybatch.example)[101]
