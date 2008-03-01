@@ -529,7 +529,7 @@ setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
     phenoData(x) <- phenoData(x)[i, , ..., drop=FALSE]
     intensity(x) <- intensity(x)[ ,i, ..., drop=FALSE]
     if (! identical(se.exprs(x), new("matrix")))  {
-      se.exprs(x) <- se.exprs[ ,i, ..., drop=FALSE]
+      se.exprs(x) <- se.exprs(x)[ ,i, ..., drop=FALSE]
     }
   }
 
