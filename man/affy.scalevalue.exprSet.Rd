@@ -13,9 +13,9 @@
 affy.scalevalue.exprSet(eset, sc = 500, analysis="absolute")
 }
 \arguments{
-  \item{eset}{An \code{\link[Biobase:class.exprSet]{exprSet}} object.}
+  \item{eset}{An \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}} object.}
   \item{sc}{Value at which all arrays will be scaled to.}
-  \item{analysis}{should we do absolute or comparison analysis, although
+  \item{analysis}{Should we do absolute or comparison analysis, although
   "comparison" is still not implemented.}
 }
 \details{
@@ -25,6 +25,5 @@ affy.scalevalue.exprSet(eset, sc = 500, analysis="absolute")
 }
 \author{Laurent}
 \value{
-  A normalized \code{\link[Biobase:class.exprSet]{exprSet}}}
+  A normalized \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}}
 \keyword{manip}
-

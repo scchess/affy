@@ -1,3 +1,9 @@
+version 1.17.x
+
+  o Replaced usage of defunct Biobase classes exprSet and phenoData with
+    ExpressionSet and AnnotatedDataFrame.
+
+
 version 1.4.x [under development]
 
   o xy2indices/indices2xy  have now a (dangerous) parameter xy.offset.

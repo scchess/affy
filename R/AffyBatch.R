@@ -21,16 +21,6 @@ setClass("AffyBatch",
            new("VersionedBiobase",
                versions=c(classVersion("eSet"), AffyBatch="1.2.0"))))
 
-## Old class definition
-## Name:            cdfName              nrow              ncol             exprs
-## Class:         character           numeric           numeric        exprMatrix
-
-## Name:           se.exprs       description        annotation             notes
-## Class:        exprMatrix  characterORMIAME         character         character
-
-## Name:       reporterInfo         phenoData .__classVersion__
-## Class:  data.frameOrNULL         phenoData          Versions
-
 
 setMethod("initialize",
           signature(.Object="AffyBatch"),
@@ -723,11 +713,9 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                         exprs=exp.mat,
                         se.exprs=se.mat,
                         annotation=annotation(x))
-            ##if (verbose) cat(".....done.\n")
 
             attr(eset, "pps.warnings") <- pps.warnings
             return(eset)
-            ##return(list(exprSet=eset, pps.warnings=pps.warnings))
           })
 
 
@@ -818,7 +806,7 @@ setMethod("mas5calls",signature(object="AffyBatch"),
           function(object,...) mas5calls.AffyBatch(object,...))
 
 
-##like for exprSet
+##like for ExpressionSet
 
 "$.AffyBatch" <- function(affybatch, val)
     (pData(affybatch))[[as.character(val)]]

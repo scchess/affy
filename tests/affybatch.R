@@ -23,10 +23,8 @@ samplenames <- c("sample1","sample2")
 signal <- exp(rexp(n,1))
 e <- cbind(exp(rnorm(n,4,1))+signal,exp(rnorm(n,4,1))+signal)
 colnames(e) <- samplenames
-pd <- read.phenoData(sampleNames=samplenames)
 afbatch <- new("AffyBatch",
                exprs=e,
-               phenoData=pd,
                cdfName="dummy",
                ncol=NCOL,nrow=NROW)
 cat("done.\n")
@@ -44,13 +42,6 @@ cat("done.\n")
 ## compute expression values
 cat("---> computing expression values...\n")
 e.set <- computeExprSet(n.afbatch, pmcorrect.method="pmonly", summary.method="avgdiff")
-if (! is(e.set, "ExpressionSet"))
-  stop("e.set does not inherit from 'ExpressionSet' !")
+if (!is(e.set, "ExpressionSet"))
+  stop("e.set does not inherit from 'ExpressionSet'!")
 cat("done.\n")
-
-
-
-
-
-
-

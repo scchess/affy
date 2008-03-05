@@ -287,7 +287,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 			       as.double(fitted.residuals),
 			       as.integer(N),
 			       robust = double(N),
-			       double(N),
+			       integer(N),
 			       PACKAGE="stats")$robust
     }
     if(surface == "interpolate")
@@ -306,7 +306,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 					 as.double(fitted.all[,k]),
 					 as.double(weights),
 					 as.double(robust),
-					 double(N),
+					 integer(N),
 					 pseudovalues = double(N),
 					 PACKAGE="stats")$pseudovalues
 		zz <- .C("loess_raw",
