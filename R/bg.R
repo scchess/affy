@@ -41,20 +41,19 @@ bg.correct.none <- function(object, ...)
 ##  return(object)
 ##}
 
-bg.correct.rma <- function(object, ...){
-  pm(object) <- apply(pm(object),2,bg.adjust)
-  return(object)
-}
+###bg.correct.rma <- function(object, ...){
+###  pm(object) <- apply(pm(object),2,bg.adjust)
+###  return(object)
+##}
 
 ##
 ## this function calls the c code as an alternative to the R code above.
 ## it should help end the disagreement between rma() and expresso()
 ##
 
-bg.correct.rma2 <- function(object,bgtype=1){
+bg.correct.rma <- function(object,...){
   
-        bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
-        pm(object) <- .Call("bg_correct_c_copy",pm(object),mm(object),body(bg.dens),new.env(),bgtype,PACKAGE="affy")
+	pm(object) <- rma.background.correct(pm(object),copy=FALSE)
         return(object)
 }
 

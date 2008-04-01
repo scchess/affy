@@ -3,7 +3,6 @@
 \alias{bg.correct.none} %took out .pmonly casue rma is pm-only
 %\alias{bg.correct.subtractmm}
 \alias{bg.correct.rma}
-\alias{bg.correct.rma2}
 \alias{bg.correct.mas}
 \title{Background Correction}
 \description{
@@ -43,14 +42,7 @@ bg.correct.none(object, ...)
 
   More details are available in the vignette.
 
-  \code{bg.correct.rma2} gives access to the older background method
-  that was used by the \code{\link{rma}} function in version 1.1
-  bioconductor releases. For the 1.2 release \code{\link{rma}} performs
-  the same background adjustment as \code{bg.correct.rma}. Unless you
-  wish to duplicate older results in which case
-  you should use \code{bg.correct.rma}.
-  
-  Details on the internal fucntions used by \code{bg.correct.rma} are in
+  R implementations similar in function to the internal implemntation used by \code{bg.correct.rma} are in
   \code{\link{bg.adjust}}.
   
 }  
