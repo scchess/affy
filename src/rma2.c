@@ -98,14 +98,13 @@
  ** May 24, 2007 - median_polish code is now from preprocessCore package
  ** Oct 26, 2007 - add verbose flag
  ** Oct 28, 2007 - remove any vestigial references to MM
+ ** Mar 31, 2008 - use rma background correction from preprocessCore
  **
  ************************************************************************/
 
 
-/* #include "rma_structures.h" */
 #include "rma_common.h"
-#include "rma_background2.h"
-//#include "qnorm.h" 
+#include "rma_background4.h"
 
 #include <R.h> 
 #include <Rdefines.h>
@@ -116,6 +115,7 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "preprocessCore_background_stubs.c"
 #include "preprocessCore_normalization_stubs.c"
 #include "preprocessCore_summarization_stubs.c"
 
@@ -332,11 +332,21 @@ SEXP rma_c_call(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag, SE
  *******************************************************************************************************************/
 
 SEXP rma_c_complete(SEXP PMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
+  SEXP dim1;
+  double *PM;
+  int rows,cols;
+
+
   if (INTEGER(bg_flag)[0]){ 
     if (INTEGER(verbose)[0]){
       Rprintf("Background correcting\n");
     }
-    PMmat = bg_correct_c(PMmat,PMmat,densfunc,rho,bg_type);
+    PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol));
+    rows = INTEGER(dim1)[0];
+    cols = INTEGER(dim1)[1];
+    PM = NUMERIC_POINTER(PMmat);
+    rma_bg_correct(PM, rows, cols);
+    UNPROTECT(1);
   }
   return rma_c_call(PMmat, ProbeNamesVec,N_probes,norm_flag,verbose);
 }
@@ -363,15 +373,24 @@ SEXP rma_c_complete(SEXP PMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, 
  ********************************************************************************************************************/
 
 SEXP rma_c_complete_copy(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
- SEXP dim1,PMcopy,exprs;
- int rows,cols;
+  SEXP dim1,PMcopy,exprs;
+  int rows,cols;
+  double *PM;
 
- if (INTEGER(bg_flag)[0]){
-   if (INTEGER(verbose)[0]){
-     Rprintf("Background correcting\n");
-   }
-   PMmat = bg_correct_c_copy(PMmat,PMmat,densfunc,rho, bg_type); 
-   return rma_c_call(PMmat, ProbeNamesVec, N_probes, norm_flag, verbose);
+  if (INTEGER(bg_flag)[0]){
+    if (INTEGER(verbose)[0]){
+      Rprintf("Background correcting\n");
+    }  
+    PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol));
+    rows = INTEGER(dim1)[0];
+    cols = INTEGER(dim1)[1];
+    PROTECT(PMcopy = allocMatrix(REALSXP,rows,cols));
+    PM = NUMERIC_POINTER(PMcopy);
+    copyMatrix(PMcopy,PMmat,0);
+    rma_bg_correct(PM, rows, cols);
+    exprs = rma_c_call(PMcopy, ProbeNamesVec, N_probes, norm_flag, verbose);
+    UNPROTECT(2);
+    return exprs;
   } else {
     PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol));
     rows = INTEGER(dim1)[0];
