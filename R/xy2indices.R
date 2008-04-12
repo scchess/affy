@@ -31,7 +31,7 @@ indices2xy <- function(i, nr=NULL, cel=NULL, abatch=NULL, cdf=NULL, xy.offset = 
     xy.offset <- getOption("BioC")$affy$xy.offset
   }
   
-  if (any(i) <= 0)
+  if (any(i <= 0))
     stop("Indices must start at 0 or 1 (please refer to the help file) !")
 
   ct <- sum(c(is.null(nr), is.null(cel), is.null(abatch), is.null(cdf)))
