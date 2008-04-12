@@ -16,9 +16,10 @@
 
 plotDensity <- function(mat,
                         ylab="density", xlab="x", type="l", col=1:6,
+                        na.rm = TRUE,
                         ...) {
   
-  x.density <- apply(mat, 2, density)
+  x.density <- apply(mat, 2, density, na.rm = na.rm)
 
   all.x <- do.call("cbind", lapply(x.density, function(x) x$x))
   all.y <- do.call("cbind", lapply(x.density, function(x) x$y))
