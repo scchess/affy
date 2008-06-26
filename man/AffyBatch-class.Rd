@@ -118,10 +118,11 @@ Class \code{"eSet"}, directly.
     \item{[<-}{\code{signature(x = "AffyBatch")}: replaces subsets. }
     \item{[}{\code{signature(x = "AffyBatch")}: subsets by array.}
     \item{boxplot}{\code{signature(x = "AffyBatch")}:  creates a
-      \code{\link{boxplot}s of log base 2 intensities. }
+      \code{\link{boxplot}s of log base 2 intensities (pm, mm or
+	both). Defaults to both.}
       \item{hist}{\code{signature(x = "AffyBatch")}:  creates a
        plot showing all the histograms of the pm,mm or both data. See
-       \code{\link{plot.density}}}
+       \code{\link{plotDensity}}}
      \item{computeExprSet}{\code{signature(x = "AffyBatch",
 	summary.method = "character")}: For each probe set computes an
       expression value using \code{summary.method}. }
