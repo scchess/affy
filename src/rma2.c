@@ -99,6 +99,7 @@
  ** Oct 26, 2007 - add verbose flag
  ** Oct 28, 2007 - remove any vestigial references to MM
  ** Mar 31, 2008 - use rma background correction from preprocessCore
+ ** Jul 2, 2008 - now use different median polish interface from preprocessCore
  **
  ************************************************************************/
 
@@ -119,90 +120,21 @@
 #include "preprocessCore_normalization_stubs.c"
 #include "preprocessCore_summarization_stubs.c"
 
+#include "R_subColSummarize.h"
+#include "R_subColSummarize_stubs.c"
 
 
-void do_RMA(double *PM, const char **ProbeNames, int *rows, int * cols,double *results,char **outNames,int nps);
+
+SEXP do_RMA2(SEXP PMmat, SEXP PM_rowIndexList){
 
 
-/************************************************************************************
- **
- **  void do_RMA(double *PM, char **ProbeNames, int *rows, int * cols)
- **
- ** double *PM - matrix of dimension rows by cols (probes by chips) should already be 
- **              normalized and background corrected.
- ** char **ProbeNames - Probeset names, one for each probe.
- ** int *rows, *cols - dimensions of matrix
- **
- ** perform the multichip averaging. PM should be background corrected and normalized
- **
- ** assumed that Probes are sorted, by ProbeNames, so that we can just look at 
- ** consecutive rows in PM matrix when doing the median polish
- **
- ** each item is then used to create a matrix that is median polished to give
- ** expression estimates.
- **
- ************************************************************************************/
+  SEXP Summaries;
 
-void do_RMA(double *PM, const char **ProbeNames, int *rows, int *cols, double *results, char **outNames, int nps){
-  int j = 0;
-  int i = 0;
-  int k = 0;
-  int size;
-  const char *first;
-  int first_ind;
-  int max_nrows = 1000;
-
-
-  /* buffers of size 200 should be enough. */
-
-  int *cur_rows=Calloc(max_nrows,int);
-  int nprobes=0;
-
-  double *cur_exprs = Calloc(*cols,double);
-  double *cur_se_exprs = Calloc(*cols,double);
-  /* double *OLDPM = NULL; */
-
-  first = ProbeNames[0];
-  first_ind = 0;
-  i = 0;     /* indexes current probeset */
-  j = 0;    /* indexes current row in PM matrix */
-  k = 0;    /* indexes current probe in probeset */
-  while ( j < *rows){
-    if (strcmp(first,ProbeNames[j]) == 0){
-      if (k >= max_nrows){
-	max_nrows = 2*max_nrows;
-	cur_rows = Realloc(cur_rows, max_nrows, int);
-      }
-      cur_rows[k] = j;
-      k++;
-      j++;
-      
-    } else {
-      nprobes = k;
-      MedianPolish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes, cur_se_exprs);
-      for (k =0; k < *cols; k++){
-	results[k*nps + i] = cur_exprs[k];
-      } 
-      size = strlen(first);
-      outNames[i] = Calloc(size+1,char);
-      strcpy(outNames[i],first);
-      i++;
-      first = ProbeNames[j];
-      k = 0;
-    }
-  }
-  nprobes = k;
-  MedianPolish(PM, *rows, *cols, cur_rows, cur_exprs, nprobes, cur_se_exprs);
-  for (k =0; k < *cols; k++){
-    results[k*nps + i] = cur_exprs[k];
-  } 
-  size = strlen(first);
-  outNames[i] = Calloc(size+1,char);
-  strcpy(outNames[i],first);
+  Summaries = R_subColSummarize_medianpolish_log(PMmat, PM_rowIndexList);
   
-  Free(cur_se_exprs);
-  Free(cur_exprs);
-  Free(cur_rows);
+
+  return Summaries;
+  
 }
 
 /********************************************************************************************
@@ -227,19 +159,14 @@ void do_RMA(double *PM, const char **ProbeNames, int *rows, int *cols, double *r
  **
  *******************************************************************************************/
 
-SEXP rma_c_call(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag, SEXP verbose){
+SEXP rma_c_call(SEXP PMmat,  SEXP PM_rowIndexList, SEXP N_probes, SEXP norm_flag, SEXP verbose){
   
   int rows, cols;
-  double *outexpr;
   double *PM;
-  char **outnames;
-  const char **ProbeNames;
-  int i,nprobesets;
+  int i, nprobesets;
   
-
-
   SEXP dim1;
-  SEXP outvec; /* ,outnamesvec; */
+  SEXP outvec, outnamesvec; 
   SEXP dimnames,names;
 
   SEXP temp;
@@ -247,65 +174,38 @@ SEXP rma_c_call(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag, SE
   PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol)); 
   rows = INTEGER(dim1)[0];
   cols = INTEGER(dim1)[1]; 
+  UNPROTECT(1);
 
   PM = NUMERIC_POINTER(AS_NUMERIC(PMmat));
   
   nprobesets=INTEGER(N_probes)[0];
   
-  /*  printf("%i\n",nprobesets); */
-  /* printf("%d ",INTEGER(norm_flag)[0]); */
   if (INTEGER(norm_flag)[0]){
-  /* normalize PM using quantile normalization */
-  /*  printf("Normalizing\n"); */
     if (INTEGER(verbose)[0]){
       Rprintf("Normalizing\n");
     }
     qnorm_c(PM,&rows,&cols);
   }
 
-  ProbeNames = Calloc(rows,const char *);
-
-  for (i =0; i < rows; i++)
-    ProbeNames[i] = CHAR(VECTOR_ELT(ProbeNamesVec,i));
-  
-  
-  outnames = Calloc(nprobesets,char *);
-
-  /* PROTECT(outvec = NEW_NUMERIC(nprobesets*cols)); */
-  
-  PROTECT(outvec = allocMatrix(REALSXP, nprobesets, cols));
-
-
-  outexpr = NUMERIC_POINTER(outvec);
- 	    
-  /* printf("Calculating Expression\n"); */
   if (INTEGER(verbose)[0]){
     Rprintf("Calculating Expression\n");
   }
 
-  do_RMA(PM, ProbeNames, &rows, &cols,outexpr,outnames,nprobesets);
-
-  
+  outvec = do_RMA2(PMmat, PM_rowIndexList);
 
   /* now lets put names on the matrix */
 
+  PROTECT(outnamesvec = getAttrib(PM_rowIndexList,R_NamesSymbol));
   PROTECT(dimnames = allocVector(VECSXP,2));
   PROTECT(names = allocVector(STRSXP,nprobesets));
   
   for ( i =0; i < nprobesets; i++){
-    PROTECT(temp = mkChar(outnames[i]));
-    SET_VECTOR_ELT(names,i,temp); /* was a direct mkChar prior to Sep 2, 2005*/
-    UNPROTECT(1);
+    SET_VECTOR_ELT(names,i,VECTOR_ELT(outnamesvec,i)); 
   }
   SET_VECTOR_ELT(dimnames,0,names);
   setAttrib(outvec, R_DimNamesSymbol, dimnames);
-  UNPROTECT(2);
-  for (i =0; i < nprobesets; i++)
-    Free(outnames[i]);
   
-  Free(outnames);
-  Free(ProbeNames);
-  UNPROTECT(2);
+  UNPROTECT(3);
   return outvec;
 }
 
@@ -331,7 +231,7 @@ SEXP rma_c_call(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag, SE
  **
  *******************************************************************************************************************/
 
-SEXP rma_c_complete(SEXP PMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
+SEXP rma_c_complete(SEXP PMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
   SEXP dim1;
   double *PM;
   int rows,cols;
@@ -348,7 +248,7 @@ SEXP rma_c_complete(SEXP PMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, 
     rma_bg_correct(PM, rows, cols);
     UNPROTECT(1);
   }
-  return rma_c_call(PMmat, ProbeNamesVec,N_probes,norm_flag,verbose);
+  return rma_c_call(PMmat, ProbeNamesVec, N_probes,norm_flag,verbose);
 }
 
 /********************************************************************************************************************
@@ -372,7 +272,7 @@ SEXP rma_c_complete(SEXP PMmat, SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, 
  **
  ********************************************************************************************************************/
 
-SEXP rma_c_complete_copy(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes,SEXP densfunc, SEXP rho,SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
+SEXP rma_c_complete_copy(SEXP PMmat,  SEXP ProbeNamesVec,SEXP N_probes, SEXP norm_flag, SEXP bg_flag, SEXP bg_type, SEXP verbose){
   SEXP dim1,PMcopy,exprs;
   int rows,cols;
   double *PM;

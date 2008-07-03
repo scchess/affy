@@ -27,7 +27,10 @@
 #
 # Oct 26, 2007 = makesure verbosity flag is correctly passed down to C-level routines
 #
-# OCt 28, 2007 MM are no longer passed to the C code
+# Oct 28, 2007 MM are no longer passed to the C code
+#
+# Jul 2, 2008 - change how probeNames (which is really probe/row indexing) is passed down to
+#               c code
 #
 #
 ########################################################
@@ -43,18 +46,15 @@ rma <- function(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=T
     ngenes <- length(subset)
   }
 
-  #background correction
-  bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
+  pNList <- probeNames(object,subset)
+  pNList <- split(0:(length(pNList) -1), pNList)
 
   if (destructive){
   	exprs <-
-  	.Call("rma_c_complete",pm(object,subset), probeNames(object,subset),ngenes,body(bg.dens),new.env(),normalize,background,bgversion, verbose,
-  	PACKAGE="affy")
+  	.Call("rma_c_complete",pm(object,subset), pNList, ngenes, normalize, background, bgversion, verbose, PACKAGE="affy")
   } else {
 	exprs <-
-  	.Call("rma_c_complete_copy", pm(object,subset), probeNames(object,subset), ngenes,
-  	body(bg.dens), new.env(), normalize, background, bgversion, verbose,
-  	PACKAGE="affy")
+  	.Call("rma_c_complete_copy", pm(object,subset), pNList, ngenes, normalize, background, bgversion, verbose, PACKAGE="affy")
   }
   colnames(exprs) <- sampleNames(object)
 

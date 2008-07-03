@@ -103,7 +103,8 @@ just.rma <- function(..., filenames=character(0),
              annotation=cleancdfname(cdfname, addcdf=FALSE))
   pmIndex <- pmindex(tmp)
   probenames <- rep(names(pmIndex), unlist(lapply(pmIndex,length)))
-  pmIndex <- unlist(pmIndex)
+  pNList <- split(0:(length(probenames) -1), probenames)	
+  
 
   ## read pm data into matrix
 
@@ -113,16 +114,8 @@ just.rma <- function(..., filenames=character(0),
 
   ngenes <- length(geneNames(tmp))
 
-  ##background correction
-  bg.dens <- function(x){density(x,kernel="epanechnikov",n=2^14)}
-
-  #if(destructive){
-    exprs <-
-    .Call("rma_c_complete",probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion, verbose,
-    PACKAGE="affy")
-  #}else{
-  #  exprs <- .Call("rma_c_complete_copy",probeintensities$pm,probeintensities$pm,probenames,ngenes,body(bg.dens),new.env(),normalize,background,bgversion)
-  #}
+  exprs <- .Call("rma_c_complete",probeintensities$pm, pNList, ngenes, normalize, background, bgversion, verbose, PACKAGE="affy")
+  
   colnames(exprs) <- samplenames
   se.exprs <- array(NA, dim(exprs),
                     dimnames=list(rownames(exprs), colnames(exprs)))
