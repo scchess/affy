@@ -234,7 +234,6 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
 
   ##MIAME stuff
   description@preprocessing$filenames <- filenames
-  if(exists("tksn")) description@samples$description <- tksn[,2]
   description@preprocessing$affyversion <- library(help=affy)$info[[2]][[2]][2]
 
   return(list(filenames   = filenames,
