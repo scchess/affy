@@ -1,6 +1,5 @@
 \name{expresso}
 \alias{expresso}
-\alias{bgcorrect.methods}
 \alias{bgcorrect}
 
 %- Also NEED an `\alias' for EACH other topic documented here.
@@ -64,9 +63,6 @@ expresso(
   For the mas 5.0 and 4.0 methods ones need to normalize after obtaining
   expression. The function \code{\link{affy.scalevalue.exprSet}} does this.
 
-  To see what background methods are available you can look at the
-  object \code{bgcorrect.methods}.
-  
   For the Li and Wong summary method notice you will not get
   the same results as you would get with dChip. dChip is not open source
   so it is not easy to reproduce. 
@@ -90,7 +86,7 @@ eset <- expresso(Dilution, bgcorrect.method="rma",
                  summary.method="avgdiff")
 
 ##to see options available for bg correction type:
-bgcorrect.methods
+bgcorrect.methods()
 }
 \keyword{ manip }
 

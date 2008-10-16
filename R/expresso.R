@@ -23,7 +23,7 @@ expresso <- function(afbatch,
         bioc.opt <- getOption("BioC")
         if(bg.correct){
             if(is.null(bgcorrect.method)){
-                BGMethods <- bgcorrect.methods
+                BGMethods <- bgcorrect.methods()
             }else{
                 BGMethods <- bgcorrect.method
             }
@@ -41,13 +41,13 @@ expresso <- function(afbatch,
         }
         # Default for this one may not be correct
         if(is.null(pmcorrect.method)){
-            PMMethods <- pmcorrect.methods
+            PMMethods <- pmcorrect.methods()
         }else{
             PMMethods <- pmcorrect.method
         }
         # Default for this one may not be correct
         if(is.null(summary.method)){
-            expMethods <- generateExprSet.methods
+            expMethods <- generateExprSet.methods()
 
         }else{
             expMethods <- summary.method

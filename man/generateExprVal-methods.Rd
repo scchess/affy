@@ -1,5 +1,4 @@
 \name{generateExprVal}
-\alias{generateExprVal}
 \alias{generateExprVal-methods}
 \alias{generateExprVal.methods}
 \alias{express.summary.stat}
@@ -33,7 +32,7 @@ data(Dilution)
 p <- probeset(Dilution, "1001_at")[[1]]
 
 par(mfcol=c(5,2))
-mymethods <- express.summary.stat.methods
+mymethods <- express.summary.stat.methods()
 nmet <- length(mymethods)
 nc <- ncol(pm(p))
 

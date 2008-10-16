@@ -57,10 +57,10 @@ For each processing step, labels for the methods known to the package
 are stored in variables. 
 
 <<>>=
-normalize.AffyBatch.methods
-bgcorrect.methods
-pmcorrect.methods
-express.summary.stat.methods
+normalize.AffyBatch.methods()
+bgcorrect.methods()
+pmcorrect.methods()
+express.summary.stat.methods()
 @
 We would recommend the use of the method \verb+normalize.methods+ to acess the
 list of available normalization methods (as a scheme for
@@ -137,7 +137,7 @@ pmcorrect.subtractmmsometimes <- function(object) {
 @ 
 Once the method defined, we just register the \emph{label name} in the corresponding variable.
 <<>>=
-pmcorrect.methods <- c(pmcorrect.methods, "subtractmmsometimes")
+upDate.pmcorrect.methods(c(pmcorrect.methods(), "subtractmmsometimes"))
 @
 
 The second new method intends to be an robust alternative to the summary expression value computation \verb+avgdiff+.
@@ -172,7 +172,7 @@ computeExprVal.huber <- function(probes) {
   return(list(exprs=mu, se.exprs=s))
 }
 
-generateExprSet.methods <- c(generateExprSet.methods, "huber")
+upDate.generateExprSet.methods(c(generateExprSet.methods(), "huber"))
 @ 
 
 From now the package is aware of the two new methods\ldots in this session.

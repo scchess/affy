@@ -318,7 +318,7 @@ Important parameters for the expresso function are:
 \item[bgcorrect.method]. The background correction method to use.
 The available methods are
 <<>>=
-bgcorrect.methods
+bgcorrect.methods()
 @
 
 \item[normalize.method]. The normalization method to use. The
@@ -332,13 +332,13 @@ normalize.methods(Dilution)
 \item[pmcorrect.method]
 The method for probe specific correction. The available methods are
 <<>>=
-pmcorrect.methods
+pmcorrect.methods()
 @
 
 \item[summary.method]. The summary method to use. The available
 methods are
 <<>>=
-express.summary.stat.methods
+express.summary.stat.methods()
 @
 Here we use \Rfunction{mas} to refer to the methods described in the
 Affymetrix manual version 5.0.

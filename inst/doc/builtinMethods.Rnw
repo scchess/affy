@@ -46,7 +46,7 @@ You can see the background correction methods that are built into the
 package by examining the variable \verb+bgcorrect.method+. 
 
 <<>>=
-bgcorrect.methods
+bgcorrect.methods()
 @
 
 \subsection{none}
@@ -97,7 +97,7 @@ different regions. Note this method corrects both PM and MM probes.
 You can see the background correction methods that are built into the
 package by examining the variable \verb+bgcorrect.method+. 
 <<>>=
-normalize.AffyBatch.methods
+normalize.AffyBatch.methods()
 @
 
 The Quantile, Contrast and Loess normalizations have been discussed
@@ -168,7 +168,7 @@ This method is documented in \cite{workman:etal:2002}. Using a target array (eit
 \section{PM correct methods}
 
 <<>>=
-pmcorrect.methods
+pmcorrect.methods()
 @
 \subsection{mas}
 
@@ -192,7 +192,7 @@ model.
 \section{Summarization methods}
 
 <<>>=
-express.summary.stat.methods
+express.summary.stat.methods()
 @
 
 \subsection{avgdiff}

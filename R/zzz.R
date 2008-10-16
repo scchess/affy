@@ -1,4 +1,4 @@
-.initNormalize <- function(all.affy) {
+.initNormalize <- function(all.affy, env) {
   if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
 
   ## this could move into the respective methods of AffyBatch later
@@ -6,35 +6,35 @@
   start <- nchar("normalize.AffyBatch.")
   assign("normalize.AffyBatch.methods",
          substr(all.affy[grep("normalize\\.AffyBatch\\.*", all.affy)], start+1, 100),
-         envir=topenv(parent.frame()))
+         envir=env)
 }
 
-.initExpression <- function(all.affy) {
+.initExpression <- function(all.affy, env) {
   if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
 
   ## the first one is deprecated (well... "should be"...)
   assign("generateExprSet.methods",
          substr(all.affy[grep("generateExprVal\\.method\\.*", all.affy)], 24,100),
-         envir=topenv(parent.frame()))
+         envir=env)
   assign("express.summary.stat.methods",
          substr(all.affy[grep("generateExprVal\\.method\\.*", all.affy)], 24,100),
-         envir=topenv(parent.frame()))
+         envir=env)
 }
 
-.initBackgroundCorrect <- function(all.affy) {
+.initBackgroundCorrect <- function(all.affy, env) {
   if (debug.affy123) cat("-->detecting background correction methods from naming convention\n")
   start <- nchar("bg.correct.")
   assign("bgcorrect.methods",
          substr(all.affy[grep("bg\\.correct\\.", all.affy)], start+1, 100),
-         envir=topenv(parent.frame()))
+         envir=env)
        }
 
-.initPmCorrect <- function(all.affy) {
+.initPmCorrect <- function(all.affy, env) {
   if (debug.affy123) cat("-->detecting pm correction methods from naming convention\n")
   start <- nchar("pmcorrect.")
   assign("pmcorrect.methods",
          substr(all.affy[grep("pmcorrect\\.*", all.affy)], start+1, 100),
-         envir=topenv(parent.frame()))
+         envir=env)
 }
 
 .setAffyOptions <- function(affy.opt=NA) {
@@ -93,10 +93,16 @@
 #  where <- match(paste("package:", pkgname, sep=""), search())
   all.affy <- ls(environment(sys.function()))
 
-  .initNormalize(all.affy)
-  .initExpression(all.affy)
-  .initBackgroundCorrect(all.affy)
-  .initPmCorrect(all.affy)
+   ##a place to store some variables that need to be accessed
+   .affyInternalEnv <- new.env(parent=emptyenv())
+
+   assign(".affyInternalEnv", .affyInternalEnv, 
+     envir=topenv(parent.frame()))
+
+  .initNormalize(all.affy, .affyInternalEnv)
+  .initExpression(all.affy, .affyInternalEnv)
+  .initBackgroundCorrect(all.affy, .affyInternalEnv)
+  .initPmCorrect(all.affy, .affyInternalEnv)
 
   .setAffyOptions()
 
@@ -104,8 +110,5 @@
         && .Platform$GUI ==  "Rgui"){
         addVigs2WinMenu("affy")
     }
-
-
-
 }
 

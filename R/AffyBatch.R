@@ -1,3 +1,44 @@
+##RG added a method to store and update the available normalization methods
+
+ normalize.AffyBatch.methods <- function() 
+            .affyInternalEnv[["normalize.AffyBatch.methods"]]
+
+ upDate.normalize.AffyBatch.methods <- function(x) {
+            if (is.character(x))
+               .affyInternalEnv[["normalize.AffyBatch.methods"]] <- x
+  }
+
+ express.summary.stat.methods <- function()
+            .affyInternalEnv[["express.summary.stat.methods"]]
+
+ upDate.summary.stat.methods <- function(x) {
+            if (is.character(x))
+               .affyInternalEnv[["summary.stat.methods"]] <- x
+  }
+
+ generateExprSet.methods <- function()
+            .affyInternalEnv[["generateExprSet.methods"]]
+
+ upDate.generateExprSet.methods <- function(x) {
+            if (is.character(x))
+               .affyInternalEnv[["generateExprSet.methods"]] <- x
+  }
+
+ bgcorrect.methods <- function()
+            .affyInternalEnv[["bgcorrect.methods"]]
+
+ upDate.bgcorrect.methods <- function(x) {
+            if (is.character(x))
+               .affyInternalEnv[["bgcorrect.methods"]] <- x
+      }
+ pmcorrect.methods <- function()
+            .affyInternalEnv[["pmcorrect.methods"]]
+
+ upDate.pmcorrect.methods <- function(x) {
+            if (is.character(x))
+               .affyInternalEnv[["pmcorrect.methods"]] <- x
+    }
+ 
 ## computeExprSet:
 ##   - better reporting of errors
 ##   - better handling of ids (does not crash any longer when unknown id)
@@ -554,7 +595,7 @@ setMethod("bg.correct", signature(object="AffyBatch", method="character"),
             ## simple for system to let one add background correction methods
             ## relies on naming convention
 
-            method <- match.arg(method, bgcorrect.methods)
+            method <- match.arg(method, bgcorrect.methods())
 
             methodname <- paste("bg.correct.", method, sep="")
 
@@ -575,7 +616,7 @@ if( is.null(getGeneric("normalize.methods")))
 
 setMethod("normalize.methods", signature(object="AffyBatch"),
           function(object) {
-            normalize.AffyBatch.methods
+            normalize.AffyBatch.methods()
           })
 
   ## ---normalize
@@ -584,7 +625,7 @@ if (is.null(getGeneric("normalize")))
 
   setMethod("normalize", signature(object="AffyBatch"),
             function(object, method=getOption("BioC")$affy$normalize.method, ...) {
-              method <- match.arg(method, normalize.AffyBatch.methods)
+              method <- match.arg(method, normalize.AffyBatch.methods())
               if (is.na(method))
                 stop("unknown method")
               method <- paste("normalize.AffyBatch", method, sep=".")
@@ -615,8 +656,8 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                    pmcorrect.param=list())
           {
 
-            pmcorrect.method<- match.arg(pmcorrect.method, pmcorrect.methods)
-            summary.method <- match.arg(summary.method, express.summary.stat.methods)
+            pmcorrect.method<- match.arg(pmcorrect.method, pmcorrect.methods())
+            summary.method <- match.arg(summary.method, express.summary.stat.methods())
 
             ids <- unname(ids)
             

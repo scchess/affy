@@ -1,6 +1,5 @@
 \name{pmcorrect}
 \alias{pmcorrect}
-\alias{pmcorrect.methods}
 \alias{pmcorrect.pmonly} %took out .pmonly casue rma is pm-only
 \alias{pmcorrect.mas}
 \alias{pmcorrect.subtractmm}

@@ -6,12 +6,21 @@
 \alias{normalize.AffyBatch.methods}
 \alias{normalize,AffyBatch-method}
 \alias{normalize.methods,AffyBatch-method}
+\alias{normalize.AffyBatch.methods}
+\alias{express.summary.stat.methods}
+\alias{generateExprSet.methods}
+\alias{bgcorrect.methods}
+\alias{pmcorrect.methods}
 
 \description{
   Method for normalizing Affymetrix Probe Level Data
 }
 \usage{
 normalize.methods(object)
+express.summary.stat.methods()
+generateExprSet.methods()
+bgcorrect.methods()
+pmcorrect.methods()
 }
 \arguments{
   \item{object}{An \code{\link[affy:AffyBatch-class]{AffyBatch}}.}
@@ -52,6 +61,12 @@ normalize.methods(object)
   To add your own normalization procedures please
   refer to the customMethods vignette.
 
+
+  The functions: \code{express.summary.stat.methods}
+\code{generateExprSet.methods}, \code{bgcorrect.methods},
+\code{pmcorrect.methods}, provide access to internal vectors
+listing the corresponding capabilities.
+
 }
 \seealso{
   \code{\link{AffyBatch-class}}, \code{\link{normalize}}.
@@ -59,6 +74,10 @@ normalize.methods(object)
 \examples{
 data(Dilution)
 normalize.methods(Dilution)
+express.summary.stat.methods()
+generateExprSet.methods()
+bgcorrect.methods()
+pmcorrect.methods()
 }
 \keyword{manip}
 
