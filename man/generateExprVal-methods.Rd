@@ -28,9 +28,9 @@ express.summary.stat.methods # vector of names of methods
   Returns a vector of expression values.
 }
 \examples{
-data(affybatch.example)
+data(Dilution)
 
-p <- probeset(affybatch.example, "A28102_at")[[1]]
+p <- probeset(Dilution, "1001_at")[[1]]
 
 par(mfcol=c(5,2))
 mymethods <- express.summary.stat.methods

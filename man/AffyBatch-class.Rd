@@ -195,26 +195,24 @@ Class \code{"eSet"}, directly.
 
 \examples{
 ## load example
-data(affybatch.example)
+data(Dilution)
 
 ## nice print
-print(affybatch.example)
+print(Dilution)
 
-pm(affybatch.example)[1:5,]
-mm(affybatch.example)[1:5,]
+pm(Dilution)[1:5,]
+mm(Dilution)[1:5,]
 
-## get indexes for the PM probes for the affyID "A28102_at" 
-mypmindex <- pmindex(affybatch.example,"A28102_at")
+## get indexes for the PM probes for the affyID "1900_at" 
+mypmindex <- pmindex(Dilution,"1900_at")
 ## same operation using the primitive
-mypmindex <- indexProbes(affybatch.example, which="pm", genenames="A28102_at")[[1]]
+mypmindex <- indexProbes(Dilution, which="pm", genenames="1900_at")[[1]]
 ## get the probe intensities from the index
-intensity(affybatch.example)[mypmindex, ]
+intensity(Dilution)[mypmindex, ]
 
-## load bigger example (try 'help(Dilution)' )
-data(affybatch.example)
-description(affybatch.example) ##we can also use the methods of eSet
-sampleNames(affybatch.example)
-abstract(affybatch.example)
+description(Dilution) ##we can also use the methods of eSet
+sampleNames(Dilution)
+abstract(Dilution)
 }
 
 \keyword{classes}

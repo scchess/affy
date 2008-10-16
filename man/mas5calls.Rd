@@ -5,7 +5,6 @@
 \alias{mas5.detection}
 \alias{mas5calls.AffyBatch}
 \alias{mas5calls.ProbeSet}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{MAS 5.0 Absolute Detection}
 \description{
  Performs the Wilcoxon signed rank-based gene expression presence/absence 
@@ -25,7 +24,6 @@ mas5calls.ProbeSet(object, tau = 0.015, alpha1 = 0.04, alpha2 = 0.06,
 mas5.detection(mat, tau = 0.015, alpha1 = 0.04, alpha2 = 0.06,
                exact.pvals = FALSE, cont.correct = FALSE)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{object}{An object of class \code{AffyBatch} or \code{ProbeSet}}
   \item{ids}{probeset IDs for which you want to compute calls}
@@ -129,7 +127,7 @@ whitepaper.
 \author{Crispin Miller, Benjamin I. P. Rubinstein, Rafael A. Irizarry}
 \examples{
 
-data(affybatch.example)
-PACalls <- mas5calls(affybatch.example)
+data(Dilution)
+PACalls <- mas5calls(Dilution)
 }
 \keyword{manip}

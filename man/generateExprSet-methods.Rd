@@ -45,12 +45,12 @@
   \code{\link{expresso}} 
 }
 \examples{
- data(affybatch.example)
+ data(Dilution)
 
- ids <- c( "A28102_at","AB000114_at")
+ ids <- c( "1000_at","1001_at")
   
-  eset <- computeExprSet(affybatch.example, pmcorrect.method="pmonly",
-summary.method="avgdiff", ids=ids)
+  eset <- computeExprSet(Dilution, pmcorrect.method="pmonly",
+               summary.method="avgdiff", ids=ids)
 }
 \keyword{manip}
 

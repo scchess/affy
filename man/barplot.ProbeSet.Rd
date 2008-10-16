@@ -24,9 +24,9 @@ ask = TRUE, scale, ...)
   \item{\dots}{ extra parameters to be passed to \code{\link{barplot}} }
 }
 \examples{
-data(affybatch.example)
-gn <- geneNames(affybatch.example)
-pps <- probeset(affybatch.example, gn[1])[[1]]
+data(Dilution)
+gn <- geneNames(Dilution)
+pps <- probeset(Dilution, gn[1])[[1]]
 
 barplot.ProbeSet(pps)
 }

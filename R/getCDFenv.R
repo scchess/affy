@@ -1,8 +1,7 @@
 getCdfInfo <- function(object,  how=getOption("BioC")$affy$probesloc, verbose=FALSE) {
     ## cdfname is the cdf environment
     ## methods is a vector detailing how to get the file - one of
-    ## 'environment', 'data', 'library', 'bioC'
-    ## where is used for specific information corresponding to method
+    ## 'library', 'bioC'
 
     if (length(how) == 0)
         stop("No available method to obtain CDF file")
@@ -15,7 +14,6 @@ getCdfInfo <- function(object,  how=getOption("BioC")$affy$probesloc, verbose=FA
         out <- switch(cur$what,
                       "environment" = cdfFromEnvironment(cdfname,
                       cur$where, verbose),
-                      "data" = cdfFromData(cdfname, cur$where, verbose),
                       "libPath" = cdfFromLibPath(cdfname, cur$where,
                       verbose=verbose),
                       "bioC" = cdfFromBioC(cdfname, cur$where,
@@ -30,28 +28,6 @@ getCdfInfo <- function(object,  how=getOption("BioC")$affy$probesloc, verbose=FA
 
     stop(paste("Could not obtain CDF environment, problems encountered:",
                paste(unlist(badOut),collapse="\n"),sep="\n"))
-}
-
-cdfFromData <- function(cdfname, pkg, verbose=TRUE) {
-    cdfname <- cleancdfname(cdfname)
-    if (verbose)
-        print(paste("Attempting to locate",cdfname,
-                    "in the data directory of package", pkg))
-
-    if(cdfname %in% do.call("data", list(package=pkg))$results[, 3]) {
-        where.env <- pos.to.env(match(paste("package:", pkg, sep = ""), search()))
-
-        ## check if the cdfenv is already loaded. If not load it *in* the environment
-        ## of the package (where.env)
-        if(!exists(cdfname, where = where.env, inherits = FALSE)) {
-            path <- system.file(package=pkg)
-            data(list=cdfname, envir=where.env)
-        }
-        cdfenv <- get(cdfname, envir=where.env)
-        return(cdfenv)
-    }
-    else
-        return(list(paste("Data for package",pkg,"did not contain",cdfname)))
 }
 
 cdfFromEnvironment <- function(cdfname, where, verbose=TRUE) {

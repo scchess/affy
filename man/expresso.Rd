@@ -83,9 +83,9 @@ expresso(
 }
 \seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}
 \examples{
-data(affybatch.example)
+data(Dilution)
 
-eset <- expresso(affybatch.example, bgcorrect.method="rma",
+eset <- expresso(Dilution, bgcorrect.method="rma",
                  normalize.method="constant",pmcorrect.method="pmonly",
                  summary.method="avgdiff")
 

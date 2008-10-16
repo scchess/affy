@@ -43,8 +43,8 @@ instances of AffyBatch.}
 \seealso{ \code{\link{probeset}}, \code{\link{AffyBatch-class}}}
 
 \examples{
-data(affybatch.example)
-ps <- probeset(affybatch.example,geneNames(affybatch.example)[1:2])
+data(Dilution)
+ps <- probeset(Dilution, geneNames(Dilution)[1:2])
 names(ps)
 print(ps[[1]])
 }

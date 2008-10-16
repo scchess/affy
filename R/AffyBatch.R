@@ -450,7 +450,6 @@ setReplaceMethod("mm", "AffyBatch", function(object, value){
 })
 
 ###probeset
-if( is.null(getGeneric("probeset") ))
   setGeneric("probeset", function(object, ...)
              standardGeneric("probeset"))
 
@@ -663,7 +662,7 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
             for (i in seq(along=ids)) {
 
               if (verbose) {
-                update(pbt)
+                updateMe(pbt)
               }
 
               id <- ids[i]

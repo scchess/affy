@@ -28,14 +28,6 @@ setMethod("show", "ProbeSet",
 ##DEBUG: what to do with that ?
 ## --> with what ?
 
-if( is.null(getGeneric("colnames")))
-                                        #setGeneric("colnames", function(x, do.NULL, prefix)
-  setGeneric("colnames")
-
-##for consistency also use sampleNames
-if( is.null(getGeneric("sampleNames")))
-  setGeneric("sampleNames", function(object)
-             standardGeneric("sampleNames"))
 setMethod("sampleNames", "ProbeSet",
           function(object) colnames(object))
 
@@ -50,7 +42,7 @@ setMethod("colnames", signature(x="ProbeSet"),
                 warning("No column names for ProbeSet")
               }
               else {
-                cnames <- paste(prefix, 1:ncols(x@pm))
+                cnames <- paste(prefix, 1:ncol(x@pm))
               }
               
             }
@@ -122,8 +114,6 @@ setMethod("express.summary.stat",signature(x="ProbeSet",  pmcorrect="character",
             return(r)
           })
 
-if( is.null(getGeneric("barplot")))
-  setGeneric("barplot")
 
 setMethod("barplot",signature(height="ProbeSet"),function(height,...) barplot.ProbeSet(height,...))
 

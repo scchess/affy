@@ -53,17 +53,7 @@ plotDensity.AffyBatch(x, col = 1:6, log = TRUE,
 \author{Ben Bolstad and Laurent Gautier}
 
 \examples{
-data(affybatch.example)
-
-m <- exprs(affybatch.example)
-
-plotDensity(exprs(affybatch.example))
-
+data(Dilution)
+plotDensity(exprs(Dilution), log="x")
 }
-\keyword{hplot}% at least one, from doc/KEYWORDS
-
-
-
-
-
-
+\keyword{hplot}

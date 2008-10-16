@@ -4,7 +4,8 @@
 \alias{close,ProgressBarText-method}
 \alias{initialize,ProgressBarText-method}
 \alias{open,ProgressBarText-method}
-\alias{update,ProgressBarText-method}
+\alias{updateMe}
+\alias{updateMe,ProgressBarText-method}
 
 \title{Class "ProgressBarText" }
 \description{ A class to handle progress bars in text mode}
@@ -33,7 +34,7 @@ Objects can be created by calls of the form \code{new("ProgressBarText", steps)}
       a progress bar that was 'progress', the progress bar is resumed
       (this might be useful when one wishes to insert text output while
       there is a progress bar running).}
-    \item{update}{\code{signature(object = "ProgressBarText")}: Update
+    \item{updateMe}{\code{signature(object = "ProgressBarText")}: Update
       the progress bar (see examples).}
   }
 }
@@ -46,7 +47,7 @@ f <- function(x, header = TRUE) {
 
   for (i in x) {
     Sys.sleep(i)
-    update(pbt)
+    updateMe(pbt)
   }
   close(pbt)
 }
@@ -68,7 +69,7 @@ h <- function(x) {
   pbt <- new("ProgressBarText", as.integer(x), barsteps = as.integer(20))
   open(pbt)
   for (i in 1:x) {
-    update(pbt)
+    updateMe(pbt)
   }
   close(pbt)
 }

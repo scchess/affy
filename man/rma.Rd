@@ -9,7 +9,6 @@
 \usage{
 rma(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=TRUE,background=TRUE,bgversion=2,...)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{object}{an \code{\link[affy:AffyBatch-class]{AffyBatch}}}
   \item{subset}{a character vector with the the names of the probesets
@@ -54,8 +53,8 @@ An \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}
 \seealso{\code{\link{expresso}} }
 
 \examples{
-data(affybatch.example)
-eset <- rma(affybatch.example)
+   data(Dilution)
+   eset <- rma(Dilution)
 }
 \keyword{manip}
 

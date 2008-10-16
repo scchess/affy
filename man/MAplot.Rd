@@ -42,9 +42,9 @@ show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,plot.method=c("
 
 }
 \examples{
-   data(affybatch.example)
-   MAplot(affybatch.example)
-   Mbox(affybatch.example)
+   data(Dilution)
+   MAplot(Dilution)
+   Mbox(Dilution)
 }
 
 \seealso{\code{\link{mva.pairs}}}

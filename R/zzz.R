@@ -1,4 +1,4 @@
-.initNormalize <- function(where, all.affy) {
+.initNormalize <- function(all.affy) {
   if (debug.affy123) cat("-->detecting normalization methods from naming convention\n")
 
   ## this could move into the respective methods of AffyBatch later
@@ -6,44 +6,36 @@
   start <- nchar("normalize.AffyBatch.")
   assign("normalize.AffyBatch.methods",
          substr(all.affy[grep("normalize\\.AffyBatch\\.*", all.affy)], start+1, 100),
-         envir=as.environment(where))
+         envir=topenv(parent.frame()))
 }
 
-.initExpression <- function(where, all.affy) {
+.initExpression <- function(all.affy) {
   if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
 
   ## the first one is deprecated (well... "should be"...)
   assign("generateExprSet.methods",
          substr(all.affy[grep("generateExprVal\\.method\\.*", all.affy)], 24,100),
-         envir=as.environment(where))
+         envir=topenv(parent.frame()))
   assign("express.summary.stat.methods",
          substr(all.affy[grep("generateExprVal\\.method\\.*", all.affy)], 24,100),
-         envir=as.environment(where))
+         envir=topenv(parent.frame()))
 }
 
-.initBackgroundCorrect <- function(where, all.affy) {
+.initBackgroundCorrect <- function(all.affy) {
   if (debug.affy123) cat("-->detecting background correction methods from naming convention\n")
-  ##assign("bg.correct.methods",
-  ##       substr(ls(where)[grep("bg.correct\\.*", ls(where))], 12,100),
-  ##       envir=as.environment(where))
   start <- nchar("bg.correct.")
   assign("bgcorrect.methods",
          substr(all.affy[grep("bg\\.correct\\.", all.affy)], start+1, 100),
-         envir=as.environment(where))
+         envir=topenv(parent.frame()))
        }
 
-.initPmCorrect <- function(where, all.affy) {
+.initPmCorrect <- function(all.affy) {
   if (debug.affy123) cat("-->detecting pm correction methods from naming convention\n")
   start <- nchar("pmcorrect.")
   assign("pmcorrect.methods",
          substr(all.affy[grep("pmcorrect\\.*", all.affy)], start+1, 100),
-         envir=as.environment(where))
+         envir=topenv(parent.frame()))
 }
-
-##.initMapCdfName <- function(where) {
-##  filepath <- system.file("data/apCdfName.rda" package="affy")
-##  load(filepath, envir=as.environment(where))
-##}
 
 .setAffyOptions <- function(affy.opt=NA) {
 
@@ -96,35 +88,19 @@
   ## ---
 }
 
-.First.lib <- function(libname, pkgname) {
+.onLoad <- function(libname, pkgname) {
     
-  where <- match(paste("package:", pkgname, sep=""), search())
-  all.affy <- ls(where)
- message <- FALSE
+#  where <- match(paste("package:", pkgname, sep=""), search())
+  all.affy <- ls(environment(sys.function()))
 
-  if (message) {
-    cat(rep("*",13),"\n",sep="")
-    cat("affy: development version\n")
-    cat(rep("*",13),"\n",sep="")
-    cat(rep("*",13),"\n",sep="")
-    cat("update versions of the required packages if necessary.\n")
-    cat(rep("*",13),"\n",sep="")
-  }
-
-  library.dynam("affy", pkgname, libname)
-
-  ##.initMapCdfName(match(paste("package:", pkgname, sep=""), search()))
-  
-  .initNormalize(match(paste("package:", pkgname, sep=""), search()), all.affy)
-  .initExpression(match(paste("package:", pkgname, sep=""), search()), all.affy)
-  .initBackgroundCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
-  .initPmCorrect(match(paste("package:", pkgname, sep=""), search()), all.affy)
+  .initNormalize(all.affy)
+  .initExpression(all.affy)
+  .initBackgroundCorrect(all.affy)
+  .initPmCorrect(all.affy)
 
   .setAffyOptions()
 
-  cacheMetaData(as.environment(where))
-
-    if(.Platform$OS.type == "windows" && require(Biobase) && interactive()
+  if(.Platform$OS.type == "windows" && require(Biobase) && interactive()
         && .Platform$GUI ==  "Rgui"){
         addVigs2WinMenu("affy")
     }
@@ -132,8 +108,4 @@
 
 
 }
-
-
-
-
 

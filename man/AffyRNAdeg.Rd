@@ -40,8 +40,8 @@ plotAffyRNAdeg(rna.deg.obj, transform = "shift.scale", cols = NULL,
   \item{pvalue}{from linear regression of means.by.number}
 }
 \examples{
-data(affybatch.example)
-RNAdeg<-AffyRNAdeg(affybatch.example)
+data(Dilution)
+RNAdeg<-AffyRNAdeg(Dilution)
 plotAffyRNAdeg(RNAdeg)
 
 }

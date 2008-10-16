@@ -36,8 +36,9 @@ setMethod("open", "ProgressBarText",
 ## to avoid 'loosing' the default update.
 ## (not sure this is the most elegant way to do this)
 
+setGeneric("updateMe", function(object, ...) standardGeneric("updateMe"))
 
-setMethod("update", "ProgressBarText",
+setMethod("updateMe", "ProgressBarText",
           function(object) {
             increment <- get("increment", object@internals)
             i <- get("i", object@internals) + increment

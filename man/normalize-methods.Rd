@@ -57,8 +57,8 @@ normalize.methods(object)
   \code{\link{AffyBatch-class}}, \code{\link{normalize}}.
 }
 \examples{
-data(affybatch.example)
-normalize.methods(affybatch.example)
+data(Dilution)
+normalize.methods(Dilution)
 }
 \keyword{manip}
 

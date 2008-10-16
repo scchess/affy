@@ -66,8 +66,8 @@ We would recommend the use of the method \verb+normalize.methods+ to acess the
 list of available normalization methods (as a scheme for
 normalization methods that would go beyond 'affy' is thought).
 <<>>=
-data(affybatch.example)
-normalize.methods(affybatch.example)
+data(Dilution)
+normalize.methods(Dilution)
 @
 
 For each processing step, a naming convention exists between the

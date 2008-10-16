@@ -54,13 +54,13 @@ bg.correct.none(object, ...)
 }
 
 \examples{
-    data(affybatch.example)
+    data(Dilution)
 
-    ##bgc will be the bg corrected version of affybatch.example 
-    bgc <- bg.correct(affybatch.example,method="rma") 
+    ##bgc will be the bg corrected version of Dilution
+    bgc <- bg.correct(Dilution, method="rma") 
 
     ##This plot shows the tranformation
-    plot(pm(affybatch.example)[,1],pm(bgc)[,1],log="xy",
+    plot(pm(Dilution)[,1],pm(bgc)[,1],log="xy",
 	main="PMs before and after background correction")
 
 }

@@ -10,14 +10,13 @@
                  annotation(y)), description = NULL, notes =
                  character(0), ...)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{x}{ an \code{AffyBatch} }
   \item{y}{ an \code{AffyBatch} }
   \item{annotation}{ a \code{character} }
   \item{description}{ a \code{characterORmiame}, eventualy \code{NULL}}
   \item{notes}{ a \code{character} }
-  \item{\dots}{ ~~Describe \code{\dots} here~~ }
+  \item{\dots}{ additional arguments }
 }
 \details{
   To be done.
@@ -28,12 +27,4 @@
 
 \seealso{ \code{\link{AffyBatch-class}} }
 
-\examples{
-data(affybatch.example)
-m.abatch <- merge(affybatch.example, affybatch.example2)
-}
 \keyword{ manip }
-
-
-
-

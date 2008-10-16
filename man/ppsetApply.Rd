@@ -37,15 +37,11 @@ ppset.ttest <- function(ppset, covariate, pmcorrect.fun = pmcorrect.pmonly, ...)
   r <- apply(probes, 1, my.ttest)
   return(r)
 }
-
-## create a dataset
-data(affybatch.example)
-abatch <- merge(affybatch.example, affybatch.example2)
-intensity(abatch) <- 2^jitter(log2(intensity(abatch)),1,1)
-chip.variate <- c("a", "b", "a", "a", "b", "a")
-phenoData(abatch) <- new("AnnotatedDataFrame", data=data.frame(whatever=chip.variate))
-## run a test over _all_ probes.
-all.ttest <- ppsetApply(abatch, ppset.ttest, covariate="whatever")
-
+##this takes a long time - and rowttests is a good alternative
+## eg: rt = rowttests(exprs(Dilution), Dilution$liver)
+\dontrun{
+  data(Dilution)
+  all.ttest <- ppsetApply(Dilution, ppset.ttest, covariate="liver")
+}
 }
 \keyword{ manip }

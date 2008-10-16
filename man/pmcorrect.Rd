@@ -4,7 +4,6 @@
 \alias{pmcorrect.pmonly} %took out .pmonly casue rma is pm-only
 \alias{pmcorrect.mas}
 \alias{pmcorrect.subtractmm}
-%- Also NEED an `\alias' for EACH other topic documented here.
 \title{PM Correction}
 \description{
   Corrects the PM intensities in a \code{\link[affy:ProbeSet-class]{ProbeSet}}
@@ -39,19 +38,13 @@ pmonly does what you think: does not change the PM values.}
 \references{Affymetrix MAS 4.0 and 5.0 manual}
 
 \examples{
-data(affybatch.example)
-gn <- geneNames(affybatch.example)
-pps <- probeset(affybatch.example, gn[1])[[1]]
+data(Dilution)
+gn <- geneNames(Dilution)
+pps <- probeset(Dilution, gn[1])[[1]]
 
 pps.pmonly <- pmcorrect.pmonly(pps)
 pps.subtractmm <- pmcorrect.subtractmm(pps)
 pps.mas5 <- pmcorrect.mas(pps)
-par(mfrow=c(2,2))
-#plot(pm(pps.pmonly), pm(pps.subtractmm))
-#plot(pm(pps.pmonly),pm(pps.mas5))
-#plot(pm(pps.subtractmm),pm(pps.mas5))
 }
 \keyword{manip}
-
-
 

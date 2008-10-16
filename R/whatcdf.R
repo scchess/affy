@@ -1,4 +1,4 @@
-##this function changes the affymetrix cdf file name to the Bioconductor
+##this function changes the Affymetrix cdf file name to the Bioconductor
 ##annotation name for that cdf file
 ## note: we had a hard time finding exact rules to match what is in the
 ## CEL file with what is in the CDF file
@@ -10,7 +10,7 @@ cleancdfname <- function(cdfname, addcdf=TRUE) {
   if ( nchar(cdfname)[1] == 0 )
                stop("supplied cdf name has zero length")
 
-  data(mapCdfName,envir=environment())
+  data("mapCdfName", package="affy")
   i <- match(cdfname, mapCdfName$inCDF)
   if (is.na(i)) {
     tmp <- tolower(cdfname) #make lower case
@@ -24,7 +24,7 @@ cleancdfname <- function(cdfname, addcdf=TRUE) {
           tmp <- paste(tmp, "cdf", sep="")
     }
   } else {
-    tmp <- mapCdfName$inBioC[1]
+    tmp <- mapCdfName$inBioC[i]
   }
   return(tmp)
 }

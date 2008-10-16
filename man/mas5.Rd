@@ -42,8 +42,8 @@ mas5(object, normalize = TRUE, sc = 500, analysis = "absolute", ...)
 }
 \seealso{\code{\link{expresso}},\code{\link{affy.scalevalue.exprSet}}}
 \examples{
-  data(affybatch.example)
-  eset <- mas5(affybatch.example)
+  data(Dilution)
+  eset <- mas5(Dilution)
 }
 \keyword{manip}% at least one, from doc/KEYWORDS
 

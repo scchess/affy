@@ -1,0 +1,26 @@
+ useDynLib("affy")
+
+ import(affyio, preprocessCore)
+
+ importFrom(graphics, image, boxplot, hist, barplot)
+
+ importFrom(Biobase, 
+              exprs, 
+              "exprs<-", 
+              featureNames, 
+              "featureNames<-", 
+              "geneNames",
+              "geneNames<-", 
+              sampleNames, 
+              se.exprs, 
+              "se.exprs<-", 
+              updateObject)
+
+  importClassesFrom(Biobase,
+      VersionedBiobase,
+      eSet,
+      Versioned)
+
+ ##export everything that does not start with a .
+ exportPattern("^[^\\.]")
+ export(".setAffyOptions")
