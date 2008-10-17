@@ -10,6 +10,6 @@ n.meth <- normalize.methods(Dilution)
 
 for (m in n.meth) {
   cat("-->method=", m, "...")
-  affybatch.example.n <- normalize(Dilution, method=m)
+  Dilution.n <- normalize(Dilution, method=m)
   cat("done.\n")
 }
