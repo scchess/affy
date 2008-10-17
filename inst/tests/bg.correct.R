@@ -1,13 +1,13 @@
 library(affy)
 
-data(affybatch.example)
+data(Dilution)
 
-meth <- bgcorrect.methods
+meth <- bgcorrect.methods()
 
 cat("background correction:\n")
 
 for (m in meth) {
   cat(m,"...")
-  abatch.bgc <- bg.correct(affybatch.example, method=m)
+  abatch.bgc <- bg.correct(Dilution, method=m)
   cat("done.\n")
 }

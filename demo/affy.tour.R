@@ -12,11 +12,11 @@ opar <- par(ask= (interactive() &&
 ## load the data
 
 data(cdf.example)
-data(affybatch.example)
+data(Dilution)
 
 ## display the image of the data in the CEL file
 
-cel <- affybatch.example[[1]]
+cel <- Dilution[[1]]
 
 image(cel,transfo=log)
 
@@ -43,7 +43,7 @@ rm(l.pm, l.mm)
 
 namesspot <- c("AFFX-BioB-5_at","AFFX-BioB-M_at", "AFFX-BioB-3_at")
 
-p <- probeset(affybatch.example, genenames=namesspot)
+p <- probeset(Dilution, genenames=namesspot)
 
 par(mfrow=c(3,3))
 
@@ -57,7 +57,7 @@ par(mfrow=c(2,2))
 
 nat <- pmormm(cdf.example)
 
-cel2 <- affybatch.example[[2]]
+cel2 <- Dilution[[2]]
 plot(intensity(cel), intensity(cel2), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted",type="n")
 points(intensity(cel)[nat], intensity(cel2)[nat], col="red")
 points(intensity(cel)[!nat], intensity(cel2)[!nat], col="blue")
@@ -66,12 +66,12 @@ legend(25000, 15000, c("PM","MM","Unknown","identity line"), c("red","blue","bla
 abline(0, 1, type="l", col="gray")
 rm(nat)
 
-abatch.n <- normalize(affybatch.example, method="constant", refindex=2)
+abatch.n <- normalize(Dilution, method="constant", refindex=2)
 plot(intensity(abatch.n[[1]]), intensity(abatch.n[[2]]), xlab="CEL file 1", ylab="CEL file 2",main="normalized by constant",sub="all probes plotted")
 abline(0, 1, type="l", col="gray")
 
 
-abatch.n <- normalize(affybatch.example, method="invariantset")
+abatch.n <- normalize(Dilution, method="invariantset")
 i.set <- history(abatch.n[[1]])$invariantset
 
 plot(intensity(cel), intensity(cel2), xlab="CEL file 1", ylab="CEL file 2",main="raw values",sub="all probes plotted")
@@ -94,7 +94,7 @@ legend(20000,10000,c("invariant set","identity line"),c("orange","grey"),bg="whi
 #boxplot(normalize(Dilution))
 
 
-p <- probeset(affybatch.example, "A28102_at")[[1]]
+p <- probeset(Dilution, "1001_at")[[1]]
 
 par(mfcol=c(5,2))
 mymethods <- express.summary.stat.methods
