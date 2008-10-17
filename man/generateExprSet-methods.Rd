@@ -3,6 +3,7 @@
 \alias{generateExprSet-methods}
 \alias{computeExprSet}
 \alias{generateExprSet.methods}
+\alias{upDate.generateExprSet.methods}
 
 \title{generate a set of expression values}
 \description{
@@ -12,11 +13,15 @@
 \usage{
   computeExprSet(x, pmcorrect.method, summary.method, ...)
 
-  generateExprSet.methods
+  generateExprSet.methods()
+
+  upDate.generateExprSet.methods(x)
+
 }
 \arguments{
   \item{x}{a \code{\link[=AffyBatch-class]{AffyBatch}} holding the probe level
-    informations to generate the expression values.}
+    informations to generate the expression values, for computeExprSet,
+    and for upDate.generateExprSet.methods it is a character vector..}
   \item{pmcorrect.method}{the method used to correct PM values (see
     section 'details').}
   \item{summary.method}{the method used to generate the expression value (see
@@ -37,6 +42,9 @@
   background correction was to subtract the \emph{MM} signal to the
   \emph{PM} signal. The methods currently inclluded in the package are
   "bg.correct.subtractmm", "bg.correct.pmonly" and "bg.correct.adjust".
+
+  To alter the available methods for generating ExprSets use
+  upDate.generateExprSet.methods.  
 
 }
 \seealso{

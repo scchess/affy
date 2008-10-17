@@ -1,6 +1,4 @@
 \name{generateExprVal}
-\alias{generateExprVal-methods}
-\alias{generateExprVal.methods}
 \alias{express.summary.stat}
 \alias{express.summary.stat-methods}
 \alias{express.summary.stat.methods}
@@ -10,10 +8,8 @@
   Compute a summary expression value from the probes intensities
 }
 \usage{
-generateExprVal.methods # vector of names of methods
-
 express.summary.stat(x, pmcorrect, summary, ...)
-express.summary.stat.methods # vector of names of methods
+express.summary.stat.methods() # vector of names of methods
 }
 \arguments{
   \item{x}{a (\code{ProbeSet}}

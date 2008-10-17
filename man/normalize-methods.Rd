@@ -4,13 +4,15 @@
 \alias{normalize.AffyBatch}
 \alias{normalize.methods}
 \alias{normalize.AffyBatch.methods}
+\alias{upDate.normalize.AffyBatch.methods}
 \alias{normalize,AffyBatch-method}
 \alias{normalize.methods,AffyBatch-method}
 \alias{normalize.AffyBatch.methods}
-\alias{express.summary.stat.methods}
-\alias{generateExprSet.methods}
+\alias{upDate.summary.stat.methods}
 \alias{bgcorrect.methods}
+\alias{upDate.bgcorrect.methods}
 \alias{pmcorrect.methods}
+\alias{upDate.pmcorrect.methods}
 
 \description{
   Method for normalizing Affymetrix Probe Level Data
@@ -18,13 +20,15 @@
 \usage{
 normalize.methods(object)
 express.summary.stat.methods()
-generateExprSet.methods()
+upDate.summary.stat.methods(x)
 bgcorrect.methods()
+upDate.bgcorrect.methods(x)
 pmcorrect.methods()
+upDate.pmcorrect.methods(x)
 }
 \arguments{
   \item{object}{An \code{\link[affy:AffyBatch-class]{AffyBatch}}.}
-%  \item{...}{Optional arguments to be passed along. See details.}
+  \item{x}{A character vector that will replace the existing one.}
 }
 \details{
 
@@ -62,8 +66,8 @@ pmcorrect.methods()
   refer to the customMethods vignette.
 
 
-  The functions: \code{express.summary.stat.methods}
-\code{generateExprSet.methods}, \code{bgcorrect.methods},
+  The functions: \code{express.summary.stat.methods},
+  \code{bgcorrect.methods},
 \code{pmcorrect.methods}, provide access to internal vectors
 listing the corresponding capabilities.
 
@@ -80,6 +84,3 @@ bgcorrect.methods()
 pmcorrect.methods()
 }
 \keyword{manip}
-
-
-
