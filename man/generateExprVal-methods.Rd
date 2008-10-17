@@ -2,6 +2,7 @@
 \alias{express.summary.stat}
 \alias{express.summary.stat-methods}
 \alias{express.summary.stat.methods}
+\alias{upDate.express.summary.stat.methods}
 
 \title{Compute a summary expression value from the probes intensities}
 \description{
@@ -10,6 +11,7 @@
 \usage{
 express.summary.stat(x, pmcorrect, summary, ...)
 express.summary.stat.methods() # vector of names of methods
+upDate.express.summary.stat.methods(x)
 }
 \arguments{
   \item{x}{a (\code{ProbeSet}}

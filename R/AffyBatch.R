@@ -11,9 +11,9 @@
  express.summary.stat.methods <- function()
             .affyInternalEnv[["express.summary.stat.methods"]]
 
- upDate.summary.stat.methods <- function(x) {
+ upDate.express.summary.stat.methods <- function(x) {
             if (is.character(x))
-               .affyInternalEnv[["summary.stat.methods"]] <- x
+               .affyInternalEnv[["express.summary.stat.methods"]] <- x
   }
 
  generateExprSet.methods <- function()

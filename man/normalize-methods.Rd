@@ -8,7 +8,6 @@
 \alias{normalize,AffyBatch-method}
 \alias{normalize.methods,AffyBatch-method}
 \alias{normalize.AffyBatch.methods}
-\alias{upDate.summary.stat.methods}
 \alias{bgcorrect.methods}
 \alias{upDate.bgcorrect.methods}
 \alias{pmcorrect.methods}
@@ -19,8 +18,6 @@
 }
 \usage{
 normalize.methods(object)
-express.summary.stat.methods()
-upDate.summary.stat.methods(x)
 bgcorrect.methods()
 upDate.bgcorrect.methods(x)
 pmcorrect.methods()
@@ -66,8 +63,7 @@ upDate.pmcorrect.methods(x)
   refer to the customMethods vignette.
 
 
-  The functions: \code{express.summary.stat.methods},
-  \code{bgcorrect.methods},
+  The functions: \code{bgcorrect.methods},
 \code{pmcorrect.methods}, provide access to internal vectors
 listing the corresponding capabilities.
 
@@ -78,7 +74,6 @@ listing the corresponding capabilities.
 \examples{
 data(Dilution)
 normalize.methods(Dilution)
-express.summary.stat.methods()
 generateExprSet.methods()
 bgcorrect.methods()
 pmcorrect.methods()
