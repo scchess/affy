@@ -29,7 +29,8 @@ ReadAffy(\dots, filenames=character(0),
 \arguments{
   \item{\dots}{file names separated by comma.}
   \item{filenames}{file names in a character vector.}
-  \item{phenoData}{a \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}} object.}
+  \item{phenoData}{an \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}}
+     object, a \code{character} of length one, or a \code{data.frame}.}
   \item{description}{a \code{\link[Biobase:class.MIAME]{MIAME}} object.}
   \item{notes}{notes.}
   \item{compress}{are the CEL files compressed?}
@@ -59,13 +60,16 @@ If the function is called with no arguments \code{ReadAffy()} all the CEL
 files in the working directory are read and put into an \code{AffyBatch}.
 However, the arguments give the user great flexibility.
   
-\code{phenoData} is read using \code{\link[Biobase]{read.AnnotatedDataFrame}}. If a
-character is given it tries to read the file with that name
-to obtain the \code{AnnotationDataFrame} object as described in \code{\link[Biobase]{read.AnnotatedDataFrame}}.
-If left \code{NULL} and \code{widget=FALSE} (\code{widget=TRUE} is not currently
-supported), then a default object is created.
-It will be an object of class \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}}
-with its pData being a data.frame with column x indexing the CEL files.
+If \code{phenoData} is a character vector of length 1, the function
+\code{\link[Biobase]{read.AnnotatedDataFrame}} is called to read a file
+of that name and produce the \code{AnnotationDataFrame} object with the
+sample metadata. If \code{phenoData} is a \code{data.frame}, it is
+converted to an \code{AnnotatedDataFrame}.
+If it is \code{NULL} and \code{widget=FALSE} (\code{widget=TRUE} is not currently
+supported), then a default object of class
+\code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}} is created,
+whose \code{pData} is a data.frame with rownames being the names
+of the CEL files, and with one column \code{sample} with an integer index.
 
 \code{AllButCelsForReadAffy} is an internal function that gets called
 by \code{ReadAffy}. It gets all the information except the cel intensities.

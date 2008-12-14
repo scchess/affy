@@ -171,7 +171,7 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
                                   phenoData=NULL,
                                   description=NULL){
 
-    ##first figure out filenames
+  ##first figure out filenames
   auxnames <- unlist(as.list(substitute(list(...)))[-1])
 
   if (widget){
@@ -206,22 +206,24 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
     }
   }
 
-  if(is.character(phenoData)) { ##if character read file 
-      phenoData <- read.AnnotatedDataFrame(filename=phenoData)
-      sampleNames <- sampleNames(phenoData)
-  } else{
-      if (!is(phenoData, "AnnotatedDataFrame")) {
-          pData <- data.frame(sample=seq(1, length(sampleNames)),
-                              row.names=sampleNames)
-          varMetadata <- data.frame(labelDescription="arbitrary numbering",
-                                    row.names=names(pData))
-          phenoData <- new("AnnotatedDataFrame",
-                           data=pData,
-                           varMetadata=varMetadata)
-      }
+  if(is.character(phenoData)) { 
+    ## if character, read file 
+    if(length(phenoData)!=1) stop(sprintf("'phenoData' must be of length 1, but is %d.", length(phenoData)))
+    phenoData <- read.AnnotatedDataFrame(filename=phenoData)
+    sampleNames <- sampleNames(phenoData)
+  } else if(is.data.frame(phenoData)) {
+    ## if data.frame, coerce
+    phenoData <-  as(phenoData, "AnnotatedDataFrame")
+  } else if(is.null(phenoData)) {
+    phenoData <- new("AnnotatedDataFrame",
+                     data = data.frame(sample=seq_along(sampleNames),
+                                       row.names=sampleNames),
+                     varMetadata = data.frame(labelDescription="arbitrary numbering",
+                                    row.names=names(pData)))
+  } else if (!is(phenoData, "AnnotatedDataFrame")) {
+    stop(sprintf("'phenoData' must be of class 'AnnotatedDataFrame', but is %s.", class(phenoData)))
   }
-
-
+  
   ##get MIAME information
   if(is.character(description)){
     description <- read.MIAME(filename=description,widget=FALSE)
