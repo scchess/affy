@@ -136,7 +136,7 @@ cdfFromLibPath <- function(cdfname, lib = NULL, verbose=TRUE) {
         if (verbose)
           print(paste("Attempting to load package", cdfname))
         ## Attempt to load the library requested
-        do.call("library", list(cdfname, lib.loc=lib, character.only=TRUE))
+        do.call(library, list(cdfname, lib.loc=lib, character.only=TRUE))
 
         ## Check to see if it got loaded
         if (! cdfname %in% .packages()) {

@@ -103,7 +103,7 @@ setMethod("initialize",
               }
               dots <- dots[!names(dots) %in% c("reporterInfo", "description", "notes")]
               ## update phenoData to AnnotatedDataFrame, if necessary
-              assayData <- do.call("assayDataNew",
+              assayData <- do.call(assayDataNew,
                                    c(list(exprs=exprs), dots))
               if (missing(phenoData) || is.null(phenoData))
                 phenoData <- annotatedDataFrameFrom(assayData, byrow=FALSE)
