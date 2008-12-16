@@ -34,7 +34,7 @@ expresso <- function(afbatch,
             if(is.null(normalize.method)){
                 normMethods <- normalize.methods(afbatch)
             }else{
-                normMethods <- normalize.method   ## was normalizer.method, but think this is typo (BMB)
+                normMethods <- normalize.method  
             }
         }else{
             normMethods <- "None"
@@ -107,7 +107,7 @@ expresso <- function(afbatch,
     if (verbose)
       cat("background correcting...")
 
-    afbatch <- do.call(bg.correct, c(alist(afbatch, method=bgcorrect.method), bgcorrect.param))
+    afbatch <- do.call(affy:::bg.correct, c(alist(afbatch, method=bgcorrect.method), bgcorrect.param))
 
     if (verbose)
       cat("done.\n")
@@ -119,8 +119,7 @@ expresso <- function(afbatch,
     if (verbose)
       cat("normalizing...")
 
-    afbatch <- do.call(normalize,
-                       c(alist(afbatch, normalize.method), normalize.param))
+    afbatch <- do.call(affy:::normalize, c(alist(afbatch, normalize.method), normalize.param))
 
     if (verbose)
       cat("done.\n")

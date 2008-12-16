@@ -24,3 +24,5 @@
  ##export everything that does not start with a .
  exportPattern("^[^\\.]")
  export(".setAffyOptions")
+
+ exportClasses("AffyBatch")
