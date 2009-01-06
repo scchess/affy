@@ -100,6 +100,7 @@
  ** Oct 28, 2007 - remove any vestigial references to MM
  ** Mar 31, 2008 - use rma background correction from preprocessCore
  ** Jul 2, 2008 - now use different median polish interface from preprocessCore
+ ** Jan 6, 2009 - fix issue with SET_VECTOR_ELT/VECTOR_ELT applied to STRSXP
  **
  ************************************************************************/
 
@@ -200,7 +201,7 @@ SEXP rma_c_call(SEXP PMmat,  SEXP PM_rowIndexList, SEXP N_probes, SEXP norm_flag
   PROTECT(names = allocVector(STRSXP,nprobesets));
   
   for ( i =0; i < nprobesets; i++){
-    SET_VECTOR_ELT(names,i,VECTOR_ELT(outnamesvec,i)); 
+    SET_STRING_ELT(names,i,STRING_ELT(outnamesvec,i)); 
   }
   SET_VECTOR_ELT(dimnames,0,names);
   setAttrib(outvec, R_DimNamesSymbol, dimnames);
