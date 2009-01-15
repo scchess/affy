@@ -30,7 +30,7 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL
   on Affymetrix chips were decided to start at 1 (one) rather than 0
   (zero). One can set the offset to 1 or to 0. Unless the you \_really\_
   know what you are doing, it is advisable to let it at the default
-  value \code{NULL}. This way the package-wide option code{xy.offset} is
+  value \code{NULL}. This way the package-wide option \code{xy.offset} is
   always used.
 }
 \value{

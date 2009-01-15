@@ -76,8 +76,8 @@ normalize.qspline(x, target = NULL, samples = NULL,
 }
 \references{
   Christopher Workman, Lars Juhl Jensen, Hanne Jarmer, Randy Berka,
-     Laurent Gautier, Henrik Bj{\o}rn Nielsen, Hans-Henrik Saxild, Claus
-     Nielsen, S{\o}ren Brunak, and Steen Knudsen. A new non-linear normal-
+     Laurent Gautier, Henrik Bjorn Nielsen, Hans-Henrik Saxild, Claus
+     Nielsen, Soren Brunak, and Steen Knudsen. A new non-linear normal-
      ization method for reducing variability in dna microarray experiments.
      Genome Biology, accepted, 2002
 }

@@ -170,8 +170,6 @@ SEXP rma_c_call(SEXP PMmat,  SEXP PM_rowIndexList, SEXP N_probes, SEXP norm_flag
   SEXP outvec, outnamesvec; 
   SEXP dimnames,names;
 
-  SEXP temp;
-  
   PROTECT(dim1 = getAttrib(PMmat,R_DimSymbol)); 
   rows = INTEGER(dim1)[0];
   cols = INTEGER(dim1)[1]; 

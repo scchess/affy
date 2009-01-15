@@ -28,7 +28,7 @@ A non-parametrical method to weight each perfect match
   discussions about it)
 }
 \references{
-   \item Emmanuel N. Lazaridis, Dominic Sinibaldi, Gregory Bloom, Shrikant Mane and Richard Jove
+  Emmanuel N. Lazaridis, Dominic Sinibaldi, Gregory Bloom, Shrikant Mane and Richard Jove
   A simple method to improve probe set estimates from oligonucleotide
   arrays, Mathematical Biosciences, Volume 176, Issue 1, March 2002, Pages 53-58
 }

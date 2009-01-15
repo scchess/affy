@@ -14,14 +14,14 @@ data set.
 \source{This comes from an experiments where 11 different cRNA
 fragments have been added to the hybridization mixture of the GeneChip
 arrays at different pM concentrations.  The 11 control cRNAs were BioB-5,
-BioB-M, BioB-3, BioC-5, BioC-3, BioDn-5 (all {\it E. coli}), CreX-5, CreX-3
-(phage P1), and  DapX-5, DapX-M, DapX-3 ({\it B. subtilis})
+BioB-M, BioB-3, BioC-5, BioC-3, BioDn-5 (all \emph{E. coli}), CreX-5, CreX-3
+(phage P1), and  DapX-5, DapX-M, DapX-3 (\emph{B. subtilis})
 The cRNA were chosen to match the target sequence for each of the
-Affymetrix control probe sets. For example, for DapX (a {\it B. subtilis}
+Affymetrix control probe sets. For example, for DapX (a \emph{B. subtilis}
 gene), the 5', middle and 3' target sequences (identified by DapX-5,
 DapX-M, DapX-3) were each synthesized separately and spiked-in at a
 specific concentration. Thus, for example, DapX-3 target sequence may be
-added to the total hybridization solution of 200 $\mu$l to give a final
+added to the total hybridization solution of 200 micro-liters to give a final
 concentration of 0.5 pM.
 
 For this example we have the $PM$ and $MM$ for BioB-5

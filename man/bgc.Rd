@@ -29,13 +29,13 @@ bg.correct.none(object, ...)
 \details{
   The name of the method to apply must be double-quoted.
   Methods provided with the package are currently:
-  \begin{itemize}
-  \item bg.correct.none: returns \code{object} unchanged.
-  \item bg.correct.chipwide: noise correction as described in a
-  `white paper' from Affymetrix.
-  \item bg.correct.rma: the model based correction used by the RMA
-  expression measure.
-  \end{itemize}
+  \itemize{
+    \item bg.correct.none: returns \code{object} unchanged.
+    \item bg.correct.chipwide: noise correction as described in a
+    `white paper' from Affymetrix.
+    \item bg.correct.rma: the model based correction used by the RMA
+    expression measure.
+  }
 
   They are listed in the variable \code{bg.correct.methods}. The user must
   supply the word after "bg.correct", i.e none, subtractmm, rma, etc...
