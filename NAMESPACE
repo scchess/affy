@@ -21,10 +21,13 @@ importClassesFrom(methods,
                   numeric)
 
 importMethodsFrom(Biobase,
+                  annotatedDataFrameFrom,
                   annotation,
                   assayData,
                   classVersion,
                   "classVersion<-",
+                  description,
+                  "description<-",
                   experimentData,
                   exprs,
                   "exprs<-",
