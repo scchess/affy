@@ -252,6 +252,7 @@ correction method. The following is a typical call to
 \verb+expresso+. 
 
 \begin{Sinput}
+ library(affydata)
  data(Dilution)
  eset <- expresso(Dilution,bgcorrect.method="rma",
                   normalize.method="quantiles",

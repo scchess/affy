@@ -126,8 +126,9 @@ whitepaper.
 }
 \author{Crispin Miller, Benjamin I. P. Rubinstein, Rafael A. Irizarry}
 \examples{
-
-data(Dilution)
-PACalls <- mas5calls(Dilution)
+if (require(affydata)) {
+  data(Dilution)
+  PACalls <- mas5calls(Dilution)
+}
 }
 \keyword{manip}

@@ -53,8 +53,10 @@ An \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}
 \seealso{\code{\link{expresso}} }
 
 \examples{
-   data(Dilution)
-   eset <- rma(Dilution)
+if (require(affydata)) {
+  data(Dilution)
+  eset <- rma(Dilution)
+}
 }
 \keyword{manip}
 

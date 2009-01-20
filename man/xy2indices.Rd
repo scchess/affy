@@ -42,17 +42,18 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL
   option \code{xy.offset} appears much more sane.}
 \seealso{\code{\link{indexProbes}}}
 \examples{
+if (require(affydata)) {
+  data(Dilution)
+  pm.i <- indexProbes(Dilution, which="pm", genenames="AFFX-BioC-5_at")[[1]]
+  mm.i <- indexProbes(Dilution, which="mm", genenames="AFFX-BioC-5_at")[[1]]
 
-data(Dilution)
-pm.i <- indexProbes(Dilution, which="pm", genenames="AFFX-BioC-5_at")[[1]]
-mm.i <- indexProbes(Dilution, which="mm", genenames="AFFX-BioC-5_at")[[1]]
+  pm.i.xy <- indices2xy(pm.i, abatch = Dilution)
+  mm.i.xy <- indices2xy(mm.i, abatch = Dilution)
 
-pm.i.xy <- indices2xy(pm.i, abatch = Dilution)
-mm.i.xy <- indices2xy(mm.i, abatch = Dilution)
-
-image(Dilution[1], transfo=log2)
-## plot the pm in red
-plotLocation(pm.i.xy, col="red")
-plotLocation(mm.i.xy, col="blue")
+  image(Dilution[1], transfo=log2)
+  ## plot the pm in red
+  plotLocation(pm.i.xy, col="red")
+  plotLocation(mm.i.xy, col="blue")
+}
 }
 \keyword{ manip }

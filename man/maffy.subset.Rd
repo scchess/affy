@@ -24,9 +24,11 @@ Please refer to references.
 \author{Magnus Astrand}
 \seealso{ \code{\link{maffy.normalize}}}
 \examples{
-     #data(Dilution)
-     #x <- log2(pm(Dilution)[,1:3])
-     #Index <- maffy.subset(x,subset.size=100)$subset
-     #mva.pairs(x[Index,])
+if (require(affydata)) {
+  #data(Dilution)
+  #x <- log2(pm(Dilution)[,1:3])
+  #Index <- maffy.subset(x,subset.size=100)$subset
+  #mva.pairs(x[Index,])
+}
 }
 \keyword{internal}

@@ -24,11 +24,13 @@ ask = TRUE, scale, ...)
   \item{\dots}{ extra parameters to be passed to \code{\link{barplot}} }
 }
 \examples{
-data(Dilution)
-gn <- geneNames(Dilution)
-pps <- probeset(Dilution, gn[1])[[1]]
+if (require(affydata)) {
+  data(Dilution)
+  gn <- geneNames(Dilution)
+  pps <- probeset(Dilution, gn[1])[[1]]
 
-barplot.ProbeSet(pps)
+  barplot.ProbeSet(pps)
+}
 }
 \keyword{hplot}
 

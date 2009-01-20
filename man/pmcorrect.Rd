@@ -37,13 +37,15 @@ pmonly does what you think: does not change the PM values.}
 \references{Affymetrix MAS 4.0 and 5.0 manual}
 
 \examples{
-data(Dilution)
-gn <- geneNames(Dilution)
-pps <- probeset(Dilution, gn[1])[[1]]
+if (require(affydata)) {
+  data(Dilution)
+  gn <- geneNames(Dilution)
+  pps <- probeset(Dilution, gn[1])[[1]]
 
-pps.pmonly <- pmcorrect.pmonly(pps)
-pps.subtractmm <- pmcorrect.subtractmm(pps)
-pps.mas5 <- pmcorrect.mas(pps)
+  pps.pmonly <- pmcorrect.pmonly(pps)
+  pps.subtractmm <- pmcorrect.subtractmm(pps)
+  pps.mas5 <- pmcorrect.mas(pps)
+}
 }
 \keyword{manip}
 

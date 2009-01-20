@@ -10,7 +10,7 @@ opar <- par(ask= (interactive() &&
 
 
 ## load the data
-
+library(affydata)
 data(cdf.example)
 data(Dilution)
 

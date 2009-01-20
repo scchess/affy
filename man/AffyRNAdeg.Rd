@@ -40,10 +40,11 @@ plotAffyRNAdeg(rna.deg.obj, transform = "shift.scale", cols = NULL,
   \item{pvalue}{from linear regression of means.by.number}
 }
 \examples{
-data(Dilution)
-RNAdeg<-AffyRNAdeg(Dilution)
-plotAffyRNAdeg(RNAdeg)
-
+if (require(affydata)) {
+  data(Dilution)
+  RNAdeg<-AffyRNAdeg(Dilution)
+  plotAffyRNAdeg(RNAdeg)
+}
 }
 \author{ Leslie Cope }
 \keyword{hplot}% at least one, from doc/KEYWORDS

@@ -72,10 +72,12 @@ listing the corresponding capabilities.
   \code{\link{AffyBatch-class}}, \code{\link{normalize}}.
 }
 \examples{
-data(Dilution)
-normalize.methods(Dilution)
-generateExprSet.methods()
-bgcorrect.methods()
-pmcorrect.methods()
+if (require(affydata)) {
+  data(Dilution)
+  normalize.methods(Dilution)
+  generateExprSet.methods()
+  bgcorrect.methods()
+  pmcorrect.methods()
+}
 }
 \keyword{manip}

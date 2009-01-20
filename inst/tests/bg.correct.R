@@ -1,4 +1,5 @@
 library(affy)
+library(affydata)
 
 data(Dilution)
 

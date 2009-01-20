@@ -325,6 +325,7 @@ bgcorrect.methods()
    available methods can be queried by using
 \verb+normalize.methods+.
 <<>>=
+library(affydata)
 data(Dilution) ##data included in the package for examples
 normalize.methods(Dilution)
 @
@@ -550,7 +551,7 @@ changed through the \verb+transfo+ argument.
 
 \begin{figure}[htbp]
 \begin{center}
-<<fig=TRUE>>=
+<<eval=FALSE>>=
 par(mfrow=c(2,2))
 image(Dilution)
 @

@@ -53,12 +53,14 @@
   \code{\link{expresso}} 
 }
 \examples{
- data(Dilution)
+if (require(affydata)) {
+  data(Dilution)
 
- ids <- c( "1000_at","1001_at")
-  
+  ids <- c( "1000_at","1001_at")
+
   eset <- computeExprSet(Dilution, pmcorrect.method="pmonly",
-               summary.method="avgdiff", ids=ids)
+                         summary.method="avgdiff", ids=ids)
+}
 }
 \keyword{manip}
 

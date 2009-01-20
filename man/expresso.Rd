@@ -79,14 +79,16 @@ expresso(
 }
 \seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}
 \examples{
-data(Dilution)
+if (require(affydata)) {
+  data(Dilution)
 
-eset <- expresso(Dilution, bgcorrect.method="rma",
-                 normalize.method="constant",pmcorrect.method="pmonly",
-                 summary.method="avgdiff")
+  eset <- expresso(Dilution, bgcorrect.method="rma",
+                   normalize.method="constant",pmcorrect.method="pmonly",
+                   summary.method="avgdiff")
 
-##to see options available for bg correction type:
-bgcorrect.methods()
+  ##to see options available for bg correction type:
+  bgcorrect.methods()
+}
 }
 \keyword{ manip }
 

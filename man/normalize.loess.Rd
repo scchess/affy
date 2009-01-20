@@ -39,12 +39,13 @@ normalize.AffyBatch.loess(abatch,type=c("together","pmonly","mmonly","separate")
   \code{\link{normalize}}
 }
 \examples{
-     #require(affy)
-     #data(Dilution)
-     #x <- pm(Dilution[,1:3])
-     #mva.pairs(x)
-     #x <- normalize.loess(x,subset=1:nrow(x))
-     #mva.pairs(x)
+if (require(affydata)) {
+  #data(Dilution)
+  #x <- pm(Dilution[,1:3])
+  #mva.pairs(x)
+  #x <- normalize.loess(x,subset=1:nrow(x))
+  #mva.pairs(x)
+}
 }
 \keyword{smooth}
 

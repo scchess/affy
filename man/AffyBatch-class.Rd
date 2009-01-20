@@ -194,25 +194,27 @@ Class \code{"eSet"}, directly.
   \code{\link[Biobase:class.eSet]{eSet}}} 
 
 \examples{
-## load example
-data(Dilution)
+if (require(affydata)) {
+  ## load example
+  data(Dilution)
 
-## nice print
-print(Dilution)
+  ## nice print
+  print(Dilution)
 
-pm(Dilution)[1:5,]
-mm(Dilution)[1:5,]
+  pm(Dilution)[1:5,]
+  mm(Dilution)[1:5,]
 
-## get indexes for the PM probes for the affyID "1900_at" 
-mypmindex <- pmindex(Dilution,"1900_at")
-## same operation using the primitive
-mypmindex <- indexProbes(Dilution, which="pm", genenames="1900_at")[[1]]
-## get the probe intensities from the index
-intensity(Dilution)[mypmindex, ]
+  ## get indexes for the PM probes for the affyID "1900_at" 
+  mypmindex <- pmindex(Dilution,"1900_at")
+  ## same operation using the primitive
+  mypmindex <- indexProbes(Dilution, which="pm", genenames="1900_at")[[1]]
+  ## get the probe intensities from the index
+  intensity(Dilution)[mypmindex, ]
 
-description(Dilution) ##we can also use the methods of eSet
-sampleNames(Dilution)
-abstract(Dilution)
+  description(Dilution) ##we can also use the methods of eSet
+  sampleNames(Dilution)
+  abstract(Dilution)
+}
 }
 
 \keyword{classes}

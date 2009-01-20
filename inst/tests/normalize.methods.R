@@ -1,5 +1,6 @@
 ## routine tests for the normalization methods
 library(affy)
+library(affydata)
 
 data(Dilution)
 

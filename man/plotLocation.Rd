@@ -26,6 +26,7 @@ plotLocation(x, col="green", pch=22, ...)
   \code{\link[affy:AffyBatch-class]{AffyBatch}}
 }
 \examples{
+if (require(affydata)) {
   data(Dilution)
 
   ## image of the celfile
@@ -41,7 +42,7 @@ plotLocation(x, col="green", pch=22, ...)
 
   ## plot
   plotLocation(xy)
-
+}
 }
 \keyword{aplot}
 

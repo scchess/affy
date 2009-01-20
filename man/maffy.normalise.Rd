@@ -26,11 +26,13 @@ Astrand, M. (2003) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
 \author{Magnus Astrand}
 \seealso{ \code{\link{maffy.subset}}}
 \examples{
-     data(Dilution)
-     x <- pm(Dilution)[1:2000,1:3]
-     mva.pairs(x)
-     x <- maffy.normalize(x,subset=1:nrow(x))
-     mva.pairs(x)
+if (require(affydata)) {
+  data(Dilution)
+  x <- pm(Dilution)[1:2000,1:3]
+  mva.pairs(x)
+  x <- maffy.normalize(x,subset=1:nrow(x))
+  mva.pairs(x)
+}
 }
 \keyword{internal}
 
