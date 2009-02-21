@@ -129,6 +129,10 @@ importFrom(utils,
 
 ##export everything that does not start with a .
 exportPattern("^[^\\.]")
-export(".setAffyOptions")
+
+export(.setAffyOptions)
+
+exportMethods(show, exprs, featureNames, geneNames, sampleNames,
+               se.exprs, updateObject)
 
 exportClasses("AffyBatch")
