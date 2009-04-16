@@ -43,7 +43,6 @@ ma.plot <- function(A,M,subset=sample(1:length(M),min(c(10000, length(M)))),show
   }
   
   if(plot.method == "smoothScatter"){
-    require("geneplotter")
     plotmethod <- "smoothScatter"
   } else if (plot.method == "add"){
     plotmethod <- "add"

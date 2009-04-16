@@ -31,7 +31,7 @@ show.statistics=TRUE, span=2/3, family.loess="gaussian", cex = 2,plot.method=c("
   \item{cex}{Size of text when writing summary statistics on plot}
   \item{plot.method}{a string specifying how the plot is to be
     drawn. \code{"normal"} plots points, \code{"smoothScatter"} uses the
-  \code{\link[geneplotter]{smoothScatter}} function. Specifying
+  \code{\link[graphics]{smoothScatter}} function. Specifying
   \code{"add"} means that the MAplot should be added to the current
   plot}
 \item{add.loess}{add a loess line to the plot}

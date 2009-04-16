@@ -467,13 +467,11 @@ you to chose between all pairwise comparisons (when \verb+TRUE+) or
 compared to a reference array (the default). These plots can be particularly
 useful in diagnosing problems in replicate sets of arrays. The function
 argument \verb+plot.method+ can be used to create a MAplot using a smoothScatter,
-rather than the default method which is to draw every point. To use this option
-you will need to the \Rpackage{geneplotter} library installed.
+rather than the default method which is to draw every point.
 
 \begin{figure}[htbp]
 \begin{center}
 <<fig=TRUE>>=
-library(geneplotter)
 data(Dilution)
 MAplot(Dilution,pairs=TRUE,plot.method="smoothScatter")
 @
