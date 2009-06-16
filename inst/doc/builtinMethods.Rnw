@@ -65,8 +65,8 @@ suggested by looking at plots of the empirical distribution of probe
 intensities.  In particular the observed PM probes are modeled as the
 sum of a normal noise component N (Normal with mean $\mu$ and variance
 $\sigma^2$) and a exponential signal component S (exponential with
-mean $\alpha$). To avoid any possibilty of negatives, the normal is
-trucated at zero. Given we have O the observed intensity, this then
+mean $\alpha$). To avoid any possibility of negatives, the normal is
+truncated at zero. Given we have O the observed intensity, this then
 leads to an adjustment. 
 
 \begin{equation*}
@@ -78,7 +78,7 @@ where $a =  s- \mu - \sigma^2\alpha$ and $b = \sigma$. Note that
 $\phi$ and $\Phi$ are the standard normal distribution density and
 distribution functions respectively. 
 
-Note that MM probe intensitys are not corrrected by either of these routines.
+Note that MM probe intensities are not corrected by either of these routines.
 
 \subsection{mas}
 
@@ -114,8 +114,10 @@ use the following algorithm where $X$ is a matrix of probe intensities
 \item Given $n$ array of length $p$, form $X$  of dimension $p \times n$  where
 each array is a column
 \item Sort each column of $X$ to give $X_{\mbox{sort}}$
-\item Take the means across rows of $X_{\mbox{sort}}$ and assign this mean to each element in the row to get $X'_{\mbox{sort}}$
-\item Get $X_{\mbox{normalized}}$ by rearranging each column of $X'_{\mbox{sort}}$ to have the same ordering as original $X$
+\item Take the means across rows of $X_{\mbox{sort}}$ and assign this mean to
+each element in the row to get $X'_{\mbox{sort}}$
+\item Get $X_{\mbox{normalized}}$ by rearranging each column of
+$X'_{\mbox{sort}}$ to have the same ordering as original $X$
 \end{enumerate}
  
 The quantile normalization method is a specific case of the
@@ -124,11 +126,11 @@ where we estimate $G$ by the empirical distribution of each array and
 $F$ using the empirical distribution of the averaged sample quantiles.
 Quantile normalization is pretty fast. 
 
-The {\tt quantiles} function performs the algorithm as above. The {\tt
-  quantile.robust} function allows you to exclude or down-weight
+The {\tt quantiles} function performs the algorithm as above. The
+{\tt quantile.robust} function allows you to exclude or down-weight
 arrays in the computation of $\hat G$ above. In most cases we have
-found that the {\tt quantiles} method is sufficient for use and {\tt
-  quantiles.robust} not required.   
+found that the {\tt quantiles} method is sufficient for use and
+{\tt quantiles.robust} not required.   
 
 \subsection{loess}
 
@@ -163,7 +165,10 @@ normalization.
 
 \subsection{qspline}
 
-This method is documented in \cite{workman:etal:2002}. Using a target array (either one of the arrays or a synthetic target), arrays are normalized by fitting splines to the quantiles, then using the splines to perform the normalization.
+This method is documented in \cite{workman:etal:2002}. Using a target array
+(either one of the arrays or a synthetic target), arrays are normalized by
+fitting splines to the quantiles, then using the splines to perform the
+normalization.
 
 \section{PM correct methods}
 
@@ -186,7 +191,7 @@ Make no adjustment to the pm values.
 \subsection{subtractmm}
 
 Subtract MM from PM. This would be the approach taken in MAS 4
-\cite{affy4}. It could also be used in conjuntion with the Li-Wong
+\cite{affy4}. It could also be used in conjunction with the Li-Wong
 model. 
 
 \section{Summarization methods}
@@ -234,9 +239,9 @@ $\log_2$ scale.
 
 \subsection{playerout}
 
-This method is detailed in \cite{Lazardis:etal:2002}. A non
-parameteric method is used to determine weights. The expression value
-is then the weighted average. 
+This method is detailed in \cite{Lazardis:etal:2002}. A non-parametric
+method is used to determine weights. The expression value is then the
+weighted average. 
 
 \section{Putting it altogether using {\tt expresso}}
 
