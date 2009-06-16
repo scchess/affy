@@ -62,19 +62,19 @@ bgcorrect.methods()
 pmcorrect.methods()
 express.summary.stat.methods()
 @
-We would recommend the use of the method \verb+normalize.methods+ to acess the
-list of available normalization methods (as a scheme for
-normalization methods that would go beyond 'affy' is thought).
+We would recommend the use of the method \verb+normalize.methods+ to access
+the list of available normalization methods (as a scheme for normalization
+methods that would go beyond 'affy' is thought).
 <<>>=
 library(affydata)
 data(Dilution)
 normalize.methods(Dilution)
 @
 
-For each processing step, a naming convention exists between the
-method label and the function name in \verb+R+ (see table~\ref{table:summary.labels}).
-Each processing methods should be passed objects (and return objects) corresponding to
-the processing step (see table~\ref{table:summary.methods}). 
+For each processing step, a naming convention exists between the method label
+and the function name in \verb+R+ (see table~\ref{table:summary.labels}).
+Each processing methods should be passed objects (and return objects)
+corresponding to the processing step (see table~\ref{table:summary.methods}). 
 \begin{table}
  \begin{tabular}{|c|c|}
 \hline
@@ -102,9 +102,11 @@ background correction & \verb+AffyBatch+ & \verb+AffyBatch+ \\
 %\hline
 normalization & \verb+AffyBatch+ & \verb+AffyBatch+ \\
 %\hline
-{\it pm} correction &  \verb+ProbeSet+ & a \verb+matrix+ of corrected PM values (one probe per row, one column per chip).\\
+{\it pm} correction &  \verb+ProbeSet+ & a \verb+matrix+ of corrected PM values
+(one probe per row, one column per chip).\\
 %\hline
-expression value & a \verb+matrix+ of PM values & a list of two elements \verb+exprs+ and \verb+se.exprs+\\
+expression value & a \verb+matrix+ of PM values & a list of two elements
+\verb+exprs+ and \verb+se.exprs+\\
 \hline
  \end{tabular}
 \caption{\label{table:summary.methods}Summary table for the processing methods.}
@@ -112,15 +114,16 @@ expression value & a \verb+matrix+ of PM values & a list of two elements \verb+e
 
 Practically, this means that to add a method one has to 
 \begin{enumerate}
- \item create an appropriate method with a name satistfying the convention.
- \item register the method by adding the label name to the
- corresponding variable.
+ \item create an appropriate method with a name satisfying the convention.
+ \item register the method by adding the label name to the corresponding
+ variable.
 \end{enumerate}
 
 \section{Examples}
-As an example we show how to add two simple new methods. The first one does {\it pm} correction.
-The method subtract {\it mm} values to the {\it pm} values, excepts when the
-result is negative. In this case the {\it pm} value remains unchanged.
+As an example we show how to add two simple new methods. The first one does
+{\it pm} correction. The method subtract {\it mm} values to the {\it pm} values,
+except when the result is negative. In this case the {\it pm} value remains
+unchanged.
 
 We create a function using the label name \verb+subtractmmsometimes+.
 <<>>=
@@ -136,13 +139,15 @@ pmcorrect.subtractmmsometimes <- function(object) {
   return(mm.subtracted)
 }
 @ 
-Once the method defined, we just register the \emph{label name} in the corresponding variable.
+Once the method defined, we just register the \emph{label name} in the
+corresponding variable.
 <<>>=
 upDate.pmcorrect.methods(c(pmcorrect.methods(), "subtractmmsometimes"))
 @
 
-The second new method intends to be an robust alternative to the summary expression value computation \verb+avgdiff+.
-The idea is to use the function \verb+huber+ of the package \verb+MASS+.
+The second new method intends to be an robust alternative to the summary
+expression value computation \verb+avgdiff+. The idea is to use the function
+\verb+huber+ of the package \verb+MASS+.
 <<>>=
 huber <- function (y, k = 1.5, tol = 1e-06) {
     y <- y[!is.na(y)]
@@ -178,9 +183,9 @@ upDate.generateExprSet.methods(c(generateExprSet.methods(), "huber"))
 
 From now the package is aware of the two new methods\ldots in this session.
 
-The code for the methods included in the package can be informative if you plan to develop methods.
-An example that demonstrates how a normalization method can be added is given
-by the function \Rfunction{normalize.AffyBatch.vsn} in the package
- \Rpackage{vsn}; see its help file.
+The code for the methods included in the package can be informative if you plan
+to develop methods. An example that demonstrates how a normalization method can
+be added is given by the function \Rfunction{normalize.AffyBatch.vsn} in the
+package \Rpackage{vsn}; see its help file.
 
 \end{document}
