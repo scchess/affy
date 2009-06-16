@@ -30,24 +30,24 @@
 \maketitle
 \tableofcontents
 \section{Introduction}
-The \Rpackage{affy} package is part of the BioConductor\footnote{\url{http://www.bioconductor.org/}} project.
+The \Rpackage{affy} package is part of the
+BioConductor\footnote{\url{http://www.bioconductor.org/}} project.
 It is meant to be an extensible, interactive environment for data analysis
 and exploration of Affymetrix oligonucleotide array probe level data.
 
-The software utilities provided with the Affymetrix software
-suite summarizes the probe set intensities to form one
-{\it expression measure} for each gene. The expression measure
-is the data available for analysis. However, as pointed out by
-\cite{li:wong:2001a}, much can be learned from studying the individual
-probe intensities, or as we call them, the {\it probe level data}.
-This is why we developed this package. The package includes plotting
-functions for the probe level data useful for quality control,
-RNA degradation assessments, different probe level normalization and
-background correction procedures, and flexible functions that permit
-the user to convert probe level data to expression measures.
-The package includes utilities for computing expression measures
-similar to MAS 4.0's AvDiff \citep{affy4}, MAS 5.0's signal
-\citep{affy5}, DChip's MBEI \citep{li:wong:2001a}, and RMA \citep{iriz:etal:2003}.
+The software utilities provided with the Affymetrix software suite
+summarizes the probe set intensities to form one {\it expression measure}
+for each gene. The expression measure is the data available for analysis.
+However, as pointed out by \cite{li:wong:2001a}, much can be learned from
+studying the individual probe intensities, or as we call them, the
+{\it probe level data}. This is why we developed this package. The package
+includes plotting functions for the probe level data useful for quality
+control, RNA degradation assessments, different probe level normalization
+and background correction procedures, and flexible functions that permit
+the user to convert probe level data to expression measures. The package
+includes utilities for computing expression measures similar to MAS 4.0's
+AvDiff \citep{affy4}, MAS 5.0's signal \citep{affy5},
+DChip's MBEI \citep{li:wong:2001a}, and RMA \citep{iriz:etal:2003}.
 
 We assume that the reader is already familiar with oligonucleotide
 arrays and with the design of the Affymetrix GeneChip arrays.
@@ -95,13 +95,17 @@ options. Section \ref{whatwasnew} describes earlier changes.
 There were relatively few changes.
 
 \begin{itemize}
-\item MAplot now accepts the argument \Rfunction{plot.method} which can be used to call
-smoothScatter.
+\item MAplot now accepts the argument \Rfunction{plot.method} which can be
+used to call smoothScatter.
 \item \Rfunction{normalize.quantiles.robust} has had minor changes.
-\item \Rfunction{ReadAffy} can optionally return the SD values stored in the cel file.
-\item The C parsing code has been moved to the \Rpackage{affyio} package, which is now a dependency of
-the affy package. This change should be transparent to users as \Rpackage{affyio} will be automatically loaded when affy is loaded.
-\item Added a cdfname argument to \Rfunction{justRMA} and \Rfunction{ReadAffy} to allow for the use of alternative cdf packages.
+\item \Rfunction{ReadAffy} can optionally return the SD values stored in
+the cel file.
+\item The C parsing code has been moved to the \Rpackage{affyio} package,
+which is now a dependency of the affy package. This change should be
+transparent to users as \Rpackage{affyio} will be automatically loaded
+when affy is loaded.
+\item Added a cdfname argument to \Rfunction{justRMA} and
+\Rfunction{ReadAffy} to allow for the use of alternative cdf packages.
 \end{itemize}
 
 \section{Getting Started: From probe level data to expression values}
@@ -160,8 +164,7 @@ An another option is to use the function \Rfunction{justRMA}.
 R> eset <- justRMA()
 \end{Sinput}
 This reads the data and performs the `RMA' way to preprocess them at
-the {\it C} level.
-One does not need to call \verb+ReadAffy+, probe level
+the {\it C} level. One does not need to call \verb+ReadAffy+, probe level
 data is never stored in an AffyBatch. \verb+rma+ continues to be the
 recommended function for computing RMA.
 
@@ -191,10 +194,10 @@ R> write.exprs(eset, file="mydata.txt")
 \end{Sinput}
 
 \subsection{Reading CEL file information}
-The function \Rfunction{ReadAffy} is quite flexible. It
-lets you specify the filenames, phenotype, and MIAME information.
-You can enter them by reading files (see the help file) or widgets
-(you need to have the tkWidgets package installed and working).
+The function \Rfunction{ReadAffy} is quite flexible. It lets you specify the
+filenames, phenotype, and MIAME information. You can enter them by reading
+files (see the help file) or widgets (you need to have the tkWidgets package
+installed and working).
 
 \begin{Sinput}
 R> Data <- ReadAffy(widget=TRUE) ##read data in working directory
@@ -206,8 +209,8 @@ that provides an easy way of choosing cel files.
 \begin{figure}[htbp]
   \begin{center}
     \includegraphics{widgetfilechooser}
-    \caption{\label{fig:widget.filechooser}Graphical display for selecting {\it CEL} files. This widget is part
-      of the {\it tkWidgets} package.
+    \caption{\label{fig:widget.filechooser}Graphical display for selecting
+      {\it CEL} files. This widget is part of the {\it tkWidgets} package.
       (function written by Jianhua (John) Zhang).
     }
   \end{center}
@@ -437,8 +440,7 @@ For the users convenience we have included the \verb+Dilution+ sample data set:
 Dilution
 @
 
-This will create the \verb+Dilution+ object of class
-\Robject{AffyBatch}.
+This will create the \verb+Dilution+ object of class \Robject{AffyBatch}.
 \Rfunction{print} (or \Rfunction{show}) will display summary information.
 These objects represent data from one experiment. The \Robject{AffyBatch}
 class combines the information of various {\it CEL} files with a common
@@ -447,7 +449,7 @@ The probe level data is contained in this object.
 
 The data in \verb+Dilution+ is a small sample of probe sets from 2
 sets of duplicate arrays hybridized with different concentrations of the
-same RNA.  This information is part of the \Robject{AffyBatch} and can be
+same RNA. This information is part of the \Robject{AffyBatch} and can be
 accessed with the \verb+phenoData+ and \verb+pData+ methods:
 <<>>=
 phenoData(Dilution)
@@ -466,8 +468,8 @@ graphical comparison of intensity data. The option \verb+pairs+ permits
 you to chose between all pairwise comparisons (when \verb+TRUE+) or
 compared to a reference array (the default). These plots can be particularly
 useful in diagnosing problems in replicate sets of arrays. The function
-argument \verb+plot.method+ can be used to create a MAplot using a smoothScatter,
-rather than the default method which is to draw every point.
+argument \verb+plot.method+ can be used to create a MAplot using a
+smoothScatter, rather than the default method which is to draw every point.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -496,10 +498,10 @@ probeNames(Dilution)[Index]
 @
 \verb+Index+ contains six arbitrary probe positions.
 
-Notice that the column names of $PM$ and $MM$ matrices are the sample
-names and the row names are the {\it affyID}, e.g. \verb+1001_at+
-and \verb+1000_at+ together with the probe
-number (related to position in the target sequence).
+Notice that the column names of $PM$ and $MM$ matrices are the sample names
+and the row names are the {\it affyID}, e.g. \verb+1001_at+ and
+\verb+1000_at+ together with the probe number (related to position in the
+target sequence).
 
 <<>>=
 sampleNames(Dilution)
@@ -517,15 +519,14 @@ specific probe set intensities.
 gn <- geneNames(Dilution)
 pm(Dilution, gn[100])
 @
-The method \Rfunction{geneNames} extracts the unique {\it
-affyID}s. Also notice that the 100th probe set is different from the
-100th probe! The 100th probe is not part of the the 100th probe set.
+The method \Rfunction{geneNames} extracts the unique {\it affyID}s. Also
+notice that the 100th probe set is different from the 100th probe! The
+100th probe is not part of the the 100th probe set.
 
-The methods \Rfunction{boxplot}, \Rfunction{hist}, and
-\Rfunction{image} are useful for quality control.
-Figure \ref{f3} shows kernel density estimates (rather than
-histograms) of $PM$ intensities for the 1st and 2nd array
-of the \verb+Dilution+ also included in the package.
+The methods \Rfunction{boxplot}, \Rfunction{hist}, and \Rfunction{image}
+are useful for quality control. Figure \ref{f3} shows kernel density
+estimates (rather than histograms) of $PM$ intensities for the 1st and
+2nd array of the \verb+Dilution+ also included in the package.
 
 \subsection{Histograms, Images, and Boxplots}
 \begin{figure}[htbp]
@@ -537,11 +538,11 @@ hist(Dilution[,1:2]) ##PM histogram of arrays 1 and 2
 \end{center}
 \end{figure}
 
-As seen in the previous example, the sub-setting method \verb+[+ can be used to extract specific
-arrays. {\bf NOTE: Sub-setting is different in this version. One can no
-longer subset by gene. We can only define subsets by one dimension: the
-columns, i.e. the arrays. Because the \verb+Cel+ class is no longer
-available \verb+[[+ is no longer available.} %]]
+As seen in the previous example, the sub-setting method \verb+[+ can be
+used to extract specific arrays. {\bf NOTE: Sub-setting is different in
+this version. One can no longer subset by gene. We can only define subsets
+by one dimension: the columns, i.e. the arrays. Because the \verb+Cel+
+class is no longer available \verb+[[+ is no longer available.} %]]
 
 The method \verb+image()+ can be used to detect spatial artifacts.
 By default we look at log transformed intensities. This can be
@@ -584,11 +585,11 @@ the targeted RNA molecule.\cite{affy4}  Since RNA degradation typically
 starts from the $5'$ end of the molecule, we would expect probe
 intensities to be systematically lowered at that end of a probeset when
 compared to the $3'$ end.  On each chip, probe intensities are averaged
-by location in probeset, with the average taken over probesets.  The
+by location in probeset, with the average taken over probesets. The
 function \Rfunction{plotAffyRNAdeg} produces a side-by-side plots of these
 means, making it easy to notice any $5'$ to $3'$ trend.  The function
 \Rfunction{summaryAffyRNAdeg} produces a single summary statistic for each
-array in the batch, offering a convenint measure of the severity of
+array in the batch, offering a convenient measure of the severity of
 degradation and significance level.  For an example
 <<>>=
 deg <- AffyRNAdeg(Dilution)
@@ -716,10 +717,10 @@ example by considering only probes common to both arrays.
 Users can also define their own environment for probe set location
 mapping. More on this in Section \ref{sec:probesloc}.
 
-An example of a \verb+ProbeSet+ is included in the package.
-A spike in data set is included in the package in the form of
-a list of \verb+ProbeSet+s. The help file describes the data
-set. Figure \ref{f5.3} uses this data set to demonstrate that the $MM$
+An example of a \verb+ProbeSet+ is included in the package. A spike-in
+data set is included in the package in the form of a list of
+\verb+ProbeSet+s. The help file describes the data set.
+Figure \ref{f5.3} uses this data set to demonstrate that the $MM$
 also detect transcript signal.
 
 \begin{figure}[htbp]
@@ -745,28 +746,29 @@ lines(concentrations[1,],apply(mms,2,mean),lwd=3)
 
 \section{Location to ProbeSet Mapping}
 \label{sec:probesloc}
-On Affymetrix GeneChip arrays, several probes are used to represent
-genes in the form of probe sets. From a {\it CEL} file we get for each
-physical location, or cel, (defined by $x$ and $y$ coordinates) an intensity.
-The {\it CEL} file also contains the name of the {\it CDF} file needed for the
-location-probe-set mapping. The {\it CDF} files store the probe set related to
-each location on the array. The computation of a summary expression values from
-the probe intensities requires a fast way to map an {\it affyid} to corresponding
-probes. We store this mapping information in {\bf R}
+On Affymetrix GeneChip arrays, several probes are used to represent genes
+in the form of probe sets. From a {\it CEL} file we get for each physical
+location, or cel, (defined by $x$ and $y$ coordinates) an intensity. The
+{\it CEL} file also contains the name of the {\it CDF} file needed for the
+location-probe-set mapping. The {\it CDF} files store the probe set related
+to each location on the array. The computation of a summary expression values
+from the probe intensities requires a fast way to map an {\it affyid} to
+corresponding probes. We store this mapping information in {\bf R}
 environments\footnote{Please refer to the {\bf R} documentation to know more about environments.}.
-They only contain a part of the information that can be found in the {\it CDF} files.
-The {\it cdfenvs} are sufficient to perform the numerical processing methods included
-in the package. For each {\it CDF} file there is package, available from
-\url{http://www.bioconductor.org/data/metaData.html}, that contains exactly one of
-these environments. The {\it cdfenvs} we store the $x$ and $y$ coordinates as one number
-(see above).
+They only contain a part of the information that can be found in the {\it CDF}
+files. The {\it cdfenvs} are sufficient to perform the numerical processing
+methods included in the package. For each {\it CDF} file there is package,
+available from \url{http://www.bioconductor.org/data/metaData.html}, that
+contains exactly one of these environments. The {\it cdfenvs} we store the
+$x$ and $y$ coordinates as one number (see above).
 
-In instances of {\it AffyBatch}, the {\it cdfName} slot gives the name of the appropriate
-{\it CDF} file for arrays represented in the \verb+intensity+ slot. The functions
-\verb+read.celfile+, \verb+read.affybatch+, and \verb+ReadAffy+ extract the {\it CDF}
-filename from the {\it CEL} files being read. Each {\it CDF} file corresponds to exactly
-one environment. The function \verb+cleancdfname+ converts the Affymetrix given {\it CDF}
-name to a BioConductor environment and annotation name. Here are two examples:
+In instances of {\it AffyBatch}, the {\it cdfName} slot gives the name of the
+appropriate {\it CDF} file for arrays represented in the \verb+intensity+ slot.
+The functions \verb+read.celfile+, \verb+read.affybatch+, and \verb+ReadAffy+
+extract the {\it CDF} filename from the {\it CEL} files being read. Each
+{\it CDF} file corresponds to exactly one environment. The function
+\verb+cleancdfname+ converts the Affymetrix given {\it CDF} name to a
+BioConductor environment and annotation name. Here are two examples:
 
 These give environment names:
 <<>>=
@@ -779,11 +781,10 @@ This gives annotation name:
 cat("HG_U95Av2 is",cleancdfname("HG_U95Av2",addcdf=FALSE),"\n")
 @
 
-An environment representing the corner of an Hu6800 array
-is available with the package.
-In the following, we load the environment,
-look at the names for the first 5 objects defined
-in the environment, and finally look at the first object in the environment:
+An environment representing the corner of an Hu6800 array is available with
+the package. In the following, we load the environment, look at the names for
+the first 5 objects defined in the environment, and finally look at the first
+object in the environment:
 <<>>=
 data(cdfenv.example)
 ls(cdfenv.example)[1:5]
@@ -819,9 +820,8 @@ locations in the components. We can also get specific probe sets:
 <<>>=
 pmindex(Dilution, genenames=c("1000_at","1001_at"))
 @
-The locations are ordered from 5' to 3'
-on the target transcript. The function \verb+mmindex+ performs in a
-similar way:
+The locations are ordered from 5' to 3' on the target transcript.
+The function \verb+mmindex+ performs in a similar way:
 <<>>=
 mmindex(Dilution, genenames=c("1000_at","1001_at"))
 @
@@ -856,10 +856,9 @@ opt$affy <- affy.opt
 options(BioC=opt)
 @
 %$
- \item Compression of files: if you are always compressing your CEL
-files, you might find annoying to specify
-it each time you call a reading function. It can be specified once for all in the
-options.
+\item Compression of files: if you are always compressing your CEL files,
+you might find annoying to specify it each time you call a reading function.
+It can be specified once for all in the options.
 <<>>=
 opt <- getOption("BioC")
 affy.opt <- opt$affy
@@ -869,14 +868,13 @@ options(BioC=opt)
 @
 %$
 \item Priority rule for the use of a cdf environment:
-The option {\it probesloc} is a list. Each element of the list is it
-self a list with two elements {\it what}
-and {\it where}. When looking for the information related to the locations
-of the probes on the array, the elements
-in the list will be looked at sequentially. The first one leading to
-the information is used (an error
-message is returned if none permits to find the information). The
-element {\it what} can be one of {\it package}, {\it environment}.
+The option {\it probesloc} is a list. Each element of the list is itself a
+list with two elements {\it what} and {\it where}. When looking for the
+information related to the locations of the probes on the array, the elements
+in the list will be looked at sequentially. The first one leading to the
+information is used (an error message is returned if none permits to find the
+information). The element {\it what} can be one of {\it package},
+{\it environment}.
 \end{itemize}
 
 
@@ -885,7 +883,7 @@ element {\it what} can be one of {\it package}, {\it environment}.
 
 There are several other vignettes addressing more specialised topics related to the {\tt affy} package.
 \begin{itemize}
-\item {\bf affy: Custom Processing Methods (HowTo)}: A description of how to use custom preprocessing methods with the package. This document gives examples of how you might write your own preprocessing method and use it with the packae.
+\item {\bf affy: Custom Processing Methods (HowTo)}: A description of how to use custom preprocessing methods with the package. This document gives examples of how you might write your own preprocessing method and use it with the package.
 \item {\bf affy: Built-in Processing Methods}: A document giving fuller descriptions of each of the preprocessing methods that are available within the {\tt affy} package.
 \item {\bf affy: Import Methods (HowTo)}: A discussion of the data structures used and how you might import non standard data into the package.
 \item {\bf affy: Loading Affymetrix Data (HowTo)}: A quick guide to loading Affymetrix data into R.
@@ -901,7 +899,9 @@ There are several other vignettes addressing more specialised topics related to 
 There were very few changes.
 
 \begin{itemize}
-\item The function \verb+MAplot+ has been added. It works on instances of AffyBatch.  You can decide if you want to make all pairwise MA plots or compare to a reference array using the pairs argument.
+\item The function \verb+MAplot+ has been added. It works on instances of AffyBatch.
+You can decide if you want to make all pairwise MA plots or compare to a
+reference array using the pairs argument.
 \item Minor bugs fixed in the parsers.
 \item The path of celfiles is now removed by ReadAffy.
 \end{itemize}
@@ -924,7 +924,7 @@ functionality has disappeared. Memory efficiency and speed have improved.
 \item For instances of \verb+AffyBatch+ the subsetting has
   changed. For consistency with \verb+exprSets+ one can only subset by
   the second dimension. So to obtain the first array, \verb+abatch[1]+
-  and \verb+abatch[1,]+ will give warnints (errors in the next
+  and \verb+abatch[1,]+ will give warnings (errors in the next
   release). The correct code is \verb+abatch[,1]+.
 \item mas5calls is now faster and reproduces Affymetrix's official
   version much better.
