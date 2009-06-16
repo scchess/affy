@@ -12,14 +12,15 @@ hybridized to the arrays.
 normalize(object, ...)
 }
 \arguments{
-  \item{object}{a data object containing microarray data}
-  \item{...}{any other arguments}
+  \item{object}{a data object containing microarray data.}
+  \item{\dots}{any other arguments.}
 }
 \seealso{
   Type \code{showMethods("normalize")} at the R prompt to see what
   methods are available. Help on individual methods is generally available
   as \code{normalize}.<class> where <class> is the class of the data
-  object. For example, for the main class in the \code{affy} package use \code{?normalize.AffyBatch}.
+  object. For example, for the main class in the \code{affy} package use
+  \code{?normalize.AffyBatch}.
 
   Other Bioconductor packages include some related generic functions:
   \code{\link[limma]{normalizeWithinArrays}}, and 
@@ -27,4 +28,3 @@ normalize(object, ...)
   \code{\link[marrayNorm]{maNorm}} in the marrayNorm package.
 }
 \keyword{models}
-

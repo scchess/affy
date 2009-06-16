@@ -6,17 +6,18 @@
 \alias{affy.scalevalue.exprSet}
 \title{Scale normalization for expreSets}
 \description{
-  Normalizes expression values using the method described in the
-  Affymetrix user manual.
+  Normalizes expression values using the method described in the Affymetrix
+  user manual.
 }
 \usage{
 affy.scalevalue.exprSet(eset, sc = 500, analysis="absolute")
 }
 \arguments{
-  \item{eset}{An \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}} object.}
+  \item{eset}{An \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}
+    object.}
   \item{sc}{Value at which all arrays will be scaled to.}
   \item{analysis}{Should we do absolute or comparison analysis, although
-  "comparison" is still not implemented.}
+    "comparison" is still not implemented.}
 }
 \details{
   This is function was implemented from the Affymetrix technical
@@ -25,5 +26,6 @@ affy.scalevalue.exprSet(eset, sc = 500, analysis="absolute")
 }
 \author{Laurent}
 \value{
-  A normalized \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}}
+  A normalized \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}.
+}
 \keyword{manip}

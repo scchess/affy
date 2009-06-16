@@ -13,12 +13,11 @@ plotLocation(x, col="green", pch=22, ...)
     \code{indexProbes}, or made elsewhere (basically a location is nrows and
     two columns array. The first column corresponds to the x positions
     and the second columns corresponds to the y positions of n elements
-    to locate)}
-  \item{col}{colors for the plot}
-  \item{pch}{plotting type (see function \code{plot})}
-  \item{...}{Other parameters passed to the function \code{points}}
+    to locate).}
+  \item{col}{colors for the plot.}
+  \item{pch}{plotting type (see function \code{plot}).}
+  \item{\dots}{other parameters passed to the function \code{points}.}
 }
-
 \author{
   Laurent
 }
@@ -45,6 +44,3 @@ if (require(affydata)) {
 }
 }
 \keyword{aplot}
-
-
-

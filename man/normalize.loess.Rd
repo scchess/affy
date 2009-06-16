@@ -16,7 +16,7 @@ normalize.AffyBatch.loess(abatch,type=c("together","pmonly","mmonly","separate")
   \item{abatch}{an \code{\link[affy:AffyBatch-class]{AffyBatch}} object.}
   \item{subset}{a subset of the data to fit a loess to.}
   \item{epsilon}{a tolerance value (supposed to be a small value - used
-    as a stopping criterium).}
+    as a stopping criterion).}
   \item{maxit}{maximum number of iterations.}
   \item{log.it}{logical. If \code{TRUE} it takes the log2 of \code{mat}}
   \item{verbose}{logical. If \code{TRUE} displays current pair of chip being
@@ -27,11 +27,11 @@ normalize.AffyBatch.loess(abatch,type=c("together","pmonly","mmonly","separate")
     are acceptable values for this parameter.}
   \item{type}{A string specifying how the normalization should be
     applied. See details for more.}
-  \item{...}{any of the options of normalize.loess you would like to
+  \item{\dots}{any of the options of normalize.loess you would like to
     modify (described above).}
 }
 \details{
-  The type arguement should be one of
+  The type argument should be one of
   \code{"separate","pmonly","mmonly","together"} which indicates whether
   to normalize only one probe type (PM,MM) or both together or separately.
 }
@@ -48,5 +48,3 @@ if (require(affydata)) {
 }
 }
 \keyword{smooth}
-
-

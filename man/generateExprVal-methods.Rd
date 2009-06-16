@@ -3,7 +3,6 @@
 \alias{express.summary.stat-methods}
 \alias{express.summary.stat.methods}
 \alias{upDate.express.summary.stat.methods}
-
 \title{Compute a summary expression value from the probes intensities}
 \description{
   Compute a summary expression value from the probes intensities
@@ -18,7 +17,7 @@ upDate.express.summary.stat.methods(x)
   \item{pmcorrect}{the method used to correct the PM values before
     summarizing to an expression value.}
   \item{summary}{the method used to generate the expression value.}
-  \item{...}{other parameters the method might need... (see the
+  \item{\dots}{other parameters the method might need... (see the
     corresponding methods below...)}
 }
 \value{

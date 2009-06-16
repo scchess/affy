@@ -11,19 +11,18 @@ ppsetApply(abatch, FUN, genenames = NULL, ...)
 ppset.ttest(ppset, covariate, pmcorrect.fun = pmcorrect.pmonly, ...)
 }
 \arguments{
-  \item{abatch}{ An object inheriting from \code{AffyBatch}.}
-  \item{ppset}{ An object of class \code{ProbeSet}.}
-  \item{covariate}{ the name a covariate in the slot \code{phenoData}.}
-  \item{pmcorrect.fun}{ a function to corrrect PM intensities}
-  \item{FUN}{ A function working on a \code{ProbeSet} }
-  \item{genenames}{ A list of Affymetrix probesets ids to work with. All
+  \item{abatch}{an object inheriting from \code{AffyBatch}.}
+  \item{ppset}{an object of class \code{ProbeSet}.}
+  \item{covariate}{the name a covariate in the slot \code{phenoData}.}
+  \item{pmcorrect.fun}{a function to correct PM intensities.}
+  \item{FUN}{a function working on a \code{ProbeSet}.}
+  \item{genenames}{a list of Affymetrix probesets ids to work with. All
   probe set ids used when \code{NULL}.}
-  \item{\dots}{ Optional parameters to the function \code{FUN} }
+  \item{\dots}{optional parameters to the function \code{FUN}.}
 }
 \value{
   Returns a \code{list} of objects, or values, as returned by the
-  function \code{FUN}
-  for each \code{ProbeSet} it processes.
+  function \code{FUN} for each \code{ProbeSet} it processes.
 }
 \author{Laurent Gautier <laurent@cbs.dtu.dk>}
 \seealso{\code{\link[affy]{ProbeSet-class}} }

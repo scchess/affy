@@ -6,19 +6,19 @@
 \alias{open,ProgressBarText-method}
 \alias{updateMe}
 \alias{updateMe,ProgressBarText-method}
-
 \title{Class "ProgressBarText" }
-\description{ A class to handle progress bars in text mode}
+\description{A class to handle progress bars in text mode.}
 \section{Objects from the Class}{
 Objects can be created by calls of the form \code{new("ProgressBarText", steps)}.
 }
 \section{Slots}{
   \describe{
     \item{\code{steps}:}{Object of class \code{"integer"}. The total number of
-      steps the progress bar should represent}
-    \item{\code{barsteps}:}{Object of class \code{"integer"}. The size
-      of the progress bar.}
-    \item{\code{internals}:}{Object of class \code{"environment"}. For internal use.}
+      steps the progress bar should represent.}
+    \item{\code{barsteps}:}{Object of class \code{"integer"}. The size of the
+      progress bar.}
+    \item{\code{internals}:}{Object of class \code{"environment"}.
+      For internal use.}
   }
 }
 \section{Methods}{

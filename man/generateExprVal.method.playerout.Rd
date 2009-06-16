@@ -17,10 +17,10 @@
   A vector of expression values.
 }
 \details{
-A non-parametrical method to weight each perfect match
-  probe in the set and to compute a weighted mean of the perfect match
-  values. One will notice this method only makes use of the perfect
-  matches. (see function \code{playerout.costfunction} for the cost function).
+  A non-parametric method to weight each perfect match probe in the set and
+  to compute a weighted mean of the perfect match values. One will notice
+  this method only makes use of the perfect matches. (see function
+  \code{playerout.costfunction} for the cost function).
 }
 \author{
   Laurent <laurent@cbs.dtu.dk>\cr
@@ -33,5 +33,3 @@ A non-parametrical method to weight each perfect match
   arrays, Mathematical Biosciences, Volume 176, Issue 1, March 2002, Pages 53-58
 }
 \keyword{manip}
-
-

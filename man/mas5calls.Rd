@@ -25,21 +25,21 @@ mas5.detection(mat, tau = 0.015, alpha1 = 0.04, alpha2 = 0.06,
                exact.pvals = FALSE, cont.correct = FALSE)
 }
 \arguments{
-  \item{object}{An object of class \code{AffyBatch} or \code{ProbeSet}}
-  \item{ids}{probeset IDs for which you want to compute calls}
-  \item{mat}{an n-by-2 matrix of paired values (pairs in rows), PMs first col}
-  \item{verbose}{logical. It \code{TRUE} status of processing is reported}
-  \item{tau}{a small positive constant }
-  \item{alpha1}{a significance threshold in (0,alph2)}
-  \item{alpha2}{a significance threshold in (alpha1,0.5) }
-  \item{exact.pvals}{a boolean controlling whether exact p-values are computed
-    (irrelevant if n<50 and there are no ties).  Otherwise the
-    normal approximation is used}
-  \item{ignore.saturated}{ if true do the saturation correction described in the paper, with a saturation level of 46000 }
-  \item{cont.correct}{a boolean controlling whether continuity
-    correction is used in the p-value normal approximation  }
-  \item{...}{any of the above arguments that applies}
-    
+  \item{object}{an object of class \code{AffyBatch} or \code{ProbeSet}.}
+  \item{ids}{probeset IDs for which you want to compute calls.}
+  \item{mat}{an n-by-2 matrix of paired values (pairs in rows), PMs first col.}
+  \item{verbose}{logical. It \code{TRUE}, status of processing is reported.}
+  \item{tau}{a small positive constant.}
+  \item{alpha1}{a significance threshold in (0, alpha2).}
+  \item{alpha2}{a significance threshold in (alpha1, 0.5).}
+  \item{exact.pvals}{logical controlling whether exact p-values are computed
+    (irrelevant if n<50 and there are no ties).  Otherwise the normal
+    approximation is used.}
+  \item{ignore.saturated}{if TRUE, do the saturation correction described in
+    the paper, with a saturation level of 46000.}
+  \item{cont.correct}{logical controlling whether continuity correction is
+    used in the p-value normal approximation.}
+  \item{\dots}{any of the above arguments that applies.}
 }
 \details{
  This function performs the hypothesis test:
@@ -47,10 +47,10 @@ mas5.detection(mat, tau = 0.015, alpha1 = 0.04, alpha2 = 0.06,
   H0: median(Ri) = tau, corresponding to absence of transcript
   H1: median(Ri) > tau, corresponding to presence of transcript
 
-where Ri = (PMi - MMi) / (PMi + MMi) for each i a probe-pair in the 
-probe-set represented by data.
+ where Ri = (PMi - MMi) / (PMi + MMi) for each i a probe-pair in the 
+ probe-set represented by data.
 
-Currently exact.pvals=TRUE is not supported, and cont.correct=TRUE works but
+ Currently exact.pvals=TRUE is not supported, and cont.correct=TRUE works but
  does not give great results (so both should be left as FALSE).  The defaults
  for tau, alpha1 and alpha2 correspond to those in MAS5.0.
 
@@ -85,9 +85,9 @@ Currently exact.pvals=TRUE is not supported, and cont.correct=TRUE works but
  were identical on the validation
  set) -- so this implementation will still be of use.
  
-The function \code{mas5.detect} is no longer the engine function for the
-others. C code is no available that computes the wilcox test faster. THe
-function is kept so that people can look at the R code (instead of C)
+ The function \code{mas5.detect} is no longer the engine function for the
+ others. C code is no available that computes the Wilcox test faster. The
+ function is kept so that people can look at the R code (instead of C).
 }
 
 \value{
@@ -98,17 +98,15 @@ function is kept so that people can look at the R code (instead of C)
     transcript is more likely to be present for p-values closer 0.} 
   \item{call}{either "P", "M" or "A" representing a call of present,
     marginal or absent; computed by simply thresholding pval using
-    alpha1 and}
+    alpha1 and alpha2.}
 
   The \code{mas5calls} method for \code{AffyBatch} returns an
   \code{ExpressionSet} with calls accessible with \code{exprs(obj)}
   and p-values available with \code{assayData(obj)[["se.exprs"]]}. The
-  code\code{mas5calls} for \code{ProbeSet} returns a list with vectors of calls
-  and pvalues.
+  code \code{mas5calls} for \code{ProbeSet} returns a list with vectors
+  of calls and p-values.
 }
-
 \references{
-
 Liu, W. M. and Mei, R. and Di, X. and Ryder, T. B. and Hubbell, E. and Dee,
 S. and Webster, T. A. and Harrington, C. A. and Ho, M. H. and Baid, J. and
 Smeekens, S. P. (2002) Analysis of high density expression microarrays with

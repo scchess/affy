@@ -2,8 +2,7 @@
 \alias{cdfenv.example}
 \title{Example cdfenv}
 \description{
-  Example cdfenv
-  (environment containing the probe locations).
+  Example cdfenv (environment containing the probe locations).
 }
 \usage{data(cdfenv.example)}
 \format{ An

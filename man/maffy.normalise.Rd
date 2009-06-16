@@ -2,11 +2,10 @@
 \alias{maffy.normalize}
 \alias{normalize.contrast}
 \title{Normalize Itensities}
-\description{Normalizes feauture intensities from
+\description{Normalizes feature intensities from
   \code{\link[affy:AffyBatch-class]{AffyBatch}}s}
 \usage{
 maffy.normalize(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TRUE)}
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{data}{an matrix of intensities.}
   \item{subset}{a vector of indexes describing which probes to use for normalising.}
@@ -35,8 +34,3 @@ if (require(affydata)) {
 }
 }
 \keyword{internal}
-
-
-
-
-

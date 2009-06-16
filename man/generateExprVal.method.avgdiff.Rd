@@ -4,8 +4,6 @@
 \alias{generateExprVal.method.liwong}
 \alias{generateExprVal.method.mas}
 
-
-
 \title{Generate an expression value from the probes informations}
 \description{
   Generate an expression from the probes
@@ -15,14 +13,13 @@ generateExprVal.method.avgdiff(probes, ...)
 generateExprVal.method.medianpolish(probes, ...)
 generateExprVal.method.liwong(probes, ...)
 generateExprVal.method.mas(probes, ...)
-
 }
 \arguments{
-  \item{probes}{a matrix of probe intesities with rows representing
-    probes and columns representing
-    samples. Usually \code{pm(probeset)} where \code{probeset} is a
-    of class \code{\link[affy:ProbeSet-class]{ProbeSet}}}
-  \item{...}{extra arguments to pass to the respective function}
+  \item{probes}{a matrix of probe intensities with rows representing
+    probes and columns representing samples. Usually \code{pm(probeset)}
+    where \code{probeset} is a of class
+    \code{\link[affy:ProbeSet-class]{ProbeSet}}.}
+  \item{\dots}{extra arguments to pass to the respective function.}
 }
 \value{
   A list containing entries:
@@ -44,8 +41,6 @@ generateExprVal.method.mas(probes, ...)
   points(concentrations,liwong$exprs,pch="l",col=3,type="b",lty=3)
   points(concentrations,playerout$exprs,pch="p",col=4,type="b",lty=4)
   points(concentrations,mas$exprs,pch="p",col=4,type="b",lty=4)
-
-  
 }
 \seealso{
   \code{\link{generateExprSet-methods},\code{\link{generateExprVal.method.playerout}}, \code{\link{li.wong}}, \code{\link{medianpolish}}}

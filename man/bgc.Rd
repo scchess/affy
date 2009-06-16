@@ -16,15 +16,14 @@ bg.correct.rma(object,...)
 bg.correct.mas(object, griddim)
 bg.correct.none(object, ...)
 }
-
 \arguments{
   \item{object}{An object of class \code{\link[affy:AffyBatch-class]{AffyBatch}}.}
   \item{method}{A \code{character} that defines what background
     correction method will be used. Available methods are given by
-    \code{bg.correct.methods}. }  
+    \code{bg.correct.methods}.}
   \item{griddim}{grid dimension used for mas background estimate. The array
-    is divided into griddm equal parts. Default is 16.}
-  \item{...}{arguments to pass along to the engine function.}
+    is divided into griddim equal parts. Default is 16.}
+  \item{\dots}{arguments to pass along to the engine function.}
 }
 \details{
   The name of the method to apply must be double-quoted.
@@ -42,9 +41,8 @@ bg.correct.none(object, ...)
 
   More details are available in the vignette.
 
-  R implementations similar in function to the internal implemntation used by \code{bg.correct.rma} are in
-  \code{\link{bg.adjust}}.
-  
+  R implementations similar in function to the internal implementation used by
+  \code{bg.correct.rma} are in \code{\link{bg.adjust}}. 
 }  
 \value{
   An \code{\link[affy:AffyBatch-class]{AffyBatch}} for which the
@@ -52,7 +50,6 @@ bg.correct.none(object, ...)
   For some methods (RMA), only PMs are corrected and the MMs remain the
   same. 
 }
-
 \examples{
 if (require(affydata)) {
   data(Dilution)
@@ -66,11 +63,3 @@ if (require(affydata)) {
 }
 }
 \keyword{manip}
-
-
-
-
-
-
-
-

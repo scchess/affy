@@ -8,7 +8,6 @@ named directory/folder ending in .cel or .CEL.
 \usage{
 list.celfiles(...)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{\dots}{arguments to  pass along to
     \code{\link[base]{list.files}}}
@@ -17,8 +16,7 @@ list.celfiles(...)
 A character vector of file names.
 }
 \seealso{list.files}
-
 \examples{
 list.celfiles()
 }
-\keyword{character}% at least one, from doc/KEYWORDS
+\keyword{character}

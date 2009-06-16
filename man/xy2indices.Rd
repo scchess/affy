@@ -1,7 +1,7 @@
 \name{xy2indices}
 \alias{xy2indices}
 \alias{indices2xy}
-\title{ Functions to convert indices to x/y (and reverse)}
+\title{Functions to convert indices to x/y (and reverse)}
 \description{
   Functions to convert indices to x/y (and reverse)
 }
@@ -10,15 +10,15 @@ xy2indices(x, y, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = N
 indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL)
 }
 \arguments{
-  \item{x}{ \code{X} position for the probes }
-  \item{y}{ \code{Y} position for the probes }
-  \item{i}{ indices in the \code{AffyBatch} for the probes }
-  \item{nr}{ total number of \code{Xs} on the chip }
-  \item{cel}{ a corresponding object of class \code{\link[affy:Cel-class]{Cel}} }
-  \item{abatch}{ a corresponding object of class
-    \code{\link[affy:AffyBatch-class]{AffyBatch}} }
-  \item{cdf}{ character - the name of the corresponding cdf package}
-  \item{xy.offset}{an eventual offset for the XY coordinates. See Details}
+  \item{x}{\code{X} position for the probes.}
+  \item{y}{\code{Y} position for the probes.}
+  \item{i}{indices in the \code{AffyBatch} for the probes.}
+  \item{nr}{total number of \code{Xs} on the chip.}
+  \item{cel}{a corresponding object of class \code{\link[affy:Cel-class]{Cel}}.}
+  \item{abatch}{a corresponding object of class
+    \code{\link[affy:AffyBatch-class]{AffyBatch}}.}
+  \item{cdf}{character - the name of the corresponding cdf package.}
+  \item{xy.offset}{an eventual offset for the XY coordinates. See Details.}
 }
 \details{
   The probes intensities for given probe set ids are extracted from an
@@ -36,9 +36,9 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL
 \value{
   A vector of indices or a two-columns matrix of Xs and Ys. 
 }
-\author{ L. }
-\section{Warning}{ Even if one really knows what is going on, playing with the
-  parameter \code{xy.offset} could be risky. Changing the package-wide
+\author{L.}
+\section{Warning}{Even if one really knows what is going on, playing with
+  the parameter \code{xy.offset} could be risky. Changing the package-wide
   option \code{xy.offset} appears much more sane.}
 \seealso{\code{\link{indexProbes}}}
 \examples{
@@ -56,4 +56,4 @@ if (require(affydata)) {
   plotLocation(mm.i.xy, col="blue")
 }
 }
-\keyword{ manip }
+\keyword{manip}

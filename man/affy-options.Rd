@@ -24,8 +24,7 @@
       \item if \emph{package}: location for the package (like it would be for
       the argument \code{lib.loc} for the function \code{library}.)
       \item if \emph{environment}: an \code{environment} to look for the
-      information
-      (like the argument \code{env} for the function \code{get}).
+      information (like the argument \code{env} for the function \code{get}).
       \item if \emph{file}: a \code{character} with the path in which a CDF
       file can be found.
     }

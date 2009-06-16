@@ -2,26 +2,25 @@
 \alias{barplot.ProbeSet}
 \title{show a ProbeSet as barplots}
 \description{
-  displays the probe intensities in a ProbeSet as a barplots
+  Displays the probe intensities in a ProbeSet as a barplots
 }
 \usage{
-\method{barplot}{ProbeSet}(height, xlab = "Probe pair", ylab = "Intensity", main =
-NA, col.pm = "red", col.mm = "blue", beside = TRUE, names.arg = "pp",
-ask = TRUE, scale, ...)
+\method{barplot}{ProbeSet}(height, xlab = "Probe pair", ylab = "Intensity",
+    main = NA, col.pm = "red", col.mm = "blue", beside = TRUE, names.arg = "pp",
+    ask = TRUE, scale, ...)
 }
-%- maybe also `usage' for other objects documented here.
 \arguments{
-  \item{height}{an object of class \code{ProbeSet} }
-  \item{xlab}{ label for x axis }
-  \item{ylab}{ label for y axis }
-  \item{main}{ main label for the figure }
-  \item{col.pm}{ color for the `pm' intensities }
-  \item{col.mm}{ color for the `mm' intensities }
-  \item{beside}{ bars beside eachothers or not }
-  \item{names.arg}{  }
-  \item{ask}{ ask before ploting the next barplot }
-  \item{scale}{ put all the barplot to the same scale }
-  \item{\dots}{ extra parameters to be passed to \code{\link{barplot}} }
+  \item{height}{an object of class \code{ProbeSet}.}
+  \item{xlab}{label for x axis.}
+  \item{ylab}{label for y axis.}
+  \item{main}{main label for the figure.}
+  \item{col.pm}{color for the `pm' intensities.}
+  \item{col.mm}{color for the `mm' intensities.}
+  \item{beside}{bars beside each others or not.}
+  \item{names.arg}{names to be plotted below each bar or group of bars.}
+  \item{ask}{ask before ploting the next barplot.}
+  \item{scale}{put all the barplot to the same scale.}
+  \item{\dots}{extra parameters to be passed to \code{\link{barplot}}.}
 }
 \examples{
 if (require(affydata)) {
@@ -33,4 +32,3 @@ if (require(affydata)) {
 }
 }
 \keyword{hplot}
-

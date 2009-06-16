@@ -5,7 +5,6 @@
 \usage{
 maffy.subset(data,subset.size=5000,maxit=100,
              subset.delta=max(round(subset.size/100),25),verbose=FALSE)}
-%- maybe also `usage' for other objects documented here.
 \arguments{
   \item{data}{a matrix}
   \item{subset.size}{desired size of subset}
@@ -17,8 +16,7 @@ maffy.subset(data,subset.size=5000,maxit=100,
 Please refer to references.
 }
 \value{ 
-  A list with component
-  \code{subset}, the indexes for subset.
+  A list with component \code{subset}, the indexes for subset.
 }
 \references{Astrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
 \author{Magnus Astrand}

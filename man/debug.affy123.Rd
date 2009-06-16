@@ -6,6 +6,3 @@
 For developmental use only
 }
 \keyword{methods}
-
-
-

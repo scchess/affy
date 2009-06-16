@@ -3,8 +3,8 @@
 \alias{concentrations}
 \title{SpikeIn Experiment Data: ProbeSet Example}
 \description{
-This \code{\link[affy:ProbeSet-class]{ProbeSet}} represents part of SpikeIn experiment
-data set. 
+This \code{\link[affy:ProbeSet-class]{ProbeSet}} represents part of SpikeIn
+experiment data set. 
 }
 \usage{data(SpikeIn)}
 \format{\code{SpikeIn} is \code{\link[affy:ProbeSet-class]{ProbeSet}} containing the
@@ -31,5 +31,4 @@ pM.
 
 For more information see Irizarry, R.A., et al. (2001)
 \url{http://biosun01.biostat.jhsph.edu/~ririzarr/papers/index.html}}
-
 \keyword{datasets}

@@ -2,7 +2,6 @@
 \alias{cdfFromBioC}
 \alias{cdfFromLibPath}
 \alias{cdfFromEnvironment}
-
 \title{Functions to obtain CDF files}
 \description{
   A set of functions to obtain CDF files from various locations.
@@ -13,10 +12,10 @@ cdfFromLibPath(cdfname, lib = NULL, verbose=TRUE)
 cdfFromEnvironment(cdfname, where, verbose=TRUE)
 }
 \arguments{
-  \item{cdfname}{ The CDF desired }
-  \item{lib}{ Directory to install the CDF package to }
-  \item{where}{What environment to search}
-  \item{verbose}{Controls extra output}  
+  \item{cdfname}{name of the CDF.}
+  \item{lib}{install directory for the CDF package.}
+  \item{where}{environment to search.}
+  \item{verbose}{logical controlling extra output.}  
 }
 \details{
   These functions all take a requested CDF environment name and will

@@ -9,7 +9,7 @@
   normalize.AffyBatch.quantiles(abatch, type=c("separate","pmonly","mmonly","together"))
 }
 \arguments{
-  \item{abatch}{An \code{\link[affy:AffyBatch-class]{AffyBatch}}}
+  \item{abatch}{an \code{\link[affy:AffyBatch-class]{AffyBatch}} object.}
   \item{type}{A string specifying how the normalization should be
     applied. See details for more.}
 }
@@ -21,8 +21,7 @@
 
   The type argument should be one of
   \code{"separate","pmonly","mmonly","together"} which indicates whether
-  to normalize only one probe type (PM,MM) or both together or separately.
-  
+  to normalize only one probe type (PM,MM) or both together or separately. 
 }
 
 \value{
@@ -37,10 +36,7 @@
   \emph{A Comparison of Normalization Methods for High Density
     Oligonucleotide Array Data Based on Bias and Variance.}
    Bioinformatics 19(2) ,pp 185-193. \url{http://bmbolstad.com/misc/normalize/normalize.html}
-  }
-
+}
 \author{Ben Bolstad, \email{bmbolstad.com}}
-
 \seealso{\code{\link{normalize}}}
-
 \keyword{manip}

@@ -36,7 +36,8 @@ ReadAffy(\dots, filenames=character(0),
   \item{compress}{are the CEL files compressed?}
   \item{rm.mask}{should the spots marked as 'MASKS' set to \code{NA}?}
   \item{rm.outliers}{should the spots marked as 'OUTLIERS' set to \code{NA}?}
-  \item{rm.extra}{if \code{TRUE}, then overrides what is in \code{rm.mask} and \code{rm.oultiers}.}
+  \item{rm.extra}{if \code{TRUE}, then overrides what is in \code{rm.mask} and
+    \code{rm.oultiers}.}
   \item{verbose}{verbosity flag.}
   \item{widget}{a logical specifying if widgets should be used.}
   \item{celfile.path}{a character denoting the path \code{ReadAffy}
@@ -46,9 +47,9 @@ ReadAffy(\dots, filenames=character(0),
   \item{sd}{should the standard deviation values in the CEL file be read
     in? Since these are typically not used default is not to read them
     in. This also save lots of memory.}
-   \item{cdfname}{used to specify the name of an alternative cdf package. If set to
-     \code{NULL}, then the usual cdf package based on Affymetrix' mappings
-     will be used.}
+   \item{cdfname}{used to specify the name of an alternative cdf package.
+     If set to \code{NULL}, then the usual cdf package based on Affymetrix's
+     mappings will be used.}
 }
 \details{
 \code{ReadAffy} is a wrapper for \code{read.affybatch} that permits the
@@ -84,8 +85,7 @@ empty instance of \code{MIAME} is created.
   An \code{AffyBatch} object.
 }
 \author{Ben Bolstad \email{bmb@bmbolstad.com} (read.affybatch),
-  Laurent Gautier,
-  and Rafael A. Irizarry (ReadAffy)}
+  Laurent Gautier, and Rafael A. Irizarry (ReadAffy)}
 \seealso{\code{\link[affy:AffyBatch-class]{AffyBatch}}}
 \examples{
 if(require(affydata)){
