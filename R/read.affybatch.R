@@ -68,7 +68,7 @@ read.affybatch <- function(..., filenames=character(0),
   ## read the first file to see what we have
   if (verbose) cat(1, "reading",filenames[[1]],"...")
 
-  headdetails <- .Call("ReadHeader",as.character(filenames[[1]]), PACKAGE="affyio")
+  headdetails <- read.celfile.header(as.character(filenames[[1]]))
 
   ##now we use the length
   dim.intensity <- headdetails[[2]]   ##dim(intensity(cel))
@@ -140,22 +140,25 @@ read.probematrix <- function(..., filenames = character(0), phenoData = new("Ann
 
   if (verbose)
     cat(1, "reading", filenames[[1]], "to get header information\n")
-  headdetails <- .Call("ReadHeader", as.character(filenames[[1]]), PACKAGE="affyio")
-  dim.intensity <- headdetails[[2]]
+  headdetails <- read.celfile.header(as.character(filenames[[1]]))
   ref.cdfName <- headdetails[[1]]
+  cleaned.cdfName <- cleancdfname(ref.cdfName, addcdf = FALSE)
   ## Allow for usage of alternative cdfs
   if(is.null(cdfname))
-    Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleancdfname(ref.cdfName,addcdf = FALSE))
+    Data <- new("AffyBatch", cdfName = ref.cdfName, annotation = cleaned.cdfName)
   else
-    Data <- new("AffyBatch", cdfName = cdfname, annotation = cleancdfname(ref.cdfName, addcdf = FALSE))
+    Data <- new("AffyBatch", cdfName = cdfname, annotation = cleaned.cdfName)
   
   cdfInfo <- as.list(getCdfInfo(Data))
   cdfInfo <- cdfInfo[order(names(cdfInfo))]
 
-
-  .Call("read_probeintensities", filenames,
-        rm.mask, rm.outliers, rm.extra, ref.cdfName,
-        dim.intensity, verbose, cdfInfo,which, PACKAGE="affyio")
+  read.celfile.probeintensity.matrices(filenames = filenames,
+                                       cdfInfo = cdfInfo,
+                                       rm.mask = rm.mask,
+                                       rm.outliers = rm.outliers,
+                                       rm.extra = rm.extra,
+                                       verbose = verbose,
+                                       which = which)
 }
 
 
