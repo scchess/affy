@@ -31,6 +31,7 @@ merge.AffyBatch <- function(x, y, annotation=paste(annotation(x), annotation(y))
              cdfName=cdfName(x),
              nrow=nrow(x),
              ncol=ncol(x),
-             annotation=x@annotation
+             annotation=x@annotation,
+             scanDates=c(scanDates(x),scanDates(y)),
          ))
 }

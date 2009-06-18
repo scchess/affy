@@ -69,11 +69,16 @@ read.affybatch <- function(..., filenames=character(0),
   if (verbose) cat(1, "reading",filenames[[1]],"...")
 
   headdetails <- read.celfile.header(as.character(filenames[[1]]))
-
   ##now we use the length
   dim.intensity <- headdetails[[2]]   ##dim(intensity(cel))
   ##and the cdfname as ref
   ref.cdfName <- headdetails[[1]]   #cel@cdfName
+
+  scandates <-
+    sapply(seq_len(length(filenames)), function(i) {
+             sdate <- read.celfile.header(filenames[i], info = "full")[["ScanDate"]]
+             if (is.null(sdate)) NA_character_ else sdate
+           })
 
   ## allow for non-standard cdfs
   if(is.null(cdfname))
@@ -104,6 +109,7 @@ read.affybatch <- function(..., filenames=character(0),
                nrow       = dim.intensity[1],
                ncol       = dim.intensity[2],
                annotation = cleancdfname(cdfname, addcdf=FALSE),
+               scanDates  = scandates,
                description= description,
                notes      = notes))
   } else {
@@ -117,6 +123,7 @@ read.affybatch <- function(..., filenames=character(0),
                nrow       = dim.intensity[1],
                ncol       = dim.intensity[2],
                annotation = cleancdfname(cdfname, addcdf=FALSE),
+               scanDates  = scandates,
                description= description,
                notes      = notes))
   }
@@ -306,8 +313,3 @@ checkValidFilenames <- function(filenames) {
     }
     TRUE
 }
-
-
-
-
-

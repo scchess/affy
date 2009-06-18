@@ -95,12 +95,17 @@ just.rma <- function(..., filenames=character(0),
   ## get information from cdf environment
 
   headdetails <- read.celfile.header(filenames[[1]])
-  dim.intensity <- headdetails[[2]]
   if(is.null(cdfname))
     cdfname <- headdetails[[1]]
+  scandates <-
+    sapply(seq_len(length(filenames)), function(i) {
+             sdate <- read.celfile.header(filenames[i], info = "full")[["ScanDate"]]
+             if (is.null(sdate)) NA_character_ else sdate
+           })
   tmp <- new("AffyBatch",
              cdfName=cdfname,
-             annotation=cleancdfname(cdfname, addcdf=FALSE))
+             annotation=cleancdfname(cdfname, addcdf=FALSE),
+             scanDates=scandates)
   pmIndex <- pmindex(tmp)
   probenames <- rep(names(pmIndex), unlist(lapply(pmIndex,length)))
   pNList <- split(0:(length(probenames) -1), probenames)	
@@ -128,8 +133,3 @@ just.rma <- function(..., filenames=character(0),
       experimentData = description,
       exprs = exprs, se.exprs = se.exprs)
 }
-
-
-
-
-

@@ -85,12 +85,15 @@
     \item{\code{annotation}}{A character string identifying the
       annotation that may be used for the \code{ExpressionSet}
       instance.}
+    \item{\code{scanDates}:}{A character vector containing the scan
+      dates for the samples.}
     \item{\code{featureData}}{Object of class \code{AnnotatedDataFrame}
       containing feature-level (e.g., probeset-level) information.}
     \item{\code{experimentData}:}{Object of class "MIAME" containing
       experiment-level information.} 
-    \item{\code{notes}:}{Object of class "character" Vector of
-      explanatory text.}
+    \item{\code{.__classVersion__}:}{Object of class \code{Versions}
+      describing the R and Biobase version number used to create the
+      instance. Intended for developer use.} 
   }
 }
 \section{Extends}{

@@ -2,130 +2,47 @@ useDynLib("affy")
 
 import(affyio)
 
-importClassesFrom(Biobase,
-                  AnnotatedDataFrame,
-                  AssayData,
-                  MIAME,
-                  Versioned,
-                  VersionedBiobase,
-                  Versions,
-                  eSet)
+importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, MIAME,
+                  Versioned, VersionedBiobase, Versions)
 
-importClassesFrom(methods,
-                  ANY,
-                  character,
-                  environment,
-                  integer,
-                  matrix,
-                  missing,
-                  numeric)
+importClassesFrom(methods, ANY, character, environment, integer,
+                  matrix, missing, numeric)
 
-importMethodsFrom(Biobase,
-                  annotatedDataFrameFrom,
-                  annotation,
-                  assayData,
-                  classVersion,
-                  "classVersion<-",
-                  description,
-                  "description<-",
-                  experimentData,
-                  exprs,
-                  "exprs<-",
-                  featureNames,
-                  "featureNames<-",
-                  geneNames,
-                  "geneNames<-",
-                  isCurrent,
-                  isVersioned,
-                  notes,
-                  "notes<-",
-                  pData,
-                  "pData<-",
-                  phenoData,
-                  "phenoData<-",
-                  preproc,
-                  "preproc<-",
-                  rowMedians,
-                  sampleNames,
-                  "sampleNames<-",
-                  se.exprs,
-                  "se.exprs<-",
-                  updateObject)
+importMethodsFrom(Biobase, annotatedDataFrameFrom, annotation,
+                  assayData, classVersion, "classVersion<-",
+                  description, "description<-", experimentData, exprs,
+                  "exprs<-", featureNames, "featureNames<-", geneNames,
+                  "geneNames<-", isCurrent, isVersioned, notes,
+                  "notes<-", pData, "pData<-", phenoData,
+                  "phenoData<-", preproc, "preproc<-", rowMedians,
+                  sampleNames, "sampleNames<-", scanDates,
+                  "scanDates<-", se.exprs, "se.exprs<-", updateObject)
 
-importMethodsFrom(methods,
-                  initialize,
-                  show)
+importMethodsFrom(methods, initialize, show)
 
-importFrom(Biobase,
-           addVigs2WinMenu,
-           assayDataElementReplace,
-           assayDataNew,
-           multiassign,
-           read.AnnotatedDataFrame,
-           read.MIAME,
-           testBioCConnection)
+importFrom(Biobase, addVigs2WinMenu, assayDataElementReplace,
+           assayDataNew, multiassign, read.AnnotatedDataFrame,
+           read.MIAME, testBioCConnection)
 
-importFrom(graphics,
-           abline,
-           axis,
-           barplot,
-           boxplot,
-           frame,
-           hist,
-           image,
-           lines,
-           matplot,
-           mtext,
-           pairs,
-           par,
-           plot,
-           points,
-           text)
+importFrom(graphics, abline, axis, barplot, boxplot, frame, hist,
+           image, lines, matplot, mtext, pairs, par, plot, points,
+           smoothScatter, text)
 
-importFrom(methods,
-           "@<-",
-           as,
-           callNextMethod,
-           getMethod,
-           is,
-           new,
+importFrom(grDevices, dev.interactive, gray)
+
+importFrom(methods, "@<-", as, callNextMethod, getMethod, is, new,
            slot)
 
-importFrom(preprocessCore,
-           normalize.quantiles,
-           normalize.quantiles.robust,
-           rma.background.correct)
+importFrom(preprocessCore, normalize.quantiles,
+           normalize.quantiles.robust, rma.background.correct)
 
-importFrom(stats,
-           IQR,
-           approx,
-           density,
-           lm,
-           loess,
-           loess.control,
-           median,
-           medpolish,
-           model.response,
-           model.weights,
-           optim,
-           pnorm,
-           predict,
-           quantile,
-           runif,
-           sd,
-           smooth.spline,
-           splinefun,
-           t.test,
-           terms,
-           var,
-           wilcox.test)
+importFrom(stats, approx, density, IQR, lm, loess, loess.control,
+           median, medpolish, model.response, model.weights, optim,
+           pnorm, predict, quantile, runif, sd, smooth.spline,
+           splinefun, t.test, terms, var, wilcox.test)
 
-importFrom(utils,
-           available.packages,
-           contrib.url,
-           data,
-           install.packages,
-           object.size)
+importFrom(utils, available.packages, contrib.url, data, flush.console,
+           install.packages, object.size)
 
 ##export everything that does not start with a .
 exportPattern("^[^\\.]")
@@ -133,6 +50,6 @@ exportPattern("^[^\\.]")
 export(.setAffyOptions)
 
 exportMethods(show, exprs, featureNames, geneNames, sampleNames,
-               se.exprs, updateObject)
+              se.exprs, updateObject)
 
 exportClasses("AffyBatch")

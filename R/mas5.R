@@ -81,6 +81,7 @@ mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
               ## featureData picked up from object
               experimentData=experimentData(object),
               annotation=annotation(object),
+              scanDates=scanDates(object),
               exprs=calls,
               se.exprs=p
               )
@@ -150,4 +151,3 @@ mas5.detection <- function(mat, tau=0.015, alpha1=0.04, alpha2=0.06,
   ## DONE
   return(list(pval=pval, call=call))
 }
-

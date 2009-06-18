@@ -71,6 +71,8 @@ setMethod("initialize",
                    phenoData, featureData,
                    experimentData=new("MIAME"),
                    annotation=character(0),
+                   scanDates=character(0),
+                   assayData,
                    exprs=matrix(numeric(0), nrow=nrow, ncol=ncol),
                    ## se.exprs
                    ...) {
@@ -82,40 +84,49 @@ setMethod("initialize",
               if ("reporterInfo" %in% names(dots)) {
                   if (missing(featureData)) {
                       if (!is.null(dots[["reporterInfo"]])) {
-                          if (is(dots[["reporterInfo"]], "data.frame"))
+                          if (is(dots[["reporterInfo"]], "data.frame")) {
                             featureData <- new("AnnotatedDataFrame", data=dots[["reporterInfo"]])
-                          else {
+                          } else {
                               warning("trying to convert reporterInfo (class '", class(dots[["reporterInfo"]]),
                                       "') to featureData (class 'AnnotatedDataFrame')",
                                       immediate.=TRUE)
                               featureData <- as(dots[["reporterInfo"]], "AnnotatedDataFrame")
                           }
-                      } else stop("use 'featureData' rather than 'reporterInfo' for feature covariates")
+                      } else {
+                        stop("use 'featureData' rather than 'reporterInfo' for feature covariates")
+                      }
                   }
               }
               if ("description" %in% names(dots)) {
-                  if (missing(experimentData)) experimentData <- dots[["description"]]
-                  else stop("use 'experimentData' rather than 'description' for experiment description")
+                  if (missing(experimentData))
+                    experimentData <- dots[["description"]]
+                  else
+                    stop("use 'experimentData' rather than 'description' for experiment description")
               }
               if ("notes" %in% names(dots)) {
-##                   warning("addding 'notes' to 'experimentData'")
+                  ## warning("addding 'notes' to 'experimentData'")
                   notes(experimentData) <- c(notes(experimentData), dots[["notes"]])
               }
               dots <- dots[!names(dots) %in% c("reporterInfo", "description", "notes")]
               ## update phenoData to AnnotatedDataFrame, if necessary
-              assayData <- do.call(assayDataNew,
-                                   c(list(exprs=exprs), dots))
+              if (missing(assayData)) {
+                assayData <- do.call(assayDataNew, c(list(exprs=exprs), dots))
+              } else if (!missing(exprs)) {
+                stop("cannot initialize when both 'assayData' and 'exprs' are specified")
+              }
               if (missing(phenoData) || is.null(phenoData))
                 phenoData <- annotatedDataFrameFrom(assayData, byrow=FALSE)
               else if (!is(phenoData, "AnnotatedDataFrame"))
                 phenoData <- as(phenoData, "AnnotatedDataFrame")
-              if (missing(featureData)) featureData <- annotatedDataFrameFrom(assayData, byrow=TRUE)
+              if (missing(featureData))
+                featureData <- annotatedDataFrameFrom(assayData, byrow=TRUE)
               callNextMethod(.Object,
                              assayData=assayData,
                              phenoData=phenoData,
                              featureData=featureData,
                              experimentData=experimentData,
-                             annotation=annotation)
+                             annotation=annotation,
+                             scanDates=scanDates)
           })
 
 setMethod("updateObject",
@@ -294,14 +305,12 @@ setMethod("show", "AffyBatch",
               cat("AffyBatch object\n")
               cat("size of arrays=", nrow(object), "x", ncol(object),
                   " features (", object.size(object) %/% 1024, " kb)\n", sep="")
-              cat("cdf=", object@cdfName,
-                  " (", num.ids, " affyids)\n",
-                  sep="")
-              cat("number of samples=",length(object),"\n",sep="")
-              cat("number of genes=", length(featureNames(object)), "\n",sep="")
-              cat("annotation=",object@annotation,"\n",sep="")
-              if(length(notes(object))>0)
-                cat("notes=",paste(notes(object),collapse="\n\t"), "\n")
+              cat("cdf=", object@cdfName, " (", num.ids, " affyids)\n", sep="")
+              cat("number of samples=", length(object), "\n", sep="")
+              cat("number of genes=", length(featureNames(object)), "\n", sep="")
+              cat("annotation=", object@annotation, "\n", sep="")
+              if(length(notes(object)) > 0)
+                cat("notes=",paste(notes(object),collapse="\n\t"), "\n", sep="")
           })
 
 
@@ -554,21 +563,18 @@ if (debug.affy123) cat("--->[[\n")
 
 ##[ subseting. can only happen by sample. for now not by gene
 setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
-  if( !missing(i) & missing(j)) {
-    warning("The use of abatch[i,] and abatch[i] is decrepit. Please us abatch[,i] instead.\n")
-    phenoData(x) <- phenoData(x)[i, , ..., drop=FALSE]
-    intensity(x) <- intensity(x)[ ,i, ..., drop=FALSE]
-    if (! identical(se.exprs(x), new("matrix")))  {
-      se.exprs(x) <- se.exprs(x)[ ,i, ..., drop=FALSE]
-    }
+  if (!missing(i) & missing(j)) {
+    warning("The use of abatch[i,] and abatch[i] is deprecated. Please use abatch[,i] instead.\n")
+    x <- x[,i]
   }
 
-  if( !missing(j)) {
+  if (!missing(j)) {
     phenoData(x) <- phenoData(x)[j, , ..., drop=FALSE]
     intensity(x) <- intensity(x)[ ,j, ..., drop=FALSE]
-    if (! identical(se.exprs(x), new("matrix"))) { 
+    if (!identical(se.exprs(x), new("matrix"))) { 
       se.exprs(x) <- se.exprs(x)[ ,j, ..., drop=FALSE]
     }
+    scanDates(x) <- scanDates(x)[j]
   }
 
   return(x)
@@ -577,6 +583,7 @@ setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
 setReplaceMethod("[", "AffyBatch", function(x, i, j,..., value) {
   phenoData(x)[i,, ...] <- phenoData(value)[i, , ..., drop=FALSE]
   intensity(x)[,i]      <- intensity(value)[ ,i,... , drop=FALSE]
+  scanDates(x)[i]       <- scanDates(value)[i]
   return(x)
 })
 
@@ -752,7 +759,8 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                         experimentData=experimentData(x),
                         exprs=exp.mat,
                         se.exprs=se.mat,
-                        annotation=annotation(x))
+                        annotation=annotation(x),
+                        scanDates=scanDates(x))
 
             attr(eset, "pps.warnings") <- pps.warnings
             return(eset)
