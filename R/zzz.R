@@ -3,9 +3,9 @@
 
   ## this could move into the respective methods of AffyBatch later
 
-  start <- nchar("normalize.AffyBatch.")
   assign("normalize.AffyBatch.methods",
-         substr(all.affy[grep("normalize\\.AffyBatch\\.*", all.affy)], start+1, 100),
+         sub("^normalize\\.AffyBatch\\.", "",
+             grep("^normalize.AffyBatch", all.affy, value = TRUE)),
          envir=env)
 }
 
@@ -13,11 +13,11 @@
   if (debug.affy123) cat("-->detecting expression value methods from naming convention\n")
 
   ## the first one is deprecated (well... "should be"...)
-  assign("generateExprSet.methods",
-         substr(all.affy[grep("generateExprVal\\.method\\.*", all.affy)], 24,100),
+  vals <- sub("^generateExprVal\\.method\\.", "",
+              grep("^generateExprVal.method", all.affy, value = TRUE))
+  assign("generateExprSet.methods", vals,
          envir=env)
-  assign("express.summary.stat.methods",
-         substr(all.affy[grep("generateExprVal\\.method\\.*", all.affy)], 24,100),
+  assign("express.summary.stat.methods", vals,
          envir=env)
 }
 
@@ -25,15 +25,17 @@
   if (debug.affy123) cat("-->detecting background correction methods from naming convention\n")
   start <- nchar("bg.correct.")
   assign("bgcorrect.methods",
-         substr(all.affy[grep("bg\\.correct\\.", all.affy)], start+1, 100),
+         sub("^bg\\.correct\\.", "",
+             grep("^bg.correct", all.affy, value = TRUE)),
          envir=env)
        }
 
 .initPmCorrect <- function(all.affy, env) {
   if (debug.affy123) cat("-->detecting pm correction methods from naming convention\n")
-  start <- nchar("pmcorrect.")
+  
   assign("pmcorrect.methods",
-         substr(all.affy[grep("pmcorrect\\.*", all.affy)], start+1, 100),
+         sub("^pmcorrect\\.", "",
+             grep("^pmcorrect", all.affy, value = TRUE)),
          envir=env)
 }
 
@@ -89,7 +91,7 @@
 }
 
 .onLoad <- function(libname, pkgname) {
-    
+   
 #  where <- match(paste("package:", pkgname, sep=""), search())
   all.affy <- ls(environment(sys.function()))
 
