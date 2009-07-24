@@ -85,8 +85,8 @@
     \item{\code{annotation}}{A character string identifying the
       annotation that may be used for the \code{ExpressionSet}
       instance.}
-    \item{\code{scanDates}:}{A character vector containing the scan
-      dates for the samples.}
+    \item{\code{protocolData}:}{Object of class \code{AnnotatedDataFrame}
+      containing protocol data for the samples.}
     \item{\code{featureData}}{Object of class \code{AnnotatedDataFrame}
       containing feature-level (e.g., probeset-level) information.}
     \item{\code{experimentData}:}{Object of class "MIAME" containing
@@ -125,7 +125,7 @@ Class \code{"eSet"}, directly.
     \item{[<-}{\code{signature(x = "AffyBatch")}: replaces subsets.}
     \item{[}{\code{signature(x = "AffyBatch")}: subsets by array.}
     \item{boxplot}{\code{signature(x = "AffyBatch")}:  creates a
-      \code{\link{boxplot}s of log base 2 intensities (pm, mm or both).
+      \code{\link{boxplot}}s of log base 2 intensities (pm, mm or both).
       Defaults to both.}
     \item{hist}{\code{signature(x = "AffyBatch")}:  creates a plot showing
       all the histograms of the pm,mm or both data. See
@@ -154,7 +154,7 @@ Class \code{"eSet"}, directly.
 
       \code{signature(object = "AffyBatch", which = "missing")} (i.e.,
       calling \code{indexProbes} without a "which" argument) is the
-      same as setting "which" to "pm".} 
+      same as setting "which" to "pm".}
     \item{intensity<-}{\code{signature(object = "AffyBatch")}: a
       replacement method for the \code{exprs} slot, i.e. the intensities.}
     \item{intensity}{\code{signature(object = "AffyBatch")}: extract the
@@ -169,7 +169,7 @@ Class \code{"eSet"}, directly.
     \item{ncol}{\code{signature(x = "AffyBatch")}: An accessor function
       for \code{ncol}.}
     \item{nrow}{\code{signature(x = "AffyBatch")}: an accessor function
-      for \code{nrow}}.}
+      for \code{nrow}.}
     \item{normalize}{\code{signature(object = "AffyBatch")}: a method to
       \code{\link{normalize}}. The method accepts an argument
       \code{method}. The default methods is specified in package options

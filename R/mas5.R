@@ -81,7 +81,7 @@ mas5calls.AffyBatch <- function(object, ids=NULL, verbose=TRUE,
               ## featureData picked up from object
               experimentData=experimentData(object),
               annotation=annotation(object),
-              scanDates=scanDates(object),
+              protocolData=protocolData(object),
               exprs=calls,
               se.exprs=p
               )

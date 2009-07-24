@@ -102,10 +102,14 @@ just.rma <- function(..., filenames=character(0),
              sdate <- read.celfile.header(filenames[i], info = "full")[["ScanDate"]]
              if (is.null(sdate)) NA_character_ else sdate
            })
+  protocol <-
+    new("AnnotatedDataFrame",
+        data=data.frame("ScanDate"=scandates, stringsAsFactors=FALSE),
+        dimLabels=c("sampleNames", "sampleColumns"))
   tmp <- new("AffyBatch",
              cdfName=cdfname,
              annotation=cleancdfname(cdfname, addcdf=FALSE),
-             scanDates=scandates)
+             protocolData=protocol)
   pmIndex <- pmindex(tmp)
   probenames <- rep(names(pmIndex), unlist(lapply(pmIndex,length)))
   pNList <- split(0:(length(probenames) -1), probenames)	

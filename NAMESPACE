@@ -14,9 +14,9 @@ importMethodsFrom(Biobase, annotatedDataFrameFrom, annotation,
                   "exprs<-", featureNames, "featureNames<-", geneNames,
                   "geneNames<-", isCurrent, isVersioned, notes,
                   "notes<-", pData, "pData<-", phenoData,
-                  "phenoData<-", preproc, "preproc<-", rowMedians,
-                  sampleNames, "sampleNames<-", scanDates,
-                  "scanDates<-", se.exprs, "se.exprs<-", updateObject)
+                  "phenoData<-", preproc, "preproc<-", protocolData,
+                  "protocolData<-", rowMedians, sampleNames, "sampleNames<-",
+                  se.exprs, "se.exprs<-", updateObject)
 
 importMethodsFrom(methods, initialize, show)
 

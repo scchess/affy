@@ -20,6 +20,8 @@ merge.AffyBatch <- function(x, y, annotation=paste(annotation(x), annotation(y))
 
   phenodata <- phenoData(x)
   pData(phenodata) <- rbind(pData(x),pData(y))
+  protocoldata <- protocolData(x)
+  pData(protocoldata) <- rbind(pData(protocolData(x)),pData(protocolData(y)))
   notes(description) <- 
     if (length(notes)==0) 
       list(paste("Merge from two AffyBatches with notes: 1)", notes(experimentData(x)), ", and 2)",notes(experimentData(y))))
@@ -32,6 +34,6 @@ merge.AffyBatch <- function(x, y, annotation=paste(annotation(x), annotation(y))
              nrow=nrow(x),
              ncol=ncol(x),
              annotation=x@annotation,
-             scanDates=c(scanDates(x),scanDates(y)),
+             protocolData=protocoldata
          ))
 }

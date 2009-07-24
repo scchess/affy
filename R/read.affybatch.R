@@ -79,6 +79,11 @@ read.affybatch <- function(..., filenames=character(0),
              sdate <- read.celfile.header(filenames[i], info = "full")[["ScanDate"]]
              if (is.null(sdate)) NA_character_ else sdate
            })
+  protocol <-
+    new("AnnotatedDataFrame",
+        data=data.frame("ScanDate"=scandates, row.names=sampleNames(phenoData),
+                        stringsAsFactors=FALSE),
+        dimLabels=c("sampleNames", "sampleColumns"))
 
   ## allow for non-standard cdfs
   if(is.null(cdfname))
@@ -109,7 +114,7 @@ read.affybatch <- function(..., filenames=character(0),
                nrow       = dim.intensity[1],
                ncol       = dim.intensity[2],
                annotation = cleancdfname(cdfname, addcdf=FALSE),
-               scanDates  = scandates,
+               protocolData  = protocol,
                description= description,
                notes      = notes))
   } else {
@@ -123,7 +128,7 @@ read.affybatch <- function(..., filenames=character(0),
                nrow       = dim.intensity[1],
                ncol       = dim.intensity[2],
                annotation = cleancdfname(cdfname, addcdf=FALSE),
-               scanDates  = scandates,
+               protocolData  = protocol,
                description= description,
                notes      = notes))
   }

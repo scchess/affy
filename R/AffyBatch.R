@@ -71,7 +71,7 @@ setMethod("initialize",
                    phenoData, featureData,
                    experimentData=new("MIAME"),
                    annotation=character(0),
-                   scanDates=character(0),
+                   protocolData=phenoData[,integer(0)],
                    assayData,
                    exprs=matrix(numeric(0), nrow=nrow, ncol=ncol),
                    ## se.exprs
@@ -126,7 +126,7 @@ setMethod("initialize",
                              featureData=featureData,
                              experimentData=experimentData,
                              annotation=annotation,
-                             scanDates=scanDates)
+                             protocolData=protocolData)
           })
 
 setMethod("updateObject",
@@ -574,7 +574,7 @@ setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
     if (!identical(se.exprs(x), new("matrix"))) { 
       se.exprs(x) <- se.exprs(x)[ ,j, ..., drop=FALSE]
     }
-    scanDates(x) <- scanDates(x)[j]
+    protocolData(x) <- protocolData(x)[j, , ..., drop=FALSE]
   }
 
   return(x)
@@ -583,7 +583,7 @@ setMethod("[", "AffyBatch", function(x, i, j,..., drop=FALSE) {
 setReplaceMethod("[", "AffyBatch", function(x, i, j,..., value) {
   phenoData(x)[i,, ...] <- phenoData(value)[i, , ..., drop=FALSE]
   intensity(x)[,i]      <- intensity(value)[ ,i,... , drop=FALSE]
-  scanDates(x)[i]       <- scanDates(value)[i]
+  protocolData(x)[i,, ...] <- protocolData(value)[i, , ..., drop=FALSE]
   return(x)
 })
 
@@ -760,7 +760,7 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
                         exprs=exp.mat,
                         se.exprs=se.mat,
                         annotation=annotation(x),
-                        scanDates=scanDates(x))
+                        protocolData=protocolData(x))
 
             attr(eset, "pps.warnings") <- pps.warnings
             return(eset)

@@ -61,7 +61,7 @@ rma <- function(object,subset=NULL, verbose=TRUE, destructive = TRUE,normalize=T
   new("ExpressionSet",
       phenoData = phenoData(object),
       annotation = annotation(object),
-      scanDates = scanDates(object),
+      protocolData = protocolData(object),
       experimentData = experimentData(object),
       exprs = exprs)
 }
