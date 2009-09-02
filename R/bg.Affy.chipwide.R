@@ -5,6 +5,11 @@ bg.correct.mas <- function(object, griddim=16)
    pm.index <- unique(unlist(indexProbes(object, "pm")))
    mm.index <- unique(unlist(indexProbes(object, "mm")))
 
+   ## some chips have some probesets without MM probes
+   ## which will return an NA in mm.index
+
+   mm.index <- mm.index[!is.na(mm.index)]
+
    rows <- nrow(object)
    cols <- ncol(object)
 
