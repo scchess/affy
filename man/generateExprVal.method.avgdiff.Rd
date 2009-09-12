@@ -43,6 +43,9 @@ generateExprVal.method.mas(probes, ...)
   points(concentrations,mas$exprs,pch="p",col=4,type="b",lty=4)
 }
 \seealso{
-  \code{\link{generateExprSet-methods},\code{\link{generateExprVal.method.playerout}}, \code{\link{li.wong}}, \code{\link{medianpolish}}}
+  \code{\link[affy]{generateExprSet-methods},
+    \code{\link[affy]{generateExprVal.method.playerout}},
+    \code{\link[affy]{fit.li.wong}}
+  % \code{\link{medianpolish}}} 
 }
 \keyword{manip}

@@ -14,7 +14,7 @@ indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL
   \item{y}{\code{Y} position for the probes.}
   \item{i}{indices in the \code{AffyBatch} for the probes.}
   \item{nr}{total number of \code{Xs} on the chip.}
-  \item{cel}{a corresponding object of class \code{\link[affy:Cel-class]{Cel}}.}
+  \item{cel}{a corresponding object of class \code{Cel}.}
   \item{abatch}{a corresponding object of class
     \code{\link[affy:AffyBatch-class]{AffyBatch}}.}
   \item{cdf}{character - the name of the corresponding cdf package.}

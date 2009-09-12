@@ -24,7 +24,8 @@ normalize(object, ...)
 
   Other Bioconductor packages include some related generic functions:
   \code{\link[limma]{normalizeWithinArrays}}, and 
-  \code{\link[limma]{normalizeBetweenArrays}}, in the LIMMA package, and 
+  \code{\link[limma:normalizebetweenarrays]{normalizeBetweenArrays}}, in
+  the LIMMA package, and  
   \code{\link[marrayNorm]{maNorm}} in the marrayNorm package.
 }
 \keyword{models}

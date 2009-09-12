@@ -32,7 +32,7 @@ ma.plot(A, M, subset = sample(1:length(M), min(c(10000, length(M)))),
   \item{cex}{size of text when writing summary statistics on plot.}
   \item{plot.method}{a string specifying how the plot is to be drawn.
     \code{"normal"} plots points, \code{"smoothScatter"} uses the
-    \code{\link[graphics]{smoothScatter}} function. Specifying
+    \code{\link[graphics:smoothscatter]{smoothScatter}} function. Specifying
     \code{"add"} means that the MAplot should be added to the current plot.}
 \item{add.loess}{add a loess line to the plot.}
 \item{lwd}{width of loess line.}

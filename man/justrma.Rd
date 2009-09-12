@@ -30,7 +30,9 @@ justRMA(\dots, filenames=character(0),
 \arguments{
   \item{\dots}{file names separated by comma.}
   \item{filenames}{file names in a character vector.}
-  \item{phenoData}{an \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}} object.}
+  \item{phenoData}{an
+              \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}}
+              object.} 
   \item{description}{a \code{\link[Biobase:class.MIAME]{MIAME}} object.}
   \item{notes}{notes.}
   \item{compress}{are the CEL files compressed?}
@@ -91,5 +93,5 @@ passed along to the function \code{read.celfile}.
 }
 \author{In the beginning: James MacDonald <jmacdon@med.umich.edu>
 Supporting routines, maintenance and just.rma: Ben Bolstad <bmb@bmbolstad.com>}
-\seealso{\code{\link[affy]{rma}},\code{\link[affy]{ReadAffy}}}
+\seealso{\code{\link[affy]{rma}}, \code{\link{read.affybatch}}}
 \keyword{manip}
