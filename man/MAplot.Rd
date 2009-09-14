@@ -28,7 +28,7 @@ ma.plot(A, M, subset = sample(1:length(M), min(c(10000, length(M)))),
     values are drawn.}
   \item{span}{span to be used for loess fit.}
   \item{family.loess}{\code{"guassian"} or \code{"symmetric"} as in
-    \code{\link[modreg]{loess}}.}
+    \code{\link[stats]{loess}}.}
   \item{cex}{size of text when writing summary statistics on plot.}
   \item{plot.method}{a string specifying how the plot is to be drawn.
     \code{"normal"} plots points, \code{"smoothScatter"} uses the

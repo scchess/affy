@@ -13,15 +13,15 @@ multiloess(formula, data=NULL, weights, subset, na.action, model = FALSE,
 	 control = loess.control(...), ...)
 }
 \arguments{
-See \code{\link[modreg]{loess}}.
+See \code{\link[stats]{loess}}.
 }
 \details{
-Please refer to \code{\link[modreg]{loess}}.
+Please refer to \code{\link[stats]{loess}}.
 }
 \value{
-  See \code{\link[modreg]{loess}}.
+  See \code{\link[stats]{loess}}.
  }
 \references{Astrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
 \author{Magnus Astrand}
-\seealso{ \code{\link{loess}}}
+\seealso{ \code{\link[stats]{loess}}}
 \keyword{internal}

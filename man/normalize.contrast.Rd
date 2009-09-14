@@ -14,11 +14,13 @@ normalize.AffyBatch.contrasts(abatch,span=2/3, choose.subset=TRUE,
 }
 \arguments{
   \item{abatch}{an \code{\link{AffyBatch-class}} object.}
-  \item{span}{parameter to be passed to the function \code{\link[modreg]{loess}}.}
+  \item{span}{parameter to be passed to the function
+    \code{\link[stats]{loess}}.} 
   \item{choose.subset}{}
   \item{subset.size}{}
   \item{verbose}{verbosity flag.}
-  \item{family}{parameter to be passed to the function \code{\link[modreg]{loess}}.}
+  \item{family}{parameter to be passed to the function
+    \code{\link[stats]{loess}}.} 
   \item{type}{a string specifying how the normalization should be applied.}
 }
 \value{

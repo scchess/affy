@@ -38,7 +38,8 @@ justRMA(\dots, filenames=character(0),
   \item{compress}{are the CEL files compressed?}
   \item{rm.mask}{should the spots marked as 'MASKS' set to \code{NA}?}
   \item{rm.outliers}{should the spots marked as 'OUTLIERS' set to \code{NA}?}
-  \item{rm.extra}{if \code{TRUE}, then overrides what is in \code{rm.mask} and \code{rm.oultiers}.}
+  \item{rm.extra}{if \code{TRUE}, then overrides what is in
+              \code{rm.mask} and \code{rm.oultiers}.} 
   \item{hdf5}{use of hdf5 ? (not available yet)}
   \item{hdf5FilePath}{a filename to use with hdf5 (not available yet).}
   \item{verbose}{verbosity flag.}
@@ -52,8 +53,11 @@ justRMA(\dots, filenames=character(0),
   \item{background}{logical value. If \code{TRUE}, then background correct
     using RMA background correction.}
   \item{bgversion}{integer value indicating which RMA background to use
-    1: use background similar to pure R rma background given in affy version 1.0 - 1.0.2
-    2: use background similar to pure R rma background given in affy version 1.1 and above}
+    1: use background similar to pure R rma background given in affy
+    version 1.0 - 1.0.2
+    
+    2: use background similar to pure R rma background given in affy
+    version 1.1 and above} 
    \item{destructive}{logical value. If \code{TRUE}, then works on the PM matrix
     in place as much as possible, good for large datasets.}
    \item{cdfname}{Used to specify the name of an alternative cdf package. If set
@@ -67,7 +71,8 @@ define files where to read phenoData and MIAME information.
 
 If the function is called with no arguments \code{justRMA()}, then all the CEL
 files in the working directory are read, converted to an expression measure
-using RMA and put into an \code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}.
+using RMA and put into an
+\code{\link[Biobase:class.ExpressionSet]{ExpressionSet}}. 
 However, the arguments give the user great flexibility.
   
 \code{phenoData} is read using \code{\link[Biobase]{read.AnnotatedDataFrame}}.
@@ -75,7 +80,7 @@ If a character is given, it tries to read the file with that name to obtain the
 \code{AnnotatedDataFrame} object as described in \code{\link[Biobase]{read.AnnotatedDataFrame}}.
 If left \code{NULL} and \code{widget=FALSE} (\code{widget=TRUE} is not currently
 supported), then a default object is created.
-It will be an object of class \code{\link[Biobase.class.AnnotatedDataFrame]{AnnotatedDataFrame}}
+It will be an object of class \code{\link[Biobase:class.AnnotatedDataFrame]{AnnotatedDataFrame}}
 with its pData being a data.frame with column x indexing the CEL files.
 
 \code{description} is read using \code{\link[Biobase]{read.MIAME}}. If a

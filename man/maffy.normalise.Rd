@@ -10,8 +10,8 @@ maffy.normalize(data,subset,verbose=FALSE,span=0.25,family="symmetric",log.it=TR
   \item{data}{an matrix of intensities.}
   \item{subset}{a vector of indexes describing which probes to use for normalising.}
   \item{verbose}{logical value.}
-  \item{span}{See \code{\link[modreg]{loess}}.}
-  \item{family}{See \code{\link[modreg]{loess}}.}
+  \item{span}{See \code{\link[stats]{loess}}.}
+  \item{family}{See \code{\link[stats]{loess}}.}
   \item{log.it}{logical value.}
 }
 \details{

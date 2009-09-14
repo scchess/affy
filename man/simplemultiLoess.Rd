@@ -11,15 +11,15 @@ simplemultiLoess(y, x, weights, span = 0.75, degree = 2,
 	   cell = 0.2, iterations = 1, trace.hat = "exact")
 }
 \arguments{
-  See \code{\link[modreg]{loess}}.
+  See \code{\link[stats]{loess}}.
 }
 \details{
-  Please refer to \code{\link[modreg]{loess}}.
+  Please refer to \code{\link[stats]{loess}}.
 }
 \value{
-  See \code{\link[modreg]{loess}}.
+  See \code{\link[stats]{loess}}.
 }
 \references{Astrand, M. (2001) \url{http://www.math.chalmers.se/~magnusaa/maffy/}}
 \author{Magnus Astrand}
-\seealso{ \code{\link[modreg]{loess}}}
+\seealso{ \code{\link[stats]{loess}}}
 \keyword{internal}

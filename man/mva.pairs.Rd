@@ -15,7 +15,7 @@ mva.pairs(x, labels=colnames(x), log.it=TRUE,span=2/3,family.loess="gaussian",
   \item{log.it}{logical. If \code{TRUE}, uses log scale.}
   \item{span}{span to be used for loess fit.}
   \item{family.loess}{\code{"gaussian"} or \code{"symmetric"} as in
-    \code{\link[modreg]{loess}}.}
+    \code{\link[stats]{loess}}.}
   \item{digits}{number of digits to use in the display of IQR.}
   \item{line.col}{color of the loess line.}
   \item{main}{an overall title for the plot.}

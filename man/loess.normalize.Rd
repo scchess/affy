@@ -22,7 +22,7 @@ loess.normalize(mat, subset = sample(1:(dim(mat)[2]), 5000), epsilon
     worked on.}
   \item{span}{span to be used by loess.}
   \item{family.loess}{\code{"gaussian"} or \code{"symmetric"}
-    as in \code{\link[modreg]{loess}}.}
+    as in \code{\link[stats]{loess}}.}
 }
 \details{
 Experience shows that you only need 1-2 iterations to obtain useful
