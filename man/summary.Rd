@@ -9,5 +9,5 @@
   of the package. Some are still used by the generateExprVal functions, but
   you should avoid using them directly.
 }  
-\seealso{\code{\link{expresso}}}
+\seealso{\code{\link[affy]{expresso}}}
 \keyword{manip}

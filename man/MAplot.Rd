@@ -19,7 +19,7 @@ ma.plot(A, M, subset = sample(1:length(M), min(c(10000, length(M)))),
         add.loess = TRUE, lwd = 1, lty = 1, loess.col = "red", ...)
 }
 \arguments{
-  \item{object}{an \code{\link{AffyBatch-class}}.}
+  \item{object}{an \code{\link[affy]{AffyBatch-class}}.}
   \item{\dots}{additional parameters for the routine.}
   \item{A}{a vector to plot along the horizontal axis.}
   \item{M}{a vector to plot along vertical axis.}
@@ -46,5 +46,5 @@ if (require(affydata)) {
    Mbox(Dilution)
 }
 }
-\seealso{\code{\link{mva.pairs}}}
+\seealso{\code{\link[affy]{mva.pairs}}}
 \keyword{hplot}

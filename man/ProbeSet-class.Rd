@@ -38,7 +38,8 @@ instances of AffyBatch.}
   }
 }
 \note{More details are contained in the vignette.}
-\seealso{\code{\link{probeset}}, \code{\link{AffyBatch-class}}}
+\seealso{\code{\link[affy:AffyBatch-class]{probeset}},
+  \code{\link[affy]{AffyBatch-class}}} 
 \examples{
 if (require(affydata)) {
   data(Dilution)
