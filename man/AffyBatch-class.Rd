@@ -194,9 +194,11 @@ Class \code{"eSet"}, directly.
   }
 }
 \note{This class is better described in the vignette.}
+
 \seealso{related methods \code{\link[affy]{merge.AffyBatch}},
   \code{\link[affy]{pairs.AffyBatch}}, and
-  \code{\link[Biobase:class.eSet]{eSet}}} 
+  \code{\link[Biobase:class.eSet]{eSet}}}
+
 \examples{
 if (require(affydata)) {
   ## load example
