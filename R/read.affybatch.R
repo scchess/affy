@@ -48,7 +48,7 @@ read.affybatch <- function(..., filenames=character(0),
     ## if empty pdata filename are samplenames
     warning("Incompatible phenoData object. Created a new one.\n")
 
-    samplenames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+    samplenames <- sub("^/?([^/]*/)*", "", filenames)
     pdata <- data.frame(sample=1:n, row.names=samplenames)
     phenoData <- new("AnnotatedDataFrame",
                      data=pdata,
@@ -212,12 +212,12 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
   if(length(filenames)==0) stop("No cel filennames specified and no cel files in specified directory:",celfile.path,"\n")
 
   if(is.null(sampleNames)){
-    sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+    sampleNames <- sub("^/?([^/]*/)*", "", filenames)
   }
   else{
     if(length(sampleNames)!=length(filenames)){
       warning("sampleNames not same length as filenames. Using filenames as sampleNames instead\n")
-      sampleNames <- sub("^/?([^/]*/)*", "", filenames, extended=TRUE)
+      sampleNames <- sub("^/?([^/]*/)*", "", filenames)
     }
   }
 
