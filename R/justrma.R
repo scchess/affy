@@ -104,12 +104,12 @@ just.rma <- function(..., filenames=character(0),
            })
   protocol <-
     new("AnnotatedDataFrame",
-        data=data.frame("ScanDate"=scandates, stringsAsFactors=FALSE),
+        data=data.frame("ScanDate"=scandates, row.names = sampleNames(phenoData),
+        stringsAsFactors=FALSE),
         dimLabels=c("sampleNames", "sampleColumns"))
   tmp <- new("AffyBatch",
              cdfName=cdfname,
-             annotation=cleancdfname(cdfname, addcdf=FALSE),
-             protocolData=protocol)
+             annotation=cleancdfname(cdfname, addcdf=FALSE))
   pmIndex <- pmindex(tmp)
   probenames <- rep(names(pmIndex), unlist(lapply(pmIndex,length)))
   pNList <- split(0:(length(probenames) -1), probenames)	
@@ -133,6 +133,7 @@ just.rma <- function(..., filenames=character(0),
   notes(description) <- notes
   new("ExpressionSet",
       phenoData = phenoData,
+      protocolData = protocol,
       annotation = annotation,
       experimentData = description,
       exprs = exprs, se.exprs = se.exprs)
