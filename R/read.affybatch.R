@@ -77,7 +77,7 @@ read.affybatch <- function(..., filenames=character(0),
   scandates <-
     sapply(seq_len(length(filenames)), function(i) {
              sdate <- read.celfile.header(filenames[i], info = "full")[["ScanDate"]]
-             if (is.null(sdate)) NA_character_ else sdate
+             if (is.null(sdate) ||length(sdate) == 0 ) NA_character_ else sdate
            })
   protocol <-
     new("AnnotatedDataFrame",
