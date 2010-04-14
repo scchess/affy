@@ -16,8 +16,8 @@ normalize.AffyBatch.contrasts(abatch,span=2/3, choose.subset=TRUE,
   \item{abatch}{an \code{\link{AffyBatch-class}} object.}
   \item{span}{parameter to be passed to the function
     \code{\link[stats]{loess}}.} 
-  \item{choose.subset}{}
-  \item{subset.size}{}
+  \item{choose.subset}{Boolean. Defaults to \code{TRUE}}
+  \item{subset.size}{Integer. Number of probesets to use in each subset.}
   \item{verbose}{verbosity flag.}
   \item{family}{parameter to be passed to the function
     \code{\link[stats]{loess}}.} 
