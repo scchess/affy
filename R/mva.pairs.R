@@ -239,8 +239,13 @@ setMethod("MAplot",signature("AffyBatch"),
                   }
                 } else {
                   for (i in which){
-                    if (i != ref){ ##changed which to i
-                      title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
+                    if (length(ref) == 1){
+                      if (i != ref){ ##changed which to i
+                        title <- paste(sampleNames(object)[i],"vs",sampleNames(object)[ref])
+                        ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch=pch,...)
+                      }
+                    } else {
+                      title <- paste(sampleNames(object)[i],"vs",ref.title)
                       ma.plot(A[,i],M[,i],main=title,xlab="A",ylab="M",pch=pch,...)
                     }
                   }
