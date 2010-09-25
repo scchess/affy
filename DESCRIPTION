@@ -17,7 +17,7 @@ Imports: affyio (>= 1.13.3), Biobase (>= 2.5.5), graphics, grDevices, methods,
 Suggests: tkWidgets (>= 1.19.0), affydata
 LinkingTo: preprocessCore
 Description: The package contains functions for exploratory
-        oligonucleotide array analysis. The dependance to tkWidgets
+        oligonucleotide array analysis. The dependence on tkWidgets
         only concerns few convenience functions. 'affy' is fully
         functional without it.
 License: LGPL (>= 2.0)
