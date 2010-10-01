@@ -1,5 +1,5 @@
 \name{debug.affy123}
-\docType{instance}
+\docType{methods}
 \alias{debug.affy123}
 \title{Debugging Flag}
 \description{
