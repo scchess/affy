@@ -31,7 +31,7 @@
 \tableofcontents
 \section{Introduction}
 The \Rpackage{affy} package is part of the
-BioConductor\footnote{\url{http://www.bioconductor.org/}} project.
+BioConductor\footnote{\url{http://bioconductor.org/}} project.
 It is meant to be an extensible, interactive environment for data analysis
 and exploration of Affymetrix oligonucleotide array probe level data.
 
@@ -121,12 +121,13 @@ library(affy)
 This release of the \Rpackage{affy} package will automatically
 download the appropriate cdf environment when you require it. However,
 if you wish you may download and install the cdf environment you need
-from \url{http://www.bioconductor.org/data/metaData.html} manually. If
-there is no cdf environment currently built for your particular chip
-and you have access to the CDF file then you may use the
-\Rpackage{makecdfenv} package to create one yourself. To make the cdf
-packaes, Microsoft Windows users will need to use the tools described
-here: \url{http://www.stats.ox.ac.uk/pub/R/rw-FAQ.html}.
+from
+\url{http://bioconductor.org/help/bioc-views/release/data/annotation/}
+manually. If there is no cdf environment currently built for your
+particular chip and you have access to the CDF file then you may use
+the \Rpackage{makecdfenv} package to create one yourself. To make the
+cdf packaes, Microsoft Windows users will need to use the tools
+described in \url{http://www.murdoch-sutherland.com/Rtools/}.
 
 
 \subsection{Quick start}
@@ -380,10 +381,6 @@ To obtain expression values that correspond to those from MAS 5.0, use
 <<>>=
 eset <- mas5(Dilution)
 @
-
-A detailed comparison between the MAS 5.0 values that are computed by
-\Rpackage{affy} and by {\it Affymetrix}'s software can be found at
-\url{http://stat-www.berkeley.edu/~bolstad/MAS5diff/Mas5difference.html}.
 
 To obtain MAS 5.0 presence calls you can use the \verb+mas5calls+ method.
 
@@ -758,7 +755,7 @@ environments\footnote{Please refer to the {\bf R} documentation to know more abo
 They only contain a part of the information that can be found in the {\it CDF}
 files. The {\it cdfenvs} are sufficient to perform the numerical processing
 methods included in the package. For each {\it CDF} file there is package,
-available from \url{http://www.bioconductor.org/data/metaData.html}, that
+available from \url{http://bioconductor.org/help/bioc-views/release/data/annotation/}, that
 contains exactly one of these environments. The {\it cdfenvs} we store the
 $x$ and $y$ coordinates as one number (see above).
 
