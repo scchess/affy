@@ -2,6 +2,8 @@ useDynLib("affy")
 
 import(affyio)
 
+import(zlibbioc)
+
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, eSet, MIAME,
                   Versioned, VersionedBiobase, Versions)
 
