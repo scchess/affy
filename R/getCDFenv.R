@@ -88,7 +88,7 @@ cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
             }
         }
 
-        biocContribUrl <- sapply(Biobase:::biocReposList(), contrib.url)
+        biocContribUrl <- sapply(Biobase:::biocinstallRepos(), contrib.url)
         biocPkgs <- available.packages(biocContribUrl)
         if (! cdfname %in% biocPkgs[, "Package"]) {
             if (verbose)
@@ -98,7 +98,7 @@ cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
             return(list(paste("Bioconductor -",cdfname,"not available")))
         } else {
             install.packages(cdfname, lib=lib,
-                             repos=Biobase:::biocReposList(),
+                             repos=Biobase:::biocinstallRepos(),
                              dependencies=TRUE)
             ## no way to know if we succeeded or not, with install.packages
             ##if (verbose)
