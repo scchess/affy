@@ -26,6 +26,8 @@ importFrom(Biobase, addVigs2WinMenu, assayDataElementReplace,
            assayDataNew, multiassign, read.AnnotatedDataFrame,
            read.MIAME, testBioCConnection)
 
+importFrom(BiocInstaller, biocinstallRepos)
+
 importFrom(graphics, abline, axis, barplot, boxplot, frame, hist,
            image, lines, matplot, mtext, pairs, par, plot, points,
            smoothScatter, text)
