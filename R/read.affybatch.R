@@ -192,7 +192,7 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
   if (widget){
     require(tkWidgets)
     widgetfiles <- fileBrowser(textToShow="Choose CEL files",
-                               testFun=hasSuffix("[cC][eE][lL]"))
+                               testFun=hasSuffix("[cC][eE][lL]|[cC][eE][lL].gz"))
   }
   else{
     widgetfiles <- character(0)
