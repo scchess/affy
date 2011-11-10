@@ -100,7 +100,7 @@ read.affybatch <- function(..., filenames=character(0),
 
   exprs <- .Call("read_abatch",filenames, rm.mask,
                rm.outliers, rm.extra, ref.cdfName,
-               dim.intensity[c("Rows","Cols")],verbose, PACKAGE="affyio")
+               dim.intensity[c(1,2)],verbose, PACKAGE="affyio")
   colnames(exprs) <- samplenames
   
   #### this is where the code changes from the original read.affybatch.
