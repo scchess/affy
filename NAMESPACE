@@ -1,5 +1,7 @@
 useDynLib("affy")
 
+importFrom(BiocGenerics, updateObject)
+
 import(affyio)
 
 import(zlibbioc)
@@ -18,7 +20,7 @@ importMethodsFrom(Biobase, annotatedDataFrameFrom, annotation,
                   "notes<-", pData, "pData<-", phenoData,
                   "phenoData<-", preproc, "preproc<-", protocolData,
                   "protocolData<-", rowMedians, sampleNames, "sampleNames<-",
-                  se.exprs, "se.exprs<-", updateObject)
+                  se.exprs, "se.exprs<-")
 
 importMethodsFrom(methods, initialize, show)
 
