@@ -15,7 +15,7 @@ xy2indices <- function(x, y, nr=NULL, cel=NULL, abatch=NULL, cdf=NULL, xy.offset
   if (! is.null((abatch)))
     nr <- nrow(abatch)
   if(!is.null(cdf)){
-    require(cdf, character.only = TRUE, quiet = TRUE) ||
+    require(cdf, character.only = TRUE, quietly = TRUE) ||
             stop(paste(cdf, "package must be installed first"))
     nam <- paste(sub("cdf$", "", cdf), "dim", sep = "")
     nr <- get("NROW", get(nam))
@@ -43,7 +43,7 @@ indices2xy <- function(i, nr=NULL, cel=NULL, abatch=NULL, cdf=NULL, xy.offset = 
   if (! is.null((abatch)))
     nr <- nrow(abatch)
   if(!is.null(cdf)){
-    require(cdf, character.only = TRUE, quiet = TRUE) ||
+    require(cdf, character.only = TRUE, quietly = TRUE) ||
             stop(paste(cdf, "package must be installed first"))
     nam <- paste(sub("cdf$", "", cdf), "dim", sep = "")
     nr <- get("NROW", get(nam))

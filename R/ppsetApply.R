@@ -13,7 +13,7 @@ ppsetApply <- function(abatch, FUN, genenames=NULL, ...) {
 
   ##
   e1 <- new.env(parent = environment(FUN))
-  multiassign(names(pData(abatch)), pData(abatch), env = e1)
+  multiassign(names(pData(abatch)), pData(abatch), e1)
   environment(FUN) <- e1
 
   ppset <- new("ProbeSet", pm=matrix(), mm=matrix())

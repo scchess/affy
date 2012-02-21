@@ -1,6 +1,6 @@
 useDynLib("affy")
 
-importFrom(BiocGenerics, updateObject)
+importFrom(BiocGenerics, updateObject, colnames)
 
 import(affyio)
 
