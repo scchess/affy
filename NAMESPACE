@@ -1,6 +1,6 @@
 useDynLib("affy")
 
-importFrom(BiocGenerics, updateObject, colnames)
+importFrom(BiocGenerics, updateObject, colnames, boxplot)
 
 import(affyio)
 
@@ -30,7 +30,7 @@ importFrom(Biobase, addVigs2WinMenu, assayDataElementReplace,
 
 importFrom(BiocInstaller, biocinstallRepos)
 
-importFrom(graphics, abline, axis, barplot, boxplot, frame, hist,
+importFrom(graphics, abline, axis, barplot, frame, hist,
            image, lines, matplot, mtext, pairs, par, plot, points,
            smoothScatter, text)
 
@@ -55,7 +55,7 @@ exportPattern("^[^\\.]")
 
 export(.setAffyOptions)
 
-exportMethods(show, exprs, featureNames, geneNames, sampleNames,
+exportMethods(show, boxplot, exprs, featureNames, geneNames, sampleNames,
               se.exprs, updateObject)
 
 exportClasses("AffyBatch")

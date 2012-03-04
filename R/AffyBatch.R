@@ -819,10 +819,6 @@ setMethod("image",signature(x="AffyBatch"),
           })
 
 
-###boxplot
-if( is.null(getGeneric("boxplot")))
-  setGeneric("boxplot")
-
 ##some special handling of main is needed
 setMethod("boxplot",signature(x="AffyBatch"),
           function(x, which="both", range=0, main, ...){

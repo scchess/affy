@@ -1,5 +1,5 @@
 Package: affy
-Version: 1.33.4
+Version: 1.33.5
 Title: Methods for Affymetrix Oligonucleotide Arrays
 Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier
         <lgautier@gmail.com>, Benjamin Milo Bolstad
@@ -12,9 +12,9 @@ Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier
         Christopher Workman <workman@cbs.dtu.dk>, John Zhang
 Maintainer: Rafael A. Irizarry <rafa@jhu.edu>
 Depends: R (>= 2.8.0), BiocGenerics, Biobase (>= 2.5.5)
-Imports: BiocGenerics, Biobase, affyio (>= 1.13.3), BiocInstaller,
-        graphics, grDevices, methods, preprocessCore, stats, utils,
-        zlibbioc
+Imports: BiocGenerics (>= 0.1.11), Biobase, affyio (>= 1.13.3),
+        BiocInstaller, graphics, grDevices, methods, preprocessCore,
+        stats, utils, zlibbioc
 Suggests: tkWidgets (>= 1.19.0), affydata, widgetTools
 LinkingTo: preprocessCore
 Description: The package contains functions for exploratory
