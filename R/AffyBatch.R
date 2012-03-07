@@ -769,9 +769,6 @@ setMethod("computeExprSet", signature(x="AffyBatch", pmcorrect.method="character
 
 ##some methods i was asked to add
 
-if( is.null(getGeneric("image")))
-  setGeneric("image")
-
 setMethod("image",signature(x="AffyBatch"),
           function(x, transfo=log, col=gray(c(0:64)/64), xlab="",
             ylab="",type=c("exprs","se.exprs"), main, ...){
