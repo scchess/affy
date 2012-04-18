@@ -276,9 +276,6 @@ setMethod("geneNames",signature("AffyBatch"),
               return(ls(env=cdf.envir))
             })
 
-setReplaceMethod("geneNames", "AffyBatch", function(object, value){
-  stop("This operation is not permitted.\nTo change geneNames change the cdf environment.\n")
-})
 
 ##show method
 if (debug.affy123) cat("--->show\n")
