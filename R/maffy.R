@@ -244,7 +244,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 	    else if(trace.hat == "exact") "1.approx"
 	surf.stat <- paste(surface, statistics, sep="/")
         for(k in 1:M) {
-        	z <- .C("loess_raw",
+        	z <- .C(stats:::C_loess_raw,
 			as.double(y[,k]),
 			as.double(x),
 			as.double(weights),
@@ -268,8 +268,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 			trL = double(1),
 			delta1 = double(1),
 			delta2 = double(1),
-			as.integer(surf.stat == "interpolate/exact"),
-			PACKAGE="stats")
+			as.integer(surf.stat == "interpolate/exact"))
 			fitted.all[,k] <- z$fitted.values
 	}
 
@@ -283,12 +282,11 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 	fitted.residuals <- sqrt((residuals.all^2)%*%A)
 
 	if(j < iterations)
-	    robust <- .Fortran("lowesw",
+	    robust <- .Fortran(stats:::C_lowesw,
 			       as.double(fitted.residuals),
 			       as.integer(N),
 			       robust = double(N),
-			       integer(N),
-			       PACKAGE="stats")$robust
+			       integer(N))$robust
     }
     if(surface == "interpolate")
     {
@@ -300,16 +298,15 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
     }
     if(iterations > 1) {
         for(k in 1:M) {
-		pseudovalues <- .Fortran("lowesp",
+		pseudovalues <- .Fortran(stats:::C_lowesp,
 					 as.integer(N),
 					 as.double(y[,k]),
 					 as.double(fitted.all[,k]),
 					 as.double(weights),
 					 as.double(robust),
 					 integer(N),
-					 pseudovalues = double(N),
-					 PACKAGE="stats")$pseudovalues
-		zz <- .C("loess_raw",
+					 pseudovalues = double(N))$pseudovalues
+		zz <- .C(stats:::C_loess_raw,
 			as.double(pseudovalues),
 			as.double(x),
 			as.double(weights),
@@ -333,8 +330,7 @@ simplemultiLoess <- function(y, x, weights, span = 0.75, degree = 2,
 			trL = double(1),
 			delta1 = double(1),
 			delta2 = double(1),
-			as.integer(0),
-			PACKAGE="stats")
+			as.integer(0))
 		pseudo.resid.all[,k] <- pseudovalues-zz$temp
 	}
 
