@@ -36,7 +36,7 @@ importFrom(graphics, abline, axis, barplot, frame, hist,
 
 importFrom(grDevices, dev.interactive, gray)
 
-importFrom(methods, "@<-", as, callNextMethod, getMethod, is, new,
+importFrom(methods, as, callNextMethod, getMethod, is, new,
            slot)
 
 importFrom(preprocessCore, normalize.quantiles,
