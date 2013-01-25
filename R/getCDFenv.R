@@ -99,7 +99,7 @@ cdfFromBioC <- function(cdfname, lib=.libPaths()[1], verbose=TRUE) {
         } else {
             install.packages(cdfname, lib=lib,
                              repos=biocinstallRepos(),
-                             dependencies=c("Depends","Imports")
+                             dependencies=c("Depends","Imports"))
             ## no way to know if we succeeded or not, with install.packages
             ##if (verbose)
             ##  print(paste("Installation of environment",
