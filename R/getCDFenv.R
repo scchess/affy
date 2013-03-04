@@ -124,7 +124,7 @@ cdfFromLibPath <- function(cdfname, lib = NULL, verbose=TRUE) {
       print(paste("Checking to see if package",cdfname,
                   "is already installed"))
 
-    if (length(.find.package(cdfname, lib.loc=lib, quiet=TRUE)) == 0)
+    if (length(find.package(cdfname, lib.loc=lib, quiet=TRUE)) == 0)
       return(list(paste("Library - package",cdfname,"not installed")))
 
     ## See if package is already loaded
