@@ -24,6 +24,7 @@
 ## Mar 6, 2006 - change .Call to reference affyio. that is new location for parsing code
 ## Dec 12, 2006 - added checkCelFiles() to ensure all filenames are celfiles so unintended
 ##                arguments don't get passed in via ...
+## Apr 19, 2013 - JWM: added warning and error messages for Gene ST and Exon ST arrays
 ##
 #############################################################
 
@@ -73,6 +74,15 @@ read.affybatch <- function(..., filenames=character(0),
   dim.intensity <- headdetails[[2]]   ##dim(intensity(cel))
   ##and the cdfname as ref
   ref.cdfName <- headdetails[[1]]   #cel@cdfName
+
+  if(length(grep("gene1[01]st", cleancdfname(ref.cdfName))) == 1)
+      warning(paste0("\n\nThe affy package can process data from the Gene ST 1.x series of arrays,\n",
+                    "but you should consider using either the oligo or xps packages, which are specifically\n",
+                     "designed for these arrays.\n\n"), call. = FALSE)
+  if(length(grep("gene2[01]st|ex[1-2][0-1]st", cleancdfname(ref.cdfName))) == 1)
+      stop(paste0("\n\nThe affy package is not designed for this array type.\n",
+                   "Please use either the oligo or xps package.\n\n"), .call = FALSE)
+              
 
   scandates <-
     sapply(seq_len(length(filenames)), function(i) {
