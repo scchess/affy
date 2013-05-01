@@ -119,7 +119,7 @@ expresso <- function(afbatch,
     if (verbose)
       cat("normalizing...")
 
-    afbatch <- do.call(affy:::normalize, c(alist(afbatch, normalize.method), normalize.param))
+    afbatch <- do.call(BiocGenerics:::normalize, c(alist(afbatch, normalize.method), normalize.param))
 
     if (verbose)
       cat("done.\n")
