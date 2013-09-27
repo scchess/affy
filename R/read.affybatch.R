@@ -25,6 +25,7 @@
 ## Dec 12, 2006 - added checkCelFiles() to ensure all filenames are celfiles so unintended
 ##                arguments don't get passed in via ...
 ## Apr 19, 2013 - JWM: added warning and error messages for Gene ST and Exon ST arrays
+## Sept 26, 2013 - naked .Call() to affyio replaced
 ##
 #############################################################
 
@@ -108,9 +109,9 @@ read.affybatch <- function(..., filenames=character(0),
   ## Change sampleNames to be consistent with row.names of phenoData
   ## object
 
-  exprs <- .Call("read_abatch",filenames, rm.mask,
+  exprs <-  affyio::read_abatch(filenames, rm.mask,
                rm.outliers, rm.extra, ref.cdfName,
-               dim.intensity[c(1,2)],verbose, PACKAGE="affyio")
+               dim.intensity[c(1,2)],verbose)
   colnames(exprs) <- samplenames
   
   #### this is where the code changes from the original read.affybatch.
@@ -130,9 +131,9 @@ read.affybatch <- function(..., filenames=character(0),
   } else {
     return(new("AffyBatch",
                exprs  = exprs,
-               se.exprs = .Call("read_abatch_stddev",filenames, rm.mask,
-                 rm.outliers, rm.extra, ref.cdfName,
-                 dim.intensity,verbose, PACKAGE="affyio"),
+               se.exprs =  affyio::read_abatch_stddev(filenames, rm.mask,
+               rm.outliers, rm.extra, ref.cdfName,
+               dim.intensity[c(1,2)],verbose),
                cdfName    = cdfname,   ##cel@cdfName,
                phenoData  = phenoData,
                nrow       = dim.intensity[2],##["Rows"],
