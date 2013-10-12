@@ -9,7 +9,7 @@ cleancdfname <- function(cdfname, addcdf=TRUE) {
                 stop(paste("invalid CDF name:", cdfname))
   if ( nchar(cdfname)[1] == 0 )
                stop("supplied cdf name has zero length")
-
+  mapCdfName <- NULL # To appease R CMD check
   data("mapCdfName", package="affy")
   i <- match(cdfname, mapCdfName$inCDF)
   if (is.na(i)) {
