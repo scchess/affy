@@ -253,7 +253,7 @@ setMethod("featureNames",
           signature=signature(object="AffyBatch"),
           function(object) {
               cdf.envir <- getCdfInfo(object)
-              ls(env=cdf.envir)
+              ls(envir=cdf.envir)
           })
 
 setReplaceMethod("featureNames",
@@ -273,7 +273,7 @@ if( is.null(getGeneric("geneNames") ))
 setMethod("geneNames",signature("AffyBatch"),
             function(object){
               cdf.envir <- getCdfInfo(object)
-              return(ls(env=cdf.envir))
+              return(ls(envir=cdf.envir))
             })
 
 
@@ -296,7 +296,7 @@ setMethod("show", "AffyBatch",
                              NULL
                          })
               num.ids <-
-                if (!is.null(cdf.env)) length(ls(env=cdf.env))
+                if (!is.null(cdf.env)) length(ls(envir=cdf.env))
                 else num.ids <- "???"
 
               cat("AffyBatch object\n")
