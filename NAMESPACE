@@ -16,7 +16,7 @@ importMethodsFrom(Biobase, annotatedDataFrameFrom, annotation,
                   assayData, classVersion, "classVersion<-",
                   description, "description<-", experimentData, exprs,
                   "exprs<-", featureNames, "featureNames<-",
-                  isCurrent, isVersioned, normalize,
+                  isCurrent, isVersioned,
 		  notes,
                   "notes<-", pData, "pData<-", phenoData,
                   "phenoData<-", preproc, "preproc<-", protocolData,
@@ -28,6 +28,8 @@ importMethodsFrom(methods, initialize, show)
 importFrom(Biobase, addVigs2WinMenu, assayDataElementReplace,
            assayDataNew, multiassign, read.AnnotatedDataFrame,
            read.MIAME, testBioCConnection)
+
+importMethodsFrom(BiocGenerics, normalize)
 
 importFrom(BiocInstaller, biocinstallRepos)
 
