@@ -82,7 +82,7 @@ read.affybatch <- function(..., filenames=character(0),
                      "designed for these arrays.\n\n"), call. = FALSE)
   if(length(grep("gene2[01]st|ex[1-2][0-1]st", cleancdfname(ref.cdfName))) == 1)
       stop(paste0("\n\nThe affy package is not designed for this array type.\n",
-                   "Please use either the oligo or xps package.\n\n"), .call = FALSE)
+                   "Please use either the oligo or xps package.\n\n"), call. = FALSE)
               
 
   scandates <-
