@@ -1,6 +1,8 @@
 loess.normalize <- function(mat,subset=sample(1:(dim(mat)[2]),5000),
                       epsilon=10^-2,maxit=1,log.it=TRUE,verbose=TRUE,span=2/3,
-                      family.loess="symmetric"){
+                      family.loess="symmetric")
+{
+    .Deprecated("normalize.loess", "affy")
   J <- dim(mat)[2]
   II <- dim(mat)[1]
   newData <- mat
@@ -41,5 +43,3 @@ loess.normalize <- function(mat,subset=sample(1:(dim(mat)[2]),5000),
   if(log.it) return(2^newData)
   else return(newData)
 }
-
-
