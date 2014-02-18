@@ -10,8 +10,8 @@ xy2indices(x, y, nc = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = N
 indices2xy(i, nc = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL)
 }
 \arguments{
-  \item{x}{\code{X} position for the probes.}
-  \item{y}{\code{Y} position for the probes.}
+  \item{x}{A numeric vector of \code{X} position(s) for the probes.}
+  \item{y}{A numeric vector of \code{Y} position(s) for the probes.}
   \item{i}{indices in the \code{AffyBatch} for the probes.}
   \item{nc}{total number of columns on the chip.}
   \item{cel}{a corresponding object of class \code{Cel}. This has been
@@ -51,8 +51,12 @@ if (require(affydata)) {
   pm.i.xy <- indices2xy(pm.i, abatch = Dilution)
   mm.i.xy <- indices2xy(mm.i, abatch = Dilution)
 
-  identical(pm.i, xy2indices(pm.i.xy[,1], pm.i.xy[,2], cdf = "hgu95av2cdf"))
-  identical(mm.i, xy2indices(mm.i.xy[,1], mm.i.xy[,2], cdf = "hgu95av2cdf"))
+  ## and back to indices
+  i.pm <- xy2indices(pm.i.xy[,1], pm.i.xy[,2], cdf = "hgu95av2cdf")
+  i.mm <- xy2indices(mm.i.xy[,1], mm.i.xy[,2], cdf = "hgu95av2cdf")
+
+  identical(pm.i, as.integer(i.pm))
+  identical(mm.i, as.integer(i.mm))
 
   image(Dilution[1], transfo=log2)
   ## plot the pm in red
