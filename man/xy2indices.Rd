@@ -6,15 +6,16 @@
   Functions to convert indices to x/y (and reverse)
 }
 \usage{
-xy2indices(x, y, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL)
-indices2xy(i, nr = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL)
+xy2indices(x, y, nc = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL)
+indices2xy(i, nc = NULL, cel = NULL, abatch = NULL, cdf = NULL, xy.offset = NULL)
 }
 \arguments{
   \item{x}{\code{X} position for the probes.}
   \item{y}{\code{Y} position for the probes.}
   \item{i}{indices in the \code{AffyBatch} for the probes.}
-  \item{nr}{total number of \code{Xs} on the chip.}
-  \item{cel}{a corresponding object of class \code{Cel}.}
+  \item{nc}{total number of columns on the chip.}
+  \item{cel}{a corresponding object of class \code{Cel}. This has been
+    deprecated. Use abatch or cdf instead.}
   \item{abatch}{a corresponding object of class
     \code{\link[affy:AffyBatch-class]{AffyBatch}}.}
   \item{cdf}{character - the name of the corresponding cdf package.}
@@ -49,6 +50,8 @@ if (require(affydata)) {
 
   pm.i.xy <- indices2xy(pm.i, abatch = Dilution)
   mm.i.xy <- indices2xy(mm.i, abatch = Dilution)
+
+ identical(xy2indices(pm.i.xy[,1], pm.i.xy[,2], cdf = "hgu95av2cdf"))
 
   image(Dilution[1], transfo=log2)
   ## plot the pm in red
