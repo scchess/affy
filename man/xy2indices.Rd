@@ -52,7 +52,7 @@ if (require(affydata)) {
   mm.i.xy <- indices2xy(mm.i, abatch = Dilution)
 
   identical(pm.i, xy2indices(pm.i.xy[,1], pm.i.xy[,2], cdf = "hgu95av2cdf"))
-  identical(mm.i, xy2indices(mm.i.xy[,1], mm.i.xy[,2], cdf = "hgu95av2cdf")
+  identical(mm.i, xy2indices(mm.i.xy[,1], mm.i.xy[,2], cdf = "hgu95av2cdf"))
 
   image(Dilution[1], transfo=log2)
   ## plot the pm in red
