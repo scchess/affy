@@ -8,7 +8,7 @@ Author: Rafael A. Irizarry <rafa@jhu.edu>, Laurent Gautier
         Astrand <Magnus.Astrand@astrazeneca.com>, Leslie M. Cope
         <cope@mts.jhu.edu>, Robert Gentleman, Jeff Gentry, Conrad
         Halling <challing@agilixcorp.com>, Wolfgang Huber, James
-        MacDonald <jmacdon@med.umich.edu>, Benjamin I. P. Rubinstein,
+        MacDonald <jmacdon@u.washington.edu>, Benjamin I. P. Rubinstein,
         Christopher Workman <workman@cbs.dtu.dk>, John Zhang
 Maintainer: Rafael A. Irizarry <rafa@jhu.edu>
 Depends: R (>= 2.8.0), BiocGenerics (>= 0.1.12), Biobase (>= 2.5.5)
