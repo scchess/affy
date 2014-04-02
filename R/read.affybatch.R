@@ -232,14 +232,32 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
     }
   }
 
+  chkSn <- function(filenames, samplenames){
+      fntest <- sub("^/?([^/]*/)*", "", filenames)
+      if(all(fntest %in% samplenames)){
+          filenames <<- filenames[match(samplenames, fntest)]
+      } else {
+          warning(paste("\n\nThe cel file names are not conformable to the sample names",
+                        "provided in the phenoData object.\nNote that the sample names",
+                        "take precedence, so will be used in the sampleNames slot of the",
+                        "resulting ExpressionSet.\nPlease ensure that the ordering of the",
+                        "phenoData object matches the order of the file names",
+                        "(use read.celfiles() to test), as no re-ordering is possible.\n\n"),
+                  call. = FALSE)
+      }
+  }
+  
   if(is.character(phenoData)) { 
     ## if character, read file 
     if(length(phenoData)!=1) stop(sprintf("'phenoData' must be of length 1, but is %d.", length(phenoData)))
     phenoData <- read.AnnotatedDataFrame(filename=phenoData)
     sampleNames <- sampleNames(phenoData)
+    chkSn(filenames, sampleNames)
   } else if(is.data.frame(phenoData)) {
     ## if data.frame, coerce
     phenoData <-  as(phenoData, "AnnotatedDataFrame")
+    sampleNames <- sampleNames(phenoData)
+    chkSn(filenames, sampleNames)
   } else if(is.null(phenoData)) {
     phenoData <- new("AnnotatedDataFrame",
                      data = data.frame(sample=seq_along(sampleNames),
