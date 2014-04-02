@@ -237,7 +237,7 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
       if(all(fntest %in% samplenames)){
           filenames <<- filenames[match(samplenames, fntest)]
       } else {
-          warning(paste("\n\nThe cel file names are not conformable to the sample names",
+          warning(paste("The cel file names are not conformable to the sample names",
                         "provided in the phenoData object.\nNote that the sample names",
                         "take precedence, so will be used in the sampleNames slot of the",
                         "resulting ExpressionSet.\nPlease ensure that the ordering of the",
