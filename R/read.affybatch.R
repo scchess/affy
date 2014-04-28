@@ -242,7 +242,7 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
                         "take precedence, so will be used in the sampleNames slot of the",
                         "resulting ExpressionSet.\nPlease ensure that the ordering of the",
                         "phenoData object matches the order of the file names",
-                        "(use read.celfiles() to test), as no re-ordering is possible.\n\n"),
+                        "(use list.celfiles() to test), as no re-ordering is possible.\n\n"),
                   call. = FALSE)
       }
   }
