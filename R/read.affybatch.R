@@ -237,12 +237,15 @@ AllButCelsForReadAffy <- function(..., filenames=character(0),
       if(all(fntest %in% samplenames)){
           filenames <<- filenames[match(samplenames, fntest)]
       } else {
-          warning(paste("The cel file names are not conformable to the sample names",
-                        "provided in the phenoData object.\nNote that the sample names",
-                        "take precedence, so will be used in the sampleNames slot of the",
-                        "resulting ExpressionSet.\nPlease ensure that the ordering of the",
-                        "phenoData object matches the order of the file names",
-                        "(use list.celfiles() to test), as no re-ordering is possible.\n\n"),
+          warning(paste0("Mismatched phenoData and celfile names!\n\n",
+                         "Please note that the row.names of your phenoData ",
+                         "object should be identical to what you get from ",
+                         "list.celfiles()!\nOtherwise you are responsible for ",
+                         "ensuring that the ordering of your phenoData object ",
+                         "conforms to the ordering of the celfiles as they are ",
+                         "read into the AffyBatch!\nIf not, errors may ",
+                         "result from using the phenoData for subsetting or ",
+                         "creating linear models, etc.\n\n"),
                   call. = FALSE)
       }
   }
