@@ -24,7 +24,7 @@ normalize.AffyBatch.constant <- function(abatch, refindex=1, FUN=mean, na.rm=TRU
 normalize.constant <- function(x, refconstant, FUN=mean, na.rm=TRUE) {
   thisconstant <- FUN(x, na.rm=na.rm)
   r <- x / thisconstant * refconstant
-  attr(r,"constant") <- thisconstant * refconstant
+  attr(r,"constant") <-  refconstant / thisconstant 
   return(r)
 }
 
