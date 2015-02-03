@@ -1,5 +1,6 @@
 version 1.41.1
-  o Fixed bug. attr(r,"constant") <- thisconstant * refconstant to  attr(r,"constant") <- refconstant / thisconstant.
+  o Fixed bug. attr(r,"constant") <- thisconstant * refconstant to  attr(r,"constant") <- refconstant / thisconstant. Reported Aris Floratos.
+
 
 version 1.23.x
 
