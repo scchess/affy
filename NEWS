@@ -1,3 +1,6 @@
+version 1.41.1
+  o Fixed bug. attr(r,"constant") <- thisconstant * refconstant to  attr(r,"constant") <- refconstant / thisconstant.
+
 version 1.23.x
 
   o Populate new eSet slot 'protocolData' with information from cel files.
