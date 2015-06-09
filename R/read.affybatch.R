@@ -80,7 +80,7 @@ read.affybatch <- function(..., filenames=character(0),
       warning(paste0("\n\nThe affy package can process data from the Gene ST 1.x series of arrays,\n",
                     "but you should consider using either the oligo or xps packages, which are specifically\n",
                      "designed for these arrays.\n\n"), call. = FALSE)
-  if(length(grep("gene2[01]st|ex[1-2][0-1]st|hta20", cleancdfname(ref.cdfName))) == 1)
+  if(length(grep("gene2[01]st|ex[1-2][0-1]st|hta20|mta10", cleancdfname(ref.cdfName))) == 1)
       stop(paste0("\n\nThe affy package is not designed for this array type.\n",
                    "Please use either the oligo or xps package.\n\n"), call. = FALSE)
               
