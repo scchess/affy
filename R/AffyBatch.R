@@ -196,7 +196,9 @@ setMethod("exprs",
 
 setReplaceMethod("exprs",
           signature(object="AffyBatch"),
-          function(object, value) assayDataElementReplace(object, "exprs", value))
+          function(object, value) {
+    assayDataElementReplace(object, "exprs", value, validate=FALSE)
+})
 
 setMethod("se.exprs",
           signature(object="AffyBatch"),
@@ -211,7 +213,9 @@ setMethod("se.exprs",
 
 setReplaceMethod("se.exprs",
           signature(object="AffyBatch"),
-          function(object, value) assayDataElementReplace(object, "se.exprs", value))
+          function(object, value) {
+    assayDataElementReplace(object, "se.exprs", value, validate=FALSE)
+})
 
 if (is.null(getGeneric("cdfName")))
     setGeneric("cdfName", function(object)
@@ -231,9 +235,9 @@ setGeneric("intensity<-", function(object, value)
            standardGeneric("intensity<-"))
 
 setReplaceMethod("intensity", signature(object="AffyBatch"),
-                 function(object, value){
-                     assayDataElementReplace(object, "exprs", value)
-                 })
+                 function(object, value) {
+    assayDataElementReplace(object, "exprs", value, validate=FALSE)
+})
 
 ##for now, there is no accessor for se.exprs. we could use this to store
 ##sd, but if no one uses it... why do it
